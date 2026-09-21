@@ -2,13 +2,21 @@
 
 ## Active Blockers
 
+### Local App Next Development Task Unknown
+
+Status: active planning blocker.
+
+Evidence: the human owner confirms that the Local App remains under active development, while current canonical state does not identify the actual next development task.
+
+Required action: inspect the minimum relevant files in the confirmed Local App authority before selecting the next development task.
+
 ### Local App Live Setup Pending
 
-Status: active.
+Status: active live-use blocker; not established as a blocker to current development.
 
-Evidence: Local App 25N handoff and verification say controlled live owner use is ready only after actual owner setup.
+Evidence: owner live setup remains pending. Earlier Local App 25N results are historical automated verification evidence and do not establish development completion.
 
-Required action: owner confirmation of clean live profile, actual supplier/contact/address/bank settings, terms/due date review, first document review, and separate-device backup routine.
+Required action: address clean live profile, actual supplier/contact/address/bank settings, terms/due date review, first document review, and separate-device backup when development reaches the appropriate live-use stage.
 
 ### Broken Root Git Metadata
 

@@ -1,0 +1,55 @@
+version: 1
+workflow: project-continuation
+source: provider-neutral
+initial_agent: project-manager
+canonical_agent: ../../agents/project-manager/ROLE.md
+project_state_root: ../../shared/projects
+canonical_read_order:
+  - PROJECT_STATE.md
+  - HANDOFF.md
+  - DECISIONS.md
+  - TODO.md
+  - ACTIVE_FILE_MAP.md
+  - BLOCKERS.md
+  - RISKS.md
+  - metadata.yaml
+steps:
+  - resolve_requested_project
+  - read_canonical_state_in_order
+  - retain_only_context_relevant_to_continuation
+  - determine_whether_canonical_state_is_sufficient
+  - if_insufficient_resolve_source_path_from_metadata
+  - if_insufficient_inspect_only_relevant_source_files
+  - select_highest_priority_actionable_task
+  - identify_selected_agent
+  - identify_selected_skill
+  - identify_selected_workflow
+  - classify_risk_level
+  - determine_approval_requirement
+selection_output:
+  - selected_task
+  - selected_agent
+  - selected_skill
+  - selected_workflow
+  - risk_level
+  - approval_requirement
+state_labels_to_preserve:
+  - confirmed
+  - provisional
+  - inferred
+  - pending
+state_rules:
+  - never_change_pending_human_confirmed_state_without_explicit_human_confirmation
+  - never_upgrade_provisional_or_inferred_state_without_evidence_or_explicit_human_confirmation
+source_inspection:
+  default: do_not_inspect
+  allowed_when: canonical_state_is_insufficient
+  path_source: metadata.yaml
+  scope: minimum_relevant_files
+approval_policy: ../approvals/APPROVAL_POLICY.md
+risk_levels: ../approvals/risk-levels.yaml
+must_not_without_separate_approval:
+  - repair_git
+  - deploy
+  - send_external_communications
+  - mutate_source_code

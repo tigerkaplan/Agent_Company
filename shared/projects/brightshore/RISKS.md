@@ -4,7 +4,7 @@
 
 - Broken root and Local App Git metadata prevents reliable repository status/history for those areas.
 - Treating stale documentation as current truth could route future work to obsolete paths.
-- Treating automated Local App verification as owner live setup would overstate readiness.
+- Treating historical automated Local App verification or stale readiness wording as proof that development is finished or production-ready would overstate the current state.
 
 ## Medium Risks
 
@@ -23,4 +23,5 @@
 - Keep project-state claims labelled as confirmed, provisional, or inferred.
 - Require approval before Git repair, cleanup, deployment, external communication, or production data work.
 - Use current routing files before broad documentation scans.
+- Inspect the minimum relevant current Local App files before selecting the next development task.
 - Keep Website authority provisional until resolved.

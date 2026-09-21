@@ -18,7 +18,7 @@ The dispatcher classifies an incoming task, selects the initial canonical agent 
 5. Select the matching minimal workflow from `../workflows/`.
 6. Route important or high-risk output to Reviewer before acceptance.
 
-## Phase 1 Limits
+## Current Scope Limits
 
 - Do not use provider weighting.
 - Do not start queues, workers, schedulers, integrations, deployments, or external messaging systems.

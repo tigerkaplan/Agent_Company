@@ -6,6 +6,7 @@ canonical_agents:
     guardrails: ../../agents/project-manager/GUARDRAILS.md
     memory: ../../agents/project-manager/MEMORY.md
     default_for:
+      - project-continuation
       - coordination
       - status
       - next_step

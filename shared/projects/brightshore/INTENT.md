@@ -20,9 +20,11 @@ This package covers the whole CleaningBusiness project as Brightshore Cleaning, 
 - Marketing.
 - Business Operations.
 
-## Current Priority
+## Desired Outcome
 
-Confirmed by inspected Local App evidence: the Local App is closest to controlled live owner use, but live owner setup remains pending.
+Agent Company can continue each Brightshore project area from concise durable state and current evidence without relying on old chat history.
+
+Local App continuation must reflect that it is unfinished and under active development. When canonical state does not identify the next development task, the task must be determined from the minimum relevant current source evidence.
 
 ## Constraints
 
@@ -37,6 +39,6 @@ Confirmed by inspected Local App evidence: the Local App is closest to controlle
 This state package is based on:
 
 - Read-only inspection of `E:\00_CleaningProject\CleaningBusiness`.
-- Read-only inspection of current Agent Company Phase 1 architecture.
+- Read-only inspection of the current Agent Company architecture.
 - Human clarification supplied during onboarding.
 - Prior memory used only as background and not as a replacement for repository evidence.

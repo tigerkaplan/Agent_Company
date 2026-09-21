@@ -1,53 +1,18 @@
 version: 1
 project_id: brightshore
-canonical_name: Brightshore Cleaning
-source_root: E:\00_CleaningProject\CleaningBusiness
-onboarding_mode: read-only-project-state-creation
+project_name: Brightshore Cleaning
+root_path: E:\00_CleaningProject\CleaningBusiness
 created_in_agent_company: true
-source_repository_modified: false
-committed: false
-status: needs_human_confirmation_for_live_use
 areas:
   global:
     path: 00_GLOBAL
-    status: active_project_area
   local_app:
-    path: 02_LOCAL_APP/17_CODE_LOCAL_APP
-    status: confirmed_primary_implementation_authority
-    live_setup: pending
-    git_status: unusable_git_metadata
+    path: E:\00_CleaningProject\CleaningBusiness\02_LOCAL_APP\17_CODE_LOCAL_APP
+    authority: confirmed
   website:
-    path: 01_WEBSITE/06_CODE
-    status: provisional_evidence_backed_authority
-    git_status: usable_with_modified_gitignore
-    authority_confirmation: pending
+    path: E:\00_CleaningProject\CleaningBusiness\01_WEBSITE\06_CODE
+    authority: provisional
   marketing:
     path: 03_MARKETING
-    status: active_project_area_not_deeply_audited
   business_operations:
     path: 04_BUSINESS_OPERATIONS
-    status: active_project_area_not_deeply_audited
-blockers:
-  - local_app_live_setup_pending
-  - root_git_metadata_unusable
-  - local_app_git_metadata_unusable
-  - website_authority_conflict
-risks:
-  - stale_documentation_paths
-  - runtime_artifacts_in_project_tree
-  - website_gitignore_modified_unreviewed
-non_canonical_artifacts:
-  - .next
-  - out
-  - .25n-runtime
-  - .25m-runtime
-  - .env.local
-  - logs
-  - local_runtime_data
-  - local_export_data
-approvals:
-  git_repair: not_approved
-  source_edits: not_approved
-  runtime_cleanup: not_approved
-  deployment: not_approved
-  production_data_changes: not_approved

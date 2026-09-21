@@ -1,12 +1,19 @@
 # Brightshore Cleaning TODO
 
-## Current Open Tasks
+## Current Local App Development Task
+
+- [ ] Inspect the minimum relevant current files in `02_LOCAL_APP/17_CODE_LOCAL_APP` to determine the actual next development task.
+
+## Pending Local App Live-Use Gates
 
 - [ ] Confirm owner has completed Local App live setup.
 - [ ] Confirm actual supplier/contact/address/bank settings are entered in the Local App live profile.
 - [ ] Confirm first real customer document is reviewed before external use.
 - [ ] Confirm separate-device backup routine is in place.
 - [ ] Run a controlled live owner pilot after setup.
+
+## Other Current Open Tasks
+
 - [ ] Confirm Website authority between `01_WEBSITE/06_CODE` and `01_WEBSITE/cleaning-business-service-website-git`.
 - [ ] Perform read-only diff review of Website `.gitignore`.
 - [ ] Plan Git metadata recovery as a separate approved task.
@@ -14,18 +21,9 @@
 
 ## Later Tasks
 
-- [ ] Online payment integration, if required.
-- [ ] Automated collection messages, if required.
-- [ ] Review evidence attachment/storage decision.
-- [ ] AI automation decision.
-- [ ] Advanced analytics decision.
-- [ ] Website production launch gates: domain, contact values, legal/privacy wording, production intake, sitemap/canonical/indexing.
-
-## Explicitly Not Started
-
-- Git repair.
-- Source cleanup.
-- Runtime artifact deletion.
-- Production deployment.
-- External communication sending.
-- Production database changes.
+- [ ] Decide whether online payment integration is required.
+- [ ] Decide whether automated collection messages are required.
+- [ ] Decide how review evidence should be attached or stored.
+- [ ] Decide whether to use AI automation.
+- [ ] Decide whether advanced analytics is required.
+- [ ] Complete Website production launch gates for domain, contact values, legal/privacy wording, production intake, sitemap, canonical URLs, and indexing.

@@ -17,8 +17,8 @@
 - `02_LOCAL_APP/README.md`: Local App folder overview.
 - `02_LOCAL_APP/17_CODE_LOCAL_APP/`: primary Local App implementation authority.
 - `02_LOCAL_APP/17_CODE_LOCAL_APP/package.json`: Local App package and scripts.
-- `02_LOCAL_APP/17_CODE_LOCAL_APP/02_HANDOFF.md`: current Local App state.
-- `02_LOCAL_APP/17_CODE_LOCAL_APP/02_TODO.md`: current Local App tasks.
+- `02_LOCAL_APP/17_CODE_LOCAL_APP/02_HANDOFF.md`: Local App implementation evidence to inspect; stale completion or readiness claims must not override the human-confirmed active-development status.
+- `02_LOCAL_APP/17_CODE_LOCAL_APP/02_TODO.md`: Local App task evidence to inspect when determining the actual next development task.
 - `02_LOCAL_APP/17_CODE_LOCAL_APP/ACTIVE_CODE_RULES.md`: implementation constraints.
 - `02_LOCAL_APP/17_CODE_LOCAL_APP/BACKUP_AND_EXPORT_RULES.md`: live setup, backup, restore, and export rules.
 - `02_LOCAL_APP/17_CODE_LOCAL_APP/electron/`: Electron main/preload/database/recovery implementation.
