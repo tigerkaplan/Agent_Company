@@ -16,8 +16,20 @@ Canonical skills live here first. Future Claude, Codex, ChatGPT, or other provid
 
 Provider-specific adaptations may translate format or tool syntax, but they must not redefine the canonical purpose, constraints, or checks.
 
-## Minimal Phase 1 Scope
+## Shared Skill Catalogue
 
-Phase 1 defines only shared, provider-neutral skill packages under `shared/`.
+Phase 1 core skills:
+
+- `skill-creator`
+- `handoff`
+- `project-audit`
+- `research`
+- `review`
+
+Phase 3B knowledge skills:
+
+- `knowledge-ingest`: integrate sources into source cards and synthesized wiki pages.
+- `knowledge-query`: retrieve minimum relevant indexed knowledge without silently mutating it.
+- `knowledge-lint`: report knowledge quality, provenance, navigation, duplication, and gap findings.
 
 Do not create provider-specific copies unless a later phase requires an adaptation.
