@@ -1,0 +1,52 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets/
+
+# Runtime state and local data
+runtime/
+state/
+data/runtime/
+tmp/
+temp/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Caches
+.cache/
+.codex-cache/
+.claude-cache/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+node_modules/
+.next/
+dist/
+build/
+
+# Local editor and OS artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+
+# Local databases and generated archives
+*.sqlite
+*.sqlite3
+*.db
+*.zip
+*.tar
+*.tar.gz

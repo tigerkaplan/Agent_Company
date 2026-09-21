@@ -1,0 +1,23 @@
+version: 1
+workflow: research
+source: provider-neutral
+initial_agent: research
+canonical_agent: ../../agents/research/ROLE.md
+skills:
+  - ../../skills/shared/research/SKILL.md
+  - ../../skills/shared/review/SKILL.md
+steps:
+  - classify_task
+  - define_research_question
+  - collect_sources
+  - verify_sources
+  - compare_options_when_relevant
+  - synthesize_findings
+  - label_fact_inference_and_uncertainty
+  - route_important_or_high_risk_output_to_reviewer
+approval_policy: ../approvals/APPROVAL_POLICY.md
+review_outcomes:
+  - PASS
+  - FIX
+  - ESCALATE
+  - HUMAN_APPROVAL

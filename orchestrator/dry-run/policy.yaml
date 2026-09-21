@@ -1,0 +1,23 @@
+version: 1
+source: provider-neutral
+default_dry_run_for:
+  - project_onboarding
+  - project-audit
+allowed:
+  - inspect_files
+  - inspect_repository_status
+  - inspect_documentation
+  - inspect_tests_and_build_configuration
+  - report_findings
+  - identify_blockers
+  - identify_risks
+forbidden:
+  - edit_files
+  - delete_files
+  - move_files
+  - commit_changes
+  - push_changes
+  - deploy
+  - send_external_communications
+  - mutate_target_project
+exit_condition: explicit_human_approval_required_to_leave_dry_run

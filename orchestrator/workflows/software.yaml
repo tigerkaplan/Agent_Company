@@ -1,0 +1,22 @@
+version: 1
+workflow: software
+source: provider-neutral
+initial_agent: software
+canonical_agent: ../../agents/software/ROLE.md
+skills:
+  - ../../skills/shared/review/SKILL.md
+  - ../../skills/shared/handoff/SKILL.md
+steps:
+  - classify_task
+  - inspect_relevant_repository_context
+  - plan_minimal_safe_change
+  - implement_when_approved_by_scope
+  - run_relevant_deterministic_checks
+  - route_important_or_high_risk_output_to_reviewer
+  - prepare_handoff_when_needed
+approval_policy: ../approvals/APPROVAL_POLICY.md
+review_outcomes:
+  - PASS
+  - FIX
+  - ESCALATE
+  - HUMAN_APPROVAL

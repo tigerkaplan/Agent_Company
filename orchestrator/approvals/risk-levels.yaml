@@ -1,0 +1,16 @@
+version: 1
+source: provider-neutral
+levels:
+  low:
+    description: Inspection, planning, or reversible local work with no external effect.
+    default_action: proceed_with_normal_checks
+  medium:
+    description: Local modifications, generated artifacts, or user-facing drafts that remain reversible.
+    default_action: proceed_with_scope_control
+  high:
+    description: Important, user-facing, security-sensitive, cross-project, or difficult-to-reverse work.
+    default_action: route_to_reviewer
+  approval_required:
+    description: Risky or irreversible work that requires explicit human approval before execution.
+    default_action: stop_for_human_approval
+approval_policy: APPROVAL_POLICY.md

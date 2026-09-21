@@ -1,0 +1,43 @@
+version: 1
+source: provider-neutral
+canonical_agents:
+  project-manager:
+    role: ../../agents/project-manager/ROLE.md
+    guardrails: ../../agents/project-manager/GUARDRAILS.md
+    memory: ../../agents/project-manager/MEMORY.md
+    default_for:
+      - coordination
+      - status
+      - next_step
+      - handoff_coordination
+  software:
+    role: ../../agents/software/ROLE.md
+    guardrails: ../../agents/software/GUARDRAILS.md
+    memory: ../../agents/software/MEMORY.md
+    default_for:
+      - software
+      - project-audit
+      - implementation
+      - debugging
+      - tests
+      - build
+      - code_audit
+  research:
+    role: ../../agents/research/ROLE.md
+    guardrails: ../../agents/research/GUARDRAILS.md
+    memory: ../../agents/research/MEMORY.md
+    default_for:
+      - research
+      - source_collection
+      - verification
+      - comparison
+      - synthesis
+  reviewer:
+    role: ../../agents/reviewer/ROLE.md
+    guardrails: ../../agents/reviewer/GUARDRAILS.md
+    memory: ../../agents/reviewer/MEMORY.md
+    default_for:
+      - review
+      - high_risk_output
+      - important_output
+      - approval_gate

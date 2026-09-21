@@ -1,0 +1,43 @@
+version: 1
+workflow: project-audit
+source: provider-neutral
+mode: dry-run
+initial_agent: software
+canonical_agent: ../../agents/software/ROLE.md
+skills:
+  - ../../skills/shared/project-audit/SKILL.md
+  - ../../skills/shared/review/SKILL.md
+steps:
+  - classify_task
+  - confirm_target_project
+  - inspect_project_state
+  - inspect_repository_status
+  - inspect_documentation
+  - inspect_tests_and_build_configuration
+  - identify_blockers
+  - identify_risks
+  - recommend_next_actions_without_executing_them
+  - route_important_or_high_risk_findings_to_reviewer
+dry_run_policy: ../dry-run/policy.yaml
+approval_policy: ../approvals/APPROVAL_POLICY.md
+may_inspect:
+  - project_state
+  - repository_status
+  - documentation
+  - tests_build_configuration
+  - blockers
+  - risks
+must_not:
+  - mutate_target_project
+  - edit_files
+  - delete_files
+  - move_files
+  - commit_changes
+  - push_changes
+  - deploy
+  - execute_recommended_next_actions
+review_outcomes:
+  - PASS
+  - FIX
+  - ESCALATE
+  - HUMAN_APPROVAL

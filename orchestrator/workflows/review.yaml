@@ -1,0 +1,21 @@
+version: 1
+workflow: review
+source: provider-neutral
+initial_agent: reviewer
+canonical_agent: ../../agents/reviewer/ROLE.md
+skills:
+  - ../../skills/shared/review/SKILL.md
+steps:
+  - identify_acceptance_criteria
+  - inspect_executor_output
+  - inspect_evidence
+  - check_quality_safety_requirements_and_validation
+  - return_single_review_outcome
+allowed_outcomes:
+  - PASS
+  - FIX
+  - ESCALATE
+  - HUMAN_APPROVAL
+must_not:
+  - silently_repair_executor_output
+approval_policy: ../approvals/APPROVAL_POLICY.md
