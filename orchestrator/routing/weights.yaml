@@ -36,6 +36,18 @@ weights:
   knowledge_lint:
     claude: 70
     codex: 30
+  business_communications:
+    claude: 50
+    codex: 50
+  sales_coordination:
+    claude: 50
+    codex: 50
+  marketing_analysis:
+    claude: 50
+    codex: 50
+  operations_coordination:
+    claude: 50
+    codex: 50
   long_context_review:
     claude: 70
     codex: 30

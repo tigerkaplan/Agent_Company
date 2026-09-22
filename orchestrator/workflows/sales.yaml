@@ -1,0 +1,62 @@
+version: 1
+workflow: sales
+source: provider-neutral
+initial_agent: sales
+canonical_agent: ../../agents/sales/ROLE.md
+skills:
+  speed-to-lead: ../../skills/sales/speed-to-lead/SKILL.md
+  proposal-builder: ../../skills/sales/proposal-builder/SKILL.md
+  follow-up: ../../skills/sales/follow-up/SKILL.md
+connectors:
+  gmail: ../../integrations/gmail/CONTRACT.md
+  google-drive: ../../integrations/google-drive/CONTRACT.md
+  google-calendar: ../../integrations/google-calendar/CONTRACT.md
+  telegram: ../../integrations/telegram/CONTRACT.md
+  webhooks: ../../integrations/webhooks/CONTRACT.md
+approval_policy: ../approvals/APPROVAL_POLICY.md
+review_workflow: review.yaml
+supported_operations:
+  speed-to-lead:
+    skill: ../../skills/sales/speed-to-lead/SKILL.md
+    primary_connectors:
+      - ../../integrations/webhooks/CONTRACT.md
+      - ../../integrations/gmail/CONTRACT.md
+      - ../../integrations/telegram/CONTRACT.md
+  proposal-builder:
+    skill: ../../skills/sales/proposal-builder/SKILL.md
+    primary_connectors:
+      - ../../integrations/google-drive/CONTRACT.md
+      - ../../integrations/gmail/CONTRACT.md
+  follow-up:
+    skill: ../../skills/sales/follow-up/SKILL.md
+    primary_connectors:
+      - ../../integrations/gmail/CONTRACT.md
+      - ../../integrations/google-calendar/CONTRACT.md
+      - ../../integrations/telegram/CONTRACT.md
+steps:
+  - classify_task_as_sales
+  - select_speed_to_lead_proposal_builder_or_follow_up
+  - validate_inbound_source_before_using_event_data
+  - read_only_from_approved_connector_contracts_when_needed
+  - apply_selected_provider_neutral_skill
+  - create_qualification_summary_proposal_or_follow_up_draft
+  - mark_external_sending_calendar_changes_document_writes_and_commercial_commitments_as_approval_gated
+  - route_important_high_risk_user_facing_or_commercial_output_to_reviewer
+boundaries:
+  - connectors_provide_access_data_or_approved_actions_not_business_logic
+  - inbound_lead_or_event_receipt_is_not_permission_for_downstream_external_action
+  - draft_creation_is_not_sending
+  - no_autonomous_external_sending
+  - commercial_commitments_are_approval_aware
+  - calendar_commitments_are_external_actions_and_approval_aware
+  - no_runtime_listener_queue_scheduler_or_api_client
+review_triggers:
+  - sales_message_draft_for_external_send
+  - proposal_or_commercial_claim
+  - pricing_terms_deadline_or_delivery_commitment
+  - high_value_sensitive_or_reputational_lead
+review_outcomes:
+  - PASS
+  - FIX
+  - ESCALATE
+  - HUMAN_APPROVAL

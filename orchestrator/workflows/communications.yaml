@@ -1,0 +1,49 @@
+version: 1
+workflow: communications
+source: provider-neutral
+initial_agent: communications
+canonical_agent: ../../agents/communications/ROLE.md
+skills:
+  inbox-manager: ../../skills/communications/inbox-manager/SKILL.md
+  meeting-notes: ../../skills/communications/meeting-notes/SKILL.md
+connectors:
+  gmail: ../../integrations/gmail/CONTRACT.md
+  telegram: ../../integrations/telegram/CONTRACT.md
+  google-calendar: ../../integrations/google-calendar/CONTRACT.md
+approval_policy: ../approvals/APPROVAL_POLICY.md
+review_workflow: review.yaml
+supported_operations:
+  inbox-manager:
+    skill: ../../skills/communications/inbox-manager/SKILL.md
+    primary_connectors:
+      - ../../integrations/gmail/CONTRACT.md
+      - ../../integrations/telegram/CONTRACT.md
+  meeting-notes:
+    skill: ../../skills/communications/meeting-notes/SKILL.md
+    primary_connectors:
+      - ../../integrations/google-calendar/CONTRACT.md
+      - ../../integrations/gmail/CONTRACT.md
+steps:
+  - classify_task_as_communications
+  - select_inbox_manager_or_meeting_notes
+  - read_only_from_approved_connector_contracts_when_needed
+  - apply_selected_provider_neutral_skill
+  - create_summaries_classifications_actions_or_drafts
+  - mark_external_sending_calendar_changes_and_message_state_changes_as_approval_gated
+  - route_important_high_risk_or_user_facing_output_to_reviewer
+boundaries:
+  - connectors_provide_access_data_or_approved_actions_not_business_logic
+  - inbound_message_receipt_is_not_permission_for_downstream_external_action
+  - draft_creation_is_not_sending
+  - calendar_commitments_are_external_actions_and_approval_aware
+  - no_runtime_listener_queue_scheduler_or_api_client
+review_triggers:
+  - external_message_draft
+  - sensitive_or_reputational_content
+  - legal_financial_contractual_or_account_content
+  - calendar_commitment_or_change
+review_outcomes:
+  - PASS
+  - FIX
+  - ESCALATE
+  - HUMAN_APPROVAL

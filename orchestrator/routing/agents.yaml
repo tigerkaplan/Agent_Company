@@ -42,6 +42,52 @@ canonical_agents:
       - knowledge-query
       - knowledge-ingest
       - knowledge-lint
+  communications:
+    role: ../../agents/communications/ROLE.md
+    guardrails: ../../agents/communications/GUARDRAILS.md
+    memory: ../../agents/communications/MEMORY.md
+    default_for:
+      - communications
+      - inbox-manager
+      - meeting-notes
+      - message_triage
+      - communication_classification
+      - response_drafting
+  sales:
+    role: ../../agents/sales/ROLE.md
+    guardrails: ../../agents/sales/GUARDRAILS.md
+    memory: ../../agents/sales/MEMORY.md
+    default_for:
+      - sales
+      - speed-to-lead
+      - proposal-builder
+      - follow-up
+      - lead_handling
+      - sales_qualification
+      - sales_drafting
+  marketing:
+    role: ../../agents/marketing/ROLE.md
+    guardrails: ../../agents/marketing/GUARDRAILS.md
+    memory: ../../agents/marketing/MEMORY.md
+    default_for:
+      - marketing
+      - marketing-monday
+      - reputation-review
+      - competitor-analysis
+      - campaign_analysis
+      - audience_signal_analysis
+      - marketing_reporting
+  operations:
+    role: ../../agents/operations/ROLE.md
+    guardrails: ../../agents/operations/GUARDRAILS.md
+    memory: ../../agents/operations/MEMORY.md
+    default_for:
+      - operations
+      - report-builder
+      - sop-builder
+      - operational_reporting
+      - recurring_checks
+      - sop_drafting
   reviewer:
     role: ../../agents/reviewer/ROLE.md
     guardrails: ../../agents/reviewer/GUARDRAILS.md

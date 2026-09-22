@@ -27,6 +27,10 @@ capability_resolution:
     software: software_implementation
     research: research_synthesis
     knowledge: knowledge_query
+    communications: business_communications
+    sales: sales_coordination
+    marketing: marketing_analysis
+    operations: operations_coordination
     coordination: planning
     review: independent_review
   task_operation_capabilities:

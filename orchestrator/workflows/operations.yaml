@@ -1,0 +1,54 @@
+version: 1
+workflow: operations
+source: provider-neutral
+initial_agent: operations
+canonical_agent: ../../agents/operations/ROLE.md
+skills:
+  report-builder: ../../skills/operations/report-builder/SKILL.md
+  sop-builder: ../../skills/operations/sop-builder/SKILL.md
+connectors:
+  google-drive: ../../integrations/google-drive/CONTRACT.md
+  google-calendar: ../../integrations/google-calendar/CONTRACT.md
+  github: ../../integrations/github/CONTRACT.md
+  webhooks: ../../integrations/webhooks/CONTRACT.md
+approval_policy: ../approvals/APPROVAL_POLICY.md
+review_workflow: review.yaml
+supported_operations:
+  report-builder:
+    skill: ../../skills/operations/report-builder/SKILL.md
+    primary_connectors:
+      - ../../integrations/google-drive/CONTRACT.md
+      - ../../integrations/google-calendar/CONTRACT.md
+      - ../../integrations/github/CONTRACT.md
+      - ../../integrations/webhooks/CONTRACT.md
+  sop-builder:
+    skill: ../../skills/operations/sop-builder/SKILL.md
+    primary_connectors:
+      - ../../integrations/google-drive/CONTRACT.md
+      - ../../integrations/google-calendar/CONTRACT.md
+      - ../../integrations/github/CONTRACT.md
+steps:
+  - classify_task_as_operations
+  - select_report_builder_or_sop_builder
+  - read_only_from_approved_connector_contracts_when_needed
+  - apply_selected_provider_neutral_skill
+  - create_internal_report_or_sop_draft
+  - mark_document_writes_calendar_changes_github_writes_destructive_actions_and_external_execution_as_approval_gated
+  - route_important_high_risk_or_externally_consequential_output_to_reviewer
+boundaries:
+  - connectors_provide_access_data_or_approved_actions_not_business_logic
+  - inbound_event_receipt_is_not_permission_for_downstream_external_action
+  - github_writes_remain_separate_from_read_only_repository_access
+  - calendar_commitments_are_external_actions_and_approval_aware
+  - no_destructive_or_external_execution_without_approval
+  - no_runtime_listener_queue_scheduler_or_api_client
+review_triggers:
+  - operational_report_used_for_external_commitment
+  - sop_with_destructive_external_financial_account_safety_or_legal_steps
+  - github_write_or_calendar_change
+  - high_risk_internal_report
+review_outcomes:
+  - PASS
+  - FIX
+  - ESCALATE
+  - HUMAN_APPROVAL

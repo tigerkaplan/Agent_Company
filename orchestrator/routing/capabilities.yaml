@@ -21,6 +21,14 @@ capabilities:
     description: Integrate source material into canonical long-term knowledge while preserving provenance and raw sources.
   knowledge_lint:
     description: Inspect canonical long-term knowledge for consistency, provenance, navigation, duplication, and gaps.
+  business_communications:
+    description: Classify, summarize, and prepare drafts for business communications while preserving domain ownership and approval boundaries.
+  sales_coordination:
+    description: Qualify leads and coordinate opportunity-specific proposals, responses, and commercial follow-up without making unapproved commitments.
+  marketing_analysis:
+    description: Analyze aggregate audience, customer, campaign, reputation, competitor, and market signals while distinguishing evidence from inference.
+  operations_coordination:
+    description: Coordinate processes, SOPs, recurring checks, and internal operational reporting without absorbing domain-specific decisions.
   long_context_review:
     description: Review a large but bounded evidence set while preserving traceability and uncertainty.
   independent_review:

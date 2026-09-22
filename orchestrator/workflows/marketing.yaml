@@ -1,0 +1,55 @@
+version: 1
+workflow: marketing
+source: provider-neutral
+initial_agent: marketing
+canonical_agent: ../../agents/marketing/ROLE.md
+skills:
+  marketing-monday: ../../skills/marketing/marketing-monday/SKILL.md
+  reputation-review: ../../skills/marketing/reputation-review/SKILL.md
+  competitor-analysis: ../../skills/marketing/competitor-analysis/SKILL.md
+connectors:
+  google-drive: ../../integrations/google-drive/CONTRACT.md
+  webhooks: ../../integrations/webhooks/CONTRACT.md
+future_sources:
+  - external_read_only_evidence_sources_when_later_implemented
+approval_policy: ../approvals/APPROVAL_POLICY.md
+review_workflow: review.yaml
+supported_operations:
+  marketing-monday:
+    skill: ../../skills/marketing/marketing-monday/SKILL.md
+    primary_connectors:
+      - ../../integrations/google-drive/CONTRACT.md
+      - ../../integrations/webhooks/CONTRACT.md
+  reputation-review:
+    skill: ../../skills/marketing/reputation-review/SKILL.md
+    primary_connectors:
+      - ../../integrations/google-drive/CONTRACT.md
+      - ../../integrations/webhooks/CONTRACT.md
+  competitor-analysis:
+    skill: ../../skills/marketing/competitor-analysis/SKILL.md
+    primary_connectors:
+      - ../../integrations/google-drive/CONTRACT.md
+steps:
+  - classify_task_as_marketing
+  - select_marketing_monday_reputation_review_or_competitor_analysis
+  - read_only_from_approved_connector_contracts_when_needed
+  - apply_selected_provider_neutral_skill
+  - create_internal_brief_theme_analysis_or_competitor_comparison
+  - mark_publication_external_claims_document_writes_and_campaign_changes_as_approval_gated
+  - route_important_public_facing_reputational_or_high_risk_output_to_reviewer
+boundaries:
+  - connectors_provide_access_data_or_approved_actions_not_business_logic
+  - inbound_signal_or_event_receipt_is_not_permission_for_downstream_external_action
+  - publication_is_out_of_scope_and_approval_gated
+  - public_claims_and_response_drafts_remain_unapproved_until_reviewed_and_approved
+  - no_runtime_listener_queue_scheduler_or_api_client
+review_triggers:
+  - public_or_campaign_ready_recommendation
+  - reputation_response_draft
+  - competitor_claim_for_external_use
+  - budget_legal_reputational_or_substantiation_risk
+review_outcomes:
+  - PASS
+  - FIX
+  - ESCALATE
+  - HUMAN_APPROVAL

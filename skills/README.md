@@ -32,4 +32,11 @@ Phase 3B knowledge skills:
 - `knowledge-query`: retrieve minimum relevant indexed knowledge without silently mutating it.
 - `knowledge-lint`: report knowledge quality, provenance, navigation, duplication, and gap findings.
 
+Phase 5B business skills:
+
+- Communications: `inbox-manager`, `meeting-notes`
+- Sales: `speed-to-lead`, `proposal-builder`, `follow-up`
+- Marketing: `marketing-monday`, `reputation-review`, `competitor-analysis`
+- Operations: `report-builder`, `sop-builder`
+
 Do not create provider-specific copies unless a later phase requires an adaptation.

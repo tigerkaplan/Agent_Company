@@ -21,6 +21,10 @@ If a provider-specific agent conflicts with these files, the canonical definitio
 - Research Agent
 - Reviewer
 - Knowledge Manager
+- Sales Agent
+- Marketing Agent
+- Operations Agent
+- Communications Agent
 
 ## File Roles
 
