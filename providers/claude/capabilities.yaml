@@ -1,0 +1,20 @@
+version: 1
+provider_id: claude
+canonical_model: ../../orchestrator/routing/capabilities.yaml
+eligibility:
+  planning: true
+  architecture: true
+  software_implementation: true
+  repository_inspection: true
+  debugging: true
+  testing: true
+  research_synthesis: true
+  knowledge_query: true
+  knowledge_ingest: true
+  knowledge_lint: true
+  long_context_review: true
+  independent_review: true
+interpretation:
+  eligible_means: may_be_selected_when_available
+  quality_claim: none
+  preferences_source: ../../orchestrator/routing/weights.yaml

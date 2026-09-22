@@ -1,0 +1,49 @@
+version: 1
+source: configurable-routing-preferences
+scale:
+  minimum: 0
+  maximum: 100
+  neutral: 50
+preference_only: true
+weights:
+  planning:
+    claude: 70
+    codex: 30
+  architecture:
+    claude: 70
+    codex: 30
+  software_implementation:
+    claude: 30
+    codex: 70
+  repository_inspection:
+    claude: 30
+    codex: 70
+  debugging:
+    claude: 30
+    codex: 70
+  testing:
+    claude: 50
+    codex: 50
+  research_synthesis:
+    claude: 70
+    codex: 30
+  knowledge_query:
+    claude: 70
+    codex: 30
+  knowledge_ingest:
+    claude: 70
+    codex: 30
+  knowledge_lint:
+    claude: 70
+    codex: 30
+  long_context_review:
+    claude: 70
+    codex: 30
+  independent_review:
+    claude: 50
+    codex: 50
+constraints:
+  - weights_are_preferences_not_capability_or_quality_facts
+  - eligibility_and_observed_availability_are_required
+  - canonical_governance_risk_and_approval_rules_always_win
+  - independent_review_provider_diversity_is_applied_by_escalation_policy

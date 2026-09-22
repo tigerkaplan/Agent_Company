@@ -1,6 +1,6 @@
 # Routing
 
-Routing maps task classes to canonical agents and shared skills. It does not choose a model provider.
+Routing first maps task classes to canonical agents, shared skills, and workflows. It then uses provider-neutral capability, eligibility, preference, fallback, and escalation configuration to specify a provider route.
 
 ## Base Routes
 
@@ -10,6 +10,7 @@ Routing maps task classes to canonical agents and shared skills. It does not cho
 | Project audit task | Software Agent | `../../agents/software/ROLE.md` |
 | Software task | Software Agent | `../../agents/software/ROLE.md` |
 | Research task | Research Agent | `../../agents/research/ROLE.md` |
+| Knowledge task | Knowledge Manager Agent | `../../agents/knowledge-manager/ROLE.md` |
 | Coordination or status task | Project Manager Agent | `../../agents/project-manager/ROLE.md` |
 | Important or high-risk output | Reviewer Agent | `../../agents/reviewer/ROLE.md` |
 
@@ -23,6 +24,7 @@ Common pairings:
 - Project audit task: `project-audit`, then `review` when required.
 - Software implementation task: inspect relevant context, implement, then `review` when required.
 - Research task: `research`, then `review` when required.
+- Knowledge task: `knowledge-query`, `knowledge-ingest`, or `knowledge-lint` as selected by the requested operation.
 - Coordination task: `handoff` when durable project state needs updating.
 - Review task: `review`.
 
@@ -32,9 +34,17 @@ Common pairings:
 - `software`: `../workflows/software.yaml`.
 - `project-audit`: `../workflows/project-audit.yaml`.
 - `research`: `../workflows/research.yaml`.
+- `knowledge`: `../workflows/knowledge.yaml`.
 - `review`: `../workflows/review.yaml`.
 - `coordination` and `status`: Project Manager handling as defined in `../../agents/project-manager/ROLE.md`.
 
-## Current Scope Limits
+## Provider Capability Selection
 
-Provider routing and provider weighting are not implemented in the current scope.
+- Provider routing configuration lives in `providers.yaml`; eligibility, configurable preferences, fallback, and escalation remain separate inputs.
+- Architecture requests remain `coordination` tasks, with `architecture` selected explicitly as the provider capability when appropriate.
+- `long_context_review` is selected explicitly inside a `review` task when the review requires a large bounded evidence set.
+- Knowledge workflow operation selection resolves to `knowledge_query`, `knowledge_ingest`, or `knowledge_lint`.
+
+## Current Configuration Scope
+
+Provider-native Claude and Codex adaptations and routing configuration exist. Decisions are currently specification-driven: runtime/API execution and live provider availability checks are not implemented. Review independence and human approval remain governed by `fallback.yaml`, `escalation.yaml`, and `../approvals/APPROVAL_POLICY.md`.

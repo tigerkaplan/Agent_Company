@@ -1,0 +1,30 @@
+version: 1
+source: provider-neutral-escalation-policy
+canonical_reviewer: ../../agents/reviewer/ROLE.md
+review_workflow: ../workflows/review.yaml
+risk_levels: ../approvals/risk-levels.yaml
+approval_policy: ../approvals/APPROVAL_POLICY.md
+triggers:
+  high_risk:
+    action: route_to_independent_review
+    provider_rule: prefer_different_provider_from_executor_when_available
+  low_confidence:
+    condition: unresolved_uncertainty_or_insufficient_validation_evidence
+    action: route_to_independent_review
+  provider_disagreement:
+    action: escalate_with_conflicting_evidence
+  no_provider_available:
+    action: escalate
+  no_independent_provider_for_high_risk_review:
+    action: escalate
+review_constraints:
+  - reviewer_role_must_be_separate_from_executor
+  - reviewer_must_check_actual_output_and_evidence
+  - provider_diversity_does_not_replace_reviewer_role_independence
+  - review_does_not_replace_required_human_approval
+allowed_review_outcomes:
+  - PASS
+  - FIX
+  - ESCALATE
+  - HUMAN_APPROVAL
+

@@ -1,0 +1,31 @@
+version: 1
+source: canonical-provider-neutral-capability-model
+capabilities:
+  planning:
+    description: Decompose goals, identify dependencies, and select scoped next actions.
+  architecture:
+    description: Design or evaluate system structure, boundaries, interfaces, and tradeoffs.
+  software_implementation:
+    description: Implement scoped software, configuration, documentation, or test changes.
+  repository_inspection:
+    description: Inspect repository structure, status, documentation, configuration, and evidence.
+  debugging:
+    description: Diagnose failures and identify evidence-backed corrective actions.
+  testing:
+    description: Select, run, and interpret deterministic tests, builds, linters, and checks.
+  research_synthesis:
+    description: Verify sources and synthesize evidence, options, uncertainty, and conflicts.
+  knowledge_query:
+    description: Retrieve minimum relevant indexed long-term knowledge while preserving provenance and uncertainty.
+  knowledge_ingest:
+    description: Integrate source material into canonical long-term knowledge while preserving provenance and raw sources.
+  knowledge_lint:
+    description: Inspect canonical long-term knowledge for consistency, provenance, navigation, duplication, and gaps.
+  long_context_review:
+    description: Review a large but bounded evidence set while preserving traceability and uncertainty.
+  independent_review:
+    description: Validate executor output independently against requirements, risks, and evidence.
+constraints:
+  - capability_ids_are_provider_neutral
+  - capability_definitions_do_not_rank_providers
+  - provider_preferences_belong_in_weights_yaml

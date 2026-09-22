@@ -1,0 +1,39 @@
+version: 1
+source: provider-neutral-routing-configuration
+provider_registry:
+  claude:
+    provider: ../../providers/claude/provider.yaml
+    capabilities: ../../providers/claude/capabilities.yaml
+  codex:
+    provider: ../../providers/codex/provider.yaml
+    capabilities: ../../providers/codex/capabilities.yaml
+canonical_routing_sources:
+  capabilities: capabilities.yaml
+  weights: weights.yaml
+  fallback: fallback.yaml
+  escalation: escalation.yaml
+selection:
+  strategy: highest_weight_among_eligible_available
+  availability_source: runtime_input_required
+  tie_breaker: configured_provider_order
+  provider_order:
+    - claude
+    - codex
+capability_resolution:
+  explicit_capability_overrides_task_default: true
+  task_class_defaults:
+    project-continuation: planning
+    project-audit: repository_inspection
+    software: software_implementation
+    research: research_synthesis
+    knowledge: knowledge_query
+    coordination: planning
+    review: independent_review
+  task_operation_capabilities:
+    knowledge-query: knowledge_query
+    knowledge-ingest: knowledge_ingest
+    knowledge-lint: knowledge_lint
+constraints:
+  - select_canonical_agent_skill_and_workflow_before_provider
+  - provider_selection_must_not_change_canonical_state
+  - provider_availability_must_be_observed_not_invented

@@ -16,10 +16,13 @@ The dispatcher classifies an incoming task, selects the initial canonical agent 
 3. Check approval needs using `../approvals/APPROVAL_POLICY.md`.
 4. Apply dry-run policy using `../dry-run/policy.yaml` when the task is onboarding, audit, or inspection.
 5. Select the matching minimal workflow from `../workflows/`.
-6. Route important or high-risk output to Reviewer before acceptance.
+6. Resolve the provider capability and configured preference using `../routing/providers.yaml`.
+7. Route important or high-risk output to Reviewer before acceptance.
 
-## Current Scope Limits
+## Current Configuration Scope
 
-- Do not use provider weighting.
+- Provider routing configuration and configurable weights exist for Claude and Codex.
+- Provider-native Claude and Codex adaptations exist under `../../.claude/` and `../../.agents/`.
+- Routing decisions are specification-driven; runtime/API execution and live availability checks are not implemented.
+- Provider availability must be supplied as observed input rather than assumed.
 - Do not start queues, workers, schedulers, integrations, deployments, or external messaging systems.
-- Do not create provider-specific agents or skills.

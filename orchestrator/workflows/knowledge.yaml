@@ -1,0 +1,26 @@
+version: 1
+workflow: knowledge
+source: provider-neutral
+initial_agent: knowledge-manager
+canonical_agent: ../../agents/knowledge-manager/ROLE.md
+supported_operations:
+  knowledge-query:
+    skill: ../../skills/shared/knowledge-query/SKILL.md
+    capability: knowledge_query
+  knowledge-ingest:
+    skill: ../../skills/shared/knowledge-ingest/SKILL.md
+    capability: knowledge_ingest
+  knowledge-lint:
+    skill: ../../skills/shared/knowledge-lint/SKILL.md
+    capability: knowledge_lint
+steps:
+  - identify_requested_knowledge_operation
+  - select_matching_canonical_skill_and_capability
+  - read_canonical_knowledge_policy
+  - execute_with_minimum_relevant_context
+  - preserve_project_state_and_long_term_knowledge_boundary
+  - route_important_or_high_risk_output_to_reviewer
+approval_policy: ../approvals/APPROVAL_POLICY.md
+review_policy:
+  fallback: ../routing/fallback.yaml
+  escalation: ../routing/escalation.yaml

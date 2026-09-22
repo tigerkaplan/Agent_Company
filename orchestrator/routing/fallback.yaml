@@ -1,0 +1,20 @@
+version: 1
+source: provider-neutral-fallback-policy
+when_preferred_provider_unavailable:
+  - exclude_providers_observed_as_unavailable
+  - select_next_highest_weight_eligible_available_provider
+  - preserve_selected_canonical_agent_skill_workflow_and_context
+  - record_fallback_and_reason_in_execution_output
+when_no_eligible_provider_available:
+  action: escalate
+  reason: no_provider_available
+independent_review:
+  preferred_provider_rule: different_from_executor_when_available
+  if_different_provider_unavailable:
+    lower_risk_action: use_separate_reviewer_role_and_disclose_same_provider
+    high_risk_action: escalate
+constraints:
+  - fallback_must_not_bypass_human_approval
+  - fallback_must_not_reclassify_task_or_change_canonical_state
+  - availability_must_not_be_assumed
+

@@ -14,6 +14,14 @@ Canonical agent definitions live here first. When provider-specific agent files 
 
 If a provider-specific agent conflicts with these files, the canonical definition wins and the conflict should be reported.
 
+## Canonical Roles
+
+- Project Manager
+- Software Agent
+- Research Agent
+- Reviewer
+- Knowledge Manager
+
 ## File Roles
 
 Each agent directory contains:

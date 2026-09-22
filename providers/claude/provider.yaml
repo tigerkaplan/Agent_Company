@@ -1,0 +1,19 @@
+version: 1
+provider_id: claude
+provider_type: execution_provider
+integration_status: configuration_only
+canonical_governance:
+  constitution: ../../CONSTITUTION.md
+  operating_instructions: ../../AGENTS.md
+canonical_definitions:
+  agents: ../../agents
+  skills: ../../skills
+  workflows: ../../orchestrator/workflows
+  project_state: ../../shared/projects
+  knowledge: ../../shared/knowledge
+capability_manifest: capabilities.yaml
+availability:
+  source: runtime_input_required
+  default: unknown
+source_of_truth: false
+

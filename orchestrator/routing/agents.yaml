@@ -33,6 +33,15 @@ canonical_agents:
       - verification
       - comparison
       - synthesis
+  knowledge-manager:
+    role: ../../agents/knowledge-manager/ROLE.md
+    guardrails: ../../agents/knowledge-manager/GUARDRAILS.md
+    memory: ../../agents/knowledge-manager/MEMORY.md
+    default_for:
+      - knowledge
+      - knowledge-query
+      - knowledge-ingest
+      - knowledge-lint
   reviewer:
     role: ../../agents/reviewer/ROLE.md
     guardrails: ../../agents/reviewer/GUARDRAILS.md
