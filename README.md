@@ -19,44 +19,37 @@ At a high level, the system separates these concerns:
 
 Canonical definitions must remain separate from generated provider files. Claude, Codex, ChatGPT, and future engines should all defer to the same company constitution and operating instructions.
 
-## Phase 1 Scope
+## Current State
 
-Phase 1 initializes the company core with minimal provider-neutral foundations:
+The committed repository currently ends at the Phase 5 business-agent and connector checkpoint. The local-first Phase 6 runtime is implemented and verified in the working tree, with 282/282 tests passing, 71 Python files compiled, and 13 schemas checked. It is pending checkpoint commit, not verification. Phase 6M remains the highest explicit Phase 6 marker, and no Phase 6N is defined. `PROJECT_STATE.md` is the canonical current-status record and `ROADMAP.md` is the canonical capability roadmap.
 
-- `INTENT.md` defines the problem, desired outcome, stakeholders, scope, and open questions.
+The repository now contains:
+
+- `INTENT.md` defines the problem, desired outcome, stakeholders, scope, and current direction.
 - `CONSTITUTION.md` defines non-negotiable company rules.
 - `AGENTS.md` defines provider-independent operating instructions.
-- `CLAUDE.md` gives Claude a minimal bootstrap that defers to canonical rules.
-- `agents/` defines minimal canonical agent roles, guardrails, and memory files.
-- `skills/` defines minimal shared reusable skills.
-- `orchestrator/` defines minimal task classification, routing, approvals, workflows, and dry-run support.
+- `CLAUDE.md` gives Claude a provider bootstrap that defers to canonical rules.
+- `agents/` and `skills/` define canonical roles and reusable methods.
+- `orchestrator/` defines classification, routing, approvals, workflows, and dry-run policy.
+- `runtime/` contains local job, worker, provider, review, approval, controlled-write, Git, remote-Git, and scheduler coordination.
+- `schemas/` contains the persisted runtime contracts.
+- `shared/projects/` and `shared/knowledge/` keep operational state separate from durable knowledge.
 - `.env.example` lists placeholder environment variable names.
 - `.gitignore` protects secrets, runtime state, logs, caches, and local artifacts.
 
-Phase 1 does not build provider routing, provider weighting, a runtime workflow engine, scheduling layer, connectors, integrations, queue, workers, LLM Wiki, or deployment system.
+The current runtime does not implement merge, release, deployment, Telegram command handling, general connector execution, infrastructure automation, or a dedicated observability platform.
 
-## Future Phases
+## Operating Boundary
 
-Later phases may add:
-
-- LLM Wiki support.
-- INGEST, QUERY, and LINT commands.
-- Obsidian integration.
-- Hermes integration.
-- Scheduling.
-- Telegram operations.
-- VPS deployment.
-- Claude, Codex, and ChatGPT routing.
-- Business operations skills and connectors.
-- Project onboarding that does not require rewriting existing projects.
+Provider execution is explicit and approval boundaries remain authoritative. The local scheduler is sequential and file-backed; it does not install an operating-system service or create approval authority. Connector contracts are not connector implementations.
 
 ## Quick Start
 
-Placeholder for Phase 2.
-
-For now, read these files in order:
+Read these files in order:
 
 1. `INTENT.md`
 2. `CONSTITUTION.md`
 3. `AGENTS.md`
-4. Any provider-specific bootstrap, such as `CLAUDE.md`
+4. `PROJECT_STATE.md`
+5. `ROADMAP.md`
+6. Any provider-specific bootstrap, such as `CLAUDE.md`

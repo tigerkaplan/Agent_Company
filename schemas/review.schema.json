@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-company.local/schemas/review.schema.json",
+  "title": "Agent Company Review Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "review_id",
+    "job_id",
+    "execution_id",
+    "reviewer",
+    "review_provider",
+    "same_provider_review",
+    "model_review_performed",
+    "decision",
+    "reason",
+    "evidence_refs",
+    "deterministic_checks",
+    "created_at"
+  ],
+  "properties": {
+    "review_id": {"type": "string", "minLength": 1},
+    "job_id": {"type": "string", "minLength": 1},
+    "execution_id": {"type": "string", "minLength": 1},
+    "reviewer": {"type": "string", "minLength": 1},
+    "review_provider": {
+      "oneOf": [
+        {"type": "string", "enum": ["claude", "codex"]},
+        {"type": "null"}
+      ]
+    },
+    "same_provider_review": {"type": "boolean"},
+    "model_review_performed": {"type": "boolean"},
+    "decision": {
+      "type": "string",
+      "enum": ["PASS", "FAIL", "RETRY", "NEEDS_HUMAN"]
+    },
+    "reason": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "evidence_refs": {
+      "type": "array",
+      "items": {"$ref": "job.schema.json#/$defs/ref"}
+    },
+    "deterministic_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "status", "reason", "evidence_refs"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "status": {"type": "string", "enum": ["PASS", "FAIL"]},
+          "reason": {"type": "string", "minLength": 1},
+          "evidence_refs": {
+            "type": "array",
+            "items": {"$ref": "job.schema.json#/$defs/ref"}
+          }
+        }
+      }
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "preferred_provider": {
+      "oneOf": [
+        {"type": "string", "enum": ["claude", "codex"]},
+        {"type": "null"}
+      ]
+    },
+    "fallback_used": {"type": "boolean"},
+    "fallback_reason": {"type": ["string", "null"]},
+    "error_category": {"type": ["string", "null"]}
+  }
+}

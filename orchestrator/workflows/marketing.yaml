@@ -50,6 +50,6 @@ review_triggers:
   - budget_legal_reputational_or_substantiation_risk
 review_outcomes:
   - PASS
-  - FIX
-  - ESCALATE
-  - HUMAN_APPROVAL
+  - FAIL
+  - RETRY
+  - NEEDS_HUMAN

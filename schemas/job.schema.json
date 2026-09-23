@@ -1,0 +1,440 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-company.local/schemas/job.schema.json",
+  "title": "Agent Company Canonical Job",
+  "description": "Versioned schema for one runtime executable unit of work.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "job_id",
+    "created_at",
+    "task",
+    "task_class",
+    "agent",
+    "workflow",
+    "capability",
+    "risk_level",
+    "approval_status",
+    "execution_mode",
+    "execution_scope",
+    "review_required",
+    "status",
+    "attempt",
+    "max_attempts",
+    "input_refs",
+    "output_refs",
+    "created_by",
+    "last_updated_at"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "risk_level"
+        ],
+        "properties": {
+          "risk_level": {
+            "const": "approval_required"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "approval_status": {
+            "enum": [
+              "required",
+              "requested",
+              "approved",
+              "denied"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "approval_status"
+        ],
+        "properties": {
+          "approval_status": {
+            "const": "approved"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "approval"
+        ]
+      }
+    },
+    {
+      "if": {
+        "required": ["execution_mode"],
+        "properties": {"execution_mode": {"const": "CONTROLLED_WRITE"}}
+      },
+      "then": {
+        "properties": {
+          "execution_scope": {"$ref": "#/$defs/execution_scope"},
+          "approval_status": {
+            "enum": ["required", "requested", "approved", "denied"]
+          },
+          "review_required": {"const": true}
+        }
+      },
+      "else": {
+        "properties": {"execution_scope": {"type": "null"}}
+      }
+    }
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "job_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "task": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_class": {
+      "type": "string",
+      "enum": [
+        "project-continuation",
+        "project-audit",
+        "software",
+        "research",
+        "knowledge",
+        "communications",
+        "sales",
+        "marketing",
+        "operations",
+        "coordination",
+        "review"
+      ]
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agent": {
+      "type": "string",
+      "enum": [
+        "project-manager",
+        "software",
+        "research",
+        "knowledge-manager",
+        "communications",
+        "sales",
+        "marketing",
+        "operations",
+        "reviewer"
+      ]
+    },
+    "skill": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workflow": {
+      "type": "string",
+      "minLength": 1
+    },
+    "capability": {
+      "type": "string",
+      "enum": [
+        "planning",
+        "architecture",
+        "software_implementation",
+        "repository_inspection",
+        "debugging",
+        "testing",
+        "research_synthesis",
+        "knowledge_query",
+        "knowledge_ingest",
+        "knowledge_lint",
+        "business_communications",
+        "sales_coordination",
+        "marketing_analysis",
+        "operations_coordination",
+        "long_context_review",
+        "independent_review"
+      ]
+    },
+    "provider": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "claude",
+            "codex"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "May remain null or absent until execution time."
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "approval_required"
+      ]
+    },
+    "approval_status": {
+      "type": "string",
+      "enum": [
+        "not_required",
+        "required",
+        "requested",
+        "approved",
+        "denied"
+      ],
+      "description": "Explicit approval state. Approval must never be inferred from inbound messages or events."
+    },
+    "execution_mode": {
+      "type": "string",
+      "enum": ["READ_ONLY", "CONTROLLED_WRITE"]
+    },
+    "dry_run": {
+      "type": "boolean",
+      "default": false
+    },
+    "execution_scope": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/execution_scope"}
+      ]
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "approval_id",
+        "requested_action",
+        "status",
+        "recorded_at",
+        "recorded_by",
+        "actor_type",
+        "authorization_fingerprint"
+      ],
+      "properties": {
+        "approval_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "requested_action": {
+          "type": "string",
+          "enum": ["EXECUTE_JOB", "COMPLETE_REVIEWED_JOB"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["APPROVED", "REJECTED"]
+        },
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "recorded_by": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actor_type": {
+          "const": "local_operator"
+        },
+        "authorization_fingerprint": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "description": "Compact reference to one resolved scoped local-operator approval."
+    },
+    "review_required": {
+      "type": "boolean"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "created",
+        "queued",
+        "running",
+        "waiting_approval",
+        "reviewing",
+        "completed",
+        "failed",
+        "cancelled"
+      ]
+    },
+    "attempt": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "max_attempts": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "input_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "output_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "parent_job_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_by": {
+      "type": "string",
+      "minLength": 1
+    },
+    "last_updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scheduled_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "next_run_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "schedule_reason": {
+      "type": "string",
+      "enum": ["scheduled", "rescheduled", "retry_backoff"]
+    },
+    "claimed_by": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "claimed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "lease_until": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "heartbeat_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "claim_released_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "retryable": {
+          "type": "boolean"
+        },
+        "ref": {
+          "$ref": "#/$defs/ref"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "execution_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "project_root",
+        "allowed_paths",
+        "forbidden_paths",
+        "write_mode",
+        "max_changed_files",
+        "max_artifact_bytes",
+        "allow_tests",
+        "allow_git_reads",
+        "allow_protected_paths"
+      ],
+      "properties": {
+        "project_root": {"type": "string", "minLength": 3},
+        "allowed_paths": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "forbidden_paths": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "write_mode": {
+          "type": "string",
+          "enum": ["CREATE_OR_MODIFY", "CREATE_MODIFY_DELETE"]
+        },
+        "max_changed_files": {"type": "integer", "minimum": 1},
+        "max_artifact_bytes": {"type": "integer", "minimum": 1024},
+        "allow_tests": {"type": "boolean"},
+        "allow_git_reads": {"type": "boolean"},
+        "allow_protected_paths": {"type": "boolean"},
+        "dry_run": {"type": "boolean", "default": false}
+      }
+    },
+    "ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_type",
+        "ref"
+      ],
+      "properties": {
+        "ref_type": {
+          "type": "string",
+          "enum": [
+            "file",
+            "project_state",
+            "connector_contract",
+            "message",
+            "artifact",
+            "log",
+            "review",
+            "approval",
+            "provider_result",
+            "knowledge_source",
+            "other"
+          ]
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

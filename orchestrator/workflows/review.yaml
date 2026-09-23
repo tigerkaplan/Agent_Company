@@ -13,9 +13,9 @@ steps:
   - return_single_review_outcome
 allowed_outcomes:
   - PASS
-  - FIX
-  - ESCALATE
-  - HUMAN_APPROVAL
+  - FAIL
+  - RETRY
+  - NEEDS_HUMAN
 must_not:
   - silently_repair_executor_output
 approval_policy: ../approvals/APPROVAL_POLICY.md

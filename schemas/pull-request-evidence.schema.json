@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-company.local/schemas/pull-request-evidence.schema.json",
+  "title": "Agent Company Pull Request Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "pull_request_evidence_id", "pull_request_plan_id",
+    "push_evidence_ref", "repository_slug", "head_branch", "base_branch",
+    "head_commit", "pull_request_number", "pull_request_url", "title",
+    "body_fingerprint", "approval_ref", "created_at", "already_present",
+    "evidence_fingerprint"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "pull_request_evidence_id": {"type": "string", "minLength": 1},
+    "pull_request_plan_id": {"type": "string", "minLength": 1},
+    "push_evidence_ref": {"$ref": "job.schema.json#/$defs/ref"},
+    "repository_slug": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+    "head_branch": {"type": "string", "minLength": 1, "maxLength": 200},
+    "base_branch": {"type": "string", "minLength": 1, "maxLength": 200},
+    "head_commit": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "pull_request_number": {"type": "integer", "minimum": 1},
+    "pull_request_url": {"type": "string", "pattern": "^https://github\\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/pull/[1-9][0-9]*$"},
+    "title": {"type": "string", "minLength": 1, "maxLength": 256},
+    "body_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "approval_ref": {"$ref": "job.schema.json#/$defs/ref"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "already_present": {"type": "boolean"},
+    "evidence_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}

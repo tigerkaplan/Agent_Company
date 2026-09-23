@@ -1,7 +1,7 @@
 version: 1
 provider_id: claude
 provider_type: execution_provider
-integration_status: configuration_only
+integration_status: local_cli
 canonical_governance:
   constitution: ../../CONSTITUTION.md
   operating_instructions: ../../AGENTS.md
@@ -12,8 +12,11 @@ canonical_definitions:
   project_state: ../../shared/projects
   knowledge: ../../shared/knowledge
 capability_manifest: capabilities.yaml
+runtime_config: runtime.json
 availability:
   source: runtime_input_required
   default: unknown
+execution_modes:
+  READ_ONLY: configured_unavailable_locally
+  CONTROLLED_WRITE: unsupported_unverified
 source_of_truth: false
-

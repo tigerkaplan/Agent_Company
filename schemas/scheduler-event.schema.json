@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-company.local/schemas/scheduler-event.schema.json",
+  "title": "Agent Company Scheduler Audit Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "event_id",
+    "event_type",
+    "recorded_at",
+    "scheduler_id",
+    "job_id",
+    "detail"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "event_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"},
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "scheduler_started",
+        "scheduler_stopped",
+        "scheduler_restart_recovered",
+        "job_claimed",
+        "job_started",
+        "job_heartbeat",
+        "job_completed",
+        "job_failed",
+        "job_blocked",
+        "job_finished",
+        "job_retried",
+        "job_retry_recovered",
+        "claim_expired",
+        "provider_guard_blocked"
+      ]
+    },
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "scheduler_id": {"type": "string", "minLength": 1},
+    "job_id": {"type": ["string", "null"]},
+    "detail": {"type": ["object", "null"]}
+  }
+}

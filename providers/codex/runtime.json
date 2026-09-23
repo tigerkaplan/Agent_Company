@@ -1,0 +1,27 @@
+{
+  "adapter": "local_cli",
+  "arguments": [
+    "exec",
+    "--ephemeral",
+    "--ignore-user-config",
+    "--sandbox",
+    "read-only",
+    "-"
+  ],
+  "controlled_write_arguments": [
+    "exec",
+    "--ephemeral",
+    "--ignore-user-config",
+    "--config",
+    "windows.sandbox=\"elevated\"",
+    "--skip-git-repo-check",
+    "--sandbox",
+    "workspace-write",
+    "-"
+  ],
+  "executable": "codex",
+  "max_stderr_bytes": 65536,
+  "max_stdout_bytes": 1048576,
+  "provider_id": "codex",
+  "timeout_seconds": 300
+}

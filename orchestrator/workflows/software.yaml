@@ -17,6 +17,6 @@ steps:
 approval_policy: ../approvals/APPROVAL_POLICY.md
 review_outcomes:
   - PASS
-  - FIX
-  - ESCALATE
-  - HUMAN_APPROVAL
+  - FAIL
+  - RETRY
+  - NEEDS_HUMAN

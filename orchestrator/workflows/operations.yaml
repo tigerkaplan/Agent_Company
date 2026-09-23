@@ -49,6 +49,6 @@ review_triggers:
   - high_risk_internal_report
 review_outcomes:
   - PASS
-  - FIX
-  - ESCALATE
-  - HUMAN_APPROVAL
+  - FAIL
+  - RETRY
+  - NEEDS_HUMAN

@@ -6,6 +6,8 @@ Provide a provider-neutral contract for repository read operations and approval-
 
 This contract defers to `../../CONSTITUTION.md` and `../../AGENTS.md`.
 
+Phase 6J implements only the narrower runtime-controlled push and pull-request creation subset in `../../runtime/git/`. Merge and all other write operations listed by this general connector contract remain unavailable in Phase 6J.
+
 ## Supported Read Operations
 
 - Read approved repository metadata, branches, commits, tags, files, issues, pull requests, checks, and releases.

@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-company.local/schemas/git-change-set.schema.json",
+  "title": "Agent Company Controlled Git Change Set",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "change_set_id", "job_id", "execution_id",
+    "mutation_ref", "repository_root", "base_head", "changed_files",
+    "created_files", "modified_files", "deleted_files", "diff_ref",
+    "diff_fingerprint", "scope_fingerprint", "worktree_fingerprint",
+    "unrelated_files", "unrelated_fingerprint", "commit_message",
+    "created_at", "status", "dry_run", "approval_ref",
+    "commit_evidence_ref", "error"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "change_set_id": {"type": "string", "minLength": 1},
+    "job_id": {"type": "string", "minLength": 1},
+    "execution_id": {"type": "string", "minLength": 1},
+    "mutation_ref": {"$ref": "job.schema.json#/$defs/ref"},
+    "repository_root": {"type": "string", "minLength": 1},
+    "base_head": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "changed_files": {"$ref": "#/$defs/path_list"},
+    "created_files": {"$ref": "#/$defs/path_list"},
+    "modified_files": {"$ref": "#/$defs/path_list"},
+    "deleted_files": {"$ref": "#/$defs/path_list"},
+    "diff_ref": {"$ref": "job.schema.json#/$defs/ref"},
+    "diff_fingerprint": {"$ref": "#/$defs/digest"},
+    "scope_fingerprint": {"$ref": "#/$defs/digest"},
+    "worktree_fingerprint": {"$ref": "#/$defs/digest"},
+    "unrelated_files": {"$ref": "#/$defs/path_list"},
+    "unrelated_fingerprint": {"$ref": "#/$defs/digest"},
+    "commit_message": {"type": "string", "minLength": 1, "maxLength": 200},
+    "created_at": {"type": "string", "format": "date-time"},
+    "status": {
+      "enum": ["PREVIEW", "PENDING_APPROVAL", "APPROVED", "COMMITTED", "FAILED"]
+    },
+    "dry_run": {"type": "boolean"},
+    "approval_ref": {
+      "oneOf": [{"$ref": "job.schema.json#/$defs/ref"}, {"type": "null"}]
+    },
+    "commit_evidence_ref": {
+      "oneOf": [{"$ref": "job.schema.json#/$defs/ref"}, {"type": "null"}]
+    },
+    "error": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["code", "message"],
+          "properties": {
+            "code": {"type": "string", "minLength": 1},
+            "message": {"type": "string", "minLength": 1}
+          }
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "path_list": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}

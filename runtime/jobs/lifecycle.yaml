@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "source": "runtime-canonical-job-lifecycle",
+  "format_note": "JSON-compatible YAML keeps this canonical file dependency-free and machine-readable.",
+  "states": {
+    "created": {
+      "description": "Job has been created from an orchestrator dispatch result.",
+      "terminal": false
+    },
+    "queued": {
+      "description": "Job is ready for a future worker to claim.",
+      "terminal": false
+    },
+    "running": {
+      "description": "Job has been claimed for execution.",
+      "terminal": false
+    },
+    "waiting_approval": {
+      "description": "Job is blocked on explicit human approval before execution or continuation.",
+      "terminal": false
+    },
+    "reviewing": {
+      "description": "Executor output is awaiting independent reviewer validation.",
+      "terminal": false
+    },
+    "completed": {
+      "description": "Job finished successfully and any required review has been satisfied.",
+      "terminal": true
+    },
+    "failed": {
+      "description": "Current attempt failed. This state is terminal for that attempt.",
+      "terminal": true
+    },
+    "cancelled": {
+      "description": "Job was cancelled before successful completion.",
+      "terminal": true
+    }
+  },
+  "transitions": {
+    "created": ["queued", "waiting_approval", "cancelled"],
+    "queued": ["running", "waiting_approval", "cancelled"],
+    "running": ["reviewing", "completed", "failed", "waiting_approval", "cancelled"],
+    "waiting_approval": ["queued", "completed", "failed", "cancelled"],
+    "reviewing": ["completed", "failed", "waiting_approval", "cancelled"],
+    "completed": [],
+    "failed": [],
+    "cancelled": []
+  },
+  "constraints": [
+    "completed_is_terminal",
+    "failed_is_terminal_for_current_attempt",
+    "cancelled_is_terminal",
+    "external_or_high_risk_execution_may_transition_to_waiting_approval",
+    "approval_must_never_be_inferred_from_inbound_messages_or_events",
+    "reviewer_stage_must_remain_distinct_from_executor_stage",
+    "no_silent_transition_from_waiting_approval_to_running_without_recorded_approval"
+  ],
+  "approval_resolution_rule": {
+    "from": "waiting_approval",
+    "actions": {
+      "EXECUTE_JOB": {
+        "APPROVED": {"target": "queued"},
+        "REJECTED": {"target": "cancelled"}
+      },
+      "COMPLETE_REVIEWED_JOB": {
+        "APPROVED": {"target": "completed"},
+        "REJECTED": {"target": "failed"}
+      }
+    },
+    "requires": [
+      "persisted_scoped_approval_request",
+      "explicit_local_operator_decision",
+      "exact_job_execution_review_and_action_boundary"
+    ],
+    "note": "Approval authorizes only the action named by one persisted request. Reviewed execution resumes at completion and is not rerun."
+  },
+  "review_completion_rule": {
+    "condition_field": "review_required",
+    "target": "completed",
+    "allowed_from": ["reviewing"],
+    "note": "A review-required job must enter reviewing before it can be completed."
+  },
+  "review_decision_rule": {
+    "from": "reviewing",
+    "decisions": {
+      "PASS": {"action": "transition", "target": "completed"},
+      "FAIL": {"action": "fail_current_attempt"},
+      "RETRY": {"action": "fail_then_retry_with_existing_attempt_budget"},
+      "NEEDS_HUMAN": {"action": "transition", "target": "waiting_approval"}
+    },
+    "note": "Provider text has no transition authority; only a persisted normalized ReviewResult may apply this rule."
+  },
+  "retry_rule": {
+    "phase_6b_scope": "new_job_with_parent_job_id",
+    "rule": "A failed attempt remains terminal. Retrying creates a new job with an incremented attempt and traceability to the failed attempt.",
+    "must_preserve": [
+      "failed_attempt_evidence",
+      "canonical_agent",
+      "canonical_skill_when_present",
+      "canonical_workflow",
+      "canonical_task_class",
+      "provider_neutral_capability",
+      "approval_and_review_requirements"
+    ]
+  }
+}

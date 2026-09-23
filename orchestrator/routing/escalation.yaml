@@ -24,7 +24,6 @@ review_constraints:
   - review_does_not_replace_required_human_approval
 allowed_review_outcomes:
   - PASS
-  - FIX
-  - ESCALATE
-  - HUMAN_APPROVAL
-
+  - FAIL
+  - RETRY
+  - NEEDS_HUMAN

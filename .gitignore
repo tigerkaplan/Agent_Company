@@ -10,8 +10,12 @@
 secrets/
 
 # Runtime state and local data
-runtime/
-state/
+/state/
+/runtime/state/jobs/
+/runtime/state/executions/
+/runtime/state/schedules/
+/runtime/state/approvals/
+/runtime/state/scheduler-runtime/
 data/runtime/
 tmp/
 temp/

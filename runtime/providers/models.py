@@ -1,0 +1,153 @@
+"""Contracts shared by provider routing, context building, and adapters."""
+
+from __future__ import annotations
+
+import json
+from dataclasses import dataclass
+from typing import Any
+
+
+@dataclass(frozen=True)
+class ProviderAvailability:
+    available: bool
+    reason: str
+    executable_path: str | None = None
+
+
+@dataclass(frozen=True)
+class ContextEntry:
+    ref: str
+    description: str
+    content: str
+
+
+@dataclass(frozen=True)
+class ExecutionPackage:
+    task: str
+    task_class: str
+    project_id: str | None
+    agent: str
+    skill: str | None
+    workflow: str
+    capability: str
+    risk_level: str
+    approval_status: str
+    review_required: bool
+    attempt: int
+    input_refs: tuple[dict[str, Any], ...]
+    context: tuple[ContextEntry, ...]
+    execution_mode: str = "READ_ONLY"
+    execution_scope: dict[str, Any] | None = None
+    dry_run: bool = False
+
+    def render(self) -> str:
+        metadata = {
+            "task_class": self.task_class,
+            "project_id": self.project_id,
+            "agent": self.agent,
+            "skill": self.skill,
+            "workflow": self.workflow,
+            "capability": self.capability,
+            "risk_level": self.risk_level,
+            "approval_status": self.approval_status,
+            "review_required": self.review_required,
+            "attempt": self.attempt,
+            "input_refs": self.input_refs,
+            "execution_mode": self.execution_mode,
+            "execution_scope": self._provider_scope(),
+            "dry_run": self.dry_run,
+        }
+        sections = [
+            "# Agent Company Execution Package",
+            "",
+            "Follow the canonical governance and selected role, skill, and workflow below.",
+            "Do not change task identity, bypass approval, or claim review is complete.",
+            "",
+            "## Execution Metadata",
+            json.dumps(metadata, indent=2, sort_keys=True, ensure_ascii=True),
+            "",
+            "## Task",
+            self.task,
+        ]
+        if self.execution_mode == "CONTROLLED_WRITE":
+            sections.extend(
+                [
+                    "",
+                    "## Controlled Workspace",
+                    "The current working directory is a runtime-owned staged workspace.",
+                    "Modify only paths allowed by execution_scope. Do not create links, "
+                    "touch protected or forbidden paths, or attempt to reach the target "
+                    "repository directly. Runtime-observed changes are authoritative.",
+                ]
+            )
+            if self.dry_run:
+                sections.extend(
+                    [
+                        "",
+                        "## Dry-Run Boundary",
+                        "Produce proposed changes only in the staged workspace. The runtime "
+                        "will not apply them to the target project, and they must not be "
+                        "described as applied mutations.",
+                    ]
+                )
+        for entry in self.context:
+            sections.extend(
+                [
+                    "",
+                    f"## Context: {entry.ref}",
+                    entry.description,
+                    "",
+                    entry.content,
+                ]
+            )
+        sections.extend(
+            [
+                "",
+                "## Expected Result",
+                "Return a concise execution result. State what was completed, what remains, "
+                "and any validation or approval still required. Do not include credentials.",
+            ]
+        )
+        return "\n".join(sections).rstrip() + "\n"
+
+    def _provider_scope(self) -> dict[str, Any] | None:
+        if self.execution_scope is None:
+            return None
+        return {
+            key: value
+            for key, value in self.execution_scope.items()
+            if key != "project_root"
+        }
+
+
+@dataclass(frozen=True)
+class ProviderExecutionResult:
+    status: str
+    stdout: str
+    stderr: str
+    exit_code: int | None
+    error_category: str | None = None
+    error_message: str | None = None
+    requested_sandbox_mode: str | None = None
+    effective_sandbox_mode: str | None = None
+
+    def __post_init__(self) -> None:
+        if self.status not in {"succeeded", "failed"}:
+            raise ValueError("Provider execution status must be succeeded or failed")
+        if self.status == "failed" and self.error_category is None:
+            raise ValueError("Failed provider execution requires an error category")
+        supported = {None, "read-only", "workspace-write", "danger-full-access"}
+        if self.requested_sandbox_mode not in supported:
+            raise ValueError("Requested provider sandbox mode is unsupported")
+        if self.effective_sandbox_mode not in supported:
+            raise ValueError("Effective provider sandbox mode is unsupported")
+
+
+@dataclass(frozen=True)
+class ProviderSelection:
+    requested_provider: str | None
+    preferred_provider: str
+    actual_provider: str | None
+    fallback_used: bool
+    fallback_reason: str | None
+    execution_mode: str = "READ_ONLY"

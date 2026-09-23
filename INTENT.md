@@ -36,14 +36,12 @@ The system should make it clear:
 - Risky or irreversible actions require human approval.
 - Existing projects must remain onboardable without restructuring them.
 
-## Out Of Scope For Phase 1
+## Current Scope Boundary
 
-- Creating the full folder architecture.
-- Building agent, skill, prompt, or workflow registries.
-- Implementing LLM Wiki, INGEST, QUERY, or LINT.
-- Integrating Obsidian, Hermes, Telegram, scheduling, VPS deployment, or business connectors.
-- Implementing provider routing logic.
-- Migrating or rewriting existing projects.
+- The core now includes canonical agents, skills, routing, project onboarding, structured knowledge, and a local execution runtime.
+- Current implementation status belongs in `PROJECT_STATE.md`; capability progression belongs in `ROADMAP.md`.
+- Merge, deployment, Telegram command handling, general connector execution, infrastructure automation, and dedicated observability are not current runtime capabilities.
+- Existing projects remain external authorities and must not be migrated or rewritten merely to be managed.
 
 ## Success Criteria
 
@@ -53,12 +51,6 @@ The system should make it clear:
 - The system explicitly separates agents, skills, prompts, workflows, review, state, and knowledge.
 - The initial core can be extended in later phases without contradicting Phase 1.
 
-## Open Questions
+## Current Direction
 
-- What is the first concrete project to onboard?
-- What should the minimum project onboarding record contain?
-- Which actions are always gatekeeper-reviewed?
-- Which deterministic commands should exist first: INGEST, QUERY, LINT, or another primitive?
-- What local storage format should represent operational state?
-- What local storage format should represent long-term knowledge?
-- How should provider routing be decided once Claude, Codex, and ChatGPT are all available?
+The immediate task is to verify and checkpoint the existing Phase 6 runtime. No later numeric phase is canonically defined. New capability work must begin only after the current state, roadmap, tests, and approval boundaries are reconciled.

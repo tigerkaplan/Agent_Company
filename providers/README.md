@@ -17,7 +17,7 @@ Provider files may declare identity, routing eligibility, availability inputs, a
 
 1. Classify the task and select the canonical agent, skill, workflow, risk, and approval requirements.
 2. Resolve the provider-neutral capability needed for execution.
-3. Filter to providers configured as eligible and currently available.
+3. Filter to providers configured as eligible for the capability and requested execution mode, then observe local availability.
 4. Apply configurable preferences from `../orchestrator/routing/weights.yaml`.
 5. Apply fallback and escalation policy without weakening review or approval boundaries.
 
@@ -26,5 +26,6 @@ Provider files may declare identity, routing eligibility, availability inputs, a
 - `claude/`: Claude execution-provider adapter.
 - `codex/`: Codex execution-provider adapter.
 
-Phase 4A contains configuration only. It has no provider API clients, authentication, runtime dispatch, queue, scheduler, Hermes, VPS, connector, or ChatGPT provider.
+Phase 6E adds minimal local CLI runtime metadata for Claude and Codex. Runtime code observes executable availability, applies canonical eligibility/preferences/fallback, and invokes the selected engine through a provider-neutral adapter. Phase 6H adds mode eligibility: both retain read-only behavior, while only Codex declares a fixed controlled-write invocation inside a runtime-owned staged workspace. Adapters contain no credentials or canonical business logic.
 
+There are no provider SDK/API clients, authentication setup, Hermes, VPS, connector, or ChatGPT provider. Executable presence is not proof of authentication or remote availability. Automated tests use fakes and do not consume provider usage.

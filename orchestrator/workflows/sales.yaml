@@ -57,6 +57,6 @@ review_triggers:
   - high_value_sensitive_or_reputational_lead
 review_outcomes:
   - PASS
-  - FIX
-  - ESCALATE
-  - HUMAN_APPROVAL
+  - FAIL
+  - RETRY
+  - NEEDS_HUMAN

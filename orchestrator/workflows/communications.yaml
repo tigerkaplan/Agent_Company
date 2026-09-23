@@ -44,6 +44,6 @@ review_triggers:
   - calendar_commitment_or_change
 review_outcomes:
   - PASS
-  - FIX
-  - ESCALATE
-  - HUMAN_APPROVAL
+  - FAIL
+  - RETRY
+  - NEEDS_HUMAN

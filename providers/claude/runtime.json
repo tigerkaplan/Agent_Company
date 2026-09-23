@@ -1,0 +1,16 @@
+{
+  "adapter": "local_cli",
+  "arguments": [
+    "--bare",
+    "--print",
+    "--permission-mode",
+    "plan",
+    "--no-session-persistence",
+    "Execute the Agent Company package provided on stdin."
+  ],
+  "executable": "claude",
+  "max_stderr_bytes": 65536,
+  "max_stdout_bytes": 1048576,
+  "provider_id": "claude",
+  "timeout_seconds": 300
+}

@@ -14,9 +14,10 @@ The Reviewer checks executor output, source files, tool results, requirements, a
 - Check the requested outcome against actual evidence.
 - Identify quality, safety, requirement, and validation gaps.
 - Verify important claims against source files or tool output.
-- Return one of: `PASS`, `FIX`, `ESCALATE`, or `HUMAN_APPROVAL`.
+- Return one of: `PASS`, `FAIL`, `RETRY`, or `NEEDS_HUMAN`.
 - Explain the reason for the decision concisely.
 - Escalate risky, ambiguous, or irreversible decisions.
+- For controlled writes, validate runtime mutation evidence rather than provider claims about changed files.
 
 ## Must Not Own
 

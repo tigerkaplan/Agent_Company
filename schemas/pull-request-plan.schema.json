@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-company.local/schemas/pull-request-plan.schema.json",
+  "title": "Agent Company Pull Request Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "pull_request_plan_id", "push_evidence_ref", "job_id",
+    "execution_id", "forge", "repository_slug", "head_branch", "base_branch",
+    "head_commit", "title", "body_ref", "body_fingerprint", "created_at",
+    "status", "dry_run", "approval_ref", "pull_request_evidence_ref"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "pull_request_plan_id": {"type": "string", "minLength": 1},
+    "push_evidence_ref": {"$ref": "job.schema.json#/$defs/ref"},
+    "job_id": {"type": "string", "minLength": 1},
+    "execution_id": {"type": "string", "minLength": 1},
+    "forge": {"const": "github"},
+    "repository_slug": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+    "head_branch": {"type": "string", "minLength": 1, "maxLength": 200},
+    "base_branch": {"type": "string", "minLength": 1, "maxLength": 200},
+    "head_commit": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "title": {"type": "string", "minLength": 1, "maxLength": 256},
+    "body_ref": {"$ref": "job.schema.json#/$defs/ref"},
+    "body_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "status": {"enum": ["PREVIEW", "PENDING_APPROVAL", "APPROVED", "CREATED", "EXISTING", "FAILED"]},
+    "dry_run": {"type": "boolean"},
+    "approval_ref": {"oneOf": [{"$ref": "job.schema.json#/$defs/ref"}, {"type": "null"}]},
+    "pull_request_evidence_ref": {"oneOf": [{"$ref": "job.schema.json#/$defs/ref"}, {"type": "null"}]}
+  }
+}

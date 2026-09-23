@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-company.local/schemas/git-push-plan.schema.json",
+  "title": "Agent Company Controlled Git Push Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "push_plan_id", "change_set_id", "commit_evidence_ref",
+    "job_id", "execution_id", "repository_root", "commit_hash", "parent_hash",
+    "local_branch", "remote_name", "remote_kind", "remote_host",
+    "repository_slug", "remote_url_display", "remote_url_fingerprint",
+    "remote_branch", "expected_remote_head", "created_at", "status", "dry_run",
+    "approval_ref", "push_evidence_ref"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "push_plan_id": {"type": "string", "minLength": 1},
+    "change_set_id": {"type": "string", "minLength": 1},
+    "commit_evidence_ref": {"$ref": "job.schema.json#/$defs/ref"},
+    "job_id": {"type": "string", "minLength": 1},
+    "execution_id": {"type": "string", "minLength": 1},
+    "repository_root": {"type": "string", "minLength": 1},
+    "commit_hash": {"$ref": "#/$defs/commit"},
+    "parent_hash": {"$ref": "#/$defs/commit"},
+    "local_branch": {"$ref": "#/$defs/branch"},
+    "remote_name": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$"},
+    "remote_kind": {"enum": ["local", "https", "ssh"]},
+    "remote_host": {"type": ["string", "null"]},
+    "repository_slug": {"type": ["string", "null"]},
+    "remote_url_display": {"type": "string", "minLength": 1},
+    "remote_url_fingerprint": {"$ref": "#/$defs/digest"},
+    "remote_branch": {"$ref": "#/$defs/branch"},
+    "expected_remote_head": {"oneOf": [{"$ref": "#/$defs/commit"}, {"type": "null"}]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "status": {"enum": ["PREVIEW", "PENDING_APPROVAL", "APPROVED", "PUSHED", "FAILED"]},
+    "dry_run": {"type": "boolean"},
+    "approval_ref": {"oneOf": [{"$ref": "job.schema.json#/$defs/ref"}, {"type": "null"}]},
+    "push_evidence_ref": {"oneOf": [{"$ref": "job.schema.json#/$defs/ref"}, {"type": "null"}]}
+  },
+  "$defs": {
+    "commit": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "branch": {"type": "string", "minLength": 1, "maxLength": 200}
+  }
+}

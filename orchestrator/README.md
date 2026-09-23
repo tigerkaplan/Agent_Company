@@ -1,6 +1,6 @@
-# Phase 1 Orchestrator
+# Orchestrator
 
-This directory defines the minimal provider-neutral orchestrator for Phase 1. It is a canonical routing and policy layer, not a runtime service.
+This directory defines the provider-neutral classification, routing, workflow, review, approval, and dry-run policy layer. It remains separate from the execution service implemented under `../runtime/`.
 
 The orchestrator reuses:
 
@@ -11,15 +11,16 @@ The orchestrator reuses:
 
 ## Scope
 
-Phase 1 orchestration defines:
+The orchestrator defines:
 
 - task classification;
 - canonical agent routing;
 - approval policy;
 - dry-run policy;
-- minimal workflow templates.
+- canonical workflow templates and review outcomes;
+- provider capability preferences and fallback policy.
 
-It does not implement provider weighting, Hermes, scheduler, queue, workers, integrations, VPS deployment, or LLM Wiki.
+It does not itself execute providers, queue or claim jobs, run the Scheduler, mutate projects, invoke connectors, commit, push, create pull requests, merge, or deploy. Those capabilities, where implemented, remain behind their runtime and approval boundaries. Connector directories remain contracts unless an explicit runtime implementation exists.
 
 ## Directory Map
 
