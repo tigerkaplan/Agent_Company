@@ -2,19 +2,17 @@
 
 ## Current Checkpoint
 
-- Current Git HEAD is `bac9a4f`, the committed Phase 5 business agents and connectors checkpoint.
-- Phase 6 runtime implementation exists in the working tree and is pending a checkpoint commit.
+- Current Git HEAD is `81aa9b3`, the committed and verified Phase 6 local runtime checkpoint.
+- The working baseline is the verified local runtime.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
-- No canonical Phase 6N or later numeric phase is defined.
+- No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
+- Phase 7 is the next planned architectural phase.
+- No Phase 7 implementation has started.
 
 ## Committed
 
 - Provider-neutral governance, canonical agents and skills, project onboarding, knowledge structure, hybrid provider routing configuration, and Phase 5 business agents, skills, workflows, and connector contracts.
-- The committed repository does not contain the Phase 6 runtime or schemas.
-
-## Implemented But Uncommitted
-
 - Canonical jobs, lifecycle, queue, attempts, retries, Worker, and Executor contracts.
 - Phase 6B queue semantics and Phase 6D deterministic schedules.
 - Phase 6E provider execution and Phase 6F independent review.
@@ -32,6 +30,7 @@
 ## Not Started
 
 - Telegram or other remote-command runtime.
+- Phase 7 remote-control and runtime integration design or implementation.
 - Agent Company infrastructure implementation; `infrastructure/` is absent.
 - Dedicated observability, metrics, or tracing implementation; `observability/` is absent.
 
@@ -56,4 +55,4 @@ Verified on 2026-09-23:
 - Generated-state ignore rules and temporary-artifact checks: PASS.
 - Architecture and security checks: PASS, including no `shell=True`, no project-specific business logic in runtime source, and no unexpected dirty paths.
 
-This verifies the current working-tree checkpoint; it does not make the uncommitted Phase 6 files part of Git history.
+This verifies the committed Phase 6 checkpoint at `81aa9b3`.

@@ -21,7 +21,7 @@ Canonical definitions must remain separate from generated provider files. Claude
 
 ## Current State
 
-The committed repository currently ends at the Phase 5 business-agent and connector checkpoint. The local-first Phase 6 runtime is implemented and verified in the working tree, with 282/282 tests passing, 71 Python files compiled, and 13 schemas checked. It is pending checkpoint commit, not verification. Phase 6M remains the highest explicit Phase 6 marker, and no Phase 6N is defined. `PROJECT_STATE.md` is the canonical current-status record and `ROADMAP.md` is the canonical capability roadmap.
+The committed repository is at the verified Phase 6 local runtime checkpoint, `81aa9b3`. The local-first Phase 6 runtime is implemented and verified, with 282/282 tests passing, 71 Python files compiled, and 13 schemas checked. Phase 6M remains the highest explicit Phase 6 marker, and no Phase 6N is defined. Phase 7 remote control and runtime integrations are planned next, but no Phase 7 implementation has started. `PROJECT_STATE.md` is the canonical current-status record and `ROADMAP.md` is the canonical capability roadmap.
 
 The repository now contains:
 
@@ -37,7 +37,7 @@ The repository now contains:
 - `.env.example` lists placeholder environment variable names.
 - `.gitignore` protects secrets, runtime state, logs, caches, and local artifacts.
 
-The current runtime does not implement merge, release, deployment, Telegram command handling, general connector execution, infrastructure automation, or a dedicated observability platform.
+The current runtime does not implement merge, release, deployment, Telegram command handling, general connector execution, infrastructure automation, Hermes integration, VPS/Docker hosting, Control Room, or a dedicated observability platform.
 
 ## Operating Boundary
 

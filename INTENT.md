@@ -53,4 +53,4 @@ The system should make it clear:
 
 ## Current Direction
 
-The immediate task is to verify and checkpoint the existing Phase 6 runtime. No later numeric phase is canonically defined. New capability work must begin only after the current state, roadmap, tests, and approval boundaries are reconciled.
+The immediate direction is Phase 7 planning for safe remote control and runtime integrations. New implementation work must begin only after the Phase 7 authority model, remote-command contract, connector boundaries, and acceptance criteria are explicitly defined.
