@@ -74,6 +74,7 @@ class SchedulerLoop:
         counts_as_provider_run: bool = False,
         clock: Callable[[], str] = utc_now,
         id_factory: Callable[[], str] | None = None,
+        notification_emitter: Any | None = None,
     ) -> None:
         self.schedules = schedules
         self.dispatcher = dispatcher
@@ -85,6 +86,7 @@ class SchedulerLoop:
         self.counts_as_provider_run = counts_as_provider_run
         self.clock = clock
         self.id_factory = id_factory or (lambda: uuid4().hex)
+        self.notification_emitter = notification_emitter
         self.scheduler_id = f"scheduler-{self.id_factory()}"
         self._stop = threading.Event()
 
@@ -242,6 +244,8 @@ class SchedulerLoop:
         state["last_updated_at"] = self.clock()
         state["last_error"] = errors[-1] if errors else None
         self.state_store.save(state)
+        if errors:
+            self._notify_runtime_error(errors[-1])
         return {
             "status": "ok" if not errors else "partial_failure",
             "checked_at": checked_at,
@@ -487,6 +491,26 @@ class SchedulerLoop:
             "worker_error": "job_failed",
         }.get(outcome.status, "job_finished")
         self._audit(event, job_id=outcome.job_id, detail={"status": outcome.status})
+        if outcome.status == "worker_error":
+            self._notify_runtime_error(
+                {
+                    "code": "worker_error",
+                    "message": "A worker failed before producing a canonical job outcome.",
+                }
+            )
+
+    def _notify_runtime_error(self, error: dict[str, str]) -> None:
+        if self.notification_emitter is None:
+            return
+        try:
+            self.notification_emitter.runtime_error(
+                source_type="scheduler",
+                source_id="scheduler-runtime",
+                error_code=str(error.get("code", "runtime_error")),
+            )
+        except Exception:
+            # Scheduler state and audit remain authoritative if delivery fails.
+            pass
 
     def _audit(
         self,

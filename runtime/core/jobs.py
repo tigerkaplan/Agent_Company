@@ -58,12 +58,14 @@ class JobRuntime:
         id_factory: Callable[[], str] = new_job_id,
         lifecycle: Lifecycle | None = None,
         validator: JobValidator | None = None,
+        notification_emitter: Any | None = None,
     ) -> None:
         self.store = FileJobStore(state_root)
         self.clock = clock
         self.id_factory = id_factory
         self.lifecycle = lifecycle or Lifecycle()
         self.validator = validator or JobValidator()
+        self.notification_emitter = notification_emitter
 
     def create(self, payload: dict[str, Any]) -> dict[str, Any]:
         if not isinstance(payload, dict):
@@ -678,6 +680,15 @@ class JobRuntime:
             self.store.save(job)
         except JobStoreError as error:
             raise RuntimeError(str(error)) from error
+        if self.notification_emitter is not None and job["status"] in {
+            "completed",
+            "failed",
+        }:
+            try:
+                self.notification_emitter.job_terminal(deepcopy(job))
+            except Exception:
+                # Notification delivery is never part of the job transaction.
+                pass
         return deepcopy(job)
 
     def _load(self, job_id: str) -> dict[str, Any]:

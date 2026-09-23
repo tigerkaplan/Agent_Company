@@ -24,6 +24,7 @@ class RemoteUser:
 @dataclass(frozen=True)
 class RemoteRuntimeConfig:
     users: tuple[RemoteUser, ...] = ()
+    notification_targets: tuple[str, ...] = ()
     approval_ttl_seconds: int = DEFAULT_APPROVAL_TTL_SECONDS
     max_audit_records: int = 1000
 
@@ -32,6 +33,15 @@ class RemoteRuntimeConfig:
             raise RemoteCommandError("Remote approval TTL must be positive")
         if self.max_audit_records < 1:
             raise RemoteCommandError("Remote audit retention must be positive")
+        if any(
+            not isinstance(target, str)
+            or not target.strip()
+            or len(target) > 200
+            for target in self.notification_targets
+        ):
+            raise RemoteCommandError("Remote notification target is invalid")
+        if len(self.notification_targets) != len(set(self.notification_targets)):
+            raise RemoteCommandError("Remote notification targets must be unique")
 
     @classmethod
     def empty(cls) -> "RemoteRuntimeConfig":
@@ -60,8 +70,16 @@ class RemoteRuntimeConfig:
                     enabled=bool(item.get("enabled", True)),
                 )
             )
+        raw_targets = value.get("notification_targets", [])
+        if not isinstance(raw_targets, list) or any(
+            not isinstance(target, str) for target in raw_targets
+        ):
+            raise RemoteCommandError(
+                "Remote config notification_targets must be a list of strings"
+            )
         return cls(
             users=tuple(users),
+            notification_targets=tuple(raw_targets),
             approval_ttl_seconds=int(
                 value.get("approval_ttl_seconds", DEFAULT_APPROVAL_TTL_SECONDS)
             ),
@@ -91,5 +109,5 @@ class RemoteRuntimeConfig:
             "approval_ttl_seconds": self.approval_ttl_seconds,
             "max_audit_records": self.max_audit_records,
             "allowed_user_count": len(self.users),
+            "notification_target_count": len(self.notification_targets),
         }
-

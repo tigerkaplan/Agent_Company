@@ -6,12 +6,14 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import sys
 from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
 from integrations.telegram.client import TelegramApiError, TelegramBotApiClient
+from integrations.telegram.notifications import TelegramNotificationTransport
 from integrations.telegram.parser import TelegramParseError
 from integrations.telegram.state import TelegramStateError, TelegramStateStore
 from integrations.telegram.transport import TelegramTransport
@@ -20,7 +22,7 @@ from runtime.actions.store import FileMutationArtifactStore
 from runtime.approvals.factory import build_approval_runtime
 from runtime.approvals.runtime import ApprovalRuntimeError
 from runtime.approvals.store import ApprovalStoreError
-from runtime.core.jobs import JobRuntime, RuntimeError
+from runtime.core.jobs import JobRuntime, RuntimeError, utc_now
 from runtime.core.references import CanonicalReferenceResolver
 from runtime.executors.local import LocalExecutor
 from runtime.git.runtime import GitRuntime, GitRuntimeError
@@ -28,6 +30,15 @@ from runtime.git.forge import ForgeError, GitHubCliPullRequestAdapter
 from runtime.git.remote_runtime import RemoteGitRuntime, RemoteGitRuntimeError
 from runtime.git.remote_store import FileRemoteGitArtifactStore
 from runtime.git.store import GitStoreError
+from runtime.notifications.emitter import RuntimeNotificationEmitter
+from runtime.notifications.models import (
+    NotificationError,
+    NotificationEvent,
+    NotificationSeverity,
+    NotificationType,
+)
+from runtime.notifications.service import NotificationService
+from runtime.notifications.store import FileNotificationStore, NotificationStoreError
 from runtime.providers.artifacts import FileProviderArtifactStore
 from runtime.providers.config import ProviderConfigError
 from runtime.providers.context import ExecutionContextBuilder
@@ -99,6 +110,13 @@ def default_remote_root() -> Path:
     return Path(__file__).resolve().parents[1] / "state" / "remote"
 
 
+def default_notification_root() -> Path:
+    configured = os.environ.get("AGENT_COMPANY_NOTIFICATION_STATE_ROOT")
+    if configured:
+        return Path(configured)
+    return Path(__file__).resolve().parents[1] / "state" / "notifications"
+
+
 def default_remote_config() -> Path:
     configured = os.environ.get("AGENT_COMPANY_REMOTE_CONFIG")
     if configured:
@@ -108,6 +126,14 @@ def default_remote_config() -> Path:
 
 def repository_root() -> Path:
     return Path(__file__).resolve().parents[2]
+
+
+def notification_test_id(value: str) -> str:
+    if re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}", value) is None:
+        raise argparse.ArgumentTypeError(
+            "notification test ID must be a 1-64 character identifier"
+        )
+    return value
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -159,6 +185,17 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=default_remote_config(),
         help="Ignored local remote identity mapping configuration",
+    )
+    parser.add_argument(
+        "--notification-state-root",
+        type=Path,
+        default=default_notification_root(),
+        help="Local directory for generated notification delivery state",
+    )
+    parser.add_argument(
+        "--enable-notifications",
+        action="store_true",
+        help="Enable configured outbound notifications for this runtime command",
     )
     top = parser.add_subparsers(dest="resource", required=True)
     job = top.add_parser("job", help="Manage canonical jobs")
@@ -393,6 +430,30 @@ def build_parser() -> argparse.ArgumentParser:
     telegram_run.add_argument("--long-poll-seconds", type=int, default=20)
     telegram_run.add_argument("--backoff-seconds", type=float, default=5.0)
     telegram_run.add_argument("--max-cycles", type=int)
+
+    notification = top.add_parser(
+        "notification", help="Preview or explicitly send a fixed test notification"
+    )
+    notification_commands = notification.add_subparsers(
+        dest="command", required=True
+    )
+    notification_test = notification_commands.add_parser(
+        "test", help="Build one harmless informational test event"
+    )
+    notification_test.add_argument(
+        "--type",
+        choices=tuple(item.value for item in NotificationType),
+        default=NotificationType.JOB_COMPLETED.value,
+    )
+    notification_test.add_argument("--target-human", required=True)
+    notification_test.add_argument(
+        "--test-id", type=notification_test_id, default="phase7-smoke"
+    )
+    notification_test.add_argument(
+        "--send",
+        action="store_true",
+        help="Explicitly send through the configured Telegram transport",
+    )
     return parser
 
 
@@ -518,10 +579,88 @@ def scheduled_time(runtime: JobRuntime, args: argparse.Namespace) -> str:
     )
 
 
+def notification_test_event(args: argparse.Namespace, created_at: str) -> NotificationEvent:
+    notification_type = NotificationType(args.type)
+    source_id = f"notification-test-{args.test_id}"
+    approval_id = None
+    fingerprint = None
+    metadata: dict[str, Any] = {"test": True}
+    title = "Runtime notification test"
+    summary = "Harmless Phase 7 informational transport test."
+    severity = NotificationSeverity.INFO
+    source_type = "notification_test"
+    if notification_type is NotificationType.APPROVAL_REQUESTED:
+        approval_id = f"approval-test-{args.test_id}"
+        fingerprint = hashlib.sha256(source_id.encode("utf-8")).hexdigest()
+        metadata.update(
+            {"job_id": f"job-test-{args.test_id}", "requested_action": "TEST_ONLY"}
+        )
+        title = "Approval notification test"
+        severity = NotificationSeverity.WARNING
+    elif notification_type is NotificationType.JOB_COMPLETED:
+        metadata.update({"task_class": "test", "status": "completed"})
+        title = "Job completion notification test"
+    elif notification_type is NotificationType.JOB_FAILED:
+        metadata.update(
+            {
+                "failure_category": "test_only",
+                "retryable": False,
+                "attempt": 1,
+                "max_attempts": 1,
+            }
+        )
+        title = "Job failure notification test"
+        severity = NotificationSeverity.ERROR
+    else:
+        metadata.update({"error_code": "test_only"})
+        title = "Runtime error notification test"
+        severity = NotificationSeverity.ERROR
+    return NotificationEvent.create(
+        notification_type=notification_type,
+        created_at=created_at,
+        target_human_identity=args.target_human,
+        source_type=source_type,
+        source_id=source_id,
+        severity=severity,
+        title=title,
+        summary=summary,
+        approval_id=approval_id,
+        authorization_fingerprint=fingerprint,
+        metadata=metadata,
+        dedupe_key=args.test_id,
+    )
+
+
 def run(arguments: list[str] | None = None) -> int:
     args = build_parser().parse_args(arguments)
     try:
-        runtime = JobRuntime(args.state_root)
+        remote_config: RemoteRuntimeConfig | None = None
+        notification_emitter: RuntimeNotificationEmitter | None = None
+        if args.enable_notifications:
+            remote_config = load_remote_config(args.remote_config)
+            try:
+                notification_client = TelegramBotApiClient(
+                    os.environ.get("AGENT_COMPANY_TELEGRAM_BOT_TOKEN")
+                )
+            except TelegramApiError:
+                notification_client = None
+            notification_service = NotificationService(
+                FileNotificationStore(args.notification_state_root),
+                (
+                    TelegramNotificationTransport(
+                        client=notification_client,
+                        config=remote_config,
+                    ),
+                ),
+            )
+            notification_emitter = RuntimeNotificationEmitter(
+                notification_service,
+                remote_config.notification_targets,
+            )
+        runtime = JobRuntime(
+            args.state_root,
+            notification_emitter=notification_emitter,
+        )
         executions = FileExecutionStore(args.execution_root)
         reviews = FileReviewStore(args.execution_root / "reviews")
         approvals = build_approval_runtime(
@@ -529,9 +668,10 @@ def run(arguments: list[str] | None = None) -> int:
             args.approval_root,
             execution_store=executions,
             review_store=reviews,
+            notification_emitter=notification_emitter,
         )
         if args.resource in {"remote", "telegram"}:
-            config = load_remote_config(args.remote_config)
+            config = remote_config or load_remote_config(args.remote_config)
             service = RemoteCommandService(
                 jobs=runtime,
                 approvals=approvals,
@@ -772,6 +912,7 @@ def run(arguments: list[str] | None = None) -> int:
                         )
                     ),
                     counts_as_provider_run=executor_name == "provider",
+                    notification_emitter=notification_emitter,
                 )
                 if args.command == "status":
                     result = loop.inspect()
@@ -793,6 +934,24 @@ def run(arguments: list[str] | None = None) -> int:
                     )
             else:
                 raise ScheduleRuntimeError(f"Unsupported scheduler command: {args.command}")
+        elif args.resource == "notification":
+            event = notification_test_event(args, utc_now())
+            if not args.send:
+                result = {"mode": "preview", "notification": event.to_dict()}
+            else:
+                config = remote_config or load_remote_config(args.remote_config)
+                notification_service = NotificationService(
+                    FileNotificationStore(args.notification_state_root),
+                    (
+                        TelegramNotificationTransport(
+                            client=TelegramBotApiClient(
+                                os.environ.get("AGENT_COMPANY_TELEGRAM_BOT_TOKEN")
+                            ),
+                            config=config,
+                        ),
+                    ),
+                )
+                result = notification_service.emit(event).to_dict()
         elif args.resource == "worker":
             worker = build_worker(
                 args.executor,
@@ -869,6 +1028,8 @@ def run(arguments: list[str] | None = None) -> int:
         TelegramApiError,
         TelegramParseError,
         TelegramStateError,
+        NotificationError,
+        NotificationStoreError,
     ) as error:
         print(f"error: {error}", file=sys.stderr)
         return 2

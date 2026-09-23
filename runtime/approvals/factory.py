@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 from runtime.approvals.runtime import ApprovalRuntime
 from runtime.approvals.store import FileApprovalStore
@@ -17,11 +18,12 @@ def build_approval_runtime(
     *,
     execution_store: FileExecutionStore | None = None,
     review_store: FileReviewStore | None = None,
+    notification_emitter: Any | None = None,
 ) -> ApprovalRuntime:
     return ApprovalRuntime(
         job_runtime,
         FileApprovalStore(approval_root),
         execution_store=execution_store,
         review_store=review_store,
+        notification_emitter=notification_emitter,
     )
-

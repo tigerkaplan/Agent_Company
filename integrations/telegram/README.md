@@ -10,6 +10,8 @@ execution.
 
 - Local Telegram Bot API long polling through `getUpdates`.
 - Command-response messages through `sendMessage`.
+- Proactive bounded `APPROVAL_REQUESTED`, `JOB_COMPLETED`, `JOB_FAILED`, and
+  `RUNTIME_ERROR` messages through the same `sendMessage` client.
 - Stable numeric Telegram user ID mapping through ignored
   `../../config/remote.local.json`.
 - Explicit parsing for `/status`, `/jobs`, `/job`, `/approvals`, `/approve`,
@@ -36,6 +38,7 @@ Copy `../../config/remote.example.json` to the ignored
   "schema_version": 1,
   "approval_ttl_seconds": 600,
   "max_audit_records": 1000,
+  "notification_targets": ["local-owner"],
   "allowed_users": [
     {
       "channel": "telegram",
@@ -51,6 +54,10 @@ Usernames, display names, chat names, and message text do not authorize a
 command. The token is never read from this config and is not written to state,
 audit records, or logs.
 
+`notification_targets` contains mapped human identities, not Telegram names or
+IDs. Each target resolves only to an enabled `telegram` entry in
+`allowed_users`. A missing or disabled mapping receives nothing.
+
 ## Local Run
 
 Process one update batch:
@@ -65,12 +72,28 @@ Run long polling until `Ctrl+C`:
 python -m runtime.cli telegram run
 ```
 
+Enable proactive notifications for a runtime or scheduler command by placing
+the global flag before the resource:
+
+```powershell
+python -m runtime.cli --enable-notifications scheduler run
+```
+
+Preview a fixed harmless test without contacting Telegram or writing delivery
+state:
+
+```powershell
+python -m runtime.cli notification test --type JOB_COMPLETED --target-human local-owner --test-id phase7-smoke
+```
+
+Add `--send` only for an intentional live test. A live send still requires the
+environment token and an enabled numeric Telegram mapping.
+
 The first manual smoke test must use `/status`. Confirm the mapped identity and
 read-only response before testing `/approve` or `/reject`.
 
 ## Not Implemented
 
-- Proactive approval, completion, or failure notifications.
 - Telegram webhook mode or a generic webhook runtime.
 - Remote task creation, cancellation, or scheduler mutation.
 - Controlled writes, filesystem or shell commands, Git actions, merge, or

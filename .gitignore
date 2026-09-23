@@ -18,6 +18,7 @@ config/remote.local.json
 /runtime/state/approvals/
 /runtime/state/scheduler-runtime/
 /runtime/state/remote/
+/runtime/state/notifications/
 data/runtime/
 tmp/
 temp/

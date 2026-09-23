@@ -37,12 +37,14 @@ class ApprovalRuntime:
         execution_store: FileExecutionStore | None = None,
         review_store: FileReviewStore | None = None,
         clock: Callable[[], str] = utc_now,
+        notification_emitter: Any | None = None,
     ) -> None:
         self.job_runtime = job_runtime
         self.store = store
         self.execution_store = execution_store
         self.review_store = review_store
         self.clock = clock
+        self.notification_emitter = notification_emitter
 
     def request_execution(
         self,
@@ -70,6 +72,7 @@ class ApprovalRuntime:
             updated = self.job_runtime.enter_approval_boundary(job_id, artifact_ref)
         except RuntimeError as error:
             raise ApprovalRuntimeError(str(error)) from error
+        self._notify_approval_requested(request, updated)
         return ApprovalRun(request=request, artifact_ref=artifact_ref, job=updated)
 
     def request_review_completion(
@@ -109,6 +112,7 @@ class ApprovalRuntime:
             reason=review.reason,
             evidence_refs=refs,
         )
+        self._notify_approval_requested(request, job)
         return ApprovalRun(
             request=request,
             artifact_ref=self.artifact_ref(request.approval_id),
@@ -161,6 +165,7 @@ class ApprovalRuntime:
             authorization=fingerprint,
             commit_scope=commit_scope,
         )
+        self._notify_approval_requested(request, job)
         return ApprovalRun(
             request=request,
             artifact_ref=self.artifact_ref(request.approval_id),
@@ -212,6 +217,7 @@ class ApprovalRuntime:
             authorization=fingerprint,
             remote_scope=remote_scope,
         )
+        self._notify_approval_requested(request, job)
         return ApprovalRun(
             request=request,
             artifact_ref=self.artifact_ref(request.approval_id),
@@ -430,6 +436,18 @@ class ApprovalRuntime:
         except ApprovalStoreError as error:
             raise ApprovalRuntimeError(str(error)) from error
         return request
+
+    def _notify_approval_requested(
+        self, request: ApprovalRequest, job: dict[str, Any]
+    ) -> None:
+        if self.notification_emitter is not None:
+            try:
+                self.notification_emitter.approval_requested(
+                    request.to_dict(), deepcopy(job)
+                )
+            except Exception:
+                # A pending approval remains authoritative if notification fails.
+                pass
 
     def _resolve_commit(
         self,

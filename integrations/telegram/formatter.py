@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from runtime.remote.models import RemoteCommandResult, RemoteResultStatus
+from runtime.notifications.models import NotificationEvent, NotificationType
 
 
 TELEGRAM_MESSAGE_LIMIT = 4096
@@ -130,3 +131,56 @@ class TelegramResultFormatter:
 
     def _value(self, value: Any) -> str:
         return self._clean("unknown" if value is None else value)
+
+
+class TelegramNotificationFormatter:
+    """Render bounded informational events without granting authority."""
+
+    def __init__(self, *, max_chars: int = TELEGRAM_MESSAGE_LIMIT) -> None:
+        self.result_formatter = TelegramResultFormatter(max_chars=max_chars)
+
+    def format(self, event: NotificationEvent) -> str:
+        metadata = event.metadata or {}
+        if event.notification_type is NotificationType.APPROVAL_REQUESTED:
+            approval_id = self._value(event.approval_id)
+            fingerprint = self._value(event.authorization_fingerprint)
+            text = (
+                f"{event.title}\n"
+                f"Approval ID: {approval_id}\n"
+                f"Action: {self._value(metadata.get('requested_action'))}\n"
+                f"Job: {self._value(metadata.get('job_id'))}\n"
+                f"Fingerprint: {fingerprint}\n\n"
+                f"Approve: /approve {approval_id} {fingerprint}\n"
+                f"Reject: /reject {approval_id} {fingerprint}\n\n"
+                "Delivery does not grant approval. An explicit command is required."
+            )
+        elif event.notification_type is NotificationType.JOB_COMPLETED:
+            text = (
+                f"{event.title}\n"
+                f"Job: {event.source_id}\n"
+                f"Task class: {self._value(metadata.get('task_class'))}\n"
+                f"Status: completed\n"
+                f"{event.summary}"
+            )
+        elif event.notification_type is NotificationType.JOB_FAILED:
+            text = (
+                f"{event.title}\n"
+                f"Job: {event.source_id}\n"
+                f"Category: {self._value(metadata.get('failure_category'))}\n"
+                f"Retryable: {self._value(metadata.get('retryable'))}\n"
+                f"Attempt: {self._value(metadata.get('attempt'))}/"
+                f"{self._value(metadata.get('max_attempts'))}\n"
+                f"{event.summary}"
+            )
+        else:
+            text = (
+                f"{event.title}\n"
+                f"Source: {event.source_type} {event.source_id}\n"
+                f"Code: {self._value(metadata.get('error_code'))}\n"
+                f"{event.summary}"
+            )
+        return self.result_formatter.bound(text)
+
+    @staticmethod
+    def _value(value: Any) -> str:
+        return str("unknown" if value is None else value).replace("\x00", "").strip()

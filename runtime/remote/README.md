@@ -5,16 +5,18 @@ without weakening the Phase 6 approval, review, controlled-write, Git, and
 scheduler boundaries.
 
 This directory contains the design plus the transport-independent remote
-runtime core. The first Telegram long-poll adapter is implemented under
-`../../integrations/telegram/`. The runtime still does not implement a webhook
-listener, HTTP server, credential store, daemon, deployment target, provider
-integration, or autonomous messaging capability.
+runtime core. The first Telegram long-poll adapter and proactive bounded
+notification transport are implemented under `../../integrations/telegram/`.
+The runtime still does not implement a webhook listener, HTTP server,
+credential store, daemon, deployment target, or provider integration.
 
 ## Status
 
-- Phase: 7 Telegram command-response transport.
+- Phase: 7 Telegram command-response and proactive notification transport.
 - Runtime implementation: first transport-independent core implemented.
 - Transport implementation: local Telegram Bot API long polling implemented.
+- Notification implementation: bounded approval, terminal-job, and runtime
+  error events implemented through `../notifications/`.
 - Canonical command contract: `COMMAND_CONTRACT.md`.
 - Authority and threat model: `AUTHORITY_MODEL.md`.
 
@@ -49,6 +51,21 @@ Telegram user IDs from ignored remote config, reads the bot token only from
 `AGENT_COMPANY_TELEGRAM_BOT_TOKEN`, and persists only its polling offset under
 ignored `runtime/state/remote/telegram/`. See
 `../../integrations/telegram/README.md` for manual setup.
+
+Proactive delivery is provider-neutral before it reaches Telegram:
+
+```text
+persisted runtime transition
+  -> NotificationEvent
+  -> NotificationService
+  -> configured transport adapter
+  -> existing Telegram Bot API client
+```
+
+Automatic delivery is opt-in per process with `--enable-notifications` and
+targets only identities listed in local `notification_targets`. Notification
+state is stored separately under ignored `runtime/state/notifications/`.
+Delivery never approves a request or changes canonical runtime state.
 
 ## Boundary
 
@@ -91,7 +108,7 @@ the remote command service and canonical runtime operations.
 
 ## Non-Goals
 
-- No Telegram webhook endpoint or proactive Telegram notifications.
+- No Telegram webhook endpoint or generic webhook ingress.
 - No bot token, signing secret, or tracked allow-list secret.
 - No web server, Docker, VPS, Hermes, daemon, or deployment.
 - No arbitrary shell or filesystem command bridge.
@@ -117,6 +134,6 @@ showing that:
 - no token or secret enters Git, runtime job artifacts, or audit payloads;
 - the full Phase 6 regression suite remains green.
 
-The command-response transport satisfies these criteria through deterministic
-mocked-HTTP tests and the existing remote runtime boundary. Proactive
-notifications and webhook operation remain future Phase 7 work.
+The command-response and proactive notification transports satisfy these
+criteria through deterministic fake-transport tests and the existing remote
+runtime boundary. Webhook operation remains future Phase 7 work.
