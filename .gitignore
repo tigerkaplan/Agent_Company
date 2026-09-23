@@ -8,6 +8,7 @@
 *.p12
 *.pfx
 secrets/
+config/remote.local.json
 
 # Runtime state and local data
 /state/
@@ -16,6 +17,7 @@ secrets/
 /runtime/state/schedules/
 /runtime/state/approvals/
 /runtime/state/scheduler-runtime/
+/runtime/state/remote/
 data/runtime/
 tmp/
 temp/

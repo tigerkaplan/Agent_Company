@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import sys
@@ -28,6 +29,10 @@ from runtime.providers.config import ProviderConfigError
 from runtime.providers.context import ExecutionContextBuilder
 from runtime.providers.executor import ProviderExecutor
 from runtime.providers.factory import build_provider_router
+from runtime.remote.config import RemoteRuntimeConfig
+from runtime.remote.models import RemoteCommand, RemoteCommandError, RemoteCommandType
+from runtime.remote.service import RemoteCommandService, RemoteCommandServiceError
+from runtime.remote.store import FileRemoteCommandStore, RemoteStoreError
 from runtime.review.factory import build_reviewer_runtime
 from runtime.review.store import FileReviewStore, ReviewStoreError
 from runtime.scheduler.dispatch import CanonicalDispatchAdapter
@@ -83,6 +88,20 @@ def default_git_root() -> Path:
     return Path(__file__).resolve().parents[1] / "state" / "executions" / "git"
 
 
+def default_remote_root() -> Path:
+    configured = os.environ.get("AGENT_COMPANY_REMOTE_STATE_ROOT")
+    if configured:
+        return Path(configured)
+    return Path(__file__).resolve().parents[1] / "state" / "remote"
+
+
+def default_remote_config() -> Path:
+    configured = os.environ.get("AGENT_COMPANY_REMOTE_CONFIG")
+    if configured:
+        return Path(configured)
+    return repository_root() / "config" / "remote.local.json"
+
+
 def repository_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
@@ -124,6 +143,18 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=default_git_root(),
         help="Local directory for generated Git change-set and commit evidence",
+    )
+    parser.add_argument(
+        "--remote-state-root",
+        type=Path,
+        default=default_remote_root(),
+        help="Local directory for generated remote command audit/replay state",
+    )
+    parser.add_argument(
+        "--remote-config",
+        type=Path,
+        default=default_remote_config(),
+        help="Ignored local remote identity mapping configuration",
     )
     top = parser.add_subparsers(dest="resource", required=True)
     job = top.add_parser("job", help="Manage canonical jobs")
@@ -314,6 +345,35 @@ def build_parser() -> argparse.ArgumentParser:
         "pr-create", help="Create one exactly approved pull request"
     )
     pr_create.add_argument("pull_request_plan_id")
+
+    remote = top.add_parser(
+        "remote", help="Transport-independent Phase 7 remote command harness"
+    )
+    remote_commands = remote.add_subparsers(dest="command", required=True)
+
+    def add_remote_actor(command: argparse.ArgumentParser) -> None:
+        command.add_argument("--actor", required=True, help="Platform user ID")
+        command.add_argument("--channel", default="local_test")
+        command.add_argument("--command-id")
+        command.add_argument("--idempotency-key")
+        command.add_argument("--issued-at")
+        command.add_argument("--received-at")
+
+    add_remote_actor(remote_commands.add_parser("status", help="Remote status"))
+    add_remote_actor(remote_commands.add_parser("jobs", help="Remote jobs list"))
+    remote_show = remote_commands.add_parser("job-show", help="Remote job show")
+    add_remote_actor(remote_show)
+    remote_show.add_argument("job_id")
+    add_remote_actor(
+        remote_commands.add_parser("approvals", help="Remote pending approvals list")
+    )
+    for decision in ("approve", "reject"):
+        remote_resolve = remote_commands.add_parser(
+            decision, help=f"Remote {decision} for one exact approval"
+        )
+        add_remote_actor(remote_resolve)
+        remote_resolve.add_argument("approval_id")
+        remote_resolve.add_argument("--fingerprint", required=True)
     return parser
 
 
@@ -381,6 +441,53 @@ def build_worker(
     )
 
 
+def load_remote_config(path: Path) -> RemoteRuntimeConfig:
+    if path.is_file():
+        return RemoteRuntimeConfig.from_file(path)
+    return RemoteRuntimeConfig.empty()
+
+
+def remote_command_from_args(args: argparse.Namespace, clock: str) -> RemoteCommand:
+    command_map = {
+        "status": RemoteCommandType.STATUS,
+        "jobs": RemoteCommandType.JOBS_LIST,
+        "job-show": RemoteCommandType.JOB_SHOW,
+        "approvals": RemoteCommandType.APPROVALS_LIST,
+        "approve": RemoteCommandType.APPROVE,
+        "reject": RemoteCommandType.REJECT,
+    }
+    command_type = command_map[args.command]
+    target_id = args.job_id if args.command == "job-show" else None
+    approval_id = args.approval_id if args.command in {"approve", "reject"} else None
+    fingerprint = args.fingerprint if args.command in {"approve", "reject"} else None
+    issued_at = args.issued_at or clock
+    received_at = args.received_at or clock
+    base = [
+        args.channel,
+        args.actor,
+        command_type.value,
+        target_id,
+        approval_id,
+        fingerprint,
+        issued_at,
+    ]
+    stable = json.dumps(base, separators=(",", ":"), ensure_ascii=True)
+    default_id = f"remote-{hashlib.sha256(stable.encode('utf-8')).hexdigest()[:32]}"
+    return RemoteCommand(
+        command_id=args.command_id or default_id,
+        channel=args.channel,
+        actor=args.actor,
+        command_type=command_type,
+        target_id=target_id,
+        approval_id=approval_id,
+        authorization_fingerprint=fingerprint,
+        issued_at=issued_at,
+        received_at=received_at,
+        idempotency_key=args.idempotency_key or default_id,
+        metadata={},
+    )
+
+
 def scheduled_time(runtime: JobRuntime, args: argparse.Namespace) -> str:
     if args.run_at is not None:
         return args.run_at
@@ -404,7 +511,25 @@ def run(arguments: list[str] | None = None) -> int:
             execution_store=executions,
             review_store=reviews,
         )
-        if args.resource == "git":
+        if args.resource == "remote":
+            config = load_remote_config(args.remote_config)
+            identity = config.identify(
+                channel=args.channel,
+                platform_user_id=args.actor,
+            )
+            command = remote_command_from_args(args, runtime.clock())
+            service = RemoteCommandService(
+                jobs=runtime,
+                approvals=approvals,
+                store=FileRemoteCommandStore(
+                    args.remote_state_root,
+                    max_records=config.max_audit_records,
+                ),
+                config=config,
+                clock=runtime.clock,
+            )
+            result = service.handle(command, identity).to_dict()
+        elif args.resource == "git":
             git_store = FileRemoteGitArtifactStore(args.git_state_root)
             git_runtime = GitRuntime(
                 repository_root(),
@@ -698,6 +823,9 @@ def run(arguments: list[str] | None = None) -> int:
         ForgeError,
         SchedulerLoopError,
         SchedulerStateStoreError,
+        RemoteCommandError,
+        RemoteCommandServiceError,
+        RemoteStoreError,
     ) as error:
         print(f"error: {error}", file=sys.stderr)
         return 2

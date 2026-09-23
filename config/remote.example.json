@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "approval_ttl_seconds": 600,
+  "max_audit_records": 1000,
+  "allowed_users": [
+    {
+      "channel": "local_test",
+      "platform_user_id": "example-local-user-id",
+      "mapped_human_identity": "example-human",
+      "enabled": true
+    }
+  ]
+}

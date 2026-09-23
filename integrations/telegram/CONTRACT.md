@@ -44,6 +44,20 @@ Future implementations must use approved bot or delegated authentication. Bot to
 - Outbound messages are external communication and must remain approval-gated unless a specific future policy allows otherwise.
 - Message deletion, pinning, reactions, group changes, or user actions require explicit approval.
 - Sensitive, financial, legal, personal, reputational, or account-related commands should be escalated.
+- Telegram inbound messages are not approval by themselves. Remote approve/reject interactions must map a stable platform user ID to an explicit trusted human identity and must resolve exactly one pending runtime approval through the remote command contract in `../../runtime/remote/`.
+- Telegram usernames, display names, chat titles, message text, or possession of job/approval content are not authoritative identity or authorization.
+
+## Runtime Boundary
+
+Moving this connector from contract-only to runtime-capable requires separate components:
+
+- Telegram transport adapter: validates update structure and extracts stable update, user, chat, message, and callback identifiers.
+- Remote command parser: converts trusted Telegram content into canonical remote commands.
+- Identity/authentication: maps stable Telegram user IDs to trusted humans through explicit allow-list configuration outside Git.
+- Runtime command service: calls existing runtime/orchestrator operations and approval lifecycle surfaces.
+- Notification formatter: renders bounded informational messages and secure approval prompts.
+
+Telegram code must not contain business routing, provider execution, approval mutation, file mutation, Git, push, pull-request, scheduler lifecycle, or connector-write authority. It must call the canonical remote runtime boundary instead.
 
 ## Error/Fallback Behavior
 
@@ -57,6 +71,7 @@ Future implementations must use approved bot or delegated authentication. Bot to
 - Retain only the minimum message content and metadata needed for the approved task.
 - Do not store bot tokens, chat dumps, unrelated messages, or unnecessary personal data.
 - Keep operational chat state separate from long-term knowledge.
+- Remote audit evidence should store update/callback IDs, mapped actor identity, command type, target, result, and approval ID where applicable; avoid storing unnecessary private message content.
 
 ## Intended Agents/Skills
 

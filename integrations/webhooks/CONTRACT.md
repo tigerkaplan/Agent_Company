@@ -43,6 +43,13 @@ Future implementations must validate source identity using an approved mechanism
 - Inbound webhook receipt does not approve downstream action.
 - Any write, external communication, publication, account change, financial action, or destructive action triggered by a webhook remains subject to the relevant approval policy.
 - Unknown, invalid, replayed, or unsigned payloads must not trigger actions.
+- Webhooks map to trusted machine sources, not human approvers. They must never resolve `EXECUTE_JOB`, `COMPLETE_REVIEWED_JOB`, `COMMIT_CHANGE_SET`, `PUSH_GIT_COMMIT`, or `CREATE_PULL_REQUEST` approvals.
+
+## Remote Ingress Boundary
+
+Generic webhooks belong in the same remote ingress architecture only as machine-triggered inbound events. A runtime-capable webhook adapter must validate source identity, schema, replay window, and idempotency before producing a canonical remote command or normalized event.
+
+Webhook adapters may create or route work only through configured orchestrator/runtime operations. They must not execute providers directly, mutate files, commit, push, create pull requests, call arbitrary shell commands, or bypass downstream approval gates.
 
 ## Error/Fallback Behavior
 
@@ -56,6 +63,7 @@ Future implementations must validate source identity using an approved mechanism
 - Retain only the minimum payload data needed for validation, routing, and audit.
 - Do not store secrets, raw event dumps, unrelated payload fields, or unnecessary personal data.
 - Keep transient webhook events separate from long-term knowledge.
+- Persist event IDs, source identifiers, validation result, idempotency status, command target, and outcome; avoid storing full raw payloads unless required for accepted job evidence.
 
 ## Intended Agents/Skills
 
