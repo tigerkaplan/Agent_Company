@@ -452,6 +452,38 @@ class RemoteRuntimeTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         self.assertEqual(json.loads(output.getvalue())["status"], "accepted")
 
+    def test_x_remote_config_accepts_utf8_bom(self) -> None:
+        config_path = self.root / "remote-bom.local.json"
+        config_path.write_bytes(
+            b"\xef\xbb\xbf"
+            + json.dumps(
+                {
+                    "schema_version": 1,
+                    "approval_ttl_seconds": 600,
+                    "max_audit_records": 1000,
+                    "allowed_users": [
+                        {
+                            "channel": "telegram",
+                            "platform_user_id": "123456789",
+                            "mapped_human_identity": "owner-human",
+                            "enabled": True,
+                        }
+                    ],
+                }
+            ).encode("utf-8")
+        )
+
+        config = RemoteRuntimeConfig.from_file(config_path)
+
+        identity = config.identify(
+            channel="telegram",
+            platform_user_id="123456789",
+        )
+        self.assertTrue(identity.authorized)
+        self.assertEqual(identity.mapped_human_identity, "owner-human")
+        self.assertEqual(config.approval_ttl_seconds, 600)
+        self.assertEqual(config.max_audit_records, 1000)
+
 
 if __name__ == "__main__":
     unittest.main()

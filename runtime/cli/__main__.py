@@ -11,6 +11,10 @@ from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
+from integrations.telegram.client import TelegramApiError, TelegramBotApiClient
+from integrations.telegram.parser import TelegramParseError
+from integrations.telegram.state import TelegramStateError, TelegramStateStore
+from integrations.telegram.transport import TelegramTransport
 from runtime.actions.runtime import ControlledWriteRuntime
 from runtime.actions.store import FileMutationArtifactStore
 from runtime.approvals.factory import build_approval_runtime
@@ -374,6 +378,21 @@ def build_parser() -> argparse.ArgumentParser:
         add_remote_actor(remote_resolve)
         remote_resolve.add_argument("approval_id")
         remote_resolve.add_argument("--fingerprint", required=True)
+
+    telegram = top.add_parser(
+        "telegram", help="Run the local Telegram long-poll remote adapter"
+    )
+    telegram_commands = telegram.add_subparsers(dest="command", required=True)
+    telegram_once = telegram_commands.add_parser(
+        "poll-once", help="Fetch and process one bounded Telegram update batch"
+    )
+    telegram_once.add_argument("--long-poll-seconds", type=int, default=0)
+    telegram_run = telegram_commands.add_parser(
+        "run", help="Run Telegram long polling until interrupted"
+    )
+    telegram_run.add_argument("--long-poll-seconds", type=int, default=20)
+    telegram_run.add_argument("--backoff-seconds", type=float, default=5.0)
+    telegram_run.add_argument("--max-cycles", type=int)
     return parser
 
 
@@ -511,13 +530,8 @@ def run(arguments: list[str] | None = None) -> int:
             execution_store=executions,
             review_store=reviews,
         )
-        if args.resource == "remote":
+        if args.resource in {"remote", "telegram"}:
             config = load_remote_config(args.remote_config)
-            identity = config.identify(
-                channel=args.channel,
-                platform_user_id=args.actor,
-            )
-            command = remote_command_from_args(args, runtime.clock())
             service = RemoteCommandService(
                 jobs=runtime,
                 approvals=approvals,
@@ -528,7 +542,33 @@ def run(arguments: list[str] | None = None) -> int:
                 config=config,
                 clock=runtime.clock,
             )
-            result = service.handle(command, identity).to_dict()
+            if args.resource == "remote":
+                identity = config.identify(
+                    channel=args.channel,
+                    platform_user_id=args.actor,
+                )
+                command = remote_command_from_args(args, runtime.clock())
+                result = service.handle(command, identity).to_dict()
+            else:
+                transport = TelegramTransport(
+                    client=TelegramBotApiClient(
+                        os.environ.get("AGENT_COMPANY_TELEGRAM_BOT_TOKEN")
+                    ),
+                    service=service,
+                    config=config,
+                    state=TelegramStateStore(args.remote_state_root / "telegram"),
+                    clock=runtime.clock,
+                )
+                if args.command == "poll-once":
+                    result = transport.poll_once(
+                        long_poll_seconds=args.long_poll_seconds
+                    ).to_dict()
+                else:
+                    result = transport.run(
+                        long_poll_seconds=args.long_poll_seconds,
+                        backoff_seconds=args.backoff_seconds,
+                        max_cycles=args.max_cycles,
+                    )
         elif args.resource == "git":
             git_store = FileRemoteGitArtifactStore(args.git_state_root)
             git_runtime = GitRuntime(
@@ -826,6 +866,9 @@ def run(arguments: list[str] | None = None) -> int:
         RemoteCommandError,
         RemoteCommandServiceError,
         RemoteStoreError,
+        TelegramApiError,
+        TelegramParseError,
+        TelegramStateError,
     ) as error:
         print(f"error: {error}", file=sys.stderr)
         return 2

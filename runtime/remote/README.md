@@ -4,16 +4,17 @@ Phase 7A defines how remote control may enter the local Agent Company runtime
 without weakening the Phase 6 approval, review, controlled-write, Git, and
 scheduler boundaries.
 
-This directory contains the design plus the first transport-independent remote
-runtime core. It does not implement a Telegram bot, webhook listener, HTTP
-server, credential store, daemon, deployment target, provider integration, or
-autonomous messaging capability.
+This directory contains the design plus the transport-independent remote
+runtime core. The first Telegram long-poll adapter is implemented under
+`../../integrations/telegram/`. The runtime still does not implement a webhook
+listener, HTTP server, credential store, daemon, deployment target, provider
+integration, or autonomous messaging capability.
 
 ## Status
 
-- Phase: 7A remote authority design.
+- Phase: 7 Telegram command-response transport.
 - Runtime implementation: first transport-independent core implemented.
-- Transport implementation: not started.
+- Transport implementation: local Telegram Bot API long polling implemented.
 - Canonical command contract: `COMMAND_CONTRACT.md`.
 - Authority and threat model: `AUTHORITY_MODEL.md`.
 
@@ -42,6 +43,12 @@ tracked placeholder lives at `../../config/remote.example.json`.
 
 Remote audit state is compact and bounded by `max_audit_records`, defaulting to
 1000 records. The oldest records are pruned after the configured limit.
+
+The Telegram adapter exposes only the existing core operations. It uses numeric
+Telegram user IDs from ignored remote config, reads the bot token only from
+`AGENT_COMPANY_TELEGRAM_BOT_TOKEN`, and persists only its polling offset under
+ignored `runtime/state/remote/telegram/`. See
+`../../integrations/telegram/README.md` for manual setup.
 
 ## Boundary
 
@@ -84,7 +91,7 @@ the remote command service and canonical runtime operations.
 
 ## Non-Goals
 
-- No Telegram API calls, bot polling, or webhook endpoint.
+- No Telegram webhook endpoint or proactive Telegram notifications.
 - No bot token, signing secret, or tracked allow-list secret.
 - No web server, Docker, VPS, Hermes, daemon, or deployment.
 - No arbitrary shell or filesystem command bridge.
@@ -94,7 +101,7 @@ the remote command service and canonical runtime operations.
   controlled write, commit, push, pull request creation, merge, or deployment
   command in the first executable core.
 
-## Phase 7A Acceptance Criteria
+## Phase 7 Acceptance Criteria
 
 Before implementation can be accepted, the design requires tests and review
 showing that:
@@ -110,5 +117,6 @@ showing that:
 - no token or secret enters Git, runtime job artifacts, or audit payloads;
 - the full Phase 6 regression suite remains green.
 
-Phase 7 is not implemented until these criteria are satisfied by code,
-deterministic tests, and independent review.
+The command-response transport satisfies these criteria through deterministic
+mocked-HTTP tests and the existing remote runtime boundary. Proactive
+notifications and webhook operation remain future Phase 7 work.

@@ -40,7 +40,7 @@ class RemoteRuntimeConfig:
     @classmethod
     def from_file(cls, path: Path) -> "RemoteRuntimeConfig":
         try:
-            value = json.loads(path.read_text(encoding="utf-8"))
+            value = json.loads(path.read_text(encoding="utf-8-sig"))
         except (OSError, json.JSONDecodeError) as error:
             raise RemoteCommandError(f"Could not read remote config: {error}") from error
         if not isinstance(value, dict) or value.get("schema_version") != 1:
