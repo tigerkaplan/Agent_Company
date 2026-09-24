@@ -40,7 +40,12 @@ The system should make it clear:
 
 - The core now includes canonical agents, skills, routing, project onboarding, structured knowledge, and a local execution runtime.
 - Current implementation status belongs in `PROJECT_STATE.md`; capability progression belongs in `ROADMAP.md`.
-- Merge, deployment, Telegram command handling, general connector execution, infrastructure automation, and dedicated observability are not current runtime capabilities.
+- Phase 7 provides permission-scoped private Telegram commands, bounded
+  notifications, and authenticated localhost webhook machine ingress.
+- Merge, deployment, public webhook exposure, TLS termination, remote task
+  submission, remote scheduler/file/Git commands, general connector execution,
+  infrastructure automation, and dedicated observability are not current
+  runtime capabilities.
 - Existing projects remain external authorities and must not be migrated or rewritten merely to be managed.
 
 ## Success Criteria
@@ -53,4 +58,6 @@ The system should make it clear:
 
 ## Current Direction
 
-The immediate direction is Phase 7 planning for safe remote control and runtime integrations. New implementation work must begin only after the Phase 7 authority model, remote-command contract, connector boundaries, and acceptance criteria are explicitly defined.
+The immediate direction is final independent re-review of the implemented
+Phase 7 remote-control and runtime-ingress boundary. Phase 7 must not be closed,
+and Phase 8 must not begin, until that review passes.

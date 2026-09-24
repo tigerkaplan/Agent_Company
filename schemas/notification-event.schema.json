@@ -21,7 +21,7 @@
   "properties": {
     "notification_id": {"type": "string", "minLength": 1, "maxLength": 200},
     "notification_type": {
-      "enum": ["APPROVAL_REQUESTED", "JOB_COMPLETED", "JOB_FAILED", "RUNTIME_ERROR"]
+      "enum": ["APPROVAL_REQUESTED", "APPROVAL_APPROVED", "APPROVAL_REJECTED", "JOB_COMPLETED", "JOB_FAILED", "RUNTIME_ERROR"]
     },
     "created_at": {"type": "string", "format": "date-time"},
     "target_human_identity": {"type": "string", "minLength": 1, "maxLength": 200},

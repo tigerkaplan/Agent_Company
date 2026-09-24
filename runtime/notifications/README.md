@@ -4,8 +4,9 @@ The Phase 7 notification runtime converts bounded canonical runtime events into
 informational delivery attempts. It is provider-neutral and does not approve,
 execute, classify, mutate jobs, invoke Git, or grant authority.
 
-Implemented event types are `APPROVAL_REQUESTED`, `JOB_COMPLETED`, `JOB_FAILED`,
-and `RUNTIME_ERROR`. Events use deterministic IDs and delivery evidence is
+Implemented event types are `APPROVAL_REQUESTED`, `APPROVAL_APPROVED`,
+`APPROVAL_REJECTED`, `JOB_COMPLETED`, `JOB_FAILED`, and `RUNTIME_ERROR`. Events
+use deterministic IDs and delivery evidence is
 stored atomically below ignored `runtime/state/notifications/`. A delivered or
 in-flight event is not resent after restart. Failed delivery may be retried by
 re-emitting the same event, with a maximum of three attempts.
@@ -30,5 +31,7 @@ provider output, project files, full task payloads, credentials, environment
 values, or bot tokens.
 
 Approval notifications include the exact approval ID and authorization
-fingerprint for the existing `/approve` or `/reject` command. Delivery is
-informational and never resolves the approval itself.
+fingerprint only while a decision is pending for the existing `/approve` or
+`/reject` command. Resolution notifications omit the fingerprint and contain
+only bounded action, status, actor, timestamp, and job references. Delivery is
+informational and never resolves or rolls back the approval itself.

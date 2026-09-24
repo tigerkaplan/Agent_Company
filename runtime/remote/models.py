@@ -21,6 +21,25 @@ class RemoteCommandType(str, Enum):
     REJECT = "REJECT"
 
 
+class RemotePermission(str, Enum):
+    READ_STATUS = "READ_STATUS"
+    READ_JOBS = "READ_JOBS"
+    READ_JOB = "READ_JOB"
+    READ_APPROVALS = "READ_APPROVALS"
+    APPROVE = "APPROVE"
+    REJECT = "REJECT"
+
+
+COMMAND_PERMISSIONS = {
+    RemoteCommandType.STATUS: RemotePermission.READ_STATUS,
+    RemoteCommandType.JOBS_LIST: RemotePermission.READ_JOBS,
+    RemoteCommandType.JOB_SHOW: RemotePermission.READ_JOB,
+    RemoteCommandType.APPROVALS_LIST: RemotePermission.READ_APPROVALS,
+    RemoteCommandType.APPROVE: RemotePermission.APPROVE,
+    RemoteCommandType.REJECT: RemotePermission.REJECT,
+}
+
+
 class RemoteResultStatus(str, Enum):
     ACCEPTED = "accepted"
     REJECTED = "rejected"
@@ -200,4 +219,3 @@ class RemoteCommandResult:
             data_refs=deepcopy(value.get("data_refs") or {}),
             error_code=value.get("error_code"),
         )
-

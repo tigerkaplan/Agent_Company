@@ -5,7 +5,7 @@
 ## Status Summary
 
 - Phase 1-6: COMPLETED / COMMITTED.
-- Phase 7: PLANNED / NEXT.
+- Phase 7: IMPLEMENTED / PENDING FINAL RE-REVIEW.
 - Phase 8: PLANNED.
 - Phase 9: PLANNED.
 - Phase 10: PLANNED.
@@ -20,7 +20,9 @@
 
 ### Phase 6: Verified Local Runtime
 
-Phase 6 is completed and committed at `81aa9b3`. Verification evidence recorded in `PROJECT_STATE.md` includes 282/282 runtime tests passing, 71 Python files compiled, and 13 schemas checked. Phase 6M remains the highest explicit Phase 6 marker, and no Phase 6N is defined.
+Phase 6 is completed and committed at `81aa9b3`. Phase 6M remains the highest
+explicit Phase 6 marker, and no Phase 6N is defined. Current combined Phase 6/7
+working-tree verification is recorded in `PROJECT_STATE.md`.
 
 - RUNTIME: canonical job model and lifecycle engine.
 - RUNTIME: Phase 6B local queue and traceable retries.
@@ -34,21 +36,29 @@ Phase 6 is completed and committed at `81aa9b3`. Verification evidence recorded 
 - RUNTIME: Phase 6J remote validation, separately approved push, and separately approved pull-request creation.
 - RUNTIME: Phase 6M bounded autonomous scheduler loop, claims, leases, heartbeat, retry backoff, restart recovery, audit status, and provider usage guards.
 
-## Planned / Next
+## Implemented / Pending Final Re-Review
 
 ### Phase 7: Remote Control And Runtime Integrations
 
 Goal: allow Agent Company to receive and expose runtime operations through safe remote interfaces while preserving existing approval and authority boundaries.
 
-- REMOTE INTERFACE: define the threat and authority model for remote commands.
-- REMOTE INTERFACE: define a remote-command contract for job/status inspection and bounded runtime operations.
-- REMOTE INTERFACE: evaluate Telegram inbound commands, Telegram notifications, and approval/reject interaction as connector-backed interfaces.
-- REMOTE INTERFACE: define webhook runtime ingestion and source-validation boundaries.
-- RUNTIME: define the connector execution boundary without turning connectors into agents or orchestrators.
-- CORE: ensure remote input never itself implies approval.
-- CORE: define authentication and authorization expectations for remote commands.
+- REMOTE INTERFACE: transport-independent `RemoteCommandService` with six
+  explicit commands and deny-by-default per-user permissions.
+- REMOTE INTERFACE: action and project-scoped remote approval/rejection through
+  the existing Approval Runtime, with durable pre-mutation audit evidence.
+- REMOTE INTERFACE: authenticated Telegram commands restricted to private chats.
+- REMOTE INTERFACE: bounded proactive Telegram notifications for approval
+  requested/resolved, job completion/failure, and runtime errors.
+- REMOTE INTERFACE: authenticated localhost `TASK_SIGNAL` webhook ingress with
+  HMAC verification, replay protection, and canonical task dispatch.
+- CORE: Telegram humans and webhook machine sources remain separate identity
+  and authority classes; neither inbound channel implies approval.
 
-Telegram is a candidate interface/connector for Phase 7, not an agent, orchestrator, or implemented runtime. Gmail, Drive, and Calendar write implementations are not automatically in Phase 7; they require explicit later design if included.
+Telegram is an implemented interface/connector, not an agent or orchestrator.
+The webhook adapter is loopback-only machine ingress, not public deployment.
+Gmail, Drive, Calendar, remote task submission, scheduler mutation, remote
+filesystem/Git commands, merge, and deployment are not Phase 7 capabilities.
+Phase 7 remains open until a final independent re-review passes.
 
 ## Planned
 
@@ -92,7 +102,7 @@ Project packs must not create separate Agent Company runtimes per project unless
 
 - Merge: deferred and not implemented.
 - Deployment: deferred and not implemented.
-- Telegram or remote-command runtime: not started.
-- Broader Gmail, Drive, Calendar, webhook, and Telegram integrations: contract-only.
+- Public Telegram webhook mode and public webhook hosting: not implemented.
+- Broader Gmail, Drive, and Calendar runtime integrations: contract-only.
 - Infrastructure implementation: not started.
 - Dedicated observability implementation: not started.

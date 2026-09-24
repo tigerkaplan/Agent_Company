@@ -169,6 +169,96 @@ class NotificationRuntimeTests(unittest.TestCase):
             run_result.request.authorization_fingerprint,
         )
 
+    def test_a2_approval_approved_notification_is_bounded(self) -> None:
+        job = self.jobs.create(
+            self.payload(risk_level="approval_required", approval_status="required")
+        )
+        pending = self.approvals.request_execution(
+            str(job["job_id"]), reason="Approval resolution notification"
+        )
+        resolved = self.approvals.resolve(
+            pending.request.approval_id,
+            decision="APPROVED",
+            decided_by="owner-human",
+        )
+        events = [record["notification"] for record in self.store.list()]
+        approved = next(
+            event for event in events if event["notification_type"] == "APPROVAL_APPROVED"
+        )
+        self.assertEqual(resolved["approval"]["status"], "APPROVED")
+        self.assertEqual(approved["authorization_fingerprint"], None)
+        self.assertEqual(approved["metadata"]["decided_by"], "owner-human")
+
+    def test_a3_approval_rejected_notification_is_created(self) -> None:
+        job = self.jobs.create(
+            self.payload(risk_level="approval_required", approval_status="required")
+        )
+        pending = self.approvals.request_execution(
+            str(job["job_id"]), reason="Approval rejection notification"
+        )
+        resolved = self.approvals.resolve(
+            pending.request.approval_id,
+            decision="REJECTED",
+            decided_by="owner-human",
+        )
+        event_types = {
+            record["notification"]["notification_type"] for record in self.store.list()
+        }
+        self.assertEqual(resolved["approval"]["status"], "REJECTED")
+        self.assertIn("APPROVAL_REJECTED", event_types)
+
+    def test_a4_resolution_delivery_failure_does_not_change_approval(self) -> None:
+        emitter = self._emitter_for_client(FakeTelegramClient(failing=True))
+        jobs = JobRuntime(
+            self.root / "resolution-failed-jobs",
+            clock=lambda: FIXED_TIME,
+            id_factory=lambda: "job-resolution-failed",
+            notification_emitter=emitter,
+        )
+        approvals = ApprovalRuntime(
+            jobs,
+            FileApprovalStore(self.root / "resolution-failed-approvals"),
+            clock=lambda: FIXED_TIME,
+            notification_emitter=emitter,
+        )
+        job = jobs.create(
+            self.payload(risk_level="approval_required", approval_status="required")
+        )
+        pending = approvals.request_execution(
+            str(job["job_id"]), reason="Delivery failure must be isolated"
+        )
+        resolved = approvals.resolve(
+            pending.request.approval_id,
+            decision="APPROVED",
+            decided_by="owner-human",
+        )
+        self.assertEqual(resolved["approval"]["status"], "APPROVED")
+        self.assertEqual(
+            approvals.show(pending.request.approval_id)["approval"]["status"],
+            "APPROVED",
+        )
+
+    def test_a5_duplicate_resolution_notification_is_suppressed(self) -> None:
+        job = self.jobs.create(
+            self.payload(risk_level="approval_required", approval_status="required")
+        )
+        pending = self.approvals.request_execution(
+            str(job["job_id"]), reason="Duplicate notification test"
+        )
+        resolved = self.approvals.resolve(
+            pending.request.approval_id,
+            decision="APPROVED",
+            decided_by="owner-human",
+        )
+        self.emitter.approval_resolved(resolved["approval"], resolved["job"])
+        approved_records = [
+            record
+            for record in self.store.list()
+            if record["notification"]["notification_type"] == "APPROVAL_APPROVED"
+        ]
+        self.assertEqual(len(approved_records), 1)
+        self.assertEqual(len(self.client.sent), 2)
+
     def test_b_job_completed_notification_is_created(self) -> None:
         completed = self.jobs.complete(str(self.running_job()["job_id"]))
 

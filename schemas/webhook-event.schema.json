@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-company.local/schemas/webhook-event.schema.json",
+  "title": "Agent Company Canonical Webhook Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "source_id",
+    "event_type",
+    "received_at",
+    "idempotency_key",
+    "payload",
+    "signature_metadata",
+    "metadata"
+  ],
+  "properties": {
+    "event_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "source_id": {"type": "string", "minLength": 1, "maxLength": 64},
+    "event_type": {"const": "TASK_SIGNAL"},
+    "received_at": {"type": "string", "format": "date-time"},
+    "occurred_at": {
+      "oneOf": [
+        {"type": "string", "format": "date-time"},
+        {"type": "null"}
+      ]
+    },
+    "idempotency_key": {"type": "string", "minLength": 1, "maxLength": 256},
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task", "task_class"],
+      "properties": {
+        "task": {"type": "string", "minLength": 1, "maxLength": 4000},
+        "task_class": {"type": "string", "minLength": 1, "maxLength": 64}
+      }
+    },
+    "signature_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "signed_timestamp", "verified"],
+      "properties": {
+        "mode": {"const": "HMAC_SHA256"},
+        "signed_timestamp": {"type": "string", "minLength": 1},
+        "verified": {"const": true}
+      }
+    },
+    "project_id": {
+      "oneOf": [
+        {"type": "string", "minLength": 1, "maxLength": 128},
+        {"type": "null"}
+      ]
+    },
+    "metadata": {"type": "object"}
+  }
+}

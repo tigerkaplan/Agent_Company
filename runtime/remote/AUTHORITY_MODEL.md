@@ -42,6 +42,13 @@ content, approval text, or a copied approval ID is forbidden.
 
 Remote authorization is command-class and resource scoped.
 
+The executable permission vocabulary is deliberately limited to
+`READ_STATUS`, `READ_JOBS`, `READ_JOB`, `READ_APPROVALS`, `APPROVE`, and
+`REJECT`. Enabled identity mapping is necessary but never sufficient; missing
+permissions deny, and there is no wildcard. Approval/rejection additionally
+requires a configured canonical approval-action scope and either an exact
+project ID or explicit permission for an unscoped project.
+
 - Read-only commands may be allowed for trusted operators, but sensitive state
   should still be redacted by default.
 - Task creation requires an allow-listed human or explicitly trusted machine
@@ -95,6 +102,24 @@ ID derived from platform event identity, source channel, command type, target,
 and canonical arguments. Repeated delivery of the same command must return the
 same result or a duplicate/no-op response.
 
+The local file-backed implementation records authorization durably, then marks
+the mutation attempted before calling Approval Runtime, and finally records
+completion or failure. Failure before the attempted stage prevents mutation.
+An interrupted final update leaves a detectable `MUTATION_ATTEMPTED` record.
+If canonical approval state changed without its downstream job transition, the
+remote record is `RECONCILIATION_REQUIRED`. Replay first reauthorizes the
+current identity and scope, then reloads canonical approval truth and either
+reconciles the remaining transition idempotently or reports that reconciliation
+is still required. Recovery may resolve a still-pending approval only while the
+remote interaction remains inside its TTL and permitted clock skew. Once the
+canonical approval is already resolved, downstream recovery does not replay or
+reverse that human decision merely because the interaction later expires.
+
+Incomplete `AUTHORIZED`, `MUTATION_ATTEMPTED`, and
+`RECONCILIATION_REQUIRED` records are retention-protected. Only terminal audit
+records may be pruned. If protected evidence consumes configured capacity, new
+commands fail closed rather than discarding recovery evidence.
+
 Protection must cover:
 
 - repeated callback delivery;
@@ -132,6 +157,8 @@ Telegram belongs at the transport edge only.
 
 - Telegram adapter validates bot update structure and extracts stable user,
   chat, message, callback, and update IDs.
+- Executable commands are accepted only from Telegram `private` chats; missing,
+  group, supergroup, and channel context fails closed before the remote core.
 - Telegram adapter does not classify tasks, execute providers, resolve
   approvals, or own business logic.
 - Telegram command parsing must produce canonical RemoteCommand objects.

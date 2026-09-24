@@ -8,11 +8,16 @@ from copy import deepcopy
 from datetime import datetime, timezone
 from typing import Any
 
-from runtime.approvals.runtime import ApprovalRuntime, ApprovalRuntimeError
+from runtime.approvals.runtime import (
+    ApprovalReconciliationRequired,
+    ApprovalRuntime,
+    ApprovalRuntimeError,
+)
 from runtime.core.jobs import JobRuntime, RuntimeError as JobRuntimeError, utc_now
 from runtime.providers.adapters import bound_text, sanitize_provider_text
-from runtime.remote.config import RemoteRuntimeConfig
+from runtime.remote.config import RemoteRuntimeConfig, RemoteUser
 from runtime.remote.models import (
+    COMMAND_PERMISSIONS,
     RemoteCommand,
     RemoteCommandError,
     RemoteCommandResult,
@@ -69,25 +74,13 @@ class RemoteCommandService:
         idempotency_fingerprint = self._idempotency_fingerprint(normalized)
         actor_ref = identity.actor_ref
         existing = self.store.load(normalized.command_id)
-        if existing is not None:
-            return self._duplicate_or_conflict(
-                normalized,
-                existing,
-                fingerprint,
-                idempotency_fingerprint,
-                actor_ref,
-            )
-        existing = self.store.find_by_idempotency_key(normalized.idempotency_key)
-        if existing is not None:
-            return self._duplicate_or_conflict(
-                normalized,
-                existing,
-                fingerprint,
-                idempotency_fingerprint,
-                actor_ref,
+        if existing is None:
+            existing = self.store.find_by_idempotency_key(
+                normalized.idempotency_key
             )
 
-        if not identity.authenticated or not identity.authorized or not identity.mapped_human_identity:
+        remote_user = self.config.authorized_user(identity)
+        if remote_user is None or not identity.mapped_human_identity:
             result = self._result(
                 normalized.command_id,
                 RemoteResultStatus.REJECTED,
@@ -95,14 +88,15 @@ class RemoteCommandService:
                 "Remote identity is not authorized",
                 error_code="unauthorized",
             )
-            self._audit(
-                normalized,
-                identity,
-                fingerprint,
-                idempotency_fingerprint,
-                result,
-                authorization_result="rejected",
-            )
+            if existing is None:
+                self._audit(
+                    normalized,
+                    identity,
+                    fingerprint,
+                    idempotency_fingerprint,
+                    result,
+                    authorization_result="rejected",
+                )
             return result
         if normalized.channel != identity.channel or normalized.actor != identity.platform_user_id:
             result = self._result(
@@ -112,18 +106,80 @@ class RemoteCommandService:
                 "Remote command actor does not match authenticated identity",
                 error_code="actor_mismatch",
             )
-            self._audit(
-                normalized,
-                identity,
-                fingerprint,
-                idempotency_fingerprint,
-                result,
-                authorization_result="rejected",
-            )
+            if existing is None:
+                self._audit(
+                    normalized,
+                    identity,
+                    fingerprint,
+                    idempotency_fingerprint,
+                    result,
+                    authorization_result="rejected",
+                )
             return result
 
+        required_permission = COMMAND_PERMISSIONS[normalized.command_type]
+        if required_permission not in remote_user.permissions:
+            result = self._result(
+                normalized.command_id,
+                RemoteResultStatus.REJECTED,
+                "authorization",
+                "Remote identity lacks permission for this command",
+                error_code="permission_denied",
+            )
+            if existing is None:
+                self._audit(
+                    normalized,
+                    identity,
+                    fingerprint,
+                    idempotency_fingerprint,
+                    result,
+                    authorization_result="rejected",
+                )
+            return result
+
+        if existing is not None:
+            if not self._matching_replay(
+                existing,
+                fingerprint,
+                idempotency_fingerprint,
+                actor_ref,
+            ):
+                return self._duplicate_or_conflict(
+                    normalized,
+                    existing,
+                    fingerprint,
+                    idempotency_fingerprint,
+                    actor_ref,
+                    identity,
+                )
+            scope_error = self._replay_scope_error(
+                normalized, remote_user, existing
+            )
+            if scope_error is not None:
+                return scope_error
+            return self._duplicate_or_conflict(
+                normalized,
+                existing,
+                fingerprint,
+                idempotency_fingerprint,
+                actor_ref,
+                identity,
+            )
+
+        if normalized.command_type in {
+            RemoteCommandType.APPROVE,
+            RemoteCommandType.REJECT,
+        }:
+            return self._handle_approval_mutation(
+                normalized,
+                identity,
+                remote_user,
+                fingerprint,
+                idempotency_fingerprint,
+            )
+
         try:
-            result = self._dispatch(normalized, identity)
+            result = self._dispatch(normalized, identity, remote_user)
         except (ApprovalRuntimeError, JobRuntimeError, RemoteCommandError) as error:
             result = self._result(
                 normalized.command_id,
@@ -151,16 +207,18 @@ class RemoteCommandService:
         return result
 
     def _dispatch(
-        self, command: RemoteCommand, identity: RemoteIdentity
+        self,
+        command: RemoteCommand,
+        identity: RemoteIdentity,
+        remote_user: RemoteUser,
     ) -> RemoteCommandResult:
         handlers = {
             RemoteCommandType.STATUS: self._status,
             RemoteCommandType.JOBS_LIST: self._jobs_list,
             RemoteCommandType.JOB_SHOW: self._job_show,
-            RemoteCommandType.APPROVALS_LIST: self._approvals_list,
-            RemoteCommandType.APPROVE: self._approve,
-            RemoteCommandType.REJECT: self._reject,
         }
+        if command.command_type is RemoteCommandType.APPROVALS_LIST:
+            return self._approvals_list(command, identity, remote_user)
         return handlers[command.command_type](command, identity)
 
     def _status(
@@ -213,12 +271,18 @@ class RemoteCommandService:
         )
 
     def _approvals_list(
-        self, command: RemoteCommand, identity: RemoteIdentity
+        self,
+        command: RemoteCommand,
+        identity: RemoteIdentity,
+        remote_user: RemoteUser,
     ) -> RemoteCommandResult:
-        approvals = [
-            self._approval_summary(item)
-            for item in self.approvals.list("PENDING")[:50]
-        ]
+        approvals = []
+        for item in self.approvals.list("PENDING"):
+            shown = self.approvals.show(str(item["approval_id"]))
+            if remote_user.approval_scope.allows(item, shown["job"]):
+                approvals.append(self._approval_summary(item))
+            if len(approvals) == 50:
+                break
         return self._result(
             command.command_id,
             RemoteResultStatus.ACCEPTED,
@@ -227,73 +291,99 @@ class RemoteCommandService:
             data_refs={"approvals": approvals, "count": len(approvals)},
         )
 
-    def _approve(
-        self, command: RemoteCommand, identity: RemoteIdentity
+    def _handle_approval_mutation(
+        self,
+        command: RemoteCommand,
+        identity: RemoteIdentity,
+        remote_user: RemoteUser,
+        fingerprint: str,
+        idempotency_fingerprint: str,
     ) -> RemoteCommandResult:
-        return self._resolve_approval(command, identity, decision="APPROVED")
+        decision = (
+            "APPROVED"
+            if command.command_type is RemoteCommandType.APPROVE
+            else "REJECTED"
+        )
+        validation, shown = self._validate_approval_command(
+            command, remote_user
+        )
+        if validation is not None:
+            self._audit(
+                command,
+                identity,
+                fingerprint,
+                idempotency_fingerprint,
+                validation,
+                authorization_result="accepted",
+            )
+            return validation
 
-    def _reject(
-        self, command: RemoteCommand, identity: RemoteIdentity
-    ) -> RemoteCommandResult:
-        return self._resolve_approval(command, identity, decision="REJECTED")
+        intent = self._result(
+            command.command_id,
+            RemoteResultStatus.ACCEPTED,
+            "approval_intent",
+            "Remote approval command authorized before mutation",
+            data_refs={"approval_id": command.approval_id},
+        )
+        self._audit(
+            command,
+            identity,
+            fingerprint,
+            idempotency_fingerprint,
+            intent,
+            authorization_result="accepted",
+            audit_state="AUTHORIZED",
+            mutation_state="not_started",
+        )
+        attempting = self._result(
+            command.command_id,
+            RemoteResultStatus.ACCEPTED,
+            "approval_mutation",
+            "Remote approval mutation is being attempted",
+            data_refs={"approval_id": command.approval_id},
+        )
+        self._audit(
+            command,
+            identity,
+            fingerprint,
+            idempotency_fingerprint,
+            attempting,
+            authorization_result="accepted",
+            audit_state="MUTATION_ATTEMPTED",
+            mutation_state="attempted",
+            update=True,
+        )
 
-    def _resolve_approval(
-        self, command: RemoteCommand, identity: RemoteIdentity, *, decision: str
-    ) -> RemoteCommandResult:
-        if not command.approval_id:
-            raise RemoteCommandError(f"{command.command_type.value} requires approval_id")
-        if not command.authorization_fingerprint:
-            raise RemoteCommandError(
-                f"{command.command_type.value} requires authorization_fingerprint"
-            )
-        if self._expired(command):
-            return self._result(
-                command.command_id,
-                RemoteResultStatus.REJECTED,
-                "approval",
-                "Remote approval interaction is expired",
-                error_code="remote_interaction_expired",
-                data_refs={"approval_id": command.approval_id},
-            )
-        try:
-            shown = self.approvals.show(command.approval_id)
-        except ApprovalRuntimeError as error:
-            return self._result(
-                command.command_id,
-                RemoteResultStatus.REJECTED,
-                "approval",
-                str(error),
-                error_code="approval_not_available",
-                data_refs={"approval_id": command.approval_id},
-            )
-        approval = shown["approval"]
-        if approval.get("status") != "PENDING":
-            return self._result(
-                command.command_id,
-                RemoteResultStatus.REJECTED,
-                "approval",
-                f"Approval is already resolved as {approval.get('status')}",
-                error_code="approval_not_pending",
-                data_refs={"approval_id": command.approval_id},
-            )
-        if approval.get("authorization_fingerprint") != command.authorization_fingerprint:
-            return self._result(
-                command.command_id,
-                RemoteResultStatus.REJECTED,
-                "approval",
-                "Remote approval fingerprint does not match current approval",
-                error_code="authorization_fingerprint_mismatch",
-                data_refs={"approval_id": command.approval_id},
-            )
         try:
             resolved = self.approvals.resolve(
-                command.approval_id,
+                str(command.approval_id),
                 decision=decision,
                 decided_by=str(identity.mapped_human_identity),
                 reason=f"Remote {decision.lower()} via {identity.channel}",
             )
+        except ApprovalReconciliationRequired:
+            result = self._result(
+                command.command_id,
+                RemoteResultStatus.FAILED,
+                "approval_recovery",
+                "Canonical approval resolution requires reconciliation",
+                error_code="approval_reconciliation_required",
+                data_refs={"approval_id": command.approval_id},
+            )
+            self._audit(
+                command,
+                identity,
+                fingerprint,
+                idempotency_fingerprint,
+                result,
+                authorization_result="accepted",
+                audit_state="RECONCILIATION_REQUIRED",
+                mutation_state="uncertain",
+                update=True,
+            )
+            return result
         except ApprovalRuntimeError as error:
-            return self._result(
+            result = self._result(
                 command.command_id,
                 RemoteResultStatus.REJECTED,
                 "approval",
@@ -301,7 +391,20 @@ class RemoteCommandService:
                 error_code="approval_stale",
                 data_refs={"approval_id": command.approval_id},
             )
-        return self._result(
+            self._audit(
+                command,
+                identity,
+                fingerprint,
+                idempotency_fingerprint,
+                result,
+                authorization_result="accepted",
+                audit_state="FAILED",
+                mutation_state="failed",
+                update=True,
+            )
+            return result
+
+        result = self._result(
             command.command_id,
             RemoteResultStatus.ACCEPTED,
             "approval",
@@ -313,11 +416,125 @@ class RemoteCommandService:
                 "job_status": resolved["job"]["status"],
             },
         )
+        self._audit(
+            command,
+            identity,
+            fingerprint,
+            idempotency_fingerprint,
+            result,
+            authorization_result="accepted",
+            audit_state="COMPLETED",
+            mutation_state="completed",
+            update=True,
+        )
+        return result
 
-    def _expired(self, command: RemoteCommand) -> bool:
+    def _validate_approval_command(
+        self, command: RemoteCommand, remote_user: RemoteUser
+    ) -> tuple[RemoteCommandResult | None, dict[str, Any] | None]:
+        if not command.approval_id:
+            return (
+                self._result(
+                    command.command_id,
+                    RemoteResultStatus.REJECTED,
+                    "approval",
+                    f"{command.command_type.value} requires approval_id",
+                    error_code="approval_id_required",
+                ),
+                None,
+            )
+        if not command.authorization_fingerprint:
+            return (
+                self._result(
+                    command.command_id,
+                    RemoteResultStatus.REJECTED,
+                    "approval",
+                    f"{command.command_type.value} requires authorization_fingerprint",
+                    error_code="authorization_fingerprint_required",
+                ),
+                None,
+            )
+        time_error = self._approval_time_error(command)
+        if time_error is not None:
+            return time_error, None
+        try:
+            shown = self.approvals.show(command.approval_id)
+        except ApprovalRuntimeError as error:
+            return (
+                self._result(
+                    command.command_id,
+                    RemoteResultStatus.REJECTED,
+                    "approval",
+                    str(error),
+                    error_code="approval_not_available",
+                    data_refs={"approval_id": command.approval_id},
+                ),
+                None,
+            )
+        approval = shown["approval"]
+        if approval.get("status") != "PENDING":
+            return (
+                self._result(
+                    command.command_id,
+                    RemoteResultStatus.REJECTED,
+                    "approval",
+                    f"Approval is already resolved as {approval.get('status')}",
+                    error_code="approval_not_pending",
+                    data_refs={"approval_id": command.approval_id},
+                ),
+                shown,
+            )
+        if approval.get("authorization_fingerprint") != command.authorization_fingerprint:
+            return (
+                self._result(
+                    command.command_id,
+                    RemoteResultStatus.REJECTED,
+                    "approval",
+                    "Remote approval fingerprint does not match current approval",
+                    error_code="authorization_fingerprint_mismatch",
+                    data_refs={"approval_id": command.approval_id},
+                ),
+                shown,
+            )
+        if not remote_user.approval_scope.allows(approval, shown["job"]):
+            return (
+                self._result(
+                    command.command_id,
+                    RemoteResultStatus.REJECTED,
+                    "authorization",
+                    "Remote identity is not authorized for this approval scope",
+                    error_code="approval_scope_denied",
+                    data_refs={"approval_id": command.approval_id},
+                ),
+                shown,
+            )
+        return None, shown
+
+    def _approval_time_error(
+        self, command: RemoteCommand
+    ) -> RemoteCommandResult | None:
         issued = self._parse_time(command.issued_at)
         received = self._parse_time(command.received_at)
-        return (received - issued).total_seconds() > self.config.approval_ttl_seconds
+        age = (received - issued).total_seconds()
+        if age < -self.config.allowed_clock_skew_seconds:
+            return self._result(
+                command.command_id,
+                RemoteResultStatus.REJECTED,
+                "approval",
+                "Remote approval interaction was issued too far in the future",
+                error_code="remote_interaction_future",
+                data_refs={"approval_id": command.approval_id},
+            )
+        if age > self.config.approval_ttl_seconds:
+            return self._result(
+                command.command_id,
+                RemoteResultStatus.REJECTED,
+                "approval",
+                "Remote approval interaction is expired",
+                error_code="remote_interaction_expired",
+                data_refs={"approval_id": command.approval_id},
+            )
+        return None
 
     @staticmethod
     def _parse_time(value: str) -> datetime:
@@ -336,14 +553,32 @@ class RemoteCommandService:
         fingerprint: str,
         idempotency_fingerprint: str,
         actor_ref: dict[str, Any],
+        identity: RemoteIdentity,
     ) -> RemoteCommandResult:
-        if (
-            (
-                existing.get("command_fingerprint") == fingerprint
-                or existing.get("idempotency_fingerprint") == idempotency_fingerprint
-            )
-            and existing.get("actor") == actor_ref
+        if self._matching_replay(
+            existing,
+            fingerprint,
+            idempotency_fingerprint,
+            actor_ref,
         ):
+            if (
+                existing.get("audit_state")
+                in {"MUTATION_ATTEMPTED", "RECONCILIATION_REQUIRED"}
+                and command.command_type
+                in {RemoteCommandType.APPROVE, RemoteCommandType.REJECT}
+            ):
+                return self._reconcile_approval_mutation(
+                    command, identity, existing
+                )
+            if existing.get("audit_state") == "AUTHORIZED":
+                return self._result(
+                    command.command_id,
+                    RemoteResultStatus.FAILED,
+                    "approval_recovery",
+                    "Remote approval mutation has incomplete durable audit state",
+                    data_refs={"approval_id": command.approval_id},
+                    error_code="remote_mutation_incomplete",
+                )
             prior = existing.get("result", {})
             return self._result(
                 command.command_id,
@@ -361,6 +596,169 @@ class RemoteCommandService:
             error_code="replay_conflict",
         )
 
+    @staticmethod
+    def _matching_replay(
+        existing: dict[str, Any],
+        fingerprint: str,
+        idempotency_fingerprint: str,
+        actor_ref: dict[str, Any],
+    ) -> bool:
+        return (
+            existing.get("command_fingerprint") == fingerprint
+            or existing.get("idempotency_fingerprint") == idempotency_fingerprint
+        ) and existing.get("actor") == actor_ref
+
+    def _replay_scope_error(
+        self,
+        command: RemoteCommand,
+        remote_user: RemoteUser,
+        existing: dict[str, Any],
+    ) -> RemoteCommandResult | None:
+        approval_ids: list[str] = []
+        if command.command_type in {
+            RemoteCommandType.APPROVE,
+            RemoteCommandType.REJECT,
+        }:
+            if command.approval_id:
+                approval_ids.append(command.approval_id)
+        elif command.command_type is RemoteCommandType.APPROVALS_LIST:
+            prior = existing.get("result", {})
+            data_refs = prior.get("data_refs", {}) if isinstance(prior, dict) else {}
+            summaries = data_refs.get("approvals", []) if isinstance(data_refs, dict) else []
+            if not isinstance(summaries, list):
+                summaries = []
+            for summary in summaries:
+                if isinstance(summary, dict) and isinstance(
+                    summary.get("approval_id"), str
+                ):
+                    approval_ids.append(summary["approval_id"])
+        else:
+            return None
+
+        for approval_id in approval_ids:
+            try:
+                shown = self.approvals.show(approval_id)
+            except ApprovalRuntimeError:
+                return self._result(
+                    command.command_id,
+                    RemoteResultStatus.REJECTED,
+                    "authorization",
+                    "Current approval scope could not be verified",
+                    error_code="approval_scope_denied",
+                    data_refs={"approval_id": approval_id},
+                )
+            approval = shown["approval"]
+            if (
+                command.command_type
+                in {RemoteCommandType.APPROVE, RemoteCommandType.REJECT}
+                and approval.get("authorization_fingerprint")
+                != command.authorization_fingerprint
+            ) or not remote_user.approval_scope.allows(
+                approval, shown["job"]
+            ):
+                return self._result(
+                    command.command_id,
+                    RemoteResultStatus.REJECTED,
+                    "authorization",
+                    "Remote identity is no longer authorized for this approval scope",
+                    error_code="approval_scope_denied",
+                    data_refs={"approval_id": approval_id},
+                )
+        return None
+
+    def _reconcile_approval_mutation(
+        self,
+        command: RemoteCommand,
+        identity: RemoteIdentity,
+        existing: dict[str, Any],
+    ) -> RemoteCommandResult:
+        decision = (
+            "APPROVED"
+            if command.command_type is RemoteCommandType.APPROVE
+            else "REJECTED"
+        )
+        try:
+            shown = self.approvals.show(str(command.approval_id))
+        except ApprovalRuntimeError:
+            return self._result(
+                command.command_id,
+                RemoteResultStatus.FAILED,
+                "approval_recovery",
+                "Canonical approval state is unavailable for reconciliation",
+                data_refs={"approval_id": command.approval_id},
+                error_code="approval_reconciliation_required",
+            )
+        canonical_status = shown["approval"].get("status")
+        if canonical_status == "PENDING":
+            time_error = self._approval_time_error(command)
+            if time_error is not None:
+                self._finalize_recovery_failure(existing, time_error)
+                return time_error
+        try:
+            resolved = self.approvals.reconcile(
+                str(command.approval_id),
+                decision=decision,
+                decided_by=str(identity.mapped_human_identity),
+                reason=f"Remote {decision.lower()} reconciliation via {identity.channel}",
+            )
+        except (ApprovalReconciliationRequired, ApprovalRuntimeError):
+            return self._result(
+                command.command_id,
+                RemoteResultStatus.FAILED,
+                "approval_recovery",
+                "Canonical approval resolution requires reconciliation",
+                data_refs={"approval_id": command.approval_id},
+                error_code="approval_reconciliation_required",
+            )
+
+        stored_result = self._result(
+            str(existing.get("command_id", command.command_id)),
+            RemoteResultStatus.ACCEPTED,
+            "approval",
+            f"Remote approval {decision.lower()}",
+            data_refs={
+                "approval_id": command.approval_id,
+                "approval_status": resolved["approval"]["status"],
+                "job_id": resolved["approval"]["job_id"],
+                "job_status": resolved["job"]["status"],
+            },
+        )
+        completed = deepcopy(existing)
+        completed["processed_at"] = stored_result.processed_at
+        completed["audit_state"] = "COMPLETED"
+        completed["mutation_state"] = "completed"
+        completed["result"] = stored_result.to_dict()
+        try:
+            self.store.update(completed)
+        except RemoteStoreError as error:
+            raise RemoteCommandServiceError(str(error)) from error
+        return self._result(
+            command.command_id,
+            RemoteResultStatus.DUPLICATE,
+            "approval",
+            f"Remote approval {decision.lower()} and reconciled",
+            data_refs=deepcopy(stored_result.data_refs),
+        )
+
+    def _finalize_recovery_failure(
+        self,
+        existing: dict[str, Any],
+        result: RemoteCommandResult,
+    ) -> None:
+        failed = deepcopy(existing)
+        stored_result = result.to_dict()
+        stored_result["command_id"] = str(
+            existing.get("command_id", result.command_id)
+        )
+        failed["processed_at"] = result.processed_at
+        failed["audit_state"] = "FAILED"
+        failed["mutation_state"] = "failed"
+        failed["result"] = stored_result
+        try:
+            self.store.update(failed)
+        except RemoteStoreError as error:
+            raise RemoteCommandServiceError(str(error)) from error
+
     def _audit(
         self,
         command: RemoteCommand,
@@ -370,6 +768,9 @@ class RemoteCommandService:
         result: RemoteCommandResult,
         *,
         authorization_result: str,
+        audit_state: str = "COMPLETED",
+        mutation_state: str = "not_applicable",
+        update: bool = False,
     ) -> None:
         record = {
             "schema_version": 1,
@@ -386,10 +787,15 @@ class RemoteCommandService:
             "received_at": command.received_at,
             "processed_at": result.processed_at,
             "authorization_result": authorization_result,
+            "audit_state": audit_state,
+            "mutation_state": mutation_state,
             "result": result.to_dict(),
         }
         try:
-            self.store.save(record)
+            if update:
+                self.store.update(record)
+            else:
+                self.store.save(record)
         except RemoteStoreError as error:
             raise RemoteCommandServiceError(str(error)) from error
 
@@ -429,6 +835,8 @@ class RemoteCommandService:
             "received_at": command.get("received_at"),
             "processed_at": result.processed_at,
             "authorization_result": "rejected",
+            "audit_state": "COMPLETED",
+            "mutation_state": "not_applicable",
             "result": result.to_dict(),
         }
         if self.store.load(command_id) is None:

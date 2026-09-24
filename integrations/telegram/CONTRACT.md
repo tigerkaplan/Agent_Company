@@ -20,8 +20,10 @@ This contract defers to `../../CONSTITUTION.md` and `../../AGENTS.md`.
 - Send one bounded command-response message to the originating chat.
 - Resolve `/approve` or `/reject` only through `RemoteCommandService` and
   `ApprovalRuntime` with the exact current approval binding.
-- Proactive messages, message modification, pinning, deletion, reactions, and
-  group changes are not implemented.
+- Send bounded proactive approval-requested/resolved, terminal-job, and runtime
+  error notifications to configured enabled identities.
+- Message modification, pinning, deletion, reactions, and group changes are not
+  implemented.
 
 ## Input Contract
 
@@ -45,14 +47,17 @@ This contract defers to `../../CONSTITUTION.md` and `../../AGENTS.md`.
 The implementation uses a bot token from
 `AGENT_COMPANY_TELEGRAM_BOT_TOKEN`. Bot tokens, secrets, and credentials must
 not be stored in this contract directory, remote config, runtime state, audit
-records, logs, or committed files. Authorization uses only the stable numeric
-Telegram user ID mapped through ignored `config/remote.local.json`.
+records, logs, or committed files. Authorization uses the stable numeric
+Telegram user ID mapped through ignored `config/remote.local.json`, an exact
+command permission, and approval action/project scope when applicable.
 
 ## Approval Boundaries
 
-- The current transport permits only an immediate bounded response to the
-  originating command. It does not permit unsolicited or proactive outbound
-  communication.
+- Commands are accepted only in Telegram private chats. Group, supergroup,
+  channel, missing, or ambiguous chat types fail closed without calling the
+  remote command service.
+- Proactive outbound messages are limited to the canonical bounded notification
+  event set and configured human targets; delivery never grants approval.
 - Message deletion, pinning, reactions, group changes, or user actions require explicit approval.
 - Sensitive, financial, legal, personal, reputational, or account-related commands should be escalated.
 - Telegram inbound messages are not approval by themselves. Remote approve/reject interactions must map a stable platform user ID to an explicit trusted human identity and must resolve exactly one pending runtime approval through the remote command contract in `../../runtime/remote/`.

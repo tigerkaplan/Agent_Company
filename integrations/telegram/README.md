@@ -10,12 +10,15 @@ execution.
 
 - Local Telegram Bot API long polling through `getUpdates`.
 - Command-response messages through `sendMessage`.
-- Proactive bounded `APPROVAL_REQUESTED`, `JOB_COMPLETED`, `JOB_FAILED`, and
-  `RUNTIME_ERROR` messages through the same `sendMessage` client.
+- Proactive bounded `APPROVAL_REQUESTED`, `APPROVAL_APPROVED`,
+  `APPROVAL_REJECTED`, `JOB_COMPLETED`, `JOB_FAILED`, and `RUNTIME_ERROR`
+  messages through the same `sendMessage` client.
 - Stable numeric Telegram user ID mapping through ignored
   `../../config/remote.local.json`.
 - Explicit parsing for `/status`, `/jobs`, `/job`, `/approvals`, `/approve`,
   `/reject`, and `/help`.
+- Private-chat-only command handling; group, supergroup, channel, missing, or
+  ambiguous chat contexts fail closed before the remote core.
 - Canonical command execution only through `RemoteCommandService`.
 - Persistent restart-safe polling offset under ignored
   `../../runtime/state/remote/telegram/`.
@@ -37,6 +40,7 @@ Copy `../../config/remote.example.json` to the ignored
 {
   "schema_version": 1,
   "approval_ttl_seconds": 600,
+  "allowed_clock_skew_seconds": 30,
   "max_audit_records": 1000,
   "notification_targets": ["local-owner"],
   "allowed_users": [
@@ -44,7 +48,13 @@ Copy `../../config/remote.example.json` to the ignored
       "channel": "telegram",
       "platform_user_id": "123456789",
       "mapped_human_identity": "local-owner",
-      "enabled": true
+      "enabled": true,
+      "permissions": ["READ_STATUS"],
+      "approval_scope": {
+        "allowed_actions": [],
+        "project_ids": [],
+        "allow_unscoped_projects": false
+      }
     }
   ]
 }
@@ -53,6 +63,11 @@ Copy `../../config/remote.example.json` to the ignored
 Usernames, display names, chat names, and message text do not authorize a
 command. The token is never read from this config and is not written to state,
 audit records, or logs.
+
+`enabled: true` does not grant commands by itself. Add only the exact permission
+strings required by that human. `APPROVE` or `REJECT` also requires an explicit
+`approval_scope`; an empty or missing scope denies every approval. Copy the
+tracked example and replace placeholders only in ignored local configuration.
 
 `notification_targets` contains mapped human identities, not Telegram names or
 IDs. Each target resolves only to an enabled `telegram` entry in
@@ -94,7 +109,8 @@ read-only response before testing `/approve` or `/reject`.
 
 ## Not Implemented
 
-- Telegram webhook mode or a generic webhook runtime.
+- Telegram webhook mode, public webhook hosting, or TLS termination. The
+  separate generic webhook runtime is localhost-only machine ingress.
 - Remote task creation, cancellation, or scheduler mutation.
 - Controlled writes, filesystem or shell commands, Git actions, merge, or
   deployment.

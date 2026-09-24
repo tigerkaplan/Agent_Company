@@ -154,6 +154,17 @@ class TelegramNotificationFormatter:
                 f"Reject: /reject {approval_id} {fingerprint}\n\n"
                 "Delivery does not grant approval. An explicit command is required."
             )
+        elif event.notification_type in {
+            NotificationType.APPROVAL_APPROVED,
+            NotificationType.APPROVAL_REJECTED,
+        }:
+            text = (
+                f"{event.title}\n"
+                f"Approval: {self._value(event.approval_id)}\n"
+                f"Action: {self._value(metadata.get('requested_action'))}\n"
+                f"Status: {self._value(metadata.get('approval_status'))}\n"
+                f"Resolved by: {self._value(metadata.get('decided_by'))}"
+            )
         elif event.notification_type is NotificationType.JOB_COMPLETED:
             text = (
                 f"{event.title}\n"

@@ -25,8 +25,12 @@ from runtime.approvals.runtime import ApprovalRuntime
 from runtime.approvals.store import FileApprovalStore
 from runtime.cli.__main__ import run
 from runtime.core.jobs import JobRuntime
-from runtime.remote.config import RemoteRuntimeConfig, RemoteUser
-from runtime.remote.models import RemoteCommandResult, RemoteResultStatus
+from runtime.remote.config import RemoteApprovalScope, RemoteRuntimeConfig, RemoteUser
+from runtime.remote.models import (
+    RemoteCommandResult,
+    RemotePermission,
+    RemoteResultStatus,
+)
 from runtime.remote.service import RemoteCommandService
 from runtime.remote.store import FileRemoteCommandStore
 
@@ -105,7 +109,19 @@ class TelegramTransportTests(unittest.TestCase):
             clock=self.clock,
         )
         self.config = RemoteRuntimeConfig(
-            users=(RemoteUser("telegram", "12345", "owner-human", True),)
+            users=(
+                RemoteUser(
+                    "telegram",
+                    "12345",
+                    "owner-human",
+                    True,
+                    tuple(RemotePermission),
+                    RemoteApprovalScope(
+                        allowed_actions=("EXECUTE_JOB",),
+                        allow_unscoped_projects=True,
+                    ),
+                ),
+            )
         )
         self.remote_store = FileRemoteCommandStore(self.root / "remote")
         self.service = RemoteCommandService(
@@ -147,6 +163,7 @@ class TelegramTransportTests(unittest.TestCase):
         *,
         user_id: int = 12345,
         username: str = "not-authoritative",
+        chat_type: str = "private",
     ) -> dict:
         return {
             "update_id": update_id,
@@ -158,7 +175,7 @@ class TelegramTransportTests(unittest.TestCase):
                     "username": username,
                     "first_name": "Ignored",
                 },
-                "chat": {"id": 7000, "type": "private"},
+                "chat": {"id": 7000, "type": chat_type},
                 "text": text,
             },
         }
@@ -288,6 +305,32 @@ class TelegramTransportTests(unittest.TestCase):
         self.transport(restarted).poll_once()
         self.assertEqual(restarted.requested_offsets, [15])
 
+    def test_n2_authorized_group_chat_cannot_read_status(self) -> None:
+        client = FakeTelegramClient(
+            [self.update(140, "/status", chat_type="group")]
+        )
+        self.transport(client).poll_once()
+        self.assertIn("only in private chats", client.sent[0]["text"])
+        self.assertEqual(self.remote_store.list(), [])
+
+    def test_n3_group_chat_cannot_mutate_approval(self) -> None:
+        approval = self.pending_approval()
+        command = f"/approve {approval.approval_id} {approval.authorization_fingerprint}"
+        client = FakeTelegramClient(
+            [self.update(141, command, chat_type="supergroup")]
+        )
+        self.transport(client).poll_once()
+        self.assertIn("only in private chats", client.sent[0]["text"])
+        self.assertEqual(self.approvals.store.load(approval.approval_id).status, "PENDING")
+        self.assertEqual(self.remote_store.list(), [])
+
+    def test_n4_missing_chat_type_fails_closed(self) -> None:
+        update = self.update(142, "/status")
+        del update["message"]["chat"]["type"]
+        with self.assertRaises(TelegramParseError):
+            TelegramUpdateParser().parse(update)
+        self.assertEqual(self.remote_store.list(), [])
+
     def test_r_response_formatting_is_bounded(self) -> None:
         formatter = TelegramResultFormatter(max_chars=128)
         result = RemoteCommandResult(
@@ -383,6 +426,18 @@ class TelegramTransportTests(unittest.TestCase):
             for path in (REPOSITORY_ROOT / "integrations" / "telegram").glob("*.py")
         )
         self.assertNotIn("shell=True", sources)
+
+    def test_w_canonical_token_environment_name_is_consistent(self) -> None:
+        paths = (
+            REPOSITORY_ROOT / ".env.example",
+            REPOSITORY_ROOT / "integrations" / "telegram" / "README.md",
+            REPOSITORY_ROOT / "integrations" / "telegram" / "CONTRACT.md",
+            REPOSITORY_ROOT / "runtime" / "remote" / "README.md",
+        )
+        for path in paths:
+            content = path.read_text(encoding="utf-8-sig")
+            self.assertIn("AGENT_COMPANY_TELEGRAM_BOT_TOKEN", content, path)
+            self.assertNotIn("\nTELEGRAM_BOT_TOKEN=", content, path)
 
     def test_help_is_bounded_and_does_not_call_core(self) -> None:
         client = FakeTelegramClient([self.update(16, "/help")])

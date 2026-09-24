@@ -9,6 +9,7 @@
 *.pfx
 secrets/
 config/remote.local.json
+config/webhooks.local.json
 
 # Runtime state and local data
 /state/
@@ -19,6 +20,7 @@ config/remote.local.json
 /runtime/state/scheduler-runtime/
 /runtime/state/remote/
 /runtime/state/notifications/
+/runtime/state/webhooks/
 data/runtime/
 tmp/
 temp/

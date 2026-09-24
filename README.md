@@ -21,7 +21,13 @@ Canonical definitions must remain separate from generated provider files. Claude
 
 ## Current State
 
-The committed repository is at the verified Phase 6 local runtime checkpoint, `81aa9b3`. The local-first Phase 6 runtime is implemented and verified, with 282/282 tests passing, 71 Python files compiled, and 13 schemas checked. Phase 6M remains the highest explicit Phase 6 marker, and no Phase 6N is defined. Phase 7 remote control and runtime integrations are planned next, but no Phase 7 implementation has started. `PROJECT_STATE.md` is the canonical current-status record and `ROADMAP.md` is the canonical capability roadmap.
+Git HEAD `f6820f1` contains the committed remote core, Telegram transport, and
+notification runtime. The working tree also contains authenticated localhost
+webhook ingress and Phase 7 security remediation. The current deterministic
+baseline is 424/424 runtime tests, 99 Python files compiled, and 15 schemas
+parsed. Phase 7 is implemented but remains open pending a final independent
+architecture and security re-review. `PROJECT_STATE.md` is the canonical
+current-status record and `ROADMAP.md` is the canonical capability roadmap.
 
 The repository now contains:
 
@@ -31,17 +37,29 @@ The repository now contains:
 - `CLAUDE.md` gives Claude a provider bootstrap that defers to canonical rules.
 - `agents/` and `skills/` define canonical roles and reusable methods.
 - `orchestrator/` defines classification, routing, approvals, workflows, and dry-run policy.
-- `runtime/` contains local job, worker, provider, review, approval, controlled-write, Git, remote-Git, and scheduler coordination.
+- `runtime/` contains local job, worker, provider, review, approval,
+  controlled-write, Git, scheduler, remote-command, notification, and webhook
+  coordination.
 - `schemas/` contains the persisted runtime contracts.
 - `shared/projects/` and `shared/knowledge/` keep operational state separate from durable knowledge.
 - `.env.example` lists placeholder environment variable names.
 - `.gitignore` protects secrets, runtime state, logs, caches, and local artifacts.
 
-The current runtime does not implement merge, release, deployment, Telegram command handling, general connector execution, infrastructure automation, Hermes integration, VPS/Docker hosting, Control Room, or a dedicated observability platform.
+The current runtime does not implement merge, release, deployment, public
+webhook hosting, TLS termination, remote task submission, remote scheduler or
+filesystem/Git commands, general connector execution, infrastructure
+automation, Hermes integration, VPS/Docker hosting, Control Room, or a
+dedicated observability platform.
 
 ## Operating Boundary
 
-Provider execution is explicit and approval boundaries remain authoritative. The local scheduler is sequential and file-backed; it does not install an operating-system service or create approval authority. Connector contracts are not connector implementations.
+Provider execution is explicit and approval boundaries remain authoritative.
+Remote users require an exact command permission; approval decisions also
+require configured action/project scope and the current canonical approval
+fingerprint. Telegram commands are private-chat only. Webhooks are authenticated
+machine ingress on loopback and never human approval. The local scheduler is
+sequential and file-backed; it does not install an operating-system service or
+create approval authority.
 
 ## Quick Start
 

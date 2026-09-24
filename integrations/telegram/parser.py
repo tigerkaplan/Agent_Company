@@ -19,6 +19,7 @@ HELP_TEXT = (
 )
 SAFE_UNSUPPORTED_TEXT = "Unsupported command. Use /help for the allowed commands."
 SAFE_TEXT_ONLY_RESPONSE = "Only explicit bot commands are supported. Use /help."
+PRIVATE_CHAT_ONLY_RESPONSE = "Agent Company commands are available only in private chats."
 _COMMAND_PATTERN = re.compile(r"^/([a-z]+)$")
 _IDENTIFIER_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
 _FINGERPRINT_PATTERN = re.compile(r"^[0-9a-f]{64}$")
@@ -33,6 +34,7 @@ class TelegramInboundMessage:
     update_id: int
     user_id: int
     chat_id: int
+    chat_type: str
     issued_at: str
     text: str
 
@@ -59,6 +61,14 @@ class TelegramUpdateParser:
             raise TelegramParseError("Telegram message identity is missing")
         user_id = self._integer(sender.get("id"), "user ID", minimum=1)
         chat_id = self._integer(chat.get("id"), "chat ID")
+        chat_type = chat.get("type")
+        if not isinstance(chat_type, str) or chat_type not in {
+            "private",
+            "group",
+            "supergroup",
+            "channel",
+        }:
+            raise TelegramParseError("Telegram chat type is missing or invalid")
         timestamp = self._integer(message.get("date"), "message date", minimum=0)
         text = message.get("text")
         if text is None:
@@ -79,6 +89,7 @@ class TelegramUpdateParser:
             update_id=update_id,
             user_id=user_id,
             chat_id=chat_id,
+            chat_type=chat_type,
             issued_at=issued_at,
             text=text,
         )

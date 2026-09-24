@@ -51,6 +51,51 @@ class RuntimeNotificationEmitter:
                 )
             )
 
+    def approval_resolved(
+        self, approval: dict[str, Any], job: dict[str, Any]
+    ) -> None:
+        status = str(approval.get("status"))
+        if status not in {"APPROVED", "REJECTED"}:
+            return
+        notification_type = (
+            NotificationType.APPROVAL_APPROVED
+            if status == "APPROVED"
+            else NotificationType.APPROVAL_REJECTED
+        )
+        for target in self.targets:
+            self._emit(
+                NotificationEvent.create(
+                    notification_type=notification_type,
+                    created_at=str(approval["resolved_at"]),
+                    target_human_identity=target,
+                    source_type="approval",
+                    source_id=str(approval["approval_id"]),
+                    severity=(
+                        NotificationSeverity.INFO
+                        if status == "APPROVED"
+                        else NotificationSeverity.WARNING
+                    ),
+                    title=(
+                        "Approval approved"
+                        if status == "APPROVED"
+                        else "Approval rejected"
+                    ),
+                    summary=(
+                        "A scoped runtime approval was approved."
+                        if status == "APPROVED"
+                        else "A scoped runtime approval was rejected."
+                    ),
+                    approval_id=str(approval["approval_id"]),
+                    metadata={
+                        "job_id": job.get("job_id"),
+                        "requested_action": approval.get("requested_action"),
+                        "approval_status": status,
+                        "decided_by": approval.get("decided_by"),
+                        "resolved_at": approval.get("resolved_at"),
+                    },
+                )
+            )
+
     def job_terminal(self, job: dict[str, Any]) -> None:
         status = str(job.get("status"))
         if status not in {"completed", "failed"}:

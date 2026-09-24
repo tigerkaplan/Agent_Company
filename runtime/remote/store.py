@@ -15,6 +15,12 @@ class RemoteStoreError(ValueError):
 
 
 class FileRemoteCommandStore:
+    _PROTECTED_AUDIT_STATES = {
+        "AUTHORIZED",
+        "MUTATION_ATTEMPTED",
+        "RECONCILIATION_REQUIRED",
+    }
+
     def __init__(self, root: Path, *, max_records: int = 1000) -> None:
         self.root = Path(root)
         self.max_records = max_records
@@ -46,8 +52,17 @@ class FileRemoteCommandStore:
         path = self._path(command_id)
         if path.exists():
             raise RemoteStoreError(f"Remote command already recorded: {command_id}")
+        self._make_capacity()
         self._write(path, record)
-        self._prune()
+
+    def update(self, record: dict[str, Any]) -> None:
+        command_id = str(record.get("command_id", ""))
+        if not command_id:
+            raise RemoteStoreError("Remote command record requires command_id")
+        path = self._path(command_id)
+        if not path.is_file():
+            raise RemoteStoreError(f"Remote command record does not exist: {command_id}")
+        self._write(path, record)
 
     def list(self) -> list[dict[str, Any]]:
         if not self.root.exists():
@@ -92,14 +107,39 @@ class FileRemoteCommandStore:
             if temporary_path is not None and temporary_path.exists():
                 temporary_path.unlink()
 
-    def _prune(self) -> None:
+    def _make_capacity(self) -> None:
+        self.root.mkdir(parents=True, exist_ok=True)
         records = sorted(
             self.root.glob("*.remote-command.json"),
             key=lambda path: (path.stat().st_mtime, path.name),
         )
-        while len(records) > self.max_records:
-            path = records.pop(0)
+        while len(records) >= self.max_records:
+            removable = next(
+                (
+                    path
+                    for path in records
+                    if self._audit_state(path) not in self._PROTECTED_AUDIT_STATES
+                ),
+                None,
+            )
+            if removable is None:
+                raise RemoteStoreError(
+                    "Remote audit capacity is occupied by incomplete recovery records"
+                )
+            records.remove(removable)
             try:
-                path.unlink()
+                removable.unlink()
             except OSError as error:
                 raise RemoteStoreError(f"Could not prune remote command record: {error}") from error
+
+    @staticmethod
+    def _audit_state(path: Path) -> str:
+        try:
+            value = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            raise RemoteStoreError(
+                f"Could not inspect remote command record: {error}"
+            ) from error
+        if not isinstance(value, dict):
+            raise RemoteStoreError("Remote command record is not an object")
+        return str(value.get("audit_state", ""))

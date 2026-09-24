@@ -28,6 +28,10 @@ class ApprovalRuntimeError(ValueError):
     """Raised when the human approval boundary cannot be satisfied safely."""
 
 
+class ApprovalReconciliationRequired(ApprovalRuntimeError):
+    """Raised when approval state persisted but its downstream transition did not."""
+
+
 class ApprovalRuntime:
     def __init__(
         self,
@@ -244,6 +248,7 @@ class ApprovalRuntime:
                 key: job.get(key)
                 for key in (
                     "job_id",
+                    "project_id",
                     "task",
                     "status",
                     "risk_level",
@@ -283,21 +288,31 @@ class ApprovalRuntime:
                 raise ApprovalRuntimeError(
                     f"Approval is already resolved as {request.status}"
                 )
-            self._ensure_boundary_linked(request)
-            if decision == request.status:
+            try:
+                self._ensure_boundary_linked(request)
+                self.job_runtime.validate_approval_resolution(
+                    request.to_dict(), self.artifact_ref(request.approval_id)
+                )
+                job = self.job_runtime.apply_approval_resolution(
+                    request.to_dict(), self.artifact_ref(request.approval_id)
+                )
+            except (ApprovalRuntimeError, RuntimeError) as error:
                 try:
-                    self.job_runtime.validate_approval_resolution(
-                        request.to_dict(), self.artifact_ref(request.approval_id)
-                    )
-                    job = self.job_runtime.apply_approval_resolution(
-                        request.to_dict(), self.artifact_ref(request.approval_id)
-                    )
-                    return {"approval": request.to_dict(), "job": job}
+                    current_job = self.job_runtime.show(request.job_id)
                 except RuntimeError:
-                    pass
-            raise ApprovalRuntimeError(
-                f"Approval is already resolved as {request.status}"
-            )
+                    current_job = None
+                if current_job is not None and self._resolution_is_applied(
+                    request, current_job
+                ):
+                    raise ApprovalRuntimeError(
+                        f"Approval is already resolved as {request.status}"
+                    ) from error
+                raise ApprovalReconciliationRequired(
+                    f"Approval {request.approval_id} is {request.status} but its "
+                    "downstream transition requires reconciliation"
+                ) from error
+            self._notify_approval_resolved(request, job)
+            return {"approval": request.to_dict(), "job": job}
         self._ensure_boundary_linked(request)
         actor = self._bounded_required(decided_by, 200, "Approval actor")
         decision_reason = self._bounded_optional(reason, 2000)
@@ -311,13 +326,74 @@ class ApprovalRuntime:
                 resolved_at=self.clock(),
                 reason=decision_reason,
             )
+        except (ApprovalContractError, RuntimeError) as error:
+            raise ApprovalRuntimeError(str(error)) from error
+        try:
             self.store.resolve(resolved)
+        except ApprovalStoreError as error:
+            raise ApprovalRuntimeError(str(error)) from error
+        try:
             job = self.job_runtime.apply_approval_resolution(
                 resolved.to_dict(), self.artifact_ref(resolved.approval_id)
             )
-        except (ApprovalContractError, ApprovalStoreError, RuntimeError) as error:
-            raise ApprovalRuntimeError(str(error)) from error
+        except RuntimeError as error:
+            raise ApprovalReconciliationRequired(
+                f"Approval {resolved.approval_id} is {resolved.status} but its "
+                "downstream transition requires reconciliation"
+            ) from error
+        self._notify_approval_resolved(resolved, job)
         return {"approval": resolved.to_dict(), "job": job}
+
+    def reconcile(
+        self,
+        approval_id: str,
+        *,
+        decision: str,
+        decided_by: str,
+        reason: str | None = None,
+    ) -> dict[str, Any]:
+        """Finish or confirm one interrupted canonical approval transition."""
+        request = self._load(approval_id)
+        if request.status == "PENDING":
+            return self.resolve(
+                approval_id,
+                decision=decision,
+                decided_by=decided_by,
+                reason=reason,
+            )
+        if request.status != decision:
+            raise ApprovalRuntimeError(
+                f"Approval is already resolved as {request.status}"
+            )
+        try:
+            job = self.job_runtime.show(request.job_id)
+        except RuntimeError as error:
+            raise ApprovalReconciliationRequired(
+                f"Approval {request.approval_id} is {request.status} but its "
+                "downstream transition requires reconciliation"
+            ) from error
+        if self._resolution_is_applied(request, job):
+            self._notify_approval_resolved(request, job)
+            return {"approval": request.to_dict(), "job": job}
+        return self.resolve(
+            approval_id,
+            decision=decision,
+            decided_by=decided_by,
+            reason=reason,
+        )
+
+    @staticmethod
+    def _resolution_is_applied(
+        request: ApprovalRequest, job: dict[str, Any]
+    ) -> bool:
+        applied = job.get("approval", {})
+        return (
+            isinstance(applied, dict)
+            and applied.get("approval_id") == request.approval_id
+            and applied.get("status") == request.status
+            and applied.get("authorization_fingerprint")
+            == request.authorization_fingerprint
+        )
 
     def _ensure_boundary_linked(self, request: ApprovalRequest) -> None:
         try:
@@ -449,6 +525,18 @@ class ApprovalRuntime:
                 # A pending approval remains authoritative if notification fails.
                 pass
 
+    def _notify_approval_resolved(
+        self, request: ApprovalRequest, job: dict[str, Any]
+    ) -> None:
+        if self.notification_emitter is not None:
+            try:
+                self.notification_emitter.approval_resolved(
+                    request.to_dict(), deepcopy(job)
+                )
+            except Exception:
+                # Approval state remains authoritative if notification fails.
+                pass
+
     def _resolve_commit(
         self,
         request: ApprovalRequest,
@@ -460,10 +548,12 @@ class ApprovalRuntime:
         self._validate_commit_boundary(request)
         if request.status != "PENDING":
             if decision == request.status:
-                return {
+                result = {
                     "approval": request.to_dict(),
                     "job": self.job_runtime.show(request.job_id),
                 }
+                self._notify_approval_resolved(request, result["job"])
+                return result
             raise ApprovalRuntimeError(
                 f"Approval is already resolved as {request.status}"
             )
@@ -479,10 +569,12 @@ class ApprovalRuntime:
             self.store.resolve(resolved)
         except (ApprovalContractError, ApprovalStoreError) as error:
             raise ApprovalRuntimeError(str(error)) from error
-        return {
+        result = {
             "approval": resolved.to_dict(),
             "job": self.job_runtime.show(request.job_id),
         }
+        self._notify_approval_resolved(resolved, result["job"])
+        return result
 
     def _validate_commit_boundary(self, request: ApprovalRequest) -> None:
         try:

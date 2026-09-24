@@ -1,6 +1,7 @@
 ﻿{
   "schema_version": 1,
   "approval_ttl_seconds": 600,
+  "allowed_clock_skew_seconds": 30,
   "max_audit_records": 1000,
   "notification_targets": [
     "example-human"
@@ -10,13 +11,29 @@
       "channel": "telegram",
       "platform_user_id": "123456789",
       "mapped_human_identity": "example-human",
-      "enabled": true
+      "enabled": true,
+      "permissions": [
+        "READ_STATUS"
+      ],
+      "approval_scope": {
+        "allowed_actions": [],
+        "project_ids": [],
+        "allow_unscoped_projects": false
+      }
     },
     {
       "channel": "local_test",
       "platform_user_id": "example-local-user-id",
       "mapped_human_identity": "example-human",
-      "enabled": true
+      "enabled": true,
+      "permissions": [
+        "READ_STATUS"
+      ],
+      "approval_scope": {
+        "allowed_actions": [],
+        "project_ids": [],
+        "allow_unscoped_projects": false
+      }
     }
   ]
 }

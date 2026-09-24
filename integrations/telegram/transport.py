@@ -8,7 +8,11 @@ from typing import Any, Callable, Protocol
 
 from integrations.telegram.client import TelegramApiError
 from integrations.telegram.formatter import TelegramResultFormatter
-from integrations.telegram.parser import TelegramCommandParser, TelegramUpdateParser
+from integrations.telegram.parser import (
+    PRIVATE_CHAT_ONLY_RESPONSE,
+    TelegramCommandParser,
+    TelegramUpdateParser,
+)
 from integrations.telegram.state import TelegramStateStore
 from runtime.remote.config import RemoteRuntimeConfig
 from runtime.remote.service import RemoteCommandService
@@ -83,19 +87,22 @@ class TelegramTransport:
             if message is None:
                 skipped += 1
             else:
-                outcome = self.command_parser.parse(
-                    message,
-                    received_at=self.clock(),
-                )
-                if outcome.command is None:
-                    response = outcome.direct_response or "Unsupported Telegram update."
+                if message.chat_type != "private":
+                    response = PRIVATE_CHAT_ONLY_RESPONSE
                 else:
-                    identity = self.config.identify(
-                        channel="telegram",
-                        platform_user_id=str(message.user_id),
+                    outcome = self.command_parser.parse(
+                        message,
+                        received_at=self.clock(),
                     )
-                    result = self.service.handle(outcome.command, identity)
-                    response = self.formatter.format(result)
+                    if outcome.command is None:
+                        response = outcome.direct_response or "Unsupported Telegram update."
+                    else:
+                        identity = self.config.identify(
+                            channel="telegram",
+                            platform_user_id=str(message.user_id),
+                        )
+                        result = self.service.handle(outcome.command, identity)
+                        response = self.formatter.format(result)
                 self.client.send_message(chat_id=message.chat_id, text=response)
                 processed += 1
                 sent += 1

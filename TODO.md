@@ -16,7 +16,12 @@
 - [x] Add a RemoteCommandService that calls only existing runtime/orchestrator authority surfaces.
 - [x] Persist remote approval audit evidence for authenticated remote actor, source channel, platform identity, command ID, and approval binding.
 - [x] Add duplicate update/callback replay protection with persisted command audit records.
-- [ ] Add Telegram transport adapter tests without calling Telegram APIs.
-- [ ] Add webhook ingress tests for signed trusted machine events and rejected human-approval attempts.
-- [ ] Add remote notification formatting for approval requested/resolved, job completed/failed, and scheduler/runtime errors.
-- [ ] Run the full Phase 6 regression suite after remote runtime implementation.
+- [x] Add Telegram transport adapter tests without calling Telegram APIs.
+- [x] Add authenticated local-first webhook ingress with signed trusted machine events, durable replay/idempotency state, canonical routing, bounded audit evidence, and rejected human-approval attempts.
+- [x] Add remote notification formatting for approval requested/resolved, job completed/failed, and scheduler/runtime errors.
+- [x] Add deny-by-default command permissions and action/project-scoped remote approval policy.
+- [x] Restrict Telegram command handling to authenticated private chats.
+- [x] Persist remote approval intent before mutation and expose incomplete mutation audit state.
+- [x] Reject excessive future command timestamps with bounded clock skew.
+- [x] Run the full Phase 6/7 regression suite after security remediation (424/424 PASS on 2026-09-24).
+- [ ] Pass the final independent Phase 7 architecture and security re-review before closure.

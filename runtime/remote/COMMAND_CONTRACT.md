@@ -54,6 +54,12 @@ ConfirmationBinding {
 
 The initial contract defines command classes before enabling every command.
 
+The executable Phase 7 command set is limited to `STATUS`, `JOBS_LIST`,
+`JOB_SHOW`, `APPROVALS_LIST`, `APPROVE`, and `REJECT`. Each maps one-to-one to
+the corresponding permission (`READ_STATUS`, `READ_JOBS`, `READ_JOB`,
+`READ_APPROVALS`, `APPROVE`, or `REJECT`). Other examples in the planning table
+are not remotely implemented.
+
 | Class | Commands | Authentication | Authorization | Risk | Mutates runtime state | Additional confirmation | Audit evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Read-only | `status`, `jobs`, `job show`, `scheduler status`, `approvals list`, `provider status` | Authenticated platform event from allow-listed human. | Read permission for requested runtime scope. | Low to medium depending on redaction. | No. | No. | Command ID, actor, source event, target, redaction policy, result status. |
