@@ -116,6 +116,7 @@
         "communications",
         "sales",
         "marketing",
+        "social_media",
         "operations",
         "coordination",
         "review"
@@ -135,6 +136,7 @@
         "communications",
         "sales",
         "marketing",
+        "social-media",
         "operations",
         "reviewer"
       ]
@@ -163,6 +165,7 @@
         "business_communications",
         "sales_coordination",
         "marketing_analysis",
+        "social_media_content",
         "operations_coordination",
         "long_context_review",
         "independent_review"

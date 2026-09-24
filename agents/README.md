@@ -23,6 +23,7 @@ If a provider-specific agent conflicts with these files, the canonical definitio
 - Knowledge Manager
 - Sales Agent
 - Marketing Agent
+- Social Media Agent
 - Operations Agent
 - Communications Agent
 

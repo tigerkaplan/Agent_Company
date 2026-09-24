@@ -77,6 +77,23 @@ canonical_agents:
       - campaign_analysis
       - audience_signal_analysis
       - marketing_reporting
+  social-media:
+    role: ../../agents/social-media/ROLE.md
+    guardrails: ../../agents/social-media/GUARDRAILS.md
+    memory: ../../agents/social-media/MEMORY.md
+    default_for:
+      - social_media
+      - content-calendar
+      - post-planner
+      - caption-writer
+      - hook-generator
+      - content-repurpose
+      - competitor-monitor
+      - performance-review
+      - comment-analysis
+      - weekly-social-report
+      - social_channel_planning
+      - social_channel_analysis
   operations:
     role: ../../agents/operations/ROLE.md
     guardrails: ../../agents/operations/GUARDRAILS.md

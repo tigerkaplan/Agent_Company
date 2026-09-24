@@ -14,6 +14,7 @@ Use the smallest classification that fits the user's request.
 | `communications` | Inbox/message triage, communication classification, meeting notes, summaries, or response drafts. | `communications` |
 | `sales` | Lead handling, qualification, proposal drafting, sales follow-up planning, or sales response drafts. | `sales` |
 | `marketing` | Campaign analysis, marketing briefs, audience/customer signal analysis, reputation review, or competitor comparison. | `marketing` |
+| `social_media` | Channel-level social content planning, posts or reels, captions, hooks, repurposing, comment signals, channel performance, or social competitor monitoring. | `social-media` |
 | `operations` | Operational reports, SOPs, recurring checks, process coordination, or internal operational summaries. | `operations` |
 | `coordination` | Status, planning, next-step selection, handoff coordination, or progress tracking. | `project-manager` |
 | `review` | Independent validation of completed work or important evidence. | `reviewer` |
@@ -34,6 +35,17 @@ Continuation intents include `continue <project>`, `resume <project>`, `continue
 - Sales owns specific leads, accounts, opportunities, proposals, quote context, qualification, and commercial follow-up.
 - Route aggregate or many-customer analysis to Marketing. Route an individual opportunity or commercial interaction to Sales.
 - Aggregate lead analysis defaults to Marketing unless the task is specifically pipeline or sales-operations reporting, which remains Sales work.
+
+### Marketing And Social Media
+
+- Marketing owns strategy, positioning, campaigns, audience or customer analysis, market-level competitor analysis, and broader marketing priorities.
+- Social Media owns channel-level execution planning, individual posts or reels, hooks, captions, content calendars, repurposing, community or comment signals, channel performance, and social competitor monitoring.
+- "Analyze our overall customer positioning" routes to Marketing.
+- "Plan next week's Instagram posts" routes to Social Media.
+- "Analyze competitor marketing strategy" routes to Marketing.
+- "Analyze competitor Instagram content patterns" routes to Social Media.
+- "Review a specific Reel's performance" routes to Social Media.
+- A publication request may route to Social Media for preparation, but publication remains an approval-gated external action and requires a future connector.
 
 ### Operations Boundary
 

@@ -6,6 +6,7 @@
 
 - Phase 1-6: COMPLETED / COMMITTED.
 - Phase 7: IMPLEMENTED / PENDING FINAL RE-REVIEW.
+- Social Media capability checkpoint: IMPLEMENTED / VERIFIED / PENDING COMMIT.
 - Phase 8: PLANNED.
 - Phase 9: PLANNED.
 - Phase 10: PLANNED.
@@ -59,6 +60,27 @@ The webhook adapter is loopback-only machine ingress, not public deployment.
 Gmail, Drive, Calendar, remote task submission, scheduler mutation, remote
 filesystem/Git commands, merge, and deployment are not Phase 7 capabilities.
 Phase 7 remains open until a final independent re-review passes.
+
+## Added Capability Checkpoint / Pending Commit
+
+### Social Media Capability
+
+This provider-neutral checkpoint sits between Phase 7 and Phase 8. It does not
+redefine or begin Phase 8.
+
+- CORE: dedicated Social Media Agent with an explicit boundary from Marketing.
+- SKILLS: content calendar, post planning, caption writing, hook generation,
+  content repurposing, social competitor monitoring, performance review,
+  comment analysis, and weekly social reporting.
+- ROUTING: canonical `social_media` task class, `social-media` workflow, and
+  `social_media_content` provider capability.
+- PROVIDERS: Claude and Codex are equally eligible at neutral configured weight;
+  eligibility and weights do not claim runtime availability or quality.
+- APPROVALS: planning, drafts, and analysis may remain internal; publication,
+  live edits or deletion, public replies, paid campaign changes, budget spend,
+  and account changes remain approval-gated external actions.
+- CONNECTORS: no social-platform connector, API client, credential, scheduling,
+  or autonomous publication capability is implemented.
 
 ## Planned
 

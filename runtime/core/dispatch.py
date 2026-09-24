@@ -61,13 +61,18 @@ class CanonicalTaskDispatcher:
         if self._SAFE_NAME.fullmatch(task_class) is None:
             raise CanonicalDispatchError("Task class contains unsupported characters")
 
+        workflow_name = task_class.replace("_", "-")
         workflow_path = (
-            self.repository_root / "orchestrator" / "workflows" / f"{task_class}.yaml"
+            self.repository_root
+            / "orchestrator"
+            / "workflows"
+            / f"{workflow_name}.yaml"
         )
         workflow = self._top_level_scalar(workflow_path, "workflow")
-        if workflow != task_class:
+        if workflow != workflow_name:
             raise CanonicalDispatchError(
-                f"Canonical workflow {workflow!r} does not match task class {task_class!r}"
+                f"Canonical workflow {workflow!r} does not match resolved workflow "
+                f"{workflow_name!r} for task class {task_class!r}"
             )
         agent = self._top_level_scalar(workflow_path, "initial_agent")
         capability = self._task_class_capability(task_class)

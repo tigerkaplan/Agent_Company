@@ -21,13 +21,15 @@ Canonical definitions must remain separate from generated provider files. Claude
 
 ## Current State
 
-Git HEAD `f6820f1` contains the committed remote core, Telegram transport, and
-notification runtime. The working tree also contains authenticated localhost
-webhook ingress and Phase 7 security remediation. The current deterministic
-baseline is 424/424 runtime tests, 99 Python files compiled, and 15 schemas
-parsed. Phase 7 is implemented but remains open pending a final independent
-architecture and security re-review. `PROJECT_STATE.md` is the canonical
-current-status record and `ROADMAP.md` is the canonical capability roadmap.
+Git HEAD `794cb53` contains the committed Phase 7 remote core, Telegram
+transport and notifications, localhost webhook ingress, and security
+remediation. The working tree contains an uncommitted provider-neutral Social
+Media capability checkpoint with no social-platform connector or publication
+authority. The current deterministic baseline is 430/430 runtime tests, 100
+Python files compiled, and 15 schemas parsed. Phase 7 is implemented but
+remains open pending a final independent architecture and security re-review.
+`PROJECT_STATE.md` is the canonical current-status record and `ROADMAP.md` is
+the canonical capability roadmap.
 
 The repository now contains:
 

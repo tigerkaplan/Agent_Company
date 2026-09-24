@@ -39,4 +39,8 @@ Phase 5B business skills:
 - Marketing: `marketing-monday`, `reputation-review`, `competitor-analysis`
 - Operations: `report-builder`, `sop-builder`
 
+Post-Phase-7 social media capability checkpoint:
+
+- Social Media: `content-calendar`, `post-planner`, `caption-writer`, `hook-generator`, `content-repurpose`, `competitor-monitor`, `performance-review`, `comment-analysis`, `weekly-social-report`
+
 Do not create provider-specific copies unless a later phase requires an adaptation.

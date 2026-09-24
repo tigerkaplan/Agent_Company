@@ -27,6 +27,8 @@ capabilities:
     description: Qualify leads and coordinate opportunity-specific proposals, responses, and commercial follow-up without making unapproved commitments.
   marketing_analysis:
     description: Analyze aggregate audience, customer, campaign, reputation, competitor, and market signals while distinguishing evidence from inference.
+  social_media_content:
+    description: Plan and analyze channel-level social content, community signals, and performance while keeping publication and account changes approval-gated.
   operations_coordination:
     description: Coordinate processes, SOPs, recurring checks, and internal operational reporting without absorbing domain-specific decisions.
   long_context_review:

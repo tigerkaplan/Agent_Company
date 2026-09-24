@@ -30,6 +30,7 @@ capability_resolution:
     communications: business_communications
     sales: sales_coordination
     marketing: marketing_analysis
+    social_media: social_media_content
     operations: operations_coordination
     coordination: planning
     review: independent_review

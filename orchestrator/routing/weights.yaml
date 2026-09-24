@@ -45,6 +45,9 @@ weights:
   marketing_analysis:
     claude: 50
     codex: 50
+  social_media_content:
+    claude: 50
+    codex: 50
   operations_coordination:
     claude: 50
     codex: 50

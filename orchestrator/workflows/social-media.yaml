@@ -1,0 +1,75 @@
+version: 1
+workflow: social-media
+source: provider-neutral
+task_class: social_media
+initial_agent: social-media
+canonical_agent: ../../agents/social-media/ROLE.md
+skills:
+  content-calendar: ../../skills/social-media/content-calendar/SKILL.md
+  post-planner: ../../skills/social-media/post-planner/SKILL.md
+  caption-writer: ../../skills/social-media/caption-writer/SKILL.md
+  hook-generator: ../../skills/social-media/hook-generator/SKILL.md
+  content-repurpose: ../../skills/social-media/content-repurpose/SKILL.md
+  competitor-monitor: ../../skills/social-media/competitor-monitor/SKILL.md
+  performance-review: ../../skills/social-media/performance-review/SKILL.md
+  comment-analysis: ../../skills/social-media/comment-analysis/SKILL.md
+  weekly-social-report: ../../skills/social-media/weekly-social-report/SKILL.md
+available_sources:
+  - user_supplied_context
+  - approved_project_references
+  - approved_read_only_evidence
+future_connectors:
+  - social_platform_read_or_publication_connectors_when_separately_implemented_and_approved
+approval_policy: ../approvals/APPROVAL_POLICY.md
+review_workflow: review.yaml
+supported_operations:
+  content-calendar:
+    skill: ../../skills/social-media/content-calendar/SKILL.md
+  post-planner:
+    skill: ../../skills/social-media/post-planner/SKILL.md
+  caption-writer:
+    skill: ../../skills/social-media/caption-writer/SKILL.md
+  hook-generator:
+    skill: ../../skills/social-media/hook-generator/SKILL.md
+  content-repurpose:
+    skill: ../../skills/social-media/content-repurpose/SKILL.md
+  competitor-monitor:
+    skill: ../../skills/social-media/competitor-monitor/SKILL.md
+  performance-review:
+    skill: ../../skills/social-media/performance-review/SKILL.md
+  comment-analysis:
+    skill: ../../skills/social-media/comment-analysis/SKILL.md
+  weekly-social-report:
+    skill: ../../skills/social-media/weekly-social-report/SKILL.md
+steps:
+  - classify_task_as_social_media
+  - select_the_minimum_matching_social_media_skill
+  - read_only_from_available_approved_context_sources_when_needed
+  - apply_selected_provider_neutral_skill
+  - create_internal_draft_plan_analysis_or_report
+  - route_important_public_facing_reputational_or_high_risk_output_to_reviewer
+  - stop_for_applicable_approval_before_any_future_external_publication_or_action
+boundaries:
+  - marketing_owns_strategy_positioning_campaigns_market_level_analysis_and_broader_priorities
+  - social_media_owns_channel_level_execution_planning_content_and_analysis
+  - drafts_and_analysis_do_not_grant_publication_authority
+  - no_real_social_connector_api_client_or_credential
+  - no_autonomous_publication_edit_deletion_reply_paid_campaign_change_budget_spend_or_account_change
+review_triggers:
+  - public_ready_content
+  - sensitive_reputational_legal_or_substantiation_risk
+  - competitor_claim_for_external_use
+  - recommendation_involving_paid_media_budget_or_account_change
+approval_required_actions:
+  - publish_post
+  - edit_published_post
+  - delete_published_post
+  - send_public_reply
+  - modify_paid_campaign
+  - spend_budget
+  - alter_account_settings
+review_outcomes:
+  - PASS
+  - FAIL
+  - RETRY
+  - NEEDS_HUMAN

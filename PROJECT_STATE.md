@@ -2,16 +2,32 @@
 
 ## Current Checkpoint
 
-- Current Git HEAD is `f6820f1`, containing the committed Phase 7 remote core,
-  Telegram long-poll transport, and proactive notification runtime.
-- The working tree contains the Phase 7 localhost webhook ingress and security
-  remediation. These changes are implemented and verified but remain
-  uncommitted and pending a final independent Phase 7 re-review.
+- Current Git HEAD is `794cb53`, containing the committed Phase 7 remote core,
+  Telegram transport and notifications, localhost webhook ingress, and Phase 7
+  security remediation.
+- The working tree contains an uncommitted provider-neutral Social Media
+  capability checkpoint. It adds a canonical agent, nine skills, task routing,
+  workflow, provider capability configuration, schema support, and deterministic
+  routing tests without adding a social-platform connector or publishing authority.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
 - Phase 7 implementation is present; Phase 7 is not declared closed until the
   final architecture and security re-review passes.
+
+## Uncommitted Capability Checkpoint
+
+- Social Media owns channel-level content planning, individual content drafts,
+  hooks, captions, calendars, repurposing, community signals, channel
+  performance, social competitor monitoring, and weekly social reporting.
+- Marketing retains strategy, positioning, campaigns, audience or customer
+  analysis, market-level competitor analysis, and broader marketing priorities.
+- `social_media` routes to the Social Media Agent through the `social-media`
+  workflow and the provider-neutral `social_media_content` capability.
+- Claude and Codex are configured as equally eligible at neutral weight. This is
+  routing configuration, not an availability or quality claim.
+- No real social API, connector, credential, scheduling, or publication action
+  is implemented. Consequential external actions remain approval-gated.
 
 ## Committed
 
@@ -58,8 +74,8 @@
 
 Verified on 2026-09-24 for the current working tree:
 
-- Runtime tests: 424 passed, 0 failed, and 0 skipped.
-- Python compilation: PASS for 99 files.
+- Runtime tests: 430 passed, 0 failed, and 0 skipped.
+- Python compilation: PASS for 100 files.
 - Schemas: PASS for 15 JSON schemas parsed; runtime schema/model tests also passed.
 - Git diff check: PASS.
 - Secret and credential scan: PASS. One deliberate credential-shaped rejection fixture in `runtime/tests/test_remote_git.py` is not a real credential.
@@ -67,5 +83,6 @@ Verified on 2026-09-24 for the current working tree:
 - Generated-state ignore rules and temporary-artifact checks: PASS.
 - Architecture and security checks: PASS, including no `shell=True`, no project-specific business logic in runtime source, and no unexpected dirty paths.
 
-This verifies the Phase 6/7 working tree without declaring Phase 7 closed. A
-fresh independent final review remains required.
+This verifies the Phase 6/7 runtime and the uncommitted Social Media capability
+checkpoint without declaring Phase 7 closed. A fresh independent final Phase 7
+review remains required.
