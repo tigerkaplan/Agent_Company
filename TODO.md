@@ -24,4 +24,21 @@
 - [x] Persist remote approval intent before mutation and expose incomplete mutation audit state.
 - [x] Reject excessive future command timestamps with bounded clock skew.
 - [x] Run the full Phase 6/7 regression suite after security remediation (424/424 PASS on 2026-09-24).
-- [ ] Pass the final independent Phase 7 architecture and security re-review before closure.
+- [x] Pass the final repository-backed Phase 7 architecture and security review
+  (142/142 targeted and 430/430 full runtime tests PASS on 2026-09-24).
+- [x] Record Phase 7 as COMPLETED / CLOSED; retain a different-provider
+  full-repository audit as recommended future validation rather than a gate.
+
+## Phase 8A Design — PASS / COMPLETED
+
+- [x] Inventory current always-on-safe runtime assumptions without claiming distributed guarantees.
+- [x] Define the canonical host, process, persistent-state, secret, ingress, backup, and authority boundaries.
+- [x] Assess Docker, a vendor-neutral VPS target, Telegram long polling, public webhook prerequisites, and optional Hermes use.
+- [x] Define the Phase 8 threat model, acceptance criteria, and implementation stages in `infrastructure/`.
+- [x] Close the recorded Phase 7 independent review gate before Phase 8 implementation.
+- [x] Record Phase 8A as PASS / COMPLETED with no deployment and no Phase 8B implementation.
+- [ ] Complete Phase 8B host configuration and persistence work without deploying.
+- [ ] Complete Phase 8C background process lifecycle and recovery validation without public exposure.
+- [ ] Perform any Phase 8D Docker adaptation only after Linux controlled-write behavior is independently reviewed.
+- [ ] Require exact human approval before Phase 8E VPS deployment or any later public exposure.
+- [ ] Complete Phase 8F backup/recovery, Phase 8G smoke testing, and Phase 8H final independent security review.

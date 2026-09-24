@@ -5,9 +5,10 @@
 ## Status Summary
 
 - Phase 1-6: COMPLETED / COMMITTED.
-- Phase 7: IMPLEMENTED / PENDING FINAL RE-REVIEW.
-- Social Media capability checkpoint: IMPLEMENTED / VERIFIED / PENDING COMMIT.
-- Phase 8: PLANNED.
+- Phase 7: COMPLETED / CLOSED.
+- Social Media capability checkpoint: COMPLETED / COMMITTED.
+- Phase 8A: PASS / COMPLETED / NO DEPLOYMENT.
+- Phase 8B: NEXT / NOT STARTED.
 - Phase 9: PLANNED.
 - Phase 10: PLANNED.
 
@@ -37,7 +38,7 @@ working-tree verification is recorded in `PROJECT_STATE.md`.
 - RUNTIME: Phase 6J remote validation, separately approved push, and separately approved pull-request creation.
 - RUNTIME: Phase 6M bounded autonomous scheduler loop, claims, leases, heartbeat, retry backoff, restart recovery, audit status, and provider usage guards.
 
-## Implemented / Pending Final Re-Review
+## Completed / Closed
 
 ### Phase 7: Remote Control And Runtime Integrations
 
@@ -59,9 +60,13 @@ Telegram is an implemented interface/connector, not an agent or orchestrator.
 The webhook adapter is loopback-only machine ingress, not public deployment.
 Gmail, Drive, Calendar, remote task submission, scheduler mutation, remote
 filesystem/Git commands, merge, and deployment are not Phase 7 capabilities.
-Phase 7 remains open until a final independent re-review passes.
+The final repository-backed Phase 7 architecture and security review passed on
+2026-09-24: 142/142 targeted Phase 7 tests and 430/430 full runtime tests passed,
+100 Python files compiled, and 15 schemas parsed. Phase 7 is closed. A future
+different-provider full-repository audit remains recommended validation, not a
+mandatory Phase 8 implementation gate.
 
-## Added Capability Checkpoint / Pending Commit
+## Completed / Committed Capability Checkpoint
 
 ### Social Media Capability
 
@@ -82,11 +87,19 @@ redefine or begin Phase 8.
 - CONNECTORS: no social-platform connector, API client, credential, scheduling,
   or autonomous publication capability is implemented.
 
-## Planned
+## Phase 8A Completed / No Deployment
 
 ### Phase 8: Always-On Runtime And Deployment
 
 Goal: move the verified local runtime into an optional always-on execution environment.
+
+Phase 8A architecture design is PASS / COMPLETED. The canonical host and
+threat-model design is in `infrastructure/`. It defines the infrastructure,
+host/process, persistent-state, secrets, Docker, VPS, Telegram, webhook,
+deployment/merge authority, Hermes, backup/recovery, threat-model, acceptance,
+and staged implementation boundaries. The current baseline remains local; no
+service, Docker image, VPS, Hermes integration, public endpoint, merge
+authority, or deployment authority has been created.
 
 - RUNTIME: plan background runtime hosting, process lifecycle, startup/restart behavior, and recovery.
 - DEPLOYMENT: define environment and secrets management for optional hosted operation.
@@ -96,6 +109,15 @@ Goal: move the verified local runtime into an optional always-on execution envir
 - CORE: define deployment authority before any deployment implementation exists.
 
 Hermes is optional and must not be treated as the Agent Company core. Merge and deployment authority remain absent until deliberately implemented and approved.
+
+Proposed implementation stages are Phase 8B host configuration and persistence,
+8C background process lifecycle, 8D optional Docker adaptation and packaging,
+8E VPS deployment, 8F backup/recovery, 8G deployment smoke testing, and 8H final
+independent security review. Phase 8B is NEXT and has not started. No technical
+blocker prevents it after this documentation checkpoint is committed; none of
+the implementation stages is currently implemented.
+
+## Planned
 
 ### Phase 9: Observability, Control Room, And Hardening
 

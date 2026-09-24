@@ -58,6 +58,12 @@ The system should make it clear:
 
 ## Current Direction
 
-The immediate direction is final independent re-review of the implemented
-Phase 7 remote-control and runtime-ingress boundary. Phase 7 must not be closed,
-and Phase 8 must not begin, until that review passes.
+The final repository-backed architecture and security review of the Phase 7
+remote-control and runtime-ingress boundary passed on 2026-09-24, so Phase 7 is
+completed and closed. Phase 8A Always-On Runtime and Deployment Architecture
+Design is PASS / COMPLETED. It changed no local-first runtime capability,
+performed no deployment, and installed no Docker, VPS, or Hermes component.
+Phase 8B is NEXT and has not started. No technical blocker prevents Phase 8B
+after the documentation checkpoint is committed. A future different-provider
+full-repository audit is recommended validation, not a mandatory Phase 8
+implementation gate.

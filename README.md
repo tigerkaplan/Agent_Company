@@ -21,13 +21,19 @@ Canonical definitions must remain separate from generated provider files. Claude
 
 ## Current State
 
-Git HEAD `794cb53` contains the committed Phase 7 remote core, Telegram
-transport and notifications, localhost webhook ingress, and security
-remediation. The working tree contains an uncommitted provider-neutral Social
-Media capability checkpoint with no social-platform connector or publication
-authority. The current deterministic baseline is 430/430 runtime tests, 100
-Python files compiled, and 15 schemas parsed. Phase 7 is implemented but
-remains open pending a final independent architecture and security re-review.
+Git HEAD `03a3a2e` contains the committed Phase 7 remote core, Telegram
+transport and notifications, localhost webhook ingress, security remediation,
+and provider-neutral Social Media capability checkpoint. The working tree
+contains Phase 8A design documentation and the Phase 7 closure reconciliation;
+it adds no runtime, connector, publication, hosting, or deployment capability.
+The final repository-backed Phase 7 architecture and security review passed on
+2026-09-24 with 142/142 targeted Phase 7 tests and 430/430 full runtime tests;
+100 Python files compiled and 15 schemas parsed. Phase 7 is completed and
+closed, and the Social Media capability checkpoint is completed and committed.
+Phase 8A architecture design is PASS / COMPLETED. The runtime remains
+local-first; no deployment occurred and no Docker, VPS, or Hermes installation
+exists. Phase 8B is NEXT and has not started; no technical blocker prevents it
+after this documentation checkpoint is committed.
 `PROJECT_STATE.md` is the canonical current-status record and `ROADMAP.md` is
 the canonical capability roadmap.
 
