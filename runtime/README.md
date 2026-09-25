@@ -2,7 +2,7 @@
 
 The runtime is the local-first execution coordination layer. It accepts already-classified work from the orchestrator, creates canonical jobs, manages job lifecycle state, queues work, and later lets workers execute jobs through provider abstractions.
 
-Phase 6F adds deterministic verification and a Reviewer Runtime after Phase 6E provider execution. Phase 6G adds persisted scoped human approval requests. Phase 6H adds explicit execution modes and staged controlled mutation. Phase 6I adds an exact local Git change-set and commit gate after reviewed completion. Phase 6J adds separately approved exact-branch push and pull-request creation gates. Phase 6M adds the bounded autonomous Scheduler, claims, leases, retry backoff, restart recovery, and audit status. Phase 8B adds one configurable state base root while preserving the repository-local `runtime/state/` default. Jobs remain under `jobs/`, execution/provider/review/mutation/Git artifacts under `executions/`, approvals under `approvals/`, schedules under `schedules/`, and scheduler operational state under `scheduler-runtime/` beneath that root. Legal job transitions still come directly from `jobs/lifecycle.yaml`.
+Phase 6F adds deterministic verification and a Reviewer Runtime after Phase 6E provider execution. Phase 6G adds persisted scoped human approval requests. Phase 6H adds explicit execution modes and staged controlled mutation. Phase 6I adds an exact local Git change-set and commit gate after reviewed completion. Phase 6J adds separately approved exact-branch push and pull-request creation gates. Phase 6M adds the bounded autonomous Scheduler, claims, leases, retry backoff, restart recovery, and audit status. Phase 8B adds one configurable state base root while preserving the repository-local `runtime/state/` default. Phase 8C adds a supervisor-neutral lifecycle wrapper, fixed process types, atomic host-process records, local singleton locks, graceful signals, and a host heartbeat. Jobs remain under `jobs/`, execution/provider/review/mutation/Git artifacts under `executions/`, approvals under `approvals/`, schedules under `schedules/`, scheduler operational state under `scheduler-runtime/`, and lifecycle metadata under `host/processes/` beneath that root. Legal job transitions still come directly from `jobs/lifecycle.yaml`.
 
 The runtime does not classify business intent. Classification, canonical agent routing, workflow selection, risk assessment, review triggers, provider capability resolution, and approval rules remain governed by `../orchestrator/`, `../CONSTITUTION.md`, and `../AGENTS.md`.
 
@@ -66,7 +66,7 @@ Canonical `dry_run=true` changes controlled write into preview-only execution be
 
 After a non-dry-run controlled write is completed through deterministic review or explicit human review completion, `git prepare` may build an immutable change set from actual Git state and mutation evidence. It creates a separate `COMMIT_CHANGE_SET` approval. Only an approved, unchanged change set can reach exact-path staging and commit. A verified commit can then enter `git push-prepare`; an exact separately approved push can produce remote evidence, which may enter the separately approved PR gate. Providers cannot invoke any Git boundary. Force push, merge, release, and deployment remain unavailable. See `git/README.md`.
 
-The Scheduler supports bounded `run` and deterministic `run-once` polling in the foreground. Phase 6M does not install a daemon, Windows Service, Task Scheduler task, systemd unit, external scheduler, condition watcher, or cron parser. Remote or multi-user authentication, connectors, REST or web interfaces, databases, VPS/Docker deployment, and external listeners remain out of scope.
+The Scheduler supports bounded `run` and deterministic `run-once` polling in the foreground. Phase 8C can run it, Telegram, or an opt-in loopback webhook adapter through the same host lifecycle contract. It still does not install a daemon, Windows Service, Task Scheduler task, systemd unit, external scheduler, condition watcher, cron parser, Docker image, or VPS deployment. Public listeners remain out of scope.
 
 The runtime must not redefine agent, skill, workflow, connector, provider, approval, reviewer, or project-state policy. It must not treat inbound messages, webhooks, schedules, or connector reads as approval for downstream external actions.
 
@@ -77,6 +77,10 @@ Run from the repository root:
 ```text
 python -m runtime.cli host init [--config <path>] [--base-root <absolute-path>]
 python -m runtime.cli host check [--config <path>] [--base-root <absolute-path>]
+python -m runtime.cli host processes
+python -m runtime.cli host status
+python -m runtime.cli host run <scheduler|telegram|webhook-local>
+python -m runtime.cli host request-stop <scheduler|telegram|webhook-local>
 python -m runtime.cli job create --from dispatch-job.json
 python -m runtime.cli job create --from dispatch-job.json --dry-run
 python -m runtime.cli job enqueue <job_id>
@@ -140,9 +144,13 @@ Windows ACL validation is reported as WARN/operator validation required, never
 as POSIX-equivalent PASS. See `../config/host.example.json` and
 `../infrastructure/`.
 
+See `host/README.md` for lifecycle state, singleton, signal, heartbeat, and
+future-supervisor requirements.
+
 ## Local-First Portability
 
-The contracts and operations here work as local files first. Phase 8B only
-provides host configuration and state foundations; later phases may run the
-same model in a background runtime or another approved transport, but those
-transports must not change the canonical job model or governance boundaries.
+The contracts and operations here work as local files first. Phase 8B provides
+host configuration and state foundations. Phase 8C adds only the foreground
+lifecycle contract needed by a later supervisor; it does not install one.
+Later transports must not change the canonical job model or governance
+boundaries.

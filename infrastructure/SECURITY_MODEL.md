@@ -70,6 +70,9 @@ overlap is rejected in both directions. On POSIX, `host init` applies `0700`
 only after dedicated-root validation succeeds. Windows ACLs are not managed or
 treated as equivalent to POSIX permissions; checks always report WARN and
 require operator validation rather than claiming equivalent enforcement.
+Explicit host CLI executor selection cannot override a false
+`provider_execution_enabled` flag and is rejected before provider discovery,
+credential readiness inspection, or provider Worker construction.
 
 ## Identity And Authority
 
@@ -108,8 +111,19 @@ The Phase 8 MVP has no public application listener.
 - State and project filesystems are distinct. Credential paths are distinct
   from both and excluded from normal state backups.
 - One scheduler and one Telegram poller are allowed per canonical state root.
+- One optional loopback webhook process is allowed per canonical state root.
 - Local file locks, atomic replacement, leases, and persisted dedupe are
   required. They are not distributed coordination.
+- Phase 8C singleton enforcement uses kernel-released local file locks. PID is
+  evidence only and is paired with an owner token and process start time; the
+  lifecycle layer never kills a PID or trusts PID identity alone.
+- OS signal callbacks set only an in-memory event. Coordinated lifecycle flow
+  performs metadata persistence and component shutdown outside the callback.
+- Startup holds the singleton lock before serializing prior-state inspection,
+  pending-stop handling, and new-owner publication under the lifecycle metadata
+  lock. A successful stop request is never overwritten by startup.
+- Lifecycle status omits owner tokens and secrets. Errors are bounded, and
+  host heartbeats never mutate jobs, leases, approvals, or routing state.
 - Containerization, if used later, is defense in depth only. It does not replace
   controlled-write validation, approval, or host hardening.
 
@@ -162,7 +176,7 @@ approve, or invoke it. Phase 8A/8B implement none of this sequence.
 | Persistent state loss or corruption | Durable local filesystem, free-space checks, atomic writes, quiesced encrypted snapshots, hash manifests, restore drills. | Stop startup or enter recovery hold; never create replacement empty authority state over missing state. | Backup RPO can lose recent dedupe/approval evidence; safe reconciliation may require human investigation or abandonment of uncertain work. |
 | Restart duplication | Singletons, leases, deterministic attempts, remote command replay records, Telegram offset, notification dedupe, webhook provenance/tombstones, Git action evidence. | Wait for lease expiry, reconcile canonical state, and fail closed on missing/mismatched evidence. | Telegram responses and provider consumption may repeat across a crash window even when approval and canonical job mutation do not. |
 | Runaway provider usage | Single worker, per-cycle and persisted daily provider limits, timeouts, bounded retries, supervisor restart limits, explicit provider mode. | Stop claims when limit is reached; stop the unit after a crash loop; require operator action to resume. | Current counters govern scheduler provider runs, not every possible manual CLI invocation. Phase 8 host policy must prevent unsupervised provider commands and later consider a global budget. |
-| Uncontrolled restart loop | Supervisor exponential delay, `StartLimit`-style burst cap, persistent last-error state, disk and configuration preflight. | Leave the unit failed instead of restarting indefinitely; scheduler state remains inspectable. | A repeated intermittent fault may consume provider/API capacity before the cap unless provider calls are separately bounded. |
+| Uncontrolled restart loop | Phase 8C persists bounded restart/failure metadata and performs readiness preflight; a future supervisor must add exponential delay and a burst cap. | The host CLI never restarts forever; leave the process failed and require operator action. | A future supervisor configured without the documented cap could still consume provider/API capacity. |
 | Provider CLI credentials | Dedicated credential home, least privilege, no tokens in arguments/state/image, disabled providers by default, credential rotation. | Provider becomes unavailable and jobs fail or wait through canonical policy; no fallback may weaken approval or mode. | Provider CLI internals may store broad tokens or emit sensitive diagnostics; versions and redaction require review. |
 | Git or forge credentials | Fine-grained repository/action scope, protected branches, exact remote/branch binding, disabled prompting, separate commit/push/PR approvals, no merge method. | Authentication failure is terminal for that action; stale remote evidence blocks mutation. | A stolen push credential may permit actions outside Agent Company. Server-side branch protection remains necessary. |
 | Remote code/path exposure | No public runtime API, fixed provider/Git arguments, `shell=False`, explicit project mounts, staged controlled writes, protected paths, bounded payloads. | Reject unknown routes, paths, modes, commands, and provider sandbox mismatch; keep target unchanged. | Provider processes operate with service-account rights; current Windows controlled-write sandbox has not been ported to Linux/container. |

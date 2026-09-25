@@ -8,6 +8,7 @@ import json
 import os
 import re
 import sys
+import threading
 from datetime import timedelta
 from pathlib import Path
 from typing import Any, Mapping
@@ -22,6 +23,7 @@ from runtime.actions.store import FileMutationArtifactStore
 from runtime.approvals.factory import build_approval_runtime
 from runtime.approvals.runtime import ApprovalRuntimeError
 from runtime.approvals.store import ApprovalStoreError
+from runtime.core.dispatch import CanonicalTaskDispatcher
 from runtime.core.jobs import JobRuntime, RuntimeError, utc_now
 from runtime.core.references import CanonicalReferenceResolver
 from runtime.executors.local import LocalExecutor
@@ -32,6 +34,7 @@ from runtime.git.remote_store import FileRemoteGitArtifactStore
 from runtime.git.store import GitStoreError
 from runtime.host.config import HostConfig, HostConfigError
 from runtime.host.paths import StatePathError, StatePaths
+from runtime.host.processes import HostProcessController, HostProcessError, ProcessType
 from runtime.host.service import HostReadinessError, HostReadinessService
 from runtime.notifications.emitter import RuntimeNotificationEmitter
 from runtime.notifications.models import (
@@ -61,6 +64,11 @@ from runtime.storage.scheduler_state_store import (
     FileSchedulerStateStore,
     SchedulerStateStoreError,
 )
+from runtime.webhooks.config import WebhookRuntimeConfig
+from runtime.webhooks.http import create_local_http_server
+from runtime.webhooks.models import WebhookContractError
+from runtime.webhooks.service import WebhookIngressService
+from runtime.webhooks.store import FileWebhookStore, WebhookStoreError
 from runtime.workers.worker import Worker
 
 
@@ -306,6 +314,43 @@ def build_parser() -> argparse.ArgumentParser:
         )
         host_command.add_argument("--config", dest="command_host_config", type=Path)
         host_command.add_argument("--base-root", dest="command_base_root", type=Path)
+    host_commands.add_parser(
+        "status", help="Read canonical host process lifecycle status"
+    )
+    host_commands.add_parser(
+        "processes", help="List the fixed canonical host process set"
+    )
+    host_run = host_commands.add_parser(
+        "run", help="Run one fixed component through the host lifecycle wrapper"
+    )
+    host_run.add_argument(
+        "process",
+        choices=tuple(item.value for item in ProcessType),
+    )
+    host_run.add_argument(
+        "--executor",
+        choices=("local-success", "local-failure", "provider"),
+        default=None,
+        help="Scheduler executor; defaults from provider_execution_enabled",
+    )
+    host_run.add_argument("--dry-run", action="store_true")
+    host_run.add_argument("--max-jobs-per-cycle", type=int, default=1)
+    host_run.add_argument("--max-concurrent-jobs", type=int, default=1)
+    host_run.add_argument("--max-provider-runs-per-cycle", type=int, default=1)
+    host_run.add_argument("--max-provider-runs-per-day", type=int, default=25)
+    host_run.add_argument("--lease-seconds", type=int, default=300)
+    host_run.add_argument("--heartbeat-seconds", type=float, default=60.0)
+    host_run.add_argument("--poll-seconds", type=float, default=5.0)
+    host_run.add_argument("--max-cycles", type=int)
+    host_run.add_argument("--long-poll-seconds", type=int, default=20)
+    host_run.add_argument("--backoff-seconds", type=float, default=5.0)
+    host_run.add_argument("--port", type=int, default=8787)
+    host_stop = host_commands.add_parser(
+        "request-stop", help="Persist a graceful stop request for one host process"
+    )
+    host_stop.add_argument(
+        "process", choices=tuple(item.value for item in ProcessType)
+    )
 
     job = top.add_parser("job", help="Manage canonical jobs")
     commands = job.add_subparsers(dest="command", required=True)
@@ -633,6 +678,69 @@ def build_worker(
     )
 
 
+def build_scheduler_loop(
+    args: argparse.Namespace,
+    runtime: JobRuntime,
+    executions: FileExecutionStore,
+    approvals: Any,
+    execution_root: Path,
+    scheduler_runtime_root: Path,
+    *,
+    executor_name: str,
+    provider_environment: Mapping[str, str],
+    notification_emitter: RuntimeNotificationEmitter | None,
+) -> SchedulerLoop:
+    worker = build_worker(
+        executor_name,
+        runtime,
+        executions,
+        approvals,
+        execution_root,
+        lease_seconds=args.lease_seconds,
+        provider_environment=provider_environment,
+    )
+    return SchedulerLoop(
+        ScheduleRuntime(args.schedule_root),
+        CanonicalDispatchAdapter(runtime, approval_runtime=approvals),
+        runtime,
+        worker,
+        approvals,
+        FileSchedulerStateStore(scheduler_runtime_root),
+        config=SchedulerConfig(
+            poll_interval_seconds=args.poll_seconds,
+            max_jobs_per_cycle=args.max_jobs_per_cycle,
+            max_concurrent_jobs=args.max_concurrent_jobs,
+            max_provider_runs_per_cycle=args.max_provider_runs_per_cycle,
+            max_provider_runs_per_day=args.max_provider_runs_per_day,
+            lease_seconds=args.lease_seconds,
+            heartbeat_interval_seconds=args.heartbeat_seconds,
+        ),
+        counts_as_provider_run=executor_name == "provider",
+        notification_emitter=notification_emitter,
+    )
+
+
+class LocalWebhookProcess:
+    """Interruptible localhost-only wrapper around the existing HTTP adapter."""
+
+    def __init__(self, server_factory: Any) -> None:
+        self.server_factory = server_factory
+        self.server: Any | None = None
+        self._stop = threading.Event()
+
+    def run(self) -> dict[str, Any]:
+        self.server = self.server_factory()
+        try:
+            while not self._stop.is_set():
+                self.server.handle_request()
+        finally:
+            self.server.server_close()
+        return {"status": "stopped", "reason": "stop_requested"}
+
+    def stop(self) -> None:
+        self._stop.set()
+
+
 def load_remote_config(path: Path) -> RemoteRuntimeConfig:
     if path.is_file():
         return RemoteRuntimeConfig.from_file(path)
@@ -748,6 +856,16 @@ def run(arguments: list[str] | None = None) -> int:
     try:
         config_path = getattr(args, "command_host_config", None) or args.host_config
         host_config = load_host_config(config_path)
+        if (
+            args.resource == "host"
+            and args.command == "run"
+            and args.process == ProcessType.SCHEDULER.value
+            and args.executor == "provider"
+            and not host_config.provider_execution_enabled
+        ):
+            raise HostProcessError(
+                "Provider execution is disabled by canonical host configuration"
+            )
         provider_environment = dict(os.environ)
         if (
             not provider_environment.get("AGENT_COMPANY_PROVIDER_CREDENTIAL_ROOT")
@@ -764,7 +882,8 @@ def run(arguments: list[str] | None = None) -> int:
             environment=os.environ,
         )
         apply_state_paths(args, state_paths)
-        if args.resource == "host":
+        host_controller: HostProcessController | None = None
+        if args.resource == "host" and args.command in {"init", "check"}:
             host_service = HostReadinessService(host_config, state_paths)
             result = (
                 host_service.initialize()
@@ -773,9 +892,31 @@ def run(arguments: list[str] | None = None) -> int:
             )
             emit(result)
             return 2 if result["status"] == "FAIL" else 0
+        if args.resource == "host":
+            host_controller = HostProcessController(host_config, state_paths)
+            if args.command in {"status", "processes"}:
+                emit(host_controller.status())
+                return 0
+            if args.command == "request-stop":
+                emit(
+                    {
+                        "stop_requested": host_controller.request_stop(
+                            ProcessType(args.process)
+                        )
+                    }
+                )
+                return 0
 
         remote_config: RemoteRuntimeConfig | None = None
         notification_emitter: RuntimeNotificationEmitter | None = None
+        if (
+            args.resource == "host"
+            and args.enable_notifications
+            and not host_config.notifications_enabled
+        ):
+            raise HostProcessError(
+                "Host notifications are disabled by canonical host configuration"
+            )
         if args.enable_notifications:
             remote_config = load_remote_config(args.remote_config)
             try:
@@ -810,7 +951,104 @@ def run(arguments: list[str] | None = None) -> int:
             review_store=reviews,
             notification_emitter=notification_emitter,
         )
-        if args.resource in {"remote", "telegram"}:
+        if args.resource == "host":
+            if host_controller is None or args.command != "run":
+                raise HostProcessError("Unsupported host lifecycle command")
+            process_type = ProcessType(args.process)
+            if process_type is ProcessType.SCHEDULER:
+                executor_name = args.executor or (
+                    "provider"
+                    if host_config.provider_execution_enabled
+                    else "local-success"
+                )
+                if executor_name != "provider" and not args.dry_run:
+                    raise HostProcessError(
+                        "Non-dry host scheduler runs require provider execution; "
+                        "local executors are test-only"
+                    )
+                if executor_name == "provider":
+                    availability = build_provider_router(
+                        repository_root(), environment=provider_environment
+                    ).availability()
+                    if not any(item.available for item in availability.values()):
+                        raise HostProcessError(
+                            "Provider execution is enabled but no provider executable is available"
+                        )
+                scheduler_loop = build_scheduler_loop(
+                    args,
+                    runtime,
+                    executions,
+                    approvals,
+                    args.execution_root,
+                    args.scheduler_runtime_root,
+                    executor_name=executor_name,
+                    provider_environment=provider_environment,
+                    notification_emitter=notification_emitter,
+                )
+                result = host_controller.run(
+                    process_type,
+                    lambda: scheduler_loop.run(
+                        max_cycles=args.max_cycles, dry_run=args.dry_run
+                    ),
+                    request_component_stop=scheduler_loop.stop,
+                )
+            elif process_type is ProcessType.TELEGRAM:
+                config = remote_config or load_remote_config(args.remote_config)
+                service = RemoteCommandService(
+                    jobs=runtime,
+                    approvals=approvals,
+                    store=FileRemoteCommandStore(
+                        args.remote_state_root,
+                        max_records=config.max_audit_records,
+                    ),
+                    config=config,
+                    clock=runtime.clock,
+                )
+                transport = TelegramTransport(
+                    client=TelegramBotApiClient(
+                        os.environ.get("AGENT_COMPANY_TELEGRAM_BOT_TOKEN")
+                    ),
+                    service=service,
+                    config=config,
+                    state=TelegramStateStore(args.remote_state_root / "telegram"),
+                    clock=runtime.clock,
+                )
+                result = host_controller.run(
+                    process_type,
+                    lambda: transport.run(
+                        long_poll_seconds=args.long_poll_seconds,
+                        backoff_seconds=args.backoff_seconds,
+                        max_cycles=args.max_cycles,
+                    ),
+                    request_component_stop=transport.stop,
+                )
+            else:
+                webhook_config_path = Path(
+                    os.environ.get(
+                        "AGENT_COMPANY_WEBHOOK_CONFIG",
+                        repository_root() / "config" / "webhooks.local.json",
+                    )
+                )
+                webhook_config = WebhookRuntimeConfig.from_file(webhook_config_path)
+                webhook_service = WebhookIngressService(
+                    webhook_config,
+                    FileWebhookStore(
+                        state_paths.path("webhooks"),
+                        max_records=webhook_config.max_audit_records,
+                    ),
+                    CanonicalTaskDispatcher(runtime, repository_root(), approvals),
+                )
+                webhook_process = LocalWebhookProcess(
+                    lambda: create_local_http_server(
+                        webhook_service, host="127.0.0.1", port=args.port
+                    )
+                )
+                result = host_controller.run(
+                    process_type,
+                    webhook_process.run,
+                    request_component_stop=webhook_process.stop,
+                )
+        elif args.resource in {"remote", "telegram"}:
             config = remote_config or load_remote_config(args.remote_config)
             service = RemoteCommandService(
                 jobs=runtime,
@@ -1177,6 +1415,9 @@ def run(arguments: list[str] | None = None) -> int:
         HostConfigError,
         StatePathError,
         HostReadinessError,
+        HostProcessError,
+        WebhookContractError,
+        WebhookStoreError,
     ) as error:
         print(f"error: {error}", file=sys.stderr)
         return 2

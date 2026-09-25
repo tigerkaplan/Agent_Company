@@ -65,6 +65,9 @@ Design is PASS / COMPLETED. It changed no local-first runtime capability,
 performed no deployment, and installed no Docker, VPS, or Hermes component.
 Phase 8B host configuration and persistent-state foundations are COMPLETED /
 CLOSED after their successful final independent re-review; they add no service,
-deployment, or new authority. Phase 8C is NEXT / NOT STARTED. A future
-different-provider full-repository audit remains recommended validation, not a
-mandatory Phase 8 implementation gate.
+deployment, or new authority. Phase 8C is COMPLETED / CLOSED after its
+successful final independent re-review; it adds a supervisor-neutral process
+lifecycle but installs no service or supervisor and grants no new authority.
+Phase 8D is NEXT / NOT STARTED. A future different-provider full-repository
+audit and the other recorded Phase 8C hardening items remain recommended
+validation, not a mandatory Phase 8 implementation gate.

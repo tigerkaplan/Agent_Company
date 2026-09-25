@@ -25,6 +25,7 @@ config/host.local.json
 /runtime/state/webhooks/
 /runtime/state/locks/
 /runtime/state/audit/
+/runtime/state/host/
 data/runtime/
 tmp/
 temp/

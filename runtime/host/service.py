@@ -166,6 +166,7 @@ class HostReadinessService:
             "remote",
             "notifications",
             "webhooks",
+            "processes",
         ):
             directory = local_root.joinpath(*self.paths.relative_layout()[key].split("/"))
             if directory.is_dir() and any(

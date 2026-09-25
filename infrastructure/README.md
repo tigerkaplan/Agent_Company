@@ -8,18 +8,22 @@ endpoint, credential, or infrastructure automation.
 
 - Phase 8A: PASS / COMPLETED on 2026-09-24; design and discovery only.
 - Phase 8B: COMPLETED / CLOSED; no deployment.
-- Phase 8C: NEXT / NOT STARTED.
+- Phase 8C: COMPLETED / CLOSED after final independent re-review; no deployment.
+- Phase 8D: NEXT / NOT STARTED.
 - Current runtime: local-first, file-backed, and single-worker.
 - Deployment: not performed.
 - Docker, VPS, operating-system service, Hermes, and public webhook exposure:
   not installed or enabled.
 - Merge and deployment authority: absent.
 
-Phase 8B did not add a process supervisor or service lifecycle, systemd,
-Windows Service, Docker, VPS deployment, Hermes, public webhook exposure,
-backup automation, merge authority, or deployment authority. Future
-cross-provider audit, native Windows ACL inspection, and race-resistant
-directory-handle containment are non-blocking hardening items.
+Phase 8C adds a supervisor-neutral lifecycle wrapper but does not install a
+systemd unit, Windows Service, Task Scheduler job, automatic restart supervisor
+daemon, Docker, VPS, Hermes, public webhook hosting, or TLS termination, and it
+adds no merge or deployment authority. Non-blocking Phase 8C future hardening
+is a different-provider full-repository audit, real subprocess singleton-race
+validation, native Windows signal/ACL validation, and more race-resistant
+status-lock probing. Race-resistant directory-handle containment remains a
+separate non-blocking Phase 8B item.
 
 ## Documents
 
@@ -69,6 +73,39 @@ state, notifications, webhook provenance/audit, and Git action evidence.
 Transient locks and caches are excluded; expendable retained logs are optional.
 Secrets and provider credential homes are separate and excluded from ordinary
 state backups. Phase 8F, not Phase 8B, owns backup automation.
+
+## Phase 8C Process Lifecycle
+
+The fixed process set is `scheduler`, `telegram`, and opt-in
+`webhook-local`. Lifecycle metadata is written atomically below
+`host/processes/`; OS-backed singleton locks remain below `locks/`. The wrapper
+records `STARTING`, `RUNNING`, `STOPPING`, `STOPPED`, or `FAILED`, a bounded
+heartbeat, restart/failure metadata, PID plus a per-run owner token and start
+time, and never kills a PID. A released kernel lock makes a stale active record
+recoverable after a crash.
+
+```text
+python -m runtime.cli host processes
+python -m runtime.cli host status
+python -m runtime.cli host run scheduler
+python -m runtime.cli host run telegram
+python -m runtime.cli host run webhook-local
+python -m runtime.cli host request-stop <scheduler|telegram|webhook-local>
+```
+
+Every run performs Phase 8B readiness checks and fails closed when the
+component is disabled or required configuration/secrets are absent. Scheduler
+execution reuses `SchedulerLoop`; Telegram reuses `TelegramTransport`; the
+optional webhook process reuses the existing server factory and binds
+`127.0.0.1` only. Non-dry host scheduler runs require provider execution;
+local executors remain test-only. SIGTERM/SIGINT and `KeyboardInterrupt`
+request graceful stop.
+Windows console delivery remains dependent on the launching terminal or future
+supervisor; no forced termination is implemented.
+
+The CLI performs no automatic restart. A future supervisor should use bounded
+exponential delay, a burst cap, and an operator-required failed state after a
+crash loop. Phase 8C metadata supports that policy without installing it.
 
 ## Authority Boundary
 

@@ -28,6 +28,7 @@ _LAYOUT = {
     "git": ("executions", "git"),
     "locks": ("locks",),
     "audit": ("audit",),
+    "processes": ("host", "processes"),
 }
 _CANONICAL_TOP_LEVEL = frozenset(parts[0] for parts in _LAYOUT.values())
 
@@ -43,6 +44,7 @@ PERSISTENT_STATE_KEYS = (
     "webhooks",
     "git",
     "audit",
+    "processes",
 )
 EPHEMERAL_STATE_KEYS = ("locks",)
 

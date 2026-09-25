@@ -21,18 +21,18 @@ Canonical definitions must remain separate from generated provider files. Claude
 
 ## Current State
 
-Git HEAD `4f4d951` contains the committed Phase 7 closure and Phase 8A design
-checkpoint; the provider-neutral Social Media capability is committed at
-`03a3a2e`. The working tree contains the Phase 8B host-configuration and
-persistent-state foundation. Its 98 targeted host/provider/action tests and the
-469-test full runtime suite pass; 105 Python files compile and 16 schemas parse.
+Git HEAD `b1456f3` contains the committed Phase 8B host-configuration and
+persistent-state foundation. The working tree contains the uncommitted Phase 8C
+process lifecycle implementation.
 Phase 7 is completed and closed, the Social Media checkpoint is completed and committed,
 and Phase 8A is PASS / COMPLETED. Phase 8B is COMPLETED / CLOSED after its
 successful final independent re-review.
-The runtime remains local-first; no process supervisor, service lifecycle,
-systemd unit, Windows Service, Docker, VPS deployment, Hermes, public webhook
-exposure, backup automation, merge authority, or deployment authority was
-added. Phase 8C is NEXT / NOT STARTED.
+The runtime remains local-first. Phase 8C is COMPLETED / CLOSED after its
+successful final independent re-review and adds only a supervisor-neutral
+foreground lifecycle. Phase 8D is NEXT / NOT STARTED. Phase 8C added no
+systemd unit, Windows Service, Task Scheduler job, automatic restart supervisor
+daemon, Docker, VPS, Hermes, public webhook hosting, TLS termination, merge
+authority, or deployment authority.
 `PROJECT_STATE.md` is the canonical current-status record and `ROADMAP.md` is
 the canonical capability roadmap.
 

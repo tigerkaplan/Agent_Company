@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import threading
 import time
 from dataclasses import dataclass
 from typing import Any, Callable, Protocol
@@ -67,6 +68,7 @@ class TelegramTransport:
         self.command_parser = command_parser or TelegramCommandParser()
         self.formatter = formatter or TelegramResultFormatter()
         self.sleeper = sleeper
+        self._stop = threading.Event()
 
     def poll_once(self, *, long_poll_seconds: int = 0) -> TelegramPollResult:
         state = self.state.load()
@@ -135,7 +137,9 @@ class TelegramTransport:
         processed_updates = 0
         interrupted = False
         try:
-            while max_cycles is None or cycles < max_cycles:
+            while not self._stop.is_set() and (
+                max_cycles is None or cycles < max_cycles
+            ):
                 cycles += 1
                 try:
                     result = self.poll_once(long_poll_seconds=long_poll_seconds)
@@ -148,7 +152,10 @@ class TelegramTransport:
                         backoff_seconds * (2 ** min(consecutive_errors - 1, 4)),
                         60.0,
                     )
-                    self.sleeper(delay)
+                    if self.sleeper is time.sleep:
+                        self._stop.wait(delay)
+                    else:
+                        self.sleeper(delay)
                     continue
                 consecutive_errors = 0
                 processed_updates += result.processed_updates
@@ -160,5 +167,16 @@ class TelegramTransport:
             "processed_updates": processed_updates,
             "api_errors": api_errors,
             "interrupted": interrupted,
+            "reason": (
+                "stop_requested"
+                if self._stop.is_set()
+                else "keyboard_interrupt"
+                if interrupted
+                else "max_cycles_reached"
+            ),
             "next_update_id": self.state.load().next_update_id,
         }
+
+    def stop(self) -> None:
+        """Request a graceful stop after the current bounded poll completes."""
+        self._stop.set()

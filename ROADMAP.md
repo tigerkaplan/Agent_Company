@@ -9,7 +9,8 @@
 - Social Media capability checkpoint: COMPLETED / COMMITTED.
 - Phase 8A: PASS / COMPLETED / NO DEPLOYMENT.
 - Phase 8B: COMPLETED / CLOSED / NO DEPLOYMENT.
-- Phase 8C: NEXT / NOT STARTED.
+- Phase 8C: COMPLETED / CLOSED / NO DEPLOYMENT.
+- Phase 8D: NEXT / NOT STARTED.
 - Phase 9: PLANNED.
 - Phase 10: PLANNED.
 
@@ -88,7 +89,7 @@ redefine or begin Phase 8.
 - CONNECTORS: no social-platform connector, API client, credential, scheduling,
   or autonomous publication capability is implemented.
 
-## Phase 8A Completed; Phase 8B Completed / Closed
+## Phase 8A Completed; Phase 8B And Phase 8C Completed / Closed
 
 ### Phase 8: Always-On Runtime And Deployment
 
@@ -121,13 +122,22 @@ the canonical state root, strict non-secret host configuration, fixed path
 resolver, dedicated-root rejection before initialization, default-deny
 provider child environments, symmetric state/credential/secret separation,
 and deterministic readiness failures while preserving local defaults. Phase
-8C is NEXT / NOT STARTED. No process supervisor or service lifecycle, systemd,
-Windows Service, Docker/VPS/Hermes installation, public webhook exposure,
-backup automation, merge authority, or deployment authority was added.
+8C is COMPLETED / CLOSED after its final independent re-review passed with no
+critical, major, or required-fix findings. It adds fixed
+scheduler/Telegram/webhook-local lifecycle wrappers, atomic process metadata,
+OS-backed singleton enforcement, signals, host heartbeats, read-only status,
+and stale-record recovery. The bounded Phase 8C repair makes provider enablement
+fail closed before discovery, makes OS signal callbacks notification-only, and
+serializes startup publication with persisted stop requests. It installs no
+systemd unit, Windows Service, Task Scheduler job, automatic restart supervisor
+daemon, Docker/VPS/Hermes component, public webhook hosting, TLS termination,
+backup automation, merge authority, or deployment authority. Phase 8D is NEXT /
+NOT STARTED.
 
-Future hardening remains separate from Phase 8B closure: a cross-provider audit
-when available, native Windows ACL inspection, and race-resistant
-directory-handle containment.
+Non-blocking Phase 8C future hardening is a different-provider full-repository
+audit, real subprocess singleton-race validation, native Windows signal/ACL
+validation, and more race-resistant status-lock probing. Phase 8B's
+race-resistant directory-handle containment item also remains non-blocking.
 
 ## Planned
 
@@ -160,6 +170,6 @@ Project packs must not create separate Agent Company runtimes per project unless
 - Deployment: deferred and not implemented.
 - Public Telegram webhook mode and public webhook hosting: not implemented.
 - Broader Gmail, Drive, and Calendar runtime integrations: contract-only.
-- Phase 8C background process lifecycle and later infrastructure stages: not
-  started.
+- Phase 8D Docker adaptation and packaging: next, not started, and subject to
+  its existing review prerequisites.
 - Dedicated observability implementation: not started.

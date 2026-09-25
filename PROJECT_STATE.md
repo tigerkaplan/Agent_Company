@@ -2,11 +2,10 @@
 
 ## Current Checkpoint
 
-- Current Git HEAD is `4f4d951`, containing the committed Phase 7 closure and
-  Phase 8A design checkpoint. The provider-neutral Social Media capability is
-  committed at `03a3a2e`.
-- The working tree contains the uncommitted Phase 8B host-configuration and
-  persistent-state foundation. It adds no deployment or background service.
+- Current Git HEAD is `b1456f3`, containing the committed Phase 8B host
+  configuration and persistence foundation.
+- The working tree contains the uncommitted Phase 8C supervisor-neutral process
+  lifecycle implementation. It adds no deployment or operating-system service.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
@@ -16,8 +15,10 @@
   `infrastructure/`. The current baseline remains local; no deployment, service,
   Docker image, VPS, Hermes integration, or public webhook exposure exists.
 - Phase 8B is COMPLETED / CLOSED. Its final independent re-review passed on
-  2026-09-25 with no critical, major, or required-fix findings. Phase 8C is
-  NEXT / NOT STARTED.
+  2026-09-25 with no critical, major, or required-fix findings.
+- Phase 8C is COMPLETED / CLOSED. Its final independent re-review passed on
+  2026-09-25 with no critical, major, or required-fix findings.
+- Phase 8D is NEXT / NOT STARTED.
 
 ## Phase 8A Architecture Design Checkpoint
 
@@ -43,11 +44,35 @@ optional host secret files, runtime state, and the repository must not overlap
 in either direction. Malformed readiness configuration produces bounded FAIL
 results; Windows ACL checks remain WARN pending operator validation.
 
-No process supervisor or service lifecycle, systemd unit, Windows Service,
-deployment, Docker container, VPS, Hermes component, public webhook listener,
-backup automation, merge authority, or deployment authority was created. Host
-configuration controls component eligibility only and grants no runtime
-authority.
+Phase 8B created no process lifecycle. Phase 8C now supplies the bounded
+foreground lifecycle contract described below, while still creating no
+installed supervisor, systemd unit, Windows Service, deployment, Docker
+container, VPS, Hermes component, public webhook listener, backup automation,
+merge authority, or deployment authority. Host configuration controls
+component eligibility only and grants no runtime authority.
+
+## Phase 8C Process Lifecycle
+
+Phase 8C defines only `scheduler`, `telegram`, and opt-in `webhook-local`.
+Atomic process records under `host/processes/` use explicit lifecycle states,
+bounded restart/failure metadata, and a host heartbeat separate from job
+leases. OS-backed per-component locks prevent duplicate live owners and are
+released by the kernel after a crash; stale active metadata is recoverable.
+PID evidence is paired with a per-run owner token and start time, is never
+trusted alone, and is never used to kill a process.
+
+The host CLI provides read-only lifecycle status, fixed process selection,
+foreground run commands, and a persisted graceful-stop request. It performs
+Phase 8B readiness validation before startup. Scheduler runs through the
+existing `SchedulerLoop`; Telegram reuses the existing long-poll transport and
+offset state; optional webhook-local reuses the authenticated adapter and is
+hard-bound to `127.0.0.1`. SIGTERM/SIGINT and `KeyboardInterrupt` request
+graceful shutdown through notification-only signal callbacks and coordinated
+normal control flow. Explicit provider CLI selection cannot override the host
+provider disable flag. Startup inspection and new-owner publication are
+serialized with stop requests so a successful request is not overwritten. No
+automatic restart loop is present; a future supervisor must apply bounded
+backoff and a burst cap.
 
 ## Social Media Capability Checkpoint
 
@@ -91,18 +116,24 @@ authority.
 
 - Merge and deployment are not implemented and grant no runtime authority.
 - Service installation, distributed execution, parallel provider execution, and broader connector execution remain outside the current local runtime.
-- Future hardening, not Phase 8B blockers: a cross-provider audit when
-  available, native Windows ACL inspection, and race-resistant
+- Non-blocking Phase 8C future hardening: a different-provider full-repository
+  audit, real subprocess singleton-race validation, native Windows signal/ACL
+  validation, and more race-resistant status-lock probing.
+- Additional Phase 8B future hardening remains non-blocking: race-resistant
   directory-handle containment.
 
 ## Not Implemented
 
-- Phase 8C and later infrastructure work: process-supervisor/service lifecycle,
-  systemd or Windows Service integration, singleton process enforcement,
-  deployment, and backup automation.
+- Phase 8D is NEXT / NOT STARTED. Phase 8D and later infrastructure work covers
+  Docker adaptation, VPS deployment, backup/recovery automation, target-host
+  smoke testing, and final review.
+- Operating-system supervisor installation, systemd, Windows Service, Task
+  Scheduler integration, an automatic restart supervisor daemon, and forced
+  process termination.
 - Dedicated observability, metrics, or tracing implementation; `observability/` is absent.
-- Phase 8 always-on hosting, TLS termination, public webhook exposure,
-  Docker, VPS, Hermes, and operating-system service installation.
+- Phase 8 always-on hosting, TLS termination, public webhook hosting, Docker,
+  VPS, Hermes, merge authority, deployment authority, and operating-system
+  service installation.
 
 ## Runtime Limitations
 
@@ -135,9 +166,32 @@ Verified on 2026-09-25 for the Phase 8B closure working tree:
   `shell=True` calls, no project-specific business logic in runtime source, and
   no unexpected generated dirty paths.
 
+Phase 8C final closure validation on 2026-09-25:
+
+- Phase 8C lifecycle tests: 31 passed, 0 failed, and 0 skipped.
+- Combined Phase 8C and Phase 8B host/provider/action tests: 129 passed, 0
+  failed, and 0 skipped.
+- Focused scheduler/Telegram/webhook regression: 155 passed, 0 failed,
+  and 0 skipped.
+- Full runtime regression: 500 passed, 0 failed, and 0 skipped.
+- Python compilation: PASS for 107 files.
+- JSON schema/config parsing: PASS for 21 files.
+- Generated lifecycle state ignore checks: PASS for all 5 probes.
+- Changed-file secret scan: PASS across 18 files with no high-confidence hit.
+- Runtime/integration AST scan: PASS with zero `shell=True` calls.
+- Git diff check: PASS.
+
+The three independent-review blockers were repaired: provider enablement now
+fails closed before discovery, OS signal callbacks are notification-only, and
+startup publication is serialized with persisted stop requests. The final
+independent re-review passed on 2026-09-25 with no critical, major, or
+required-fix findings. Phase 8C is COMPLETED / CLOSED.
+
 Phase 6 authority boundaries remain green, and Phase 7 is COMPLETED / CLOSED.
 The Social Media capability checkpoint is COMPLETED / COMMITTED. Phase 8A is
 PASS / COMPLETED and documentation-only. Phase 8B is COMPLETED / CLOSED after
-its successful final independent re-review. Phase 8C is NEXT / NOT STARTED. A
-different-provider full-repository audit remains recommended future validation,
-not a mandatory Phase 8 implementation gate.
+its successful final independent re-review. Phase 8C is COMPLETED / CLOSED
+after its successful final independent re-review. Phase 8D is NEXT / NOT
+STARTED. A different-provider full-repository audit and the other recorded
+Phase 8C hardening items remain recommended future validation, not a mandatory
+Phase 8 implementation gate.

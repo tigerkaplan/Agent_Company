@@ -74,11 +74,10 @@ No separate health process is required. A supervisor can report process state,
 and a read-only status command can derive the minimum operational signals from
 canonical state.
 
-The webhook adapter is not part of the default process set. The repository has
-a tested loopback HTTP server factory but no production CLI lifecycle entrypoint.
-If localhost webhook ingress is needed later, Phase 8C may add one bounded third
-process after its startup, shutdown, state-root, and signal behavior is tested.
-It must still bind only to loopback.
+The webhook adapter is not part of the default process set. Phase 8C adds an
+explicitly enabled `webhook-local` lifecycle entrypoint around the existing
+HTTP server factory. It binds `127.0.0.1` only and creates no public listener,
+TLS termination, reverse proxy, or deployment assumption.
 
 Separate processes match the current foreground entrypoints, isolate Telegram
 API failure from scheduling, allow independent restart limits, and avoid a new
@@ -116,15 +115,25 @@ worker, broker, database queue, or second source of truth is introduced.
 5. Persist final scheduler state, flush state and audit files, release locks,
    and stop the supervisor unit.
 
-The current loops explicitly handle `KeyboardInterrupt`; production Phase 8C
-must add tested `SIGTERM` handling or an equivalent bounded supervisor stop
-hook. If the deadline expires, the process must not write false completion. The
+Phase 8C installs process-local SIGTERM/SIGINT handlers and handles
+`KeyboardInterrupt`. The OS signal callbacks perform notification only by
+setting an in-memory event. Normal lifecycle control flow then persists
+`STOPPING`, requests component stop outside the metadata lock, and allows the
+current bounded operation to finish. Windows console signal delivery depends on
+the launching terminal or future supervisor. No forced PID termination exists.
+If an outer supervisor deadline expires, it must not write false completion; a
 persisted running claim remains recoverable only after its lease expires.
 
 ### Crash restart behavior
 
 - The supervisor uses bounded exponential restart delay and start-rate limits.
   A crash loop becomes a stopped/failed service requiring operator action.
+- Phase 8C records bounded restart count, last failure, exit reason, error, and
+  heartbeat metadata but does not automatically restart a process.
+- The singleton lock is acquired before the lifecycle metadata transaction.
+  Prior-state inspection, pending-stop handling, and `STARTING` publication are
+  serialized in that transaction; component and scheduler-internal stop work
+  begins only after lifecycle metadata locking is released.
 - Scheduler singleton locking prevents two live loops on the same host state
   root. A restarted scheduler records restart recovery and reconciles expired
   leases, failed attempts missing a retry, due schedules, and queued work.
@@ -170,6 +179,8 @@ permission change. `/var/lib/agent-company` is the recommended Linux value:
     telegram/
   notifications/
   webhooks/
+  host/
+    processes/
   audit/
   locks/
 ```
@@ -201,6 +212,7 @@ cannot split an explicitly configured host root.
 | Notification delivery and dedupe records | Must persist | Never commit | Required |
 | Webhook provenance, aliases, and completed tombstones | Must persist | Never commit | Required |
 | Bounded webhook audit history | Must persist while retained | Never commit | Required with the runtime snapshot |
+| Host lifecycle state, heartbeats, and bounded crash metadata | Must persist | Never commit | Required |
 | Git change sets, diffs, commit/push/PR plans and evidence | Must persist | Never commit | Required |
 | Ignored remote/webhook identity configuration | Must persist; sensitive configuration, not secret material | Never commit | Required in encrypted configuration backup |
 | Lock files, caches, temporary controlled-write workspaces | May be recreated | Never commit | Exclude |
@@ -407,7 +419,7 @@ dashboard is introduced. Phase 9 owns broader observability.
 
 Implementation is acceptable only when all of the following are evidenced:
 
-- The current 469-test runtime regression and any new Phase 8 tests pass.
+- The current full runtime regression and all new Phase 8 tests pass.
 - One state root rejects a second scheduler and a second Telegram poller.
 - Graceful stop prevents new claims and lets current work finish or leaves a
   recoverable lease without false completion.
@@ -451,12 +463,19 @@ Implementation is acceptable only when all of the following are evidenced:
   canonical base-root contract, strict non-secret configuration,
   exact canonical path resolver, permission model, state detection without migration,
   readiness checks, and backup-exclusion rules. No service installation.
-- **Phase 8C - Background process lifecycle:** tested Linux signal handling,
-  scheduler and Telegram singleton enforcement, bounded supervisor definitions,
-  recovery hold, and optional loopback webhook entrypoint.
-- **Phase 8D - Docker adaptation and packaging:** optional, only after a reviewed
-  Linux controlled-write/provider contract; immutable image, non-root runtime,
-  external state and secret mounts, and equivalent regression evidence.
+- **Phase 8C - Background process lifecycle — COMPLETED / CLOSED:** the final
+  independent re-review passed with no critical, major, or required-fix
+  findings. The implementation provides fixed process types, atomic lifecycle
+  records, host heartbeats,
+  OS-backed scheduler/Telegram/webhook-local singleton locks, tested graceful
+  stop and stale-record recovery, serialized startup/stop handling,
+  notification-only OS signal callbacks, a fail-closed provider-enable gate,
+  and an opt-in loopback webhook entrypoint. No service installation or
+  automatic restart daemon.
+- **Phase 8D - Docker adaptation and packaging — NEXT / NOT STARTED:** optional,
+  only after a reviewed Linux controlled-write/provider contract; immutable
+  image, non-root runtime, external state and secret mounts, and equivalent
+  regression evidence.
 - **Phase 8E - VPS deployment:** vendor-neutral host build and an exact reviewed
   deployment plan; execution requires separate human deployment approval.
 - **Phase 8F - Backup and recovery:** automated encrypted snapshots, retention,
@@ -468,12 +487,14 @@ Implementation is acceptable only when all of the following are evidenced:
   secrets, firewall, process definitions, artifacts, recovery evidence, and all
   authority boundaries before production acceptance.
 
+Non-blocking Phase 8C future hardening is a different-provider full-repository
+audit, real subprocess singleton-race validation, native Windows signal/ACL
+validation, and more race-resistant status-lock probing.
+
 ## Remaining Phase 8 Implementation Blockers
 
-- Production termination-signal behavior and Telegram singleton enforcement
-  are not implemented or tested.
-- The webhook server has no production lifecycle entrypoint; it remains
-  disabled for the Phase 8 MVP unless Phase 8C implements one.
+- No operating-system supervisor definition or forced-stop deadline has been
+  installed or target-host tested.
 - Codex controlled-write configuration is Windows-specific and cannot be
   claimed to work in Linux Docker.
 - Provider authentication has not been verified on a target host; `gh` and

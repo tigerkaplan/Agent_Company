@@ -42,10 +42,18 @@
 - [x] Repair the Phase 8B independent-review security and correctness findings.
 - [x] Pass the Phase 8B independent implementation/security re-review and
   record Phase 8B as COMPLETED / CLOSED.
-- [ ] Complete Phase 8C background process lifecycle and recovery validation without public exposure.
-- [ ] Perform any Phase 8D Docker adaptation only after Linux controlled-write behavior is independently reviewed.
+- [x] Implement Phase 8C background process lifecycle and deterministic recovery
+  validation without public exposure.
+- [x] Repair the three Phase 8C review blockers: provider-enable bypass,
+  signal-callback reentrancy, and startup/stop-request overwrite.
+- [x] Complete the successful Phase 8C independent implementation/security
+  re-review and record Phase 8C as COMPLETED / CLOSED.
+- [ ] Phase 8D is NEXT / NOT STARTED; perform any Docker adaptation only after
+  Linux controlled-write behavior is independently reviewed.
 - [ ] Require exact human approval before Phase 8E VPS deployment or any later public exposure.
 - [ ] Complete Phase 8F backup/recovery, Phase 8G smoke testing, and Phase 8H final independent security review.
 
-Future hardening, not Phase 8B blockers: cross-provider audit when available,
-native Windows ACL inspection, and race-resistant directory-handle containment.
+Non-blocking Phase 8C future hardening: different-provider full-repository
+audit, real subprocess singleton-race validation, native Windows signal/ACL
+validation, and more race-resistant status-lock probing. Race-resistant
+directory-handle containment remains a separate non-blocking Phase 8B item.
