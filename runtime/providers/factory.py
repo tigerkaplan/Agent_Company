@@ -3,17 +3,24 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Mapping
 
 from runtime.providers.adapters import CliProviderAdapter, ProviderAdapter
 from runtime.providers.config import ProviderConfiguration
 from runtime.providers.routing import ProviderRouter
 
 
-def build_provider_router(repository_root: Path) -> ProviderRouter:
+def build_provider_router(
+    repository_root: Path,
+    *,
+    environment: Mapping[str, str] | None = None,
+) -> ProviderRouter:
     configuration = ProviderConfiguration(repository_root)
     adapters: dict[str, ProviderAdapter] = {
         provider_id: CliProviderAdapter(
-            configuration.cli_config(provider_id), repository_root
+            configuration.cli_config(provider_id),
+            repository_root,
+            environment=environment,
         )
         for provider_id in configuration.provider_ids
     }

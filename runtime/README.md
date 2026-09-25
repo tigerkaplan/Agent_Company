@@ -2,7 +2,7 @@
 
 The runtime is the local-first execution coordination layer. It accepts already-classified work from the orchestrator, creates canonical jobs, manages job lifecycle state, queues work, and later lets workers execute jobs through provider abstractions.
 
-Phase 6F adds deterministic verification and a Reviewer Runtime after Phase 6E provider execution. Phase 6G adds persisted scoped human approval requests. Phase 6H adds explicit execution modes and staged controlled mutation. Phase 6I adds an exact local Git change-set and commit gate after reviewed completion. Phase 6J adds separately approved exact-branch push and pull-request creation gates. Phase 6M adds the bounded autonomous Scheduler, claims, leases, retry backoff, restart recovery, and audit status. Jobs remain under `state/jobs/`, execution/provider/review/mutation/Git artifacts under `state/executions/`, approvals under `state/approvals/`, schedules under `state/schedules/`, and scheduler operational state under `state/scheduler-runtime/`. Legal job transitions still come directly from `jobs/lifecycle.yaml`.
+Phase 6F adds deterministic verification and a Reviewer Runtime after Phase 6E provider execution. Phase 6G adds persisted scoped human approval requests. Phase 6H adds explicit execution modes and staged controlled mutation. Phase 6I adds an exact local Git change-set and commit gate after reviewed completion. Phase 6J adds separately approved exact-branch push and pull-request creation gates. Phase 6M adds the bounded autonomous Scheduler, claims, leases, retry backoff, restart recovery, and audit status. Phase 8B adds one configurable state base root while preserving the repository-local `runtime/state/` default. Jobs remain under `jobs/`, execution/provider/review/mutation/Git artifacts under `executions/`, approvals under `approvals/`, schedules under `schedules/`, and scheduler operational state under `scheduler-runtime/` beneath that root. Legal job transitions still come directly from `jobs/lifecycle.yaml`.
 
 The runtime does not classify business intent. Classification, canonical agent routing, workflow selection, risk assessment, review triggers, provider capability resolution, and approval rules remain governed by `../orchestrator/`, `../CONSTITUTION.md`, and `../AGENTS.md`.
 
@@ -54,7 +54,7 @@ This remains a local file-backed runtime. Phase 6M adds atomic per-record writes
 
 `local-success` and `local-failure` remain deterministic read-only test executors and are still the default. `--executor provider` is an explicit opt-in that resolves provider eligibility, execution-mode support, preference, observed local executable availability, and fallback from the canonical routing files. Read-only Codex and Claude behavior is unchanged. Codex alone declares `CONTROLLED_WRITE`; Claude support remains unavailable/unverified. Provider process output is bounded, sanitized for likely secrets, and stored as a Git-ignored artifact instead of being copied into job state.
 
-Availability means that the configured executable was observed on the local path. It does not claim authentication, account access, model quality, or successful remote service access. There is no provider SDK/API integration yet, and automated tests use fake adapters/runners so they consume no real provider usage.
+Availability means that the configured executable was observed on the local path. It does not claim authentication, account access, model quality, or successful remote service access. Provider child processes receive a default-deny environment containing only required system variables and that provider's explicitly allowlisted authentication variables. A configured credential root supplies a separate provider-specific `HOME`/`USERPROFILE` and native provider home; unrelated Telegram, webhook, connector, Git, and other-provider variables are not propagated. There is no provider SDK/API integration yet, and automated tests use fake adapters/runners so they consume no real provider usage.
 
 For review-required jobs, execution success now enters deterministic verification and the Reviewer Runtime. Only a normalized evidence-backed `PASS` completes the job. `FAIL`, `RETRY`, and `NEEDS_HUMAN` use the existing failure, retry-attempt, and waiting-approval boundaries. See `review/README.md`.
 
@@ -75,6 +75,8 @@ The runtime must not redefine agent, skill, workflow, connector, provider, appro
 Run from the repository root:
 
 ```text
+python -m runtime.cli host init [--config <path>] [--base-root <absolute-path>]
+python -m runtime.cli host check [--config <path>] [--base-root <absolute-path>]
 python -m runtime.cli job create --from dispatch-job.json
 python -m runtime.cli job create --from dispatch-job.json --dry-run
 python -m runtime.cli job enqueue <job_id>
@@ -118,8 +120,29 @@ python -m runtime.cli scheduler stop
 python -m runtime.cli scheduler list-due
 ```
 
-Use `--state-root <path>`, `--execution-root <path>`, `--approval-root <path>`, `--schedule-root <path>`, `--scheduler-runtime-root <path>`, and `--git-state-root <path>` before the resource command for isolated storage. The scheduler root environment variable is `AGENT_COMPANY_SCHEDULER_RUNTIME_ROOT`; the existing roots retain their corresponding `AGENT_COMPANY_*_STATE_ROOT` variables.
+Use global `--base-root <absolute-path>` or `AGENT_COMPANY_STATE_ROOT` for the
+canonical layout. Resolution order is CLI base root, environment base root,
+host-config `state_root`, then local `runtime/state/`. Existing component root
+CLI options remain available; with a configured canonical base they must equal
+the exact derived component path. Legacy component
+`AGENT_COMPANY_*_STATE_ROOT` variables are used only
+when the local default is selected.
+
+`host init` creates only the canonical directories, is idempotent, and never
+migrates or deletes existing state. `host check` is read-only, prints only
+secret presence/missing status, and makes no provider, Telegram, webhook, or
+other network call. Host mode requires an explicit dedicated state root outside
+and non-overlapping with the Git repository; broad roots and repository
+ancestors are rejected before directory creation or permission changes.
+Provider credentials, state, and secret locations are checked symmetrically.
+Malformed dependent configuration is a bounded FAIL rather than an exception.
+Windows ACL validation is reported as WARN/operator validation required, never
+as POSIX-equivalent PASS. See `../config/host.example.json` and
+`../infrastructure/`.
 
 ## Local-First Portability
 
-The contracts and operations here work as local files first. Later phases may move the same model into a background runtime or another approved transport, but those transports must not change the canonical job model or governance boundaries.
+The contracts and operations here work as local files first. Phase 8B only
+provides host configuration and state foundations; later phases may run the
+same model in a background runtime or another approved transport, but those
+transports must not change the canonical job model or governance boundaries.

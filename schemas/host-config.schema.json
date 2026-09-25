@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-company.local/schemas/host-config.schema.json",
+  "title": "Agent Company Host Configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "environment_mode",
+    "state_root",
+    "secret_file",
+    "provider_execution_enabled",
+    "provider_credential_root",
+    "telegram_enabled",
+    "webhook_enabled",
+    "notifications_enabled",
+    "scheduler_enabled",
+    "git_enabled"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "environment_mode": {
+      "enum": [
+        "local",
+        "host"
+      ]
+    },
+    "state_root": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "secret_file": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provider_execution_enabled": {
+      "type": "boolean"
+    },
+    "provider_credential_root": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "telegram_enabled": {
+      "type": "boolean"
+    },
+    "webhook_enabled": {
+      "type": "boolean"
+    },
+    "notifications_enabled": {
+      "type": "boolean"
+    },
+    "scheduler_enabled": {
+      "type": "boolean"
+    },
+    "git_enabled": {
+      "type": "boolean"
+    }
+  }
+}

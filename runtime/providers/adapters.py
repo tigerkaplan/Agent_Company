@@ -8,7 +8,7 @@ import shutil
 import subprocess
 import tempfile
 from pathlib import Path
-from typing import Any, Callable, Protocol
+from typing import Any, Callable, Mapping, Protocol
 
 from runtime.execution.models import ExecutionRequest
 from runtime.providers.config import CliProviderConfig, ProviderConfigError
@@ -78,6 +78,82 @@ _EXPECTED_ARGUMENTS = {
         )
     },
 }
+_BASE_ENVIRONMENT_ALLOWLIST = (
+    "PATH",
+    "PATHEXT",
+    "SYSTEMROOT",
+    "WINDIR",
+    "COMSPEC",
+    "TEMP",
+    "TMP",
+    "TMPDIR",
+    "HOME",
+    "USERPROFILE",
+    "LANG",
+    "LANGUAGE",
+    "LC_ALL",
+    "LC_CTYPE",
+    "TZ",
+    "SSL_CERT_FILE",
+    "SSL_CERT_DIR",
+)
+_PROVIDER_ENVIRONMENT_ALLOWLIST = {
+    "codex": ("CODEX_HOME", "OPENAI_API_KEY"),
+    "claude": (
+        "CLAUDE_CONFIG_DIR",
+        "CLAUDE_CODE_OAUTH_TOKEN",
+        "ANTHROPIC_API_KEY",
+    ),
+}
+
+
+def build_provider_environment(
+    provider_id: str,
+    source: Mapping[str, str],
+    *,
+    temporary_root: Path | None = None,
+) -> dict[str, str]:
+    """Build a default-deny child environment for one provider process."""
+    try:
+        provider_names = _PROVIDER_ENVIRONMENT_ALLOWLIST[provider_id]
+    except KeyError as error:
+        raise ProviderConfigError(
+            f"Provider {provider_id} has no environment allowlist"
+        ) from error
+
+    casefolded = {name.upper(): value for name, value in source.items()}
+    environment = {
+        name: casefolded[name]
+        for name in _BASE_ENVIRONMENT_ALLOWLIST
+        if name in casefolded
+    }
+    environment.update(
+        {
+            name: casefolded[name]
+            for name in provider_names
+            if name in casefolded
+        }
+    )
+
+    configured_root = casefolded.get("AGENT_COMPANY_PROVIDER_CREDENTIAL_ROOT")
+    if configured_root:
+        raw_root = Path(configured_root)
+        if not raw_root.is_absolute() or ".." in raw_root.parts:
+            raise ProviderConfigError(
+                "Provider credential root must be an absolute path without traversal"
+            )
+        provider_home = raw_root.resolve(strict=False) / provider_id
+        environment["HOME"] = str(provider_home)
+        environment["USERPROFILE"] = str(provider_home)
+        if provider_id == "codex":
+            environment["CODEX_HOME"] = str(provider_home)
+        else:
+            environment["CLAUDE_CONFIG_DIR"] = str(provider_home)
+
+    if temporary_root is not None:
+        temporary = str(Path(temporary_root).resolve())
+        environment.update({"TEMP": temporary, "TMP": temporary, "TMPDIR": temporary})
+    return environment
 
 
 def sanitize_provider_text(value: str | bytes | None) -> str:
@@ -118,6 +194,7 @@ class CliProviderAdapter:
         *,
         runner: Runner = subprocess.run,
         which: Which = shutil.which,
+        environment: Mapping[str, str] | None = None,
     ) -> None:
         expected_executable = _EXPECTED_EXECUTABLES.get(config.provider_id)
         if expected_executable is None or config.executable != expected_executable:
@@ -142,6 +219,7 @@ class CliProviderAdapter:
         self.repository_root = Path(repository_root).resolve()
         self.runner = runner
         self.which = which
+        self.environment = os.environ if environment is None else environment
 
     def is_available(self) -> ProviderAvailability:
         candidates = (
@@ -224,6 +302,26 @@ class CliProviderAdapter:
                     error_message="Controlled-write workspace is not runtime-owned",
                 )
         arguments = [availability.executable_path, *configured_arguments]
+        try:
+            environment = build_provider_environment(
+                self.provider_id,
+                self.environment,
+                temporary_root=(
+                    cwd if request.execution_mode == "CONTROLLED_WRITE" else None
+                ),
+            )
+        except ProviderConfigError as error:
+            return ProviderExecutionResult(
+                status="failed",
+                stdout="",
+                stderr="",
+                exit_code=None,
+                error_category="provider_unavailable",
+                error_message=str(error),
+                requested_sandbox_mode=self._requested_sandbox_mode(
+                    configured_arguments
+                ),
+            )
         run_options: dict[str, Any] = {
             "input": context.render(),
             "text": True,
@@ -232,13 +330,8 @@ class CliProviderAdapter:
             "cwd": str(cwd),
             "shell": False,
             "check": False,
+            "env": environment,
         }
-        if request.execution_mode == "CONTROLLED_WRITE":
-            environment = os.environ.copy()
-            environment.update(
-                {"TEMP": str(cwd), "TMP": str(cwd), "TMPDIR": str(cwd)}
-            )
-            run_options["env"] = environment
         try:
             completed = self.runner(arguments, **run_options)
         except subprocess.TimeoutExpired as error:

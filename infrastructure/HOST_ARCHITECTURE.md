@@ -2,16 +2,18 @@
 
 ## Status And Scope
 
-This is the Phase 8A design. It defines the smallest production-quality host
-boundary that could keep the current Agent Company runtime alive continuously.
+Phase 8A defined the smallest production-quality host boundary that could keep
+the current Agent Company runtime alive continuously. Phase 8B now implements
+the host-configuration and persistent-state foundation, now completed and
+closed after its successful final independent re-review.
 It does not deploy, install a service, create a VPS or container image, start a
 provider or Hermes, expose an endpoint, or grant merge or deployment authority.
 
-The evidence baseline is the clean `master` checkout inspected on 2026-09-24 at
-Git HEAD `03a3a2e`. The full runtime suite passed 430 tests on Python 3.14.3 in
-that checkout. Executable discovery observed Python, Git, and Codex; it did not
-observe `gh` or Claude. Executable presence is not authentication or service
-availability.
+The Phase 8A evidence baseline was the clean `master` checkout inspected on
+2026-09-24. The current Phase 8B working tree passes 469 runtime tests on Python
+3.14.3. Executable discovery during Phase 8A observed Python, Git, and Codex; it
+did not observe `gh` or Claude. Executable presence is not authentication or
+service availability.
 
 ## Current Runtime Assumptions
 
@@ -150,35 +152,41 @@ approval gates and expose this residual risk operationally.
 
 ## Canonical Persistent-State Root
 
-Phase 8 should converge generated host state under one root outside the Git
-checkout, proposed as `/var/lib/agent-company` on Linux:
+Phase 8B defines one generated-state base root. Host mode requires a dedicated
+root outside and non-overlapping with the Git checkout. Filesystem/system
+roots, repository ancestors, broad workspaces, and existing directories with
+non-canonical contents are rejected before any directory creation or
+permission change. `/var/lib/agent-company` is the recommended Linux value:
 
 ```text
 /var/lib/agent-company/
-  runtime/
-    jobs/
-    executions/
-    approvals/
-    schedules/
-    scheduler-runtime/
-    remote/
-      telegram/
-    notifications/
-    webhooks/
-  config/
-    remote.local.json
-    webhooks.local.json
+  jobs/
+  executions/
+    git/
+  approvals/
+  schedules/
+  scheduler-runtime/
+  remote/
+    telegram/
+  notifications/
+  webhooks/
+  audit/
+  locks/
 ```
 
 Project repositories and provider credential homes are separate mounts; they
-do not live below `runtime/`. No data is moved in Phase 8A.
+do not live below the state root. Remote/webhook identity configuration and an
+optional protected host secret file also remain external to state. Repository,
+state, credential, and secret-root relationships are rejected on overlap in
+either direction. Phase 8B moves or copies no data.
 
-The current CLI has separate `AGENT_COMPANY_*_STATE_ROOT` variables, while
-`.env.example` still lists the different name `RUNTIME_STATE_PATH`. Phase 8B
-must define one canonical base-root contract that derives every child path while
-preserving explicit child overrides for migration. Until then, operators must
-set every existing root consistently and must not split one logical runtime
-across disks or hosts.
+The canonical root resolves as CLI `--base-root`, then
+`AGENT_COMPANY_STATE_ROOT`, then host-config `state_root`, then the repository-
+local `runtime/state/` development default. Existing per-component CLI options
+remain available; when a canonical base root is configured they must resolve
+exactly to the derived component path. Legacy `AGENT_COMPANY_*_STATE_ROOT`
+variables are honored only as local-default compatibility fallbacks, so they
+cannot split an explicitly configured host root.
 
 | State class | Persistence | Git | Backup |
 | --- | --- | --- | --- |
@@ -399,7 +407,7 @@ dashboard is introduced. Phase 9 owns broader observability.
 
 Implementation is acceptable only when all of the following are evidenced:
 
-- The existing 430-test runtime regression and any new Phase 8 tests pass.
+- The current 469-test runtime regression and any new Phase 8 tests pass.
 - One state root rejects a second scheduler and a second Telegram poller.
 - Graceful stop prevents new claims and lets current work finish or leaves a
   recoverable lease without false completion.
@@ -439,9 +447,10 @@ Implementation is acceptable only when all of the following are evidenced:
 - **Phase 8A - Architecture and threat model:** these design documents, current
   runtime inventory, authority boundaries, feasibility decisions, acceptance
   criteria, and no deployment.
-- **Phase 8B - Host configuration and persistence:** canonical base-root
-  contract, configuration validation, permission model, migration dry run, and
-  backup-exclusion rules. No service installation.
+- **Phase 8B - Host configuration and persistence — COMPLETED / CLOSED:**
+  canonical base-root contract, strict non-secret configuration,
+  exact canonical path resolver, permission model, state detection without migration,
+  readiness checks, and backup-exclusion rules. No service installation.
 - **Phase 8C - Background process lifecycle:** tested Linux signal handling,
   scheduler and Telegram singleton enforcement, bounded supervisor definitions,
   recovery hold, and optional loopback webhook entrypoint.
@@ -459,10 +468,8 @@ Implementation is acceptable only when all of the following are evidenced:
   secrets, firewall, process definitions, artifacts, recovery evidence, and all
   authority boundaries before production acceptance.
 
-## Implementation Blockers
+## Remaining Phase 8 Implementation Blockers
 
-- The current state-root environment contract is fragmented and does not match
-  `.env.example`'s `RUNTIME_STATE_PATH` placeholder.
 - Production termination-signal behavior and Telegram singleton enforcement
   are not implemented or tested.
 - The webhook server has no production lifecycle entrypoint; it remains

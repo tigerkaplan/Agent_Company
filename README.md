@@ -21,19 +21,18 @@ Canonical definitions must remain separate from generated provider files. Claude
 
 ## Current State
 
-Git HEAD `03a3a2e` contains the committed Phase 7 remote core, Telegram
-transport and notifications, localhost webhook ingress, security remediation,
-and provider-neutral Social Media capability checkpoint. The working tree
-contains Phase 8A design documentation and the Phase 7 closure reconciliation;
-it adds no runtime, connector, publication, hosting, or deployment capability.
-The final repository-backed Phase 7 architecture and security review passed on
-2026-09-24 with 142/142 targeted Phase 7 tests and 430/430 full runtime tests;
-100 Python files compiled and 15 schemas parsed. Phase 7 is completed and
-closed, and the Social Media capability checkpoint is completed and committed.
-Phase 8A architecture design is PASS / COMPLETED. The runtime remains
-local-first; no deployment occurred and no Docker, VPS, or Hermes installation
-exists. Phase 8B is NEXT and has not started; no technical blocker prevents it
-after this documentation checkpoint is committed.
+Git HEAD `4f4d951` contains the committed Phase 7 closure and Phase 8A design
+checkpoint; the provider-neutral Social Media capability is committed at
+`03a3a2e`. The working tree contains the Phase 8B host-configuration and
+persistent-state foundation. Its 98 targeted host/provider/action tests and the
+469-test full runtime suite pass; 105 Python files compile and 16 schemas parse.
+Phase 7 is completed and closed, the Social Media checkpoint is completed and committed,
+and Phase 8A is PASS / COMPLETED. Phase 8B is COMPLETED / CLOSED after its
+successful final independent re-review.
+The runtime remains local-first; no process supervisor, service lifecycle,
+systemd unit, Windows Service, Docker, VPS deployment, Hermes, public webhook
+exposure, backup automation, merge authority, or deployment authority was
+added. Phase 8C is NEXT / NOT STARTED.
 `PROJECT_STATE.md` is the canonical current-status record and `ROADMAP.md` is
 the canonical capability roadmap.
 
@@ -46,8 +45,8 @@ The repository now contains:
 - `agents/` and `skills/` define canonical roles and reusable methods.
 - `orchestrator/` defines classification, routing, approvals, workflows, and dry-run policy.
 - `runtime/` contains local job, worker, provider, review, approval,
-  controlled-write, Git, scheduler, remote-command, notification, and webhook
-  coordination.
+  controlled-write, Git, scheduler, remote-command, notification, webhook, and
+  Phase 8B host-state coordination.
 - `schemas/` contains the persisted runtime contracts.
 - `shared/projects/` and `shared/knowledge/` keep operational state separate from durable knowledge.
 - `.env.example` lists placeholder environment variable names.

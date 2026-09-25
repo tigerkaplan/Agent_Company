@@ -63,7 +63,8 @@ remote-control and runtime-ingress boundary passed on 2026-09-24, so Phase 7 is
 completed and closed. Phase 8A Always-On Runtime and Deployment Architecture
 Design is PASS / COMPLETED. It changed no local-first runtime capability,
 performed no deployment, and installed no Docker, VPS, or Hermes component.
-Phase 8B is NEXT and has not started. No technical blocker prevents Phase 8B
-after the documentation checkpoint is committed. A future different-provider
-full-repository audit is recommended validation, not a mandatory Phase 8
-implementation gate.
+Phase 8B host configuration and persistent-state foundations are COMPLETED /
+CLOSED after their successful final independent re-review; they add no service,
+deployment, or new authority. Phase 8C is NEXT / NOT STARTED. A future
+different-provider full-repository audit remains recommended validation, not a
+mandatory Phase 8 implementation gate.

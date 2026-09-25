@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "environment_mode": "local",
+  "state_root": null,
+  "secret_file": null,
+  "provider_execution_enabled": false,
+  "provider_credential_root": null,
+  "telegram_enabled": false,
+  "webhook_enabled": false,
+  "notifications_enabled": false,
+  "scheduler_enabled": false,
+  "git_enabled": false
+}

@@ -43,11 +43,33 @@ service account. The runtime receives a provider-specific home path, not copied
 tokens. Git/forge credentials use the narrowest repository/action scope and
 remain external to Agent Company state.
 
+Phase 8B provider adapters construct child environments from a default-deny
+allowlist. Required path, operating-system, temporary-directory, home, and
+locale variables are retained; only the selected provider's explicitly
+allowlisted authentication variables are added. A configured credential root
+maps to a distinct home for each provider. Telegram and webhook secrets,
+arbitrary host/connector credentials, and another provider's private variables
+are not propagated. Git and `gh` retain their separate existing execution
+boundary.
+
 This is the simplest safe first host model compatible with current code. Phase
-8B should add file-secret support before Docker secrets or a mounted secret
-store is preferred. Secret rotation restarts only the affected process after a
-safe scheduler stop where needed. Errors report secret source names or missing
+8B host configuration may reference an external secret file, and `host check`
+validates its location, presence, and POSIX `0600`-or-stricter mode without
+reading or printing it. Current Telegram and webhook paths still consume only
+their existing environment/config interfaces; a future supervisor must inject
+only the variables each process needs. Docker/file-secret adapters
+remain later work. Secret rotation restarts only the affected process after a
+safe scheduler stop where needed. Errors report presence or missing
 configuration, never values.
+
+The tracked host example contains only non-secret eligibility flags and paths.
+Secret-shaped fields are rejected. Provider execution, when enabled, requires a
+separate credential root outside the repository and state root; its contents
+are not inspected or copied. State, credential, repository, and secret-root
+overlap is rejected in both directions. On POSIX, `host init` applies `0700`
+only after dedicated-root validation succeeds. Windows ACLs are not managed or
+treated as equivalent to POSIX permissions; checks always report WARN and
+require operator validation rather than claiming equivalent enforcement.
 
 ## Identity And Authority
 
@@ -102,10 +124,18 @@ expiry, and human actor.
 The action sequence is plan, independent review, exact human approval,
 allowlisted deployment, and persisted evidence. An approval for a job, write,
 commit, push, or pull request cannot satisfy it. Provider output cannot create,
-approve, or invoke it. Phase 8A implements none of this sequence.
+approve, or invoke it. Phase 8A/8B implement none of this sequence.
 
 ## Backup Security And Recovery Safety
 
+- Backup required: jobs and execution evidence, approvals, schedules and
+  scheduler state, remote audit/replay and Telegram offset, notification state,
+  webhook provenance/tombstones and retained audit, and Git/PR evidence.
+- Backup optional: expendable retained logs and bounded history only where the
+  canonical design permits recreation. Transient locks, atomic-write temporary
+  files, and caches are excluded.
+- Secrets and provider credential homes are excluded from ordinary state
+  backup. Phase 8B classifies these boundaries; Phase 8F owns automation.
 - Encrypt backup contents and transport; store copies outside the VPS failure
   domain with access separate from the runtime service account.
 - Exclude Telegram/webhook/provider/Git secrets and provider credential homes.

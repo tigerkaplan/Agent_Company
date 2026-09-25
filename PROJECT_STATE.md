@@ -2,14 +2,11 @@
 
 ## Current Checkpoint
 
-- Current Git HEAD is `03a3a2e`, containing the committed Phase 7 remote core,
-  Telegram transport and notifications, localhost webhook ingress, Phase 7
-  security remediation, and the provider-neutral Social Media capability
-  checkpoint.
-- Phase 8A began from a clean working tree and is now PASS / COMPLETED. Its
-  documentation changes are intentionally uncommitted; the working tree also
-  contains the Phase 7 closure reconciliation. These changes add no runtime or
-  deployment capability.
+- Current Git HEAD is `4f4d951`, containing the committed Phase 7 closure and
+  Phase 8A design checkpoint. The provider-neutral Social Media capability is
+  committed at `03a3a2e`.
+- The working tree contains the uncommitted Phase 8B host-configuration and
+  persistent-state foundation. It adds no deployment or background service.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
@@ -18,8 +15,9 @@
 - Phase 8A architecture and threat-model design is completed under
   `infrastructure/`. The current baseline remains local; no deployment, service,
   Docker image, VPS, Hermes integration, or public webhook exposure exists.
-- Phase 8B is NEXT and has not started. No technical blocker prevents Phase 8B
-  after this documentation checkpoint is committed.
+- Phase 8B is COMPLETED / CLOSED. Its final independent re-review passed on
+  2026-09-25 with no critical, major, or required-fix findings. Phase 8C is
+  NEXT / NOT STARTED.
 
 ## Phase 8A Architecture Design Checkpoint
 
@@ -29,6 +27,27 @@ requirements, Telegram always-on design, webhook public-exposure boundary,
 deployment and merge authority boundaries, Hermes evaluation, backup/recovery
 design, threat model, acceptance criteria, and staged Phase 8 implementation
 plan. Phase 8A performed no deployment and implemented none of those stages.
+
+## Phase 8B Host Foundation
+
+Phase 8B implements a strict non-secret host configuration, the canonical
+`AGENT_COMPANY_STATE_ROOT` contract, fixed exact state paths, idempotent
+`host init`, and read-only `host check`. Local development continues to use
+ignored `runtime/state/` by default; host mode requires an explicit external
+dedicated root such as `/var/lib/agent-company`. Broad roots, repository
+ancestors, and non-canonical existing directories are rejected before any
+creation or permission change. Existing local state is detected and reported,
+never moved or copied. Provider subprocesses receive a default-deny,
+provider-specific environment and credential home. Provider credentials,
+optional host secret files, runtime state, and the repository must not overlap
+in either direction. Malformed readiness configuration produces bounded FAIL
+results; Windows ACL checks remain WARN pending operator validation.
+
+No process supervisor or service lifecycle, systemd unit, Windows Service,
+deployment, Docker container, VPS, Hermes component, public webhook listener,
+backup automation, merge authority, or deployment authority was created. Host
+configuration controls component eligibility only and grants no runtime
+authority.
 
 ## Social Media Capability Checkpoint
 
@@ -72,11 +91,15 @@ plan. Phase 8A performed no deployment and implemented none of those stages.
 
 - Merge and deployment are not implemented and grant no runtime authority.
 - Service installation, distributed execution, parallel provider execution, and broader connector execution remain outside the current local runtime.
+- Future hardening, not Phase 8B blockers: a cross-provider audit when
+  available, native Windows ACL inspection, and race-resistant
+  directory-handle containment.
 
 ## Not Implemented
 
-- Agent Company infrastructure implementation; `infrastructure/` contains
-  design documents only.
+- Phase 8C and later infrastructure work: process-supervisor/service lifecycle,
+  systemd or Windows Service integration, singleton process enforcement,
+  deployment, and backup automation.
 - Dedicated observability, metrics, or tracing implementation; `observability/` is absent.
 - Phase 8 always-on hosting, TLS termination, public webhook exposure,
   Docker, VPS, Hermes, and operating-system service installation.
@@ -96,27 +119,25 @@ plan. Phase 8A performed no deployment and implemented none of those stages.
 
 ## Verification
 
-Verified on 2026-09-24 for the current working tree:
+Verified on 2026-09-25 for the Phase 8B closure working tree:
 
-- Targeted Phase 7 tests: 142 passed, 0 failed, and 0 skipped.
-- Runtime tests: 430 passed, 0 failed, and 0 skipped.
-- Python compilation: PASS for 100 files.
-- Schemas: PASS for 15 JSON schemas parsed; runtime schema/model tests also passed.
+- Targeted host/provider/action tests: 98 passed, 0 failed, and 0 skipped.
+- Runtime tests: 469 passed, 0 failed, and 0 skipped.
+- Python compilation: PASS for 105 files.
+- Schemas: PASS for 16 JSON schemas parsed; runtime schema/model tests also passed.
 - Git diff check: PASS.
-- Secret and credential scan: PASS. One deliberate Telegram-token-shaped
-  redaction fixture in `runtime/tests/test_notifications.py` is not a real
-  credential; no production high-confidence secret hit was found.
+- Secret and credential scan: PASS; no high-confidence hit was found in
+  tracked or untracked non-ignored files.
 - Provider runtime configuration: PASS for the Claude and Codex configurations.
-- Generated-state ignore rules and temporary-artifact checks: PASS, including
-  all 16 actual-path ignore probes.
+- Generated-state and host-local configuration ignore rules: PASS for all 15
+  Phase 8B probes.
 - Architecture and security checks: PASS, including zero AST-detected
   `shell=True` calls, no project-specific business logic in runtime source, and
   no unexpected generated dirty paths.
 
-This is the recorded final Phase 7 closure evidence. Phase 6 authority
-boundaries remain green, and Phase 7 is COMPLETED / CLOSED. The Social Media
-capability checkpoint is COMPLETED / COMMITTED. Phase 8A is PASS / COMPLETED
-and documentation-only. Phase 8B is NEXT, has not started, and has no technical
-blocker after checkpoint reconciliation. A different-provider full-repository
-audit is recommended future validation, not a mandatory Phase 8 implementation
-gate.
+Phase 6 authority boundaries remain green, and Phase 7 is COMPLETED / CLOSED.
+The Social Media capability checkpoint is COMPLETED / COMMITTED. Phase 8A is
+PASS / COMPLETED and documentation-only. Phase 8B is COMPLETED / CLOSED after
+its successful final independent re-review. Phase 8C is NEXT / NOT STARTED. A
+different-provider full-repository audit remains recommended future validation,
+not a mandatory Phase 8 implementation gate.

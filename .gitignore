@@ -10,6 +10,8 @@
 secrets/
 config/remote.local.json
 config/webhooks.local.json
+config/host.local.json
+/provider-credentials/
 
 # Runtime state and local data
 /state/
@@ -21,6 +23,8 @@ config/webhooks.local.json
 /runtime/state/remote/
 /runtime/state/notifications/
 /runtime/state/webhooks/
+/runtime/state/locks/
+/runtime/state/audit/
 data/runtime/
 tmp/
 temp/

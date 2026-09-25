@@ -37,8 +37,15 @@
 - [x] Define the Phase 8 threat model, acceptance criteria, and implementation stages in `infrastructure/`.
 - [x] Close the recorded Phase 7 independent review gate before Phase 8 implementation.
 - [x] Record Phase 8A as PASS / COMPLETED with no deployment and no Phase 8B implementation.
-- [ ] Complete Phase 8B host configuration and persistence work without deploying.
+- [x] Implement Phase 8B host configuration, canonical persistence paths,
+  initialization, and readiness checks without deploying.
+- [x] Repair the Phase 8B independent-review security and correctness findings.
+- [x] Pass the Phase 8B independent implementation/security re-review and
+  record Phase 8B as COMPLETED / CLOSED.
 - [ ] Complete Phase 8C background process lifecycle and recovery validation without public exposure.
 - [ ] Perform any Phase 8D Docker adaptation only after Linux controlled-write behavior is independently reviewed.
 - [ ] Require exact human approval before Phase 8E VPS deployment or any later public exposure.
 - [ ] Complete Phase 8F backup/recovery, Phase 8G smoke testing, and Phase 8H final independent security review.
+
+Future hardening, not Phase 8B blockers: cross-provider audit when available,
+native Windows ACL inspection, and race-resistant directory-handle containment.

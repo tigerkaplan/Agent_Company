@@ -10,7 +10,7 @@ import re
 import sys
 from datetime import timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from integrations.telegram.client import TelegramApiError, TelegramBotApiClient
 from integrations.telegram.notifications import TelegramNotificationTransport
@@ -30,6 +30,9 @@ from runtime.git.forge import ForgeError, GitHubCliPullRequestAdapter
 from runtime.git.remote_runtime import RemoteGitRuntime, RemoteGitRuntimeError
 from runtime.git.remote_store import FileRemoteGitArtifactStore
 from runtime.git.store import GitStoreError
+from runtime.host.config import HostConfig, HostConfigError
+from runtime.host.paths import StatePathError, StatePaths
+from runtime.host.service import HostReadinessError, HostReadinessService
 from runtime.notifications.emitter import RuntimeNotificationEmitter
 from runtime.notifications.models import (
     NotificationError,
@@ -62,59 +65,83 @@ from runtime.workers.worker import Worker
 
 
 def default_state_root() -> Path:
+    paths = default_state_paths()
+    if paths.source != "local_default":
+        return paths.path("jobs")
     configured = os.environ.get("AGENT_COMPANY_RUNTIME_STATE_ROOT")
     if configured:
         return Path(configured)
-    return Path(__file__).resolve().parents[1] / "state" / "jobs"
+    return paths.path("jobs")
 
 
 def default_execution_root() -> Path:
+    paths = default_state_paths()
+    if paths.source != "local_default":
+        return paths.path("executions")
     configured = os.environ.get("AGENT_COMPANY_EXECUTION_STATE_ROOT")
     if configured:
         return Path(configured)
-    return Path(__file__).resolve().parents[1] / "state" / "executions"
+    return paths.path("executions")
 
 
 def default_schedule_root() -> Path:
+    paths = default_state_paths()
+    if paths.source != "local_default":
+        return paths.path("schedules")
     configured = os.environ.get("AGENT_COMPANY_SCHEDULE_STATE_ROOT")
     if configured:
         return Path(configured)
-    return Path(__file__).resolve().parents[1] / "state" / "schedules"
+    return paths.path("schedules")
 
 
 def default_approval_root() -> Path:
+    paths = default_state_paths()
+    if paths.source != "local_default":
+        return paths.path("approvals")
     configured = os.environ.get("AGENT_COMPANY_APPROVAL_STATE_ROOT")
     if configured:
         return Path(configured)
-    return Path(__file__).resolve().parents[1] / "state" / "approvals"
+    return paths.path("approvals")
 
 
 def default_scheduler_runtime_root() -> Path:
+    paths = default_state_paths()
+    if paths.source != "local_default":
+        return paths.path("scheduler")
     configured = os.environ.get("AGENT_COMPANY_SCHEDULER_RUNTIME_ROOT")
     if configured:
         return Path(configured)
-    return Path(__file__).resolve().parents[1] / "state" / "scheduler-runtime"
+    return paths.path("scheduler")
 
 
 def default_git_root() -> Path:
+    paths = default_state_paths()
+    if paths.source != "local_default":
+        return paths.path("git")
     configured = os.environ.get("AGENT_COMPANY_GIT_STATE_ROOT")
     if configured:
         return Path(configured)
-    return Path(__file__).resolve().parents[1] / "state" / "executions" / "git"
+    return paths.path("git")
 
 
 def default_remote_root() -> Path:
+    paths = default_state_paths()
+    if paths.source != "local_default":
+        return paths.path("remote")
     configured = os.environ.get("AGENT_COMPANY_REMOTE_STATE_ROOT")
     if configured:
         return Path(configured)
-    return Path(__file__).resolve().parents[1] / "state" / "remote"
+    return paths.path("remote")
 
 
 def default_notification_root() -> Path:
+    paths = default_state_paths()
+    if paths.source != "local_default":
+        return paths.path("notifications")
     configured = os.environ.get("AGENT_COMPANY_NOTIFICATION_STATE_ROOT")
     if configured:
         return Path(configured)
-    return Path(__file__).resolve().parents[1] / "state" / "notifications"
+    return paths.path("notifications")
 
 
 def default_remote_config() -> Path:
@@ -128,6 +155,58 @@ def repository_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
+def default_state_paths() -> StatePaths:
+    return StatePaths.resolve(
+        repository_root(),
+        HostConfig.local_default(),
+        environment=os.environ,
+    )
+
+
+def default_host_config() -> Path | None:
+    configured = os.environ.get("AGENT_COMPANY_HOST_CONFIG")
+    return Path(configured) if configured else None
+
+
+def load_host_config(path: Path | None) -> HostConfig:
+    return HostConfig.from_file(path) if path is not None else HostConfig.local_default()
+
+
+def apply_state_paths(
+    args: argparse.Namespace,
+    paths: StatePaths,
+) -> None:
+    mappings = (
+        ("state_root", "jobs", "AGENT_COMPANY_RUNTIME_STATE_ROOT"),
+        ("execution_root", "executions", "AGENT_COMPANY_EXECUTION_STATE_ROOT"),
+        ("schedule_root", "schedules", "AGENT_COMPANY_SCHEDULE_STATE_ROOT"),
+        ("approval_root", "approvals", "AGENT_COMPANY_APPROVAL_STATE_ROOT"),
+        (
+            "scheduler_runtime_root",
+            "scheduler",
+            "AGENT_COMPANY_SCHEDULER_RUNTIME_ROOT",
+        ),
+        ("git_state_root", "git", "AGENT_COMPANY_GIT_STATE_ROOT"),
+        ("remote_state_root", "remote", "AGENT_COMPANY_REMOTE_STATE_ROOT"),
+        (
+            "notification_state_root",
+            "notifications",
+            "AGENT_COMPANY_NOTIFICATION_STATE_ROOT",
+        ),
+    )
+    for attribute, key, legacy_name in mappings:
+        setattr(
+            args,
+            attribute,
+            paths.component_root(
+                key,
+                explicit=getattr(args, attribute),
+                legacy_environment_name=legacy_name,
+                environment=os.environ,
+            ),
+        )
+
+
 def notification_test_id(value: str) -> str:
     if re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}", value) is None:
         raise argparse.ArgumentTypeError(
@@ -139,45 +218,59 @@ def notification_test_id(value: str) -> str:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Agent Company local job runtime")
     parser.add_argument(
+        "--base-root",
+        type=Path,
+        help=(
+            "Canonical persistent-state root; overrides AGENT_COMPANY_STATE_ROOT "
+            "and host config"
+        ),
+    )
+    parser.add_argument(
+        "--host-config",
+        type=Path,
+        default=default_host_config(),
+        help="Tracked-format, Git-ignored local host configuration",
+    )
+    parser.add_argument(
         "--state-root",
         type=Path,
-        default=default_state_root(),
+        default=None,
         help="Local directory for generated job JSON records",
     )
     parser.add_argument(
         "--execution-root",
         type=Path,
-        default=default_execution_root(),
+        default=None,
         help="Local directory for generated execution JSON records",
     )
     parser.add_argument(
         "--schedule-root",
         type=Path,
-        default=default_schedule_root(),
+        default=None,
         help="Local directory for generated schedule JSON records",
     )
     parser.add_argument(
         "--approval-root",
         type=Path,
-        default=default_approval_root(),
+        default=None,
         help="Local directory for generated approval JSON records",
     )
     parser.add_argument(
         "--scheduler-runtime-root",
         type=Path,
-        default=default_scheduler_runtime_root(),
+        default=None,
         help="Local directory for scheduler state and bounded audit records",
     )
     parser.add_argument(
         "--git-state-root",
         type=Path,
-        default=default_git_root(),
+        default=None,
         help="Local directory for generated Git change-set and commit evidence",
     )
     parser.add_argument(
         "--remote-state-root",
         type=Path,
-        default=default_remote_root(),
+        default=None,
         help="Local directory for generated remote command audit/replay state",
     )
     parser.add_argument(
@@ -189,7 +282,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--notification-state-root",
         type=Path,
-        default=default_notification_root(),
+        default=None,
         help="Local directory for generated notification delivery state",
     )
     parser.add_argument(
@@ -198,6 +291,22 @@ def build_parser() -> argparse.ArgumentParser:
         help="Enable configured outbound notifications for this runtime command",
     )
     top = parser.add_subparsers(dest="resource", required=True)
+    host = top.add_parser(
+        "host", help="Initialize or validate Phase 8B host-state foundations"
+    )
+    host_commands = host.add_subparsers(dest="command", required=True)
+    for name in ("init", "check"):
+        host_command = host_commands.add_parser(
+            name,
+            help=(
+                "Create canonical state directories without migration"
+                if name == "init"
+                else "Run read-only deterministic host readiness checks"
+            ),
+        )
+        host_command.add_argument("--config", dest="command_host_config", type=Path)
+        host_command.add_argument("--base-root", dest="command_base_root", type=Path)
+
     job = top.add_parser("job", help="Manage canonical jobs")
     commands = job.add_subparsers(dest="command", required=True)
 
@@ -489,9 +598,12 @@ def build_worker(
     execution_root: Path,
     *,
     lease_seconds: int = 300,
+    provider_environment: Mapping[str, str] | None = None,
 ) -> Worker:
     if executor_name == "provider":
-        router = build_provider_router(repository_root())
+        router = build_provider_router(
+            repository_root(), environment=provider_environment
+        )
         executor = ProviderExecutor(
             router=router,
             context_builder=ExecutionContextBuilder(repository_root()),
@@ -634,6 +746,34 @@ def notification_test_event(args: argparse.Namespace, created_at: str) -> Notifi
 def run(arguments: list[str] | None = None) -> int:
     args = build_parser().parse_args(arguments)
     try:
+        config_path = getattr(args, "command_host_config", None) or args.host_config
+        host_config = load_host_config(config_path)
+        provider_environment = dict(os.environ)
+        if (
+            not provider_environment.get("AGENT_COMPANY_PROVIDER_CREDENTIAL_ROOT")
+            and host_config.provider_credential_root is not None
+        ):
+            provider_environment["AGENT_COMPANY_PROVIDER_CREDENTIAL_ROOT"] = (
+                host_config.provider_credential_root
+            )
+        base_root = getattr(args, "command_base_root", None) or args.base_root
+        state_paths = StatePaths.resolve(
+            repository_root(),
+            host_config,
+            cli_root=base_root,
+            environment=os.environ,
+        )
+        apply_state_paths(args, state_paths)
+        if args.resource == "host":
+            host_service = HostReadinessService(host_config, state_paths)
+            result = (
+                host_service.initialize()
+                if args.command == "init"
+                else host_service.check()
+            )
+            emit(result)
+            return 2 if result["status"] == "FAIL" else 0
+
         remote_config: RemoteRuntimeConfig | None = None
         notification_emitter: RuntimeNotificationEmitter | None = None
         if args.enable_notifications:
@@ -797,7 +937,9 @@ def run(arguments: list[str] | None = None) -> int:
             else:
                 raise ReviewStoreError(f"Unsupported review command: {args.command}")
         elif args.resource == "provider":
-            router = build_provider_router(repository_root())
+            router = build_provider_router(
+                repository_root(), environment=provider_environment
+            )
             if args.command == "list":
                 result = [
                     {
@@ -867,6 +1009,7 @@ def run(arguments: list[str] | None = None) -> int:
                     approvals,
                     args.execution_root,
                     lease_seconds=lease_seconds,
+                    provider_environment=provider_environment,
                 )
                 loop = SchedulerLoop(
                     schedules,
@@ -959,6 +1102,7 @@ def run(arguments: list[str] | None = None) -> int:
                 executions,
                 approvals,
                 args.execution_root,
+                provider_environment=provider_environment,
             )
             result = worker.run_once().to_dict()
         elif args.command == "create":
@@ -1030,6 +1174,9 @@ def run(arguments: list[str] | None = None) -> int:
         TelegramStateError,
         NotificationError,
         NotificationStoreError,
+        HostConfigError,
+        StatePathError,
+        HostReadinessError,
     ) as error:
         print(f"error: {error}", file=sys.stderr)
         return 2

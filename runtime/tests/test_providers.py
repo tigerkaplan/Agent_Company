@@ -16,7 +16,7 @@ from runtime.cli.__main__ import run
 from runtime.core.jobs import JobRuntime
 from runtime.core.references import CanonicalReferenceResolver
 from runtime.execution.models import ExecutionRequest
-from runtime.providers.adapters import CliProviderAdapter
+from runtime.providers.adapters import CliProviderAdapter, build_provider_environment
 from runtime.providers.artifacts import FileProviderArtifactStore
 from runtime.providers.config import (
     CliProviderConfig,
@@ -309,6 +309,101 @@ class CliAdapterTests(unittest.TestCase):
                 "-",
             ],
         )
+
+    def test_h1_provider_child_environment_is_default_deny(self) -> None:
+        captured: dict[str, object] = {}
+
+        def runner(arguments: list[str], **kwargs: object) -> object:
+            captured.update(kwargs)
+            return SimpleNamespace(
+                returncode=0,
+                stdout="safe output",
+                stderr="sandbox: read-only",
+            )
+
+        with tempfile.TemporaryDirectory() as temporary:
+            credential_root = Path(temporary) / "provider-credentials"
+            parent_environment = {
+                "PATH": "C:/safe/bin",
+                "PATHEXT": ".EXE;.CMD",
+                "SYSTEMROOT": "C:/Windows",
+                "WINDIR": "C:/Windows",
+                "TEMP": str(Path(temporary) / "temp"),
+                "HOME": "C:/Users/shared",
+                "USERPROFILE": "C:/Users/shared",
+                "LANG": "en_GB.UTF-8",
+                "AGENT_COMPANY_PROVIDER_CREDENTIAL_ROOT": str(credential_root),
+                "AGENT_COMPANY_TELEGRAM_BOT_TOKEN": "telegram-private",
+                "WEBHOOK_SIGNING_SECRET": "webhook-private",
+                "SYNTHETIC_UNRELATED_SECRET": "unrelated-private",
+                "OPENAI_API_KEY": "codex-private",
+                "CODEX_HOME": "C:/wrong/codex-home",
+                "ANTHROPIC_API_KEY": "claude-private",
+                "CLAUDE_CONFIG_DIR": "C:/wrong/claude-home",
+            }
+            adapter = CliProviderAdapter(
+                self.config(),
+                REPOSITORY_ROOT,
+                runner=runner,
+                which=lambda _: "C:/fake/codex.exe",
+                environment=parent_environment,
+            )
+            result = adapter.execute(
+                request(), ExecutionContextBuilder(REPOSITORY_ROOT).build(request())
+            )
+
+            self.assertEqual(result.status, "succeeded")
+            child = captured["env"]
+            self.assertIsInstance(child, dict)
+            child_environment = child  # type: ignore[assignment]
+            self.assertEqual(child_environment["PATH"], "C:/safe/bin")
+            self.assertEqual(child_environment["SYSTEMROOT"], "C:/Windows")
+            self.assertEqual(child_environment["LANG"], "en_GB.UTF-8")
+            codex_home = str((credential_root / "codex").resolve())
+            self.assertEqual(child_environment["CODEX_HOME"], codex_home)
+            self.assertEqual(child_environment["HOME"], codex_home)
+            self.assertEqual(child_environment["USERPROFILE"], codex_home)
+            self.assertEqual(child_environment["OPENAI_API_KEY"], "codex-private")
+            for stripped in (
+                "AGENT_COMPANY_TELEGRAM_BOT_TOKEN",
+                "WEBHOOK_SIGNING_SECRET",
+                "SYNTHETIC_UNRELATED_SECRET",
+                "ANTHROPIC_API_KEY",
+                "CLAUDE_CONFIG_DIR",
+                "AGENT_COMPANY_PROVIDER_CREDENTIAL_ROOT",
+            ):
+                self.assertNotIn(stripped, child_environment)
+
+    def test_h1b_provider_private_environment_is_isolated_by_provider(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            credential_root = Path(temporary) / "provider-credentials"
+            source = {
+                "PATH": "C:/safe/bin",
+                "AGENT_COMPANY_PROVIDER_CREDENTIAL_ROOT": str(credential_root),
+                "OPENAI_API_KEY": "codex-private",
+                "CODEX_HOME": "C:/wrong/codex-home",
+                "ANTHROPIC_API_KEY": "claude-private",
+                "CLAUDE_CODE_OAUTH_TOKEN": "claude-oauth-private",
+                "CLAUDE_CONFIG_DIR": "C:/wrong/claude-home",
+            }
+
+            codex = build_provider_environment("codex", source)
+            claude = build_provider_environment("claude", source)
+
+            self.assertEqual(
+                codex["CODEX_HOME"], str((credential_root / "codex").resolve())
+            )
+            self.assertNotIn("ANTHROPIC_API_KEY", codex)
+            self.assertNotIn("CLAUDE_CODE_OAUTH_TOKEN", codex)
+            self.assertNotIn("CLAUDE_CONFIG_DIR", codex)
+
+            self.assertEqual(
+                claude["CLAUDE_CONFIG_DIR"],
+                str((credential_root / "claude").resolve()),
+            )
+            self.assertEqual(claude["ANTHROPIC_API_KEY"], "claude-private")
+            self.assertNotIn("OPENAI_API_KEY", claude)
+            self.assertNotIn("CODEX_HOME", claude)
 
     def test_h2_read_only_rejects_more_permissive_effective_modes(self) -> None:
         for effective in ("workspace-write", "danger-full-access"):

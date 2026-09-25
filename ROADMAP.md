@@ -8,7 +8,8 @@
 - Phase 7: COMPLETED / CLOSED.
 - Social Media capability checkpoint: COMPLETED / COMMITTED.
 - Phase 8A: PASS / COMPLETED / NO DEPLOYMENT.
-- Phase 8B: NEXT / NOT STARTED.
+- Phase 8B: COMPLETED / CLOSED / NO DEPLOYMENT.
+- Phase 8C: NEXT / NOT STARTED.
 - Phase 9: PLANNED.
 - Phase 10: PLANNED.
 
@@ -87,7 +88,7 @@ redefine or begin Phase 8.
 - CONNECTORS: no social-platform connector, API client, credential, scheduling,
   or autonomous publication capability is implemented.
 
-## Phase 8A Completed / No Deployment
+## Phase 8A Completed; Phase 8B Completed / Closed
 
 ### Phase 8: Always-On Runtime And Deployment
 
@@ -113,9 +114,20 @@ Hermes is optional and must not be treated as the Agent Company core. Merge and 
 Proposed implementation stages are Phase 8B host configuration and persistence,
 8C background process lifecycle, 8D optional Docker adaptation and packaging,
 8E VPS deployment, 8F backup/recovery, 8G deployment smoke testing, and 8H final
-independent security review. Phase 8B is NEXT and has not started. No technical
-blocker prevents it after this documentation checkpoint is committed; none of
-the implementation stages is currently implemented.
+independent security review. Phase 8B is COMPLETED / CLOSED after its final
+independent re-review passed with no critical, major, or required-fix findings.
+It adds
+the canonical state root, strict non-secret host configuration, fixed path
+resolver, dedicated-root rejection before initialization, default-deny
+provider child environments, symmetric state/credential/secret separation,
+and deterministic readiness failures while preserving local defaults. Phase
+8C is NEXT / NOT STARTED. No process supervisor or service lifecycle, systemd,
+Windows Service, Docker/VPS/Hermes installation, public webhook exposure,
+backup automation, merge authority, or deployment authority was added.
+
+Future hardening remains separate from Phase 8B closure: a cross-provider audit
+when available, native Windows ACL inspection, and race-resistant
+directory-handle containment.
 
 ## Planned
 
@@ -148,5 +160,6 @@ Project packs must not create separate Agent Company runtimes per project unless
 - Deployment: deferred and not implemented.
 - Public Telegram webhook mode and public webhook hosting: not implemented.
 - Broader Gmail, Drive, and Calendar runtime integrations: contract-only.
-- Infrastructure implementation: not started.
+- Phase 8C background process lifecycle and later infrastructure stages: not
+  started.
 - Dedicated observability implementation: not started.
