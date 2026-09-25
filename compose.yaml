@@ -1,0 +1,85 @@
+name: agent-company
+
+x-agent-company-service: &agent-company-service
+  image: ${AGENT_COMPANY_IMAGE:-agent-company:phase8d}
+  build:
+    context: .
+    dockerfile: Dockerfile
+    args:
+      AGENT_COMPANY_REVISION: ${AGENT_COMPANY_REVISION:-unknown}
+      AGENT_COMPANY_VERSION: ${AGENT_COMPANY_VERSION:-phase8d}
+  user: "10001:10001"
+  working_dir: /opt/agent-company
+  init: true
+  read_only: true
+  restart: "no"
+  stop_grace_period: 6m
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+  volumes:
+    - agent-company-state:/var/lib/agent-company
+  tmpfs:
+    - /tmp:rw,noexec,nosuid,nodev,mode=1777,size=64m
+
+services:
+  scheduler:
+    <<: *agent-company-service
+    command: ["host", "run", "scheduler"]
+    environment:
+      - AGENT_COMPANY_STATE_ROOT=/var/lib/agent-company
+      - AGENT_COMPANY_HOST_CONFIG=/opt/agent-company/infrastructure/docker/host.scheduler.json
+    healthcheck:
+      test: ["CMD", "python", "-m", "runtime.host.healthcheck", "scheduler"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  telegram:
+    <<: *agent-company-service
+    command: ["host", "run", "telegram"]
+    environment:
+      - AGENT_COMPANY_STATE_ROOT=/var/lib/agent-company
+      - AGENT_COMPANY_HOST_CONFIG=/opt/agent-company/infrastructure/docker/host.telegram.json
+      - AGENT_COMPANY_REMOTE_CONFIG=/run/agent-company-config/remote.json
+      - AGENT_COMPANY_TELEGRAM_BOT_TOKEN
+    configs:
+      - source: telegram-remote-config
+        target: /run/agent-company-config/remote.json
+        mode: 0444
+    healthcheck:
+      test: ["CMD", "python", "-m", "runtime.host.healthcheck", "telegram"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  webhook-local:
+    <<: *agent-company-service
+    profiles: ["webhook-local"]
+    command: ["host", "run", "webhook-local"]
+    environment:
+      - AGENT_COMPANY_STATE_ROOT=/var/lib/agent-company
+      - AGENT_COMPANY_HOST_CONFIG=/opt/agent-company/infrastructure/docker/host.webhook-local.json
+      - AGENT_COMPANY_WEBHOOK_CONFIG=/run/agent-company-config/webhooks.json
+    configs:
+      - source: webhook-local-config
+        target: /run/agent-company-config/webhooks.json
+        mode: 0444
+    healthcheck:
+      test: ["CMD", "python", "-m", "runtime.host.healthcheck", "webhook-local"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  agent-company-state:
+
+configs:
+  telegram-remote-config:
+    file: ${AGENT_COMPANY_REMOTE_CONFIG_FILE:-./config/remote.example.json}
+  webhook-local-config:
+    file: ${AGENT_COMPANY_WEBHOOK_CONFIG_FILE:-./config/webhooks.example.json}

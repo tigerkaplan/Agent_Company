@@ -68,6 +68,12 @@ CLOSED after their successful final independent re-review; they add no service,
 deployment, or new authority. Phase 8C is COMPLETED / CLOSED after its
 successful final independent re-review; it adds a supervisor-neutral process
 lifecycle but installs no service or supervisor and grants no new authority.
-Phase 8D is NEXT / NOT STARTED. A future different-provider full-repository
+Phase 8D is COMPLETED / CLOSED after its successful independent
+architecture/security review. It added Docker adaptation only and performed no
+VPS deployment, operating-system service or production supervisor installation,
+TLS, reverse proxy, public webhook ingress, Hermes integration, production
+provider installation, live Telegram/provider execution, merge, or deployment.
+Phase 8E is NEXT / NOT STARTED, and its recorded target-host runtime validation
+prerequisites remain required. A future different-provider full-repository
 audit and the other recorded Phase 8C hardening items remain recommended
 validation, not a mandatory Phase 8 implementation gate.

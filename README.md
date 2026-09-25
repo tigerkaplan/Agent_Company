@@ -21,22 +21,27 @@ Canonical definitions must remain separate from generated provider files. Claude
 
 ## Current State
 
-Git HEAD `a519452` contains the committed Phase 8C process lifecycle. Phases
-1-7 are closed, the Social Media capability is committed, Phase 8A is closed,
-and Phases 8B and 8C are completed and closed after successful independent
-review. Phase 8D is NEXT / NOT STARTED.
+Git HEAD `ef498bd` contains the committed Phase 8C closure reconciliation.
+Phases 1-7 are closed, the Social Media capability is committed, Phase 8A is
+closed, and Phases 8B and 8C are completed and closed after successful
+independent review. The working tree implements Phase 8D Docker adaptation;
+its independent architecture/security review passed with no critical, major,
+or required-fix findings. Phase 8D is COMPLETED / CLOSED and not deployed.
+Phase 8E is NEXT / NOT STARTED.
 
-The runtime remains local-first. Phase 8C added only a supervisor-neutral
-foreground lifecycle; it added no systemd unit, Windows Service, Task Scheduler
-job, automatic restart supervisor daemon, Docker, VPS, Hermes, public webhook
-hosting, TLS termination, merge authority, or deployment authority.
+The runtime remains local-first. Phase 8D packages the canonical Phase 8C
+foreground lifecycle into one non-root image definition and fixed Compose
+services. It adds no systemd unit, Windows Service, Task Scheduler job,
+automatic restart supervisor daemon, VPS, Hermes, public webhook hosting, TLS
+termination, merge authority, or deployment authority.
 `PROJECT_STATE.md` is the canonical current-status record and `ROADMAP.md` is
 the canonical capability roadmap.
 
 ## Current Repository Structure
 
-This is the physical structure inspected at `a519452`; generated contents and
-ignored local configuration are intentionally not expanded.
+This is the physical structure at the Phase 8D working-tree checkpoint;
+generated contents and ignored local configuration are intentionally not
+expanded.
 
 - `agents/` — 10 canonical roles: communications, knowledge-manager, marketing,
   operations, project-manager, research, reviewer, sales, social-media, and
@@ -54,8 +59,10 @@ ignored local configuration are intentionally not expanded.
   `queue/`, `remote/`, `review/`, `scheduler/`, `storage/`, `tests/`,
   `webhooks/`, and `workers/`. `runtime/state/` is generated, ignored
   operational state, not source architecture.
-- `infrastructure/` — `HOST_ARCHITECTURE.md`, `SECURITY_MODEL.md`, and its
-  README; no Dockerfile, Compose file, service unit, or VPS configuration.
+- `infrastructure/` — `HOST_ARCHITECTURE.md`, `SECURITY_MODEL.md`, its README,
+  and `docker/` with non-secret per-service configuration and operating notes.
+- `Dockerfile`, `.dockerignore`, and `compose.yaml` — Phase 8D packaging for the
+  existing canonical runtime; no image build or deployment is recorded.
 - `shared/projects/` — operational project state; currently includes
   `brightshore/`.
 - `shared/knowledge/` — indexed long-term knowledge, sources, raw material,
@@ -103,7 +110,7 @@ explicitly described above.
 The current runtime does not implement merge, release, deployment, public
 webhook hosting, TLS termination, remote task submission, remote scheduler or
 filesystem/Git commands, general connector execution, infrastructure
-automation, Hermes integration, VPS/Docker hosting, Control Room, or a
+deployment automation, Hermes integration, VPS hosting, Control Room, or a
 dedicated observability platform.
 
 ## Operating Boundary

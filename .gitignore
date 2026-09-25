@@ -12,6 +12,12 @@ config/remote.local.json
 config/webhooks.local.json
 config/host.local.json
 /provider-credentials/
+/compose.override.yaml
+/compose.override.yml
+/compose.local.yaml
+/compose.local.yml
+/infrastructure/docker/*.local.yaml
+/infrastructure/docker/*.local.yml
 
 # Runtime state and local data
 /state/

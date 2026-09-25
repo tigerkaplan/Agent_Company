@@ -1,24 +1,29 @@
 # Infrastructure
 
-This directory contains the canonical Phase 8 hosting and deployment design.
-It does not contain a deployment, service definition, container image, public
-endpoint, credential, or infrastructure automation.
+This directory contains the canonical Phase 8 hosting and deployment design
+plus the Phase 8D Docker adaptation. It does not contain a deployment,
+operating-system service, built image, public endpoint, credential, or
+infrastructure automation.
 
 ## Status
 
-- Phase 8A: PASS / COMPLETED on 2026-09-24; design and discovery only.
+- Phase 8A: COMPLETED / CLOSED on 2026-09-24; design and discovery only.
 - Phase 8B: COMPLETED / CLOSED; no deployment.
 - Phase 8C: COMPLETED / CLOSED after final independent re-review; no deployment.
-- Phase 8D: NEXT / NOT STARTED.
+- Phase 8D: COMPLETED / CLOSED after successful independent review; no
+  deployment.
+- Phase 8E: NEXT / NOT STARTED.
 - Current runtime: local-first, file-backed, and single-worker.
 - Deployment: not performed.
-- Docker, VPS, operating-system service, Hermes, and public webhook exposure:
-  not installed or enabled.
+- Docker image definition and Compose packaging: implemented but not built or
+  deployed; the local Docker daemon was unavailable for live validation.
+- VPS, operating-system service, Hermes, and public webhook exposure: not
+  installed or enabled.
 - Merge and deployment authority: absent.
 
 Phase 8C adds a supervisor-neutral lifecycle wrapper but does not install a
 systemd unit, Windows Service, Task Scheduler job, automatic restart supervisor
-daemon, Docker, VPS, Hermes, public webhook hosting, or TLS termination, and it
+daemon, VPS, Hermes, public webhook hosting, or TLS termination, and it
 adds no merge or deployment authority. Non-blocking Phase 8C future hardening
 is a different-provider full-repository audit, real subprocess singleton-race
 validation, native Windows signal/ACL validation, and more race-resistant
@@ -32,6 +37,9 @@ separate non-blocking Phase 8B item.
   criteria, and proposed implementation stages.
 - `SECURITY_MODEL.md` defines production secret handling, ingress and authority
   boundaries, backup safety, and the Phase 8 threat model.
+- `docker/README.md` defines the Phase 8D single-image Compose model, provider
+  prerequisite, persistent-state handling, healthchecks, and explicit
+  exclusions.
 
 ## Phase 8B Host Foundation
 
@@ -106,6 +114,23 @@ supervisor; no forced termination is implemented.
 The CLI performs no automatic restart. A future supervisor should use bounded
 exponential delay, a burst cap, and an operator-required failed state after a
 crash loop. Phase 8C metadata supports that policy without installing it.
+
+## Phase 8D Docker Adaptation
+
+The root `Dockerfile`, `.dockerignore`, and `compose.yaml` package the existing
+runtime without creating a second source of truth. Scheduler, Telegram, and the
+opt-in webhook-local process use fixed canonical commands, a single named state
+volume, non-root execution, a read-only root filesystem, dropped capabilities,
+and service-local read-only healthchecks. No port is published and no provider
+CLI, credential, or secret is built into the image.
+
+Provider-backed scheduling intentionally fails closed in the tracked config
+until a separately reviewed derived image and credential mount exist. Telegram
+requires its token at runtime. Webhook-local remains bound to `127.0.0.1` in
+its container namespace. See `docker/README.md` for validation and operating
+details. Phase 8D is COMPLETED / CLOSED after successful independent review;
+Phase 8E deployment has not started. Docker-daemon-dependent validation remains
+an explicit Phase 8E prerequisite.
 
 ## Authority Boundary
 

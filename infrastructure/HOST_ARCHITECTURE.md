@@ -472,12 +472,15 @@ Implementation is acceptable only when all of the following are evidenced:
   notification-only OS signal callbacks, a fail-closed provider-enable gate,
   and an opt-in loopback webhook entrypoint. No service installation or
   automatic restart daemon.
-- **Phase 8D - Docker adaptation and packaging — NEXT / NOT STARTED:** optional,
-  only after a reviewed Linux controlled-write/provider contract; immutable
-  image, non-root runtime, external state and secret mounts, and equivalent
-  regression evidence.
-- **Phase 8E - VPS deployment:** vendor-neutral host build and an exact reviewed
-  deployment plan; execution requires separate human deployment approval.
+- **Phase 8D - Docker adaptation and packaging — COMPLETED / CLOSED:** one
+  canonical non-root image definition, fixed Compose services, external
+  canonical state, runtime-only secrets, and equivalent regression evidence.
+  The successful independent review found no critical, major, or required-fix
+  findings. No VPS, service/supervisor, public ingress, production provider,
+  live Telegram/provider execution, merge, or deployment authority was added.
+- **Phase 8E - VPS deployment — NEXT / NOT STARTED:** vendor-neutral host build
+  and an exact reviewed deployment plan; execution requires separate human
+  deployment approval and the recorded target-host runtime validation evidence.
 - **Phase 8F - Backup and recovery:** automated encrypted snapshots, retention,
   offline validation, restore rehearsal, and documented RPO/RTO evidence.
 - **Phase 8G - Deployment smoke test:** restart, lease, Telegram offset, webhook

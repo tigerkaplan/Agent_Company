@@ -29,14 +29,14 @@
 - [x] Record Phase 7 as COMPLETED / CLOSED; retain a different-provider
   full-repository audit as recommended future validation rather than a gate.
 
-## Phase 8A Design — PASS / COMPLETED
+## Phase 8A Design — COMPLETED / CLOSED
 
 - [x] Inventory current always-on-safe runtime assumptions without claiming distributed guarantees.
 - [x] Define the canonical host, process, persistent-state, secret, ingress, backup, and authority boundaries.
 - [x] Assess Docker, a vendor-neutral VPS target, Telegram long polling, public webhook prerequisites, and optional Hermes use.
 - [x] Define the Phase 8 threat model, acceptance criteria, and implementation stages in `infrastructure/`.
 - [x] Close the recorded Phase 7 independent review gate before Phase 8 implementation.
-- [x] Record Phase 8A as PASS / COMPLETED with no deployment and no Phase 8B implementation.
+- [x] Record Phase 8A as COMPLETED / CLOSED with no deployment and no Phase 8B implementation.
 - [x] Implement Phase 8B host configuration, canonical persistence paths,
   initialization, and readiness checks without deploying.
 - [x] Repair the Phase 8B independent-review security and correctness findings.
@@ -48,8 +48,22 @@
   signal-callback reentrancy, and startup/stop-request overwrite.
 - [x] Complete the successful Phase 8C independent implementation/security
   re-review and record Phase 8C as COMPLETED / CLOSED.
-- [ ] Phase 8D is NEXT / NOT STARTED; perform any Docker adaptation only after
-  Linux controlled-write behavior is independently reviewed.
+- [x] Implement the Phase 8D Docker adaptation with one non-root image, fixed
+  Compose services, persistent canonical state, and no public exposure.
+- [x] Complete the Phase 8D independent implementation/security review with no
+  critical, major, or required-fix findings and close Phase 8D.
+- [ ] Phase 8E is NEXT / NOT STARTED.
+- [ ] Before Phase 8E production use, build the pinned image on the target Linux
+  architecture and perform an SBOM/vulnerability scan.
+- [ ] Verify or update the base-image digest where appropriate.
+- [ ] Verify fresh named-volume ownership, non-root `host init`, read-only-root
+  behavior, and `/tmp` behavior.
+- [ ] Verify duplicate-process locking across containers, `docker stop` signal
+  delivery, lifecycle final state after stop, and live health transitions.
+- [ ] Validate the derived Linux provider image/executable, provider-specific
+  credential mount, provider authentication, and provider environment isolation.
+- [ ] Run live Telegram, provider, or public-ingress smoke tests only with
+  separate explicit approval.
 - [ ] Require exact human approval before Phase 8E VPS deployment or any later public exposure.
 - [ ] Complete Phase 8F backup/recovery, Phase 8G smoke testing, and Phase 8H final independent security review.
 

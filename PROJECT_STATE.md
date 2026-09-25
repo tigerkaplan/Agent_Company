@@ -2,22 +2,24 @@
 
 ## Current Checkpoint
 
-- Current Git HEAD is `a519452`, containing the committed Phase 8C
-  supervisor-neutral process lifecycle. It adds no deployment or
-  operating-system service.
+- Current Git HEAD is `ef498bd`. The working tree contains the Phase 8D Docker
+  adaptation described below; it is not committed or deployed.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
 - Phase 7 is completed and closed. The final repository-backed architecture and
   security review passed on 2026-09-24.
-- Phase 8A architecture and threat-model design is completed under
-  `infrastructure/`. The current baseline remains local; no deployment, service,
-  Docker image, VPS, Hermes integration, or public webhook exposure exists.
+- Phase 8A architecture and threat-model design is COMPLETED / CLOSED under
+  `infrastructure/`. The current baseline remains local; no deployment,
+  operating-system service, running container, VPS, Hermes integration, or
+  public webhook exposure exists.
 - Phase 8B is COMPLETED / CLOSED. Its final independent re-review passed on
   2026-09-25 with no critical, major, or required-fix findings.
 - Phase 8C is COMPLETED / CLOSED. Its final independent re-review passed on
   2026-09-25 with no critical, major, or required-fix findings.
-- Phase 8D is NEXT / NOT STARTED.
+- Phase 8D is COMPLETED / CLOSED. Its independent architecture/security review
+  passed on 2026-09-25 with no critical, major, or required-fix findings.
+- Phase 8E is NEXT / NOT STARTED.
 
 ## Phase 8A Architecture Design Checkpoint
 
@@ -73,6 +75,47 @@ serialized with stop requests so a successful request is not overwritten. No
 automatic restart loop is present; a future supervisor must apply bounded
 backoff and a burst cap.
 
+## Phase 8D Docker Adaptation
+
+Phase 8D adds one provider-neutral Linux image definition and fixed Compose
+services for `scheduler`, `telegram`, and opt-in `webhook-local`. Every service
+uses the existing `python -m runtime.cli host run ...` lifecycle, runs as UID
+and GID 10001 with a read-only root filesystem, drops Linux capabilities, and
+shares one named volume at `/var/lib/agent-company`. The image contains no
+tracked secrets, runtime state, provider credentials, or provider CLI.
+
+The scheduler configuration keeps provider execution disabled, so a normal
+non-dry scheduler start fails closed until a separately reviewed derived image,
+provider configuration, and read-only credential mount exist. Telegram accepts
+its token only from the runtime environment. Webhook-local publishes no port
+and remains bound to container-local `127.0.0.1`. Healthchecks read lifecycle,
+lock, and heartbeat evidence only; they make no external or provider call and
+do not treat a container PID as ownership proof. No image or container was
+created because the local Docker daemon was unavailable.
+
+Phase 8D did not add VPS deployment, systemd, a Windows Service, Task
+Scheduler, a production restart supervisor, TLS, a reverse proxy, public
+webhook ingress, Hermes, merge authority, deployment authority, production
+provider installation, or live Telegram execution.
+
+### Phase 8E Runtime Validation Prerequisites
+
+The following are explicit Phase 8E prerequisites, not open Phase 8D blockers:
+
+- build the pinned image on the target Linux architecture;
+- perform an SBOM and vulnerability scan and verify or update the base-image
+  digest where appropriate;
+- verify fresh named-volume ownership and non-root `host init`;
+- verify read-only-root and `/tmp` behavior;
+- verify duplicate-process locking across containers;
+- verify `docker stop` signal delivery, the final lifecycle state after stop,
+  and live health transitions;
+- validate the derived Linux provider image and executable, provider-specific
+  credential mount, provider authentication, and provider environment
+  isolation; and
+- perform live Telegram, provider, or public-ingress smoke tests only with
+  separate explicit approval.
+
 ## Social Media Capability Checkpoint
 
 - Social Media owns channel-level content planning, individual content drafts,
@@ -120,19 +163,20 @@ backoff and a burst cap.
   validation, and more race-resistant status-lock probing.
 - Additional Phase 8B future hardening remains non-blocking: race-resistant
   directory-handle containment.
+- Phase 8E runtime validation prerequisites remain pending and are recorded in
+  the Phase 8D section above.
 
 ## Not Implemented
 
-- Phase 8D is NEXT / NOT STARTED. Phase 8D and later infrastructure work covers
-  Docker adaptation, VPS deployment, backup/recovery automation, target-host
-  smoke testing, and final review.
+- Phase 8E is NEXT / NOT STARTED. VPS deployment, backup/recovery automation,
+  target-host smoke testing, and final review remain later Phase 8 work.
 - Operating-system supervisor installation, systemd, Windows Service, Task
   Scheduler integration, an automatic restart supervisor daemon, and forced
   process termination.
 - Dedicated observability, metrics, or tracing implementation; `observability/` is absent.
-- Phase 8 always-on hosting, TLS termination, public webhook hosting, Docker,
-  VPS, Hermes, merge authority, deployment authority, and operating-system
-  service installation.
+- Phase 8 always-on hosting, TLS termination, public webhook hosting, a built or
+  deployed Docker workload, VPS, Hermes, merge authority, deployment authority,
+  and operating-system service installation.
 
 ## Runtime Limitations
 
@@ -186,11 +230,32 @@ startup publication is serialized with persisted stop requests. The final
 independent re-review passed on 2026-09-25 with no critical, major, or
 required-fix findings. Phase 8C is COMPLETED / CLOSED.
 
+Phase 8D implementation validation on 2026-09-25:
+
+- Targeted Docker tests: 12 passed, 0 failed, and 0 skipped.
+- Focused Docker/host/provider/scheduler/Telegram/webhook regression: 232
+  passed, 0 failed, and 0 skipped.
+- Full runtime regression: 512 passed, 0 failed, and 0 skipped.
+- Python compilation: PASS for 109 files.
+- JSON schema/config parsing: PASS for 24 files.
+- Compose configuration parsing: PASS; service, profile, and volume discovery
+  matched the fixed design.
+- Runtime/integration AST scan: PASS with zero `shell=True` calls.
+- Docker build and live container smoke: UNAVAILABLE because the Docker daemon
+  was not running; no daemon was installed or started.
+
+The independent Phase 8D architecture/security review passed on 2026-09-25
+with no critical, major, or required-fix findings. Phase 8D is COMPLETED /
+CLOSED. Docker-daemon-dependent validation remains an explicit Phase 8E
+prerequisite and does not reopen Phase 8D.
+
 Phase 6 authority boundaries remain green, and Phase 7 is COMPLETED / CLOSED.
 The Social Media capability checkpoint is COMPLETED / COMMITTED. Phase 8A is
-PASS / COMPLETED and documentation-only. Phase 8B is COMPLETED / CLOSED after
+COMPLETED / CLOSED and documentation-only. Phase 8B is COMPLETED / CLOSED after
 its successful final independent re-review. Phase 8C is COMPLETED / CLOSED
-after its successful final independent re-review. Phase 8D is NEXT / NOT
-STARTED. A different-provider full-repository audit and the other recorded
+after its successful final independent re-review. Phase 8D is COMPLETED /
+CLOSED after its successful independent architecture/security review, and
+Phase 8E is NEXT / NOT STARTED. A
+different-provider full-repository audit and the other recorded
 Phase 8C hardening items remain recommended future validation, not a mandatory
 Phase 8 implementation gate.

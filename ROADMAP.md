@@ -7,10 +7,11 @@
 - Phase 1-6: COMPLETED / COMMITTED.
 - Phase 7: COMPLETED / CLOSED.
 - Social Media capability checkpoint: COMPLETED / COMMITTED.
-- Phase 8A: PASS / COMPLETED / NO DEPLOYMENT.
+- Phase 8A: COMPLETED / CLOSED / NO DEPLOYMENT.
 - Phase 8B: COMPLETED / CLOSED / NO DEPLOYMENT.
 - Phase 8C: COMPLETED / CLOSED / NO DEPLOYMENT.
-- Phase 8D: NEXT / NOT STARTED.
+- Phase 8D: COMPLETED / CLOSED / NO DEPLOYMENT.
+- Phase 8E: NEXT / NOT STARTED.
 - Phase 9: PLANNED.
 - Phase 10: PLANNED.
 
@@ -89,19 +90,19 @@ redefine or begin Phase 8.
 - CONNECTORS: no social-platform connector, API client, credential, scheduling,
   or autonomous publication capability is implemented.
 
-## Phase 8A Completed; Phase 8B And Phase 8C Completed / Closed
+## Phases 8A, 8B, 8C, And 8D Closed
 
 ### Phase 8: Always-On Runtime And Deployment
 
 Goal: move the verified local runtime into an optional always-on execution environment.
 
-Phase 8A architecture design is PASS / COMPLETED. The canonical host and
+Phase 8A architecture design is COMPLETED / CLOSED. The canonical host and
 threat-model design is in `infrastructure/`. It defines the infrastructure,
 host/process, persistent-state, secrets, Docker, VPS, Telegram, webhook,
 deployment/merge authority, Hermes, backup/recovery, threat-model, acceptance,
 and staged implementation boundaries. The current baseline remains local; no
-service, Docker image, VPS, Hermes integration, public endpoint, merge
-authority, or deployment authority has been created.
+operating-system service, running container, VPS, Hermes integration, public
+endpoint, merge authority, or deployment authority has been created.
 
 - RUNTIME: plan background runtime hosting, process lifecycle, startup/restart behavior, and recovery.
 - DEPLOYMENT: define environment and secrets management for optional hosted operation.
@@ -131,8 +132,28 @@ fail closed before discovery, makes OS signal callbacks notification-only, and
 serializes startup publication with persisted stop requests. It installs no
 systemd unit, Windows Service, Task Scheduler job, automatic restart supervisor
 daemon, Docker/VPS/Hermes component, public webhook hosting, TLS termination,
-backup automation, merge authority, or deployment authority. Phase 8D is NEXT /
-NOT STARTED.
+backup automation, merge authority, or deployment authority.
+
+Phase 8D is COMPLETED / CLOSED after its independent architecture/security
+review passed with no critical, major, or required-fix findings. It adds one non-root,
+provider-neutral Linux image definition; fixed Compose services for scheduler,
+Telegram, and optional webhook-local; one canonical named state volume; strict
+per-service host configuration; and read-only lifecycle healthchecks. It adds
+no provider CLI, embedded credential, public port, automatic restart policy,
+VPS, TLS, reverse proxy, Hermes component, merge authority, or deployment
+authority. Compose syntax and deterministic regressions pass, but a Docker
+daemon was unavailable, so the image build and live-container smoke remain
+unverified. These are Phase 8E runtime-validation prerequisites and do not
+reopen Phase 8D. Phase 8E is NEXT / NOT STARTED.
+
+Before Phase 8E production use, build the pinned image on the target Linux
+architecture; perform an SBOM/vulnerability scan and verify or update the base
+digest; validate fresh-volume ownership, non-root initialization, read-only-root
+and `/tmp` behavior, cross-container singleton locks, `docker stop` signal and
+final-state behavior, and live health transitions; validate the derived Linux
+provider image/executable, provider-specific credential mount, authentication,
+and environment isolation; and run live Telegram, provider, or public-ingress
+smoke tests only with separate explicit approval.
 
 Non-blocking Phase 8C future hardening is a different-provider full-repository
 audit, real subprocess singleton-race validation, native Windows signal/ACL
@@ -191,6 +212,7 @@ Project packs must not create separate Agent Company runtimes per project unless
 - Deployment: deferred and not implemented.
 - Public Telegram webhook mode and public webhook hosting: not implemented.
 - Broader Gmail, Drive, and Calendar runtime integrations: contract-only.
-- Phase 8D Docker adaptation and packaging: next, not started, and subject to
-  its existing review prerequisites.
+- Phase 8D Docker adaptation and packaging: completed, closed, and not deployed.
+- Phase 8E VPS deployment: next, not started, and requires separate human
+  approval.
 - Dedicated observability implementation: not started.
