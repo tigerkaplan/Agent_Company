@@ -21,36 +21,84 @@ Canonical definitions must remain separate from generated provider files. Claude
 
 ## Current State
 
-Git HEAD `b1456f3` contains the committed Phase 8B host-configuration and
-persistent-state foundation. The working tree contains the uncommitted Phase 8C
-process lifecycle implementation.
-Phase 7 is completed and closed, the Social Media checkpoint is completed and committed,
-and Phase 8A is PASS / COMPLETED. Phase 8B is COMPLETED / CLOSED after its
-successful final independent re-review.
-The runtime remains local-first. Phase 8C is COMPLETED / CLOSED after its
-successful final independent re-review and adds only a supervisor-neutral
-foreground lifecycle. Phase 8D is NEXT / NOT STARTED. Phase 8C added no
-systemd unit, Windows Service, Task Scheduler job, automatic restart supervisor
-daemon, Docker, VPS, Hermes, public webhook hosting, TLS termination, merge
-authority, or deployment authority.
+Git HEAD `a519452` contains the committed Phase 8C process lifecycle. Phases
+1-7 are closed, the Social Media capability is committed, Phase 8A is closed,
+and Phases 8B and 8C are completed and closed after successful independent
+review. Phase 8D is NEXT / NOT STARTED.
+
+The runtime remains local-first. Phase 8C added only a supervisor-neutral
+foreground lifecycle; it added no systemd unit, Windows Service, Task Scheduler
+job, automatic restart supervisor daemon, Docker, VPS, Hermes, public webhook
+hosting, TLS termination, merge authority, or deployment authority.
 `PROJECT_STATE.md` is the canonical current-status record and `ROADMAP.md` is
 the canonical capability roadmap.
 
-The repository now contains:
+## Current Repository Structure
 
-- `INTENT.md` defines the problem, desired outcome, stakeholders, scope, and current direction.
-- `CONSTITUTION.md` defines non-negotiable company rules.
-- `AGENTS.md` defines provider-independent operating instructions.
-- `CLAUDE.md` gives Claude a provider bootstrap that defers to canonical rules.
-- `agents/` and `skills/` define canonical roles and reusable methods.
-- `orchestrator/` defines classification, routing, approvals, workflows, and dry-run policy.
-- `runtime/` contains local job, worker, provider, review, approval,
-  controlled-write, Git, scheduler, remote-command, notification, webhook, and
-  Phase 8B host-state coordination.
-- `schemas/` contains the persisted runtime contracts.
-- `shared/projects/` and `shared/knowledge/` keep operational state separate from durable knowledge.
-- `.env.example` lists placeholder environment variable names.
-- `.gitignore` protects secrets, runtime state, logs, caches, and local artifacts.
+This is the physical structure inspected at `a519452`; generated contents and
+ignored local configuration are intentionally not expanded.
+
+- `agents/` — 10 canonical roles: communications, knowledge-manager, marketing,
+  operations, project-manager, research, reviewer, sales, social-media, and
+  software. Each keeps `ROLE.md`, `GUARDRAILS.md`, and agent-specific `MEMORY.md`.
+- `skills/` — separate reusable HOW definitions in communications, marketing,
+  operations, sales, shared, and social-media families.
+- `orchestrator/` — `dispatcher/`, `routing/`, `workflows/`, `approvals/`, and
+  `dry-run/`.
+- `providers/` — Claude and Codex execution-provider definitions only.
+- `integrations/` — github, gmail, google-calendar, google-drive, obsidian,
+  telegram, and webhooks; runtime implementations exist only where explicitly
+  represented by source.
+- `runtime/` — `actions/`, `approvals/`, `cli/`, `core/`, `execution/`,
+  `executors/`, `git/`, `host/`, `jobs/`, `notifications/`, `providers/`,
+  `queue/`, `remote/`, `review/`, `scheduler/`, `storage/`, `tests/`,
+  `webhooks/`, and `workers/`. `runtime/state/` is generated, ignored
+  operational state, not source architecture.
+- `infrastructure/` — `HOST_ARCHITECTURE.md`, `SECURITY_MODEL.md`, and its
+  README; no Dockerfile, Compose file, service unit, or VPS configuration.
+- `shared/projects/` — operational project state; currently includes
+  `brightshore/`.
+- `shared/knowledge/` — indexed long-term knowledge, sources, raw material,
+  operations, and synthesized wiki content.
+- `schemas/` — persisted runtime contracts, summarized rather than expanded
+  here.
+- `config/` — tracked non-secret examples only: `host.example.json`,
+  `remote.example.json`, and `webhooks.example.json`. Ignored local files,
+  tokens, real IDs, and secret values are not documentation inputs.
+- `.agents/` and `.claude/` — provider-specific adapters that defer to the
+  canonical agents and skills; `agent-generation/` documents adapter generation.
+- `docs/` — physically present but empty and without a tracked detailed-doc
+  convention, so this audit created no new docs hierarchy.
+
+Agent = WHO. Skill = HOW. `shared/projects/` is operational project state,
+`shared/knowledge/` is long-term synthesized knowledge, agent `MEMORY.md` files
+hold role-specific durable lessons, and `runtime/state/` is runtime operational
+state. These stores remain separate.
+
+## Planned Structure
+
+Everything in this section is FUTURE ONLY and does not currently exist unless
+explicitly described above.
+
+- Canonical agent target: add Finance & Pricing, Analytics, Content, and Design
+  to the current 10 roles, keeping the architecture near 14 durable agents
+  rather than creating 20-30 micro-agents.
+- Planned skill expansion: Finance/Pricing, Analytics, Content, Design, Sales
+  lead generation, SEO, and Reviewer QA/Security skill packs. Skills remain
+  separate from agents.
+- After Phase 9 observability, evaluate
+  `orchestrator/decision-engine/{rules,scoring,classify,rank,confidence,adapters/jev}`.
+  JEV would be an optional bounded classification/ranking/filtering/choice and
+  confidence-gating adapter—not an agent, human approval authority, or normal
+  Claude/Codex-style execution provider.
+- Phase 9 may add `observability/{logs,metrics,audit,health}` and
+  `apps/control-room/`. Control Room would visualize and operate over canonical
+  state, never become a second source of truth.
+- Phase 10 may add project/domain packs for Brightshore, YouTube, Instagram,
+  Etsy, Travel, and Product Research/Amazon-style research. Packs are not
+  canonical agents; they reuse canonical agents, skills, workflows, connectors,
+  and the same shared runtime.
+- No planned directory above has been created by this documentation task.
 
 The current runtime does not implement merge, release, deployment, public
 webhook hosting, TLS termination, remote task submission, remote scheduler or

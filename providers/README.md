@@ -28,4 +28,9 @@ Provider files may declare identity, routing eligibility, availability inputs, a
 
 Phase 6E adds minimal local CLI runtime metadata for Claude and Codex. Runtime code observes executable availability, applies canonical eligibility/preferences/fallback, and invokes the selected engine through a provider-neutral adapter. Phase 6H adds mode eligibility: both retain read-only behavior, while only Codex declares a fixed controlled-write invocation inside a runtime-owned staged workspace. Adapters contain no credentials or canonical business logic.
 
+JEV is not a current or planned execution provider in this tree. If evaluated
+after Phase 9 observability, it belongs only as an optional bounded adapter
+under a future orchestrator decision engine; it grants no execution or human
+approval authority.
+
 There are no provider SDK/API clients, authentication setup, Hermes, VPS, connector, or ChatGPT provider. Executable presence is not proof of authentication or remote availability. Automated tests use fakes and do not consume provider usage.

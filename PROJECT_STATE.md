@@ -2,10 +2,9 @@
 
 ## Current Checkpoint
 
-- Current Git HEAD is `b1456f3`, containing the committed Phase 8B host
-  configuration and persistence foundation.
-- The working tree contains the uncommitted Phase 8C supervisor-neutral process
-  lifecycle implementation. It adds no deployment or operating-system service.
+- Current Git HEAD is `a519452`, containing the committed Phase 8C
+  supervisor-neutral process lifecycle. It adds no deployment or
+  operating-system service.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.

@@ -16,7 +16,12 @@ Canonical skills live here first. Future Claude, Codex, ChatGPT, or other provid
 
 Provider-specific adaptations may translate format or tool syntax, but they must not redefine the canonical purpose, constraints, or checks.
 
-## Shared Skill Catalogue
+## Current Physical Skill Families
+
+Skills remain separate from agents: agents define WHO performs work; skills
+define HOW reusable work is performed. The current physical families are
+`communications/`, `marketing/`, `operations/`, `sales/`, `shared/`, and
+`social-media/`.
 
 Phase 1 core skills:
 
@@ -42,5 +47,11 @@ Phase 5B business skills:
 Post-Phase-7 social media capability checkpoint:
 
 - Social Media: `content-calendar`, `post-planner`, `caption-writer`, `hook-generator`, `content-repurpose`, `competitor-monitor`, `performance-review`, `comment-analysis`, `weekly-social-report`
+
+## Planned Skill Expansion
+
+Future, unimplemented skill packs may cover Finance/Pricing, Analytics,
+Content, Design, Sales lead generation, SEO, and Reviewer QA/Security. These
+plans do not create skill directories and do not move skills under agents.
 
 Do not create provider-specific copies unless a later phase requires an adaptation.

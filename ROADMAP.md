@@ -141,6 +141,15 @@ race-resistant directory-handle containment item also remains non-blocking.
 
 ## Planned
 
+### Planned Canonical Capability Expansion
+
+The current 10 canonical agents may later be joined by Finance & Pricing,
+Analytics, Content, and Design. The target remains approximately 14 durable
+canonical roles, not a collection of 20-30 micro-agents. Planned, unimplemented
+skill expansion includes Finance/Pricing, Analytics, Content, Design, Sales lead
+generation, SEO, and Reviewer QA/Security packs. Agent and skill definitions
+remain separate.
+
 ### Phase 9: Observability, Control Room, And Hardening
 
 Goal: make the system operationally understandable and production-ready.
@@ -153,12 +162,24 @@ Goal: make the system operationally understandable and production-ready.
 
 The repository does not currently contain `apps/control-room`. A future Control Room must not become a second source of truth.
 
+### Post-Phase-9 Decision Engine Evaluation
+
+Only after Phase 9 observability exists, evaluate a bounded
+`orchestrator/decision-engine/` with rules, scoring, classification, ranking,
+confidence, and adapters. JEV may be considered only as an optional adapter for
+classification, ranking, filtering, bounded choice, and confidence gating. It
+is not an agent, human approval authority, or Claude/Codex-style execution
+provider. Observability must measure whether it actually reduces token usage,
+provider calls, cost, or routing mistakes before Phase 10 project packs.
+
 ### Phase 10: Project / Capability Packs
 
 Goal: use the stable Agent Company core for real projects and domain-specific capabilities.
 
 - PROJECT PACKS: express project-specific functionality through project state, skills, workflows, connector configuration, and domain-specific capability packs.
-- PROJECT PACKS: keep Brightshore Cleaning, YouTube, Instagram, Etsy digital products, and product research/shopping as example pack candidates rather than committed implementation scope.
+- PROJECT PACKS: keep Brightshore, YouTube, Instagram, Etsy, Travel, and Product
+  Research/Amazon-style research as example pack candidates rather than
+  committed implementation scope or canonical agents.
 - RUNTIME: use the same shared Agent Company runtime for project packs.
 - CORE: require user approval before consequential purchase, publication, account, financial, production, or external communication actions.
 

@@ -14,7 +14,9 @@ Canonical agent definitions live here first. When provider-specific agent files 
 
 If a provider-specific agent conflicts with these files, the canonical definition wins and the conflict should be reported.
 
-## Canonical Roles
+## Current Canonical Roles
+
+These are the 10 canonical agent directories that physically exist now:
 
 - Project Manager
 - Software Agent
@@ -26,6 +28,13 @@ If a provider-specific agent conflicts with these files, the canonical definitio
 - Social Media Agent
 - Operations Agent
 - Communications Agent
+
+## Planned Canonical Target
+
+Future planning may add four durable canonical roles: Finance & Pricing,
+Analytics, Content, and Design. They are not implemented and no directories
+exist for them. The intended target remains approximately 14 canonical agents,
+not 20-30 micro-agents.
 
 ## File Roles
 

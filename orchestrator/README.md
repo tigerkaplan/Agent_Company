@@ -30,6 +30,28 @@ It does not itself execute providers, queue or claim jobs, run the Scheduler, mu
 - `workflows/`: minimal workflow skeletons.
 - `dry-run/`: dry-run behavior for inspection-only work.
 
+## Planned Decision Engine
+
+No `decision-engine/` directory exists now. After Phase 9 observability, a
+future bounded design may use:
+
+```text
+decision-engine/
+  rules/
+  scoring/
+  classify/
+  rank/
+  confidence/
+  adapters/
+    jev/
+```
+
+JEV would be an optional adapter for classification, ranking, filtering,
+bounded choice, and confidence gating. It is not an agent, human approval
+authority, or normal Claude/Codex-style execution provider. Observability must
+exist first so any reduction in tokens, provider calls, cost, or routing errors
+can be measured.
+
 ## Source Of Truth
 
 This orchestrator must not redefine global governance. When a rule belongs to company policy, agent behavior, or reusable skill procedure, reference the canonical file instead of copying it here.
