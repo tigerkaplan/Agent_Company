@@ -114,7 +114,7 @@ class GitRuntime:
             self._fail("mutation_evidence_mismatch", "Mutation file sets are inconsistent")
         try:
             scope = ExecutionScope.from_dict(
-                (self.executions.load(execution_id).get("request") or {}).get(
+                (self.executions.load(execution_id).request or {}).get(
                     "execution_scope", {}
                 )
             )
@@ -298,8 +298,8 @@ class GitRuntime:
             mutation = self.mutations.load(execution_id)
         except (JobRuntimeError, ExecutionStoreError, MutationArtifactError) as error:
             self._fail("mutation_evidence_missing", str(error))
-        request = execution.get("request") or {}
-        result = execution.get("result") or {}
+        request = execution.request or {}
+        result = execution.result.to_dict()
         if (
             job.get("status") != "completed"
             or job.get("review_required") is not True

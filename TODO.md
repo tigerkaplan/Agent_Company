@@ -1,5 +1,22 @@
 # Agent Company TODO
 
+## Core Runtime Enhancements
+
+- [x] CORE-01 Canonical Result Contract — COMPLETED / CLOSED after final
+  independent closure review PASS with no Critical or Major findings.
+- [ ] CORE-02 Continuation Policy — NEXT / NOT STARTED.
+- [ ] CORE-03 Eval Framework — PLANNED.
+- [ ] CORE-04 Tool Discovery — PLANNED.
+- [ ] CORE-05 Time Budget — PLANNED.
+- [ ] CORE-06 Retry / Stop Policy — PLANNED.
+- [ ] CORE-07 Progress Events — PLANNED.
+- [ ] CORE-08 Context Discovery — PLANNED.
+- [ ] CORE-09 Context Cache Policy — PLANNED.
+- [ ] CORE-10 Effort Routing — PLANNED.
+- [ ] CORE-11 External Content Isolation — PLANNED.
+- [ ] FUTURE HARDENING / NON-BLOCKING: add an aggregate serialized-result byte
+  ceiling.
+
 ## Phase 7 Planning
 
 - [x] Define the Phase 7 threat and authority model in `runtime/remote/AUTHORITY_MODEL.md`.
@@ -52,8 +69,8 @@
   Compose services, persistent canonical state, and no public exposure.
 - [x] Complete the Phase 8D independent implementation/security review with no
   critical, major, or required-fix findings and close Phase 8D.
-- [ ] Phase 8E is BLOCKED / NOT STARTED because the VPS has not yet been
-  created.
+- [ ] Phase 8E is BLOCKED / PAUSED because the VPS has not yet been created;
+  deployment has not started.
 - [ ] Before Phase 8E production use, build the pinned image on the target Linux
   architecture and perform an SBOM/vulnerability scan.
 - [ ] Verify or update the base-image digest where appropriate.
@@ -66,7 +83,8 @@
 - [ ] Run live Telegram, provider, or public-ingress smoke tests only with
   separate explicit approval.
 - [ ] Require exact human approval before Phase 8E VPS deployment or any later public exposure.
-- [ ] Complete Phase 8F backup/recovery, Phase 8G smoke testing, and Phase 8H final independent security review.
+- [ ] Phase 8F backup/recovery is NOT STARTED.
+- [ ] Complete Phase 8G smoke testing and Phase 8H final independent security review.
 
 Non-blocking Phase 8C future hardening: different-provider full-repository
 audit, real subprocess singleton-race validation, native Windows signal/ACL

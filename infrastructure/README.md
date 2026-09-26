@@ -12,7 +12,9 @@ infrastructure automation.
 - Phase 8C: COMPLETED / CLOSED after final independent re-review; no deployment.
 - Phase 8D: COMPLETED / CLOSED after successful independent review; no
   deployment.
-- Phase 8E: BLOCKED / NOT STARTED; VPS not yet created.
+- Phase 8E: BLOCKED / PAUSED; deployment not started because the VPS has not
+  yet been created.
+- Phase 8F: NOT STARTED.
 - Current runtime: local-first, file-backed, and single-worker.
 - Deployment: not performed.
 - Docker image definition and Compose packaging: implemented but not built or

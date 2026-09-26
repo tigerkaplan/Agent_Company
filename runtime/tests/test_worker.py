@@ -11,7 +11,9 @@ from runtime.approvals.runtime import ApprovalRuntime
 from runtime.approvals.store import FileApprovalStore
 from runtime.core.jobs import JobRuntime
 from runtime.core.references import CanonicalReferenceResolver
+from runtime.execution.models import ExecutionRequest, ExecutionResult
 from runtime.executors.local import LocalExecutor
+from runtime.review.models import ReviewResult, ReviewRun
 from runtime.storage.execution_store import FileExecutionStore
 from runtime.workers.worker import Worker
 
@@ -19,6 +21,82 @@ from runtime.workers.worker import Worker
 class RaisingExecutor:
     def execute(self, request: object) -> object:
         raise ValueError("SECRET_TOKEN_MUST_NOT_BE_PERSISTED")
+
+
+class StaticResultExecutor:
+    supported_execution_modes = frozenset({"READ_ONLY"})
+
+    def __init__(self, status: str) -> None:
+        self.status = status
+
+    def execute(self, request: ExecutionRequest) -> ExecutionResult:
+        common = {
+            "execution_id": request.execution_id,
+            "job_id": request.job_id,
+            "status": self.status,
+            "summary": f"Canonical {self.status} result",
+            "error": None,
+            "provider": None,
+            "started_at": "2026-02-01T00:00:00Z",
+            "completed_at": "2026-02-01T00:00:01Z",
+        }
+        if self.status == "failed":
+            common.update(
+                summary=None,
+                error={"code": "retryable_failure", "message": "Retryable metadata only", "retryable": True},
+            )
+        elif self.status == "blocked":
+            common["blockers"] = (
+                {"code": "dependency_missing", "message": "Dependency missing", "retryable": True, "requires_human": False},
+            )
+        elif self.status == "needs_review":
+            common["evidence"] = (
+                {"kind": "observation", "status": "observed", "summary": "Work is ready for review"},
+            )
+        elif self.status == "needs_human":
+            common["blockers"] = (
+                {"code": "human_input_required", "message": "Human input is required", "retryable": False, "requires_human": True},
+            )
+        return ExecutionResult(**common)  # type: ignore[arg-type]
+
+
+class RecordingReviewerRuntime:
+    def __init__(self) -> None:
+        self.calls = 0
+
+    def run(
+        self,
+        job: dict[str, object],
+        request: ExecutionRequest,
+        result: ExecutionResult,
+    ) -> ReviewRun:
+        self.calls += 1
+        reference = {
+            "ref_type": "artifact",
+            "ref": f"runtime-execution:{result.execution_id}",
+            "description": "Canonical execution record",
+        }
+        return ReviewRun(
+            ReviewResult(
+                review_id="review-needs-review-001",
+                job_id=result.job_id,
+                execution_id=result.execution_id,
+                reviewer="test-reviewer",
+                review_provider=None,
+                same_provider_review=False,
+                model_review_performed=False,
+                decision="PASS",
+                reason="Independent deterministic review passed",
+                evidence_refs=(reference,),
+                deterministic_checks=(),
+                created_at="2026-02-01T00:00:02Z",
+            ),
+            {
+                "ref_type": "review",
+                "ref": "runtime-review:review-needs-review-001",
+                "description": "Independent review result",
+            },
+        )
 
 
 class DeterministicClock:
@@ -140,8 +218,9 @@ class WorkerTests(unittest.TestCase):
         self.assertTrue(queued["dry_run"])
         self.assertTrue(request.dry_run)
         execution = FileExecutionStore(self.execution_root).load(request.execution_id)
-        self.assertTrue(execution["request"]["dry_run"])
-        self.assertTrue(execution["result"]["dry_run"])
+        assert execution.request is not None
+        self.assertTrue(execution.request["dry_run"])
+        self.assertTrue(execution.result.dry_run)
 
     def test_d_unresolved_provider_is_acceptable(self) -> None:
         self.enqueue()
@@ -161,8 +240,8 @@ class WorkerTests(unittest.TestCase):
 
         self.assertEqual(outcome.result["status"], "succeeded")
         record = FileExecutionStore(self.execution_root).load(str(outcome.execution_id))
-        self.assertEqual(record["result"], outcome.result)
-        self.assertIsNotNone(record["request"])
+        self.assertEqual(record.result.to_dict(), outcome.result)
+        self.assertIsNotNone(record.request)
 
     def test_f_local_failure_executor_fails_job_safely(self) -> None:
         queued = self.enqueue()
@@ -174,6 +253,68 @@ class WorkerTests(unittest.TestCase):
         self.assertEqual(job["status"], "failed")
         self.assertEqual(job["error"]["code"], "local_executor_failure")
         self.assertEqual(job["error"]["ref"]["ref"], f"runtime-execution:{outcome.execution_id}")
+
+    def test_f2_result_retryability_is_not_job_retry_authority(self) -> None:
+        queued = self.enqueue()
+        worker = Worker(
+            runtime=self.runtime,
+            resolver=CanonicalReferenceResolver(self.repository),
+            executor=StaticResultExecutor("failed"),
+            execution_store=FileExecutionStore(self.execution_root),
+            approval_runtime=self.approvals,
+            clock=DeterministicClock(),
+            id_factory=SequenceIds("execution-retry-metadata"),
+        )
+        outcome = worker.run_once()
+        job = self.runtime.show(str(queued["job_id"]))
+
+        self.assertTrue(outcome.result["retryable"])
+        self.assertFalse(job["error"]["retryable"])
+
+    def test_f3_blocked_and_needs_human_remain_distinct_fail_closed_results(self) -> None:
+        for status, expected_code in (
+            ("blocked", "execution_blocked"),
+            ("needs_human", "execution_needs_human"),
+        ):
+            with self.subTest(status=status):
+                queued = self.enqueue()
+                worker = Worker(
+                    runtime=self.runtime,
+                    resolver=CanonicalReferenceResolver(self.repository),
+                    executor=StaticResultExecutor(status),
+                    execution_store=FileExecutionStore(self.execution_root),
+                    approval_runtime=self.approvals,
+                    clock=DeterministicClock(),
+                    id_factory=SequenceIds(f"execution-{status}"),
+                )
+                outcome = worker.run_once()
+                job = self.runtime.show(str(queued["job_id"]))
+                self.assertEqual(outcome.result["status"], status)
+                self.assertEqual(job["status"], "failed")
+                self.assertEqual(job["error"]["code"], expected_code)
+                self.assertFalse(job["error"]["retryable"])
+                self.assertEqual(job["approval_status"], "not_required")
+
+    def test_g0_needs_review_enters_and_invokes_existing_reviewer_gate(self) -> None:
+        queued = self.enqueue(review_required=False)
+        reviewer = RecordingReviewerRuntime()
+        worker = Worker(
+            runtime=self.runtime,
+            resolver=CanonicalReferenceResolver(self.repository),
+            executor=StaticResultExecutor("needs_review"),
+            execution_store=FileExecutionStore(self.execution_root),
+            reviewer_runtime=reviewer,  # type: ignore[arg-type]
+            approval_runtime=self.approvals,
+            clock=DeterministicClock(),
+            id_factory=SequenceIds("execution-needs-review"),
+        )
+        outcome = worker.run_once()
+        job = self.runtime.show(str(queued["job_id"]))
+
+        self.assertEqual(reviewer.calls, 1)
+        self.assertEqual(outcome.result["status"], "needs_review")
+        self.assertEqual(job["status"], "completed")
+        self.assertTrue(job["review_required"])
 
     def test_g_review_required_success_enters_reviewing(self) -> None:
         queued = self.enqueue(review_required=True)
@@ -315,7 +456,9 @@ class WorkerTests(unittest.TestCase):
         job = self.runtime.show(str(queued["job_id"]))
         record = FileExecutionStore(self.execution_root).load(str(outcome.execution_id))
 
-        evidence = json.dumps({"outcome": outcome.to_dict(), "job": job, "record": record})
+        evidence = json.dumps(
+            {"outcome": outcome.to_dict(), "job": job, "record": record.to_dict()}
+        )
         self.assertEqual(outcome.status, "failed")
         self.assertNotIn("SECRET_TOKEN_MUST_NOT_BE_PERSISTED", evidence)
         self.assertIn("details were not persisted", job["error"]["message"])

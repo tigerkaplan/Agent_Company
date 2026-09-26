@@ -180,6 +180,10 @@ class Worker:
             )
         try:
             result = self.executor.execute(request)
+            if not isinstance(result, ExecutionResult):
+                raise ExecutionContractError(
+                    "Executor did not return the canonical ExecutionResult contract"
+                )
             if result.execution_id != request.execution_id or result.job_id != request.job_id:
                 raise ExecutionContractError(
                     "Executor result IDs do not match the execution request"
@@ -217,6 +221,7 @@ class Worker:
         request: ExecutionRequest | None,
         result: ExecutionResult,
     ) -> WorkerRunOutcome:
+        serialized_result = result.to_dict()
         try:
             self.execution_store.create(request, result)
         except ExecutionStoreError as error:
@@ -239,7 +244,7 @@ class Worker:
                 status=status,
                 job_id=job["job_id"],
                 execution_id=result.execution_id,
-                result=result.to_dict(),
+                result=serialized_result,
                 error=failure,
             )
 
@@ -252,11 +257,16 @@ class Worker:
         approval_result: dict[str, Any] | None = None
         retry_job_id: str | None = None
         try:
-            if result.status == "succeeded":
-                updated = self.runtime.record_execution_success(
-                    job["job_id"],
-                    [*result.output_refs, artifact_ref],
-                )
+            if result.status in {"succeeded", "needs_review"}:
+                output_refs = [*serialized_result["output_refs"], artifact_ref]
+                if result.status == "needs_review":
+                    updated = self.runtime.record_execution_for_review(
+                        job["job_id"], output_refs
+                    )
+                else:
+                    updated = self.runtime.record_execution_success(
+                        job["job_id"], output_refs
+                    )
                 if updated["status"] == "reviewing" and self.reviewer_runtime is not None:
                     if request is None:
                         raise RuntimeError("Review-required execution has no request")
@@ -267,7 +277,7 @@ class Worker:
                             status="worker_error",
                             job_id=job["job_id"],
                             execution_id=result.execution_id,
-                            result=result.to_dict(),
+                            result=serialized_result,
                             error={
                                 "code": "review_runtime_error",
                                 "message": str(error),
@@ -290,7 +300,7 @@ class Worker:
                                 status="worker_error",
                                 job_id=job["job_id"],
                                 execution_id=result.execution_id,
-                                result=result.to_dict(),
+                                result=serialized_result,
                                 review=review_result,
                                 error={
                                     "code": "approval_runtime_error",
@@ -326,7 +336,7 @@ class Worker:
                                     status="worker_error",
                                     job_id=job["job_id"],
                                     execution_id=result.execution_id,
-                                    result=result.to_dict(),
+                                    result=serialized_result,
                                     review=review_result,
                                     error={
                                         "code": "approval_runtime_error",
@@ -335,21 +345,21 @@ class Worker:
                                 )
                             approval_result = retry_approval.request.to_dict()
             else:
-                error = self._normalise_error(result.error)
+                error = self._normalise_result_error(result)
                 updated = self.runtime.fail(
                     job["job_id"],
                     code=error["code"],
                     message=error["message"],
-                    retryable=error["retryable"],
+                    retryable=False,
                     error_ref=artifact_ref,
-                    output_refs=[*result.output_refs, artifact_ref],
+                    output_refs=[*serialized_result["output_refs"], artifact_ref],
                 )
         except RuntimeError as error:
             return WorkerRunOutcome(
                 status="worker_error",
                 job_id=job["job_id"],
                 execution_id=result.execution_id,
-                result=result.to_dict(),
+                result=serialized_result,
                 error={"code": "lifecycle_update_error", "message": str(error)},
             )
 
@@ -357,12 +367,16 @@ class Worker:
         if retry_job_id is not None:
             retry_job = self.runtime.show(retry_job_id)
             outcome_status = retry_job["status"]
-        outcome_error = result.error if result.status == "failed" else updated.get("error")
+        outcome_error = (
+            serialized_result["error"]
+            if result.status == "failed"
+            else updated.get("error")
+        )
         return WorkerRunOutcome(
             status=outcome_status,
             job_id=job["job_id"],
             execution_id=result.execution_id,
-            result=result.to_dict(),
+            result=serialized_result,
             review=review_result,
             approval=approval_result,
             retry_job_id=retry_job_id,
@@ -388,6 +402,14 @@ class Worker:
             output_refs=(),
             summary=None,
             error={"code": code, "message": message, "retryable": True},
+            next_actions=(
+                {
+                    "action": "retry_execution",
+                    "description": "Retry after the execution blocker has been resolved",
+                    "requires_human": False,
+                    "automatic": False,
+                },
+            ),
             provider=None,
             started_at=started_at,
             completed_at=completed_at,
@@ -407,4 +429,23 @@ class Worker:
             "code": str(error.get("code") or "executor_failure"),
             "message": str(error.get("message") or "Executor reported failure"),
             "retryable": bool(error.get("retryable", True)),
+        }
+
+    @classmethod
+    def _normalise_result_error(cls, result: ExecutionResult) -> dict[str, Any]:
+        if result.status == "failed" and result.error is not None:
+            error = cls._normalise_error(dict(result.error))
+            error["retryable"] = False
+            return error
+        if result.blockers:
+            blocker = result.blockers[0]
+            return {
+                "code": f"execution_{result.status}",
+                "message": str(blocker["message"]),
+                "retryable": False,
+            }
+        return {
+            "code": f"execution_{result.status}",
+            "message": f"Execution ended with canonical status {result.status}",
+            "retryable": False,
         }

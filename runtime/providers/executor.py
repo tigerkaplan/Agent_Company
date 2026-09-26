@@ -42,14 +42,26 @@ class ProviderExecutor:
                 return ExecutionResult(
                     execution_id=request.execution_id,
                     job_id=request.job_id,
-                    status="failed",
+                    status="blocked",
                     output_refs=(),
                     summary=None,
-                    error={
-                        "code": "provider_unavailable",
-                        "message": "No eligible configured provider is locally available",
-                        "retryable": True,
-                    },
+                    error=None,
+                    blockers=(
+                        {
+                            "code": "provider_unavailable",
+                            "message": "No eligible configured provider is locally available",
+                            "retryable": True,
+                            "requires_human": False,
+                        },
+                    ),
+                    next_actions=(
+                        {
+                            "action": "retry_execution",
+                            "description": "Retry after an eligible provider becomes available",
+                            "requires_human": False,
+                            "automatic": False,
+                        },
+                    ),
                     provider=None,
                     started_at=started_at,
                     completed_at=self.clock(),
@@ -68,14 +80,26 @@ class ProviderExecutor:
                     return ExecutionResult(
                         execution_id=request.execution_id,
                         job_id=request.job_id,
-                        status="failed",
+                        status="needs_human",
                         output_refs=(),
                         summary=None,
-                        error={
-                            "code": "controlled_execution_failed",
-                            "message": "Controlled-write runtime is not configured",
-                            "retryable": False,
-                        },
+                        error=None,
+                        blockers=(
+                            {
+                                "code": "capability_unavailable",
+                                "message": "Controlled-write runtime is not configured",
+                                "retryable": False,
+                                "requires_human": True,
+                            },
+                        ),
+                        next_actions=(
+                            {
+                                "action": "configure_capability",
+                                "description": "A human must configure the controlled-write runtime before retrying",
+                                "requires_human": True,
+                                "automatic": False,
+                            },
+                        ),
                         provider=selection.actual_provider,
                         started_at=started_at,
                         completed_at=self.clock(),
@@ -113,6 +137,15 @@ class ProviderExecutor:
                         "provider artifact."
                     ),
                     error=None,
+                    evidence=(
+                        {
+                            "kind": "provider_output",
+                            "status": "observed",
+                            "summary": "Bounded provider process output was persisted",
+                            "ref": artifact_ref,
+                        },
+                    ),
+                    artifacts=output_refs,
                     provider=selection.actual_provider,
                     started_at=started_at,
                     completed_at=self.clock(),
@@ -123,6 +156,20 @@ class ProviderExecutor:
                     execution_mode=request.execution_mode,
                     dry_run=request.dry_run,
                 )
+            retryable = provider_result.error_category not in {
+                "invalid_provider_output",
+                "write_not_authorized",
+                "write_scope_invalid",
+                "path_escape_attempt",
+                "protected_path_violation",
+                "mutation_scope_violation",
+                "mutation_evidence_missing",
+                "provider_sandbox_mismatch",
+                "provider_sandbox_unverified",
+                "validation_failed",
+            }
+            error_code = provider_result.error_category or "provider_execution_failed"
+            error_message = provider_result.error_message or "Provider execution failed"
             return ExecutionResult(
                 execution_id=request.execution_id,
                 job_id=request.job_id,
@@ -130,22 +177,32 @@ class ProviderExecutor:
                 output_refs=output_refs,
                 summary=None,
                 error={
-                    "code": provider_result.error_category or "provider_execution_failed",
-                    "message": provider_result.error_message or "Provider execution failed",
-                    "retryable": provider_result.error_category
-                    not in {
-                        "invalid_provider_output",
-                        "write_not_authorized",
-                        "write_scope_invalid",
-                        "path_escape_attempt",
-                        "protected_path_violation",
-                        "mutation_scope_violation",
-                        "mutation_evidence_missing",
-                        "provider_sandbox_mismatch",
-                        "provider_sandbox_unverified",
-                        "validation_failed",
-                    },
+                    "code": error_code,
+                    "message": error_message,
+                    "retryable": retryable,
                 },
+                evidence=(
+                    {
+                        "kind": "provider_output",
+                        "status": "failed",
+                        "summary": "Bounded failed provider process output was persisted",
+                        "ref": artifact_ref,
+                    },
+                ),
+                artifacts=output_refs,
+                next_actions=(
+                    {
+                        "action": "retry_execution" if retryable else "inspect_failure",
+                        "description": (
+                            "Retry the execution after the provider condition clears"
+                            if retryable
+                            else "A human must inspect the persisted provider failure"
+                        ),
+                        "requires_human": not retryable,
+                        "automatic": False,
+                        "ref": artifact_ref,
+                    },
+                ),
                 provider=selection.actual_provider,
                 started_at=started_at,
                 completed_at=self.clock(),
@@ -168,6 +225,14 @@ class ProviderExecutor:
                     "message": "Provider runtime failed before a result could be persisted",
                     "retryable": True,
                 },
+                next_actions=(
+                    {
+                        "action": "retry_execution",
+                        "description": "Retry the provider execution through the canonical Worker",
+                        "requires_human": False,
+                        "automatic": False,
+                    },
+                ),
                 provider=selection.actual_provider if selection is not None else None,
                 started_at=started_at,
                 completed_at=self.clock(),

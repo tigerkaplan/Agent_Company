@@ -6,14 +6,36 @@ import json
 import os
 import re
 import tempfile
+from copy import deepcopy
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from runtime.execution.models import ExecutionRequest, ExecutionResult
+from runtime.execution.models import ExecutionContractError, ExecutionRequest, ExecutionResult
+from runtime.execution.validation import (
+    ExecutionResultValidationError,
+    ExecutionResultValidator,
+)
 
 
 class ExecutionStoreError(ValueError):
     """Raised when an execution artifact cannot be persisted."""
+
+
+@dataclass(frozen=True)
+class ExecutionRecord:
+    """Typed persisted record; the canonical result is always revalidated on load."""
+
+    schema_version: int
+    request: dict[str, Any] | None
+    result: ExecutionResult
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "schema_version": self.schema_version,
+            "request": deepcopy(self.request),
+            "result": self.result.to_dict(),
+        }
 
 
 class FileExecutionStore:
@@ -23,6 +45,7 @@ class FileExecutionStore:
 
     def __init__(self, root: Path) -> None:
         self.root = Path(root)
+        self.result_validator = ExecutionResultValidator()
 
     def create(
         self,
@@ -34,6 +57,7 @@ class FileExecutionStore:
             raise ExecutionStoreError(
                 f"Execution artifact already exists: {result.execution_id}"
             )
+        self.result_validator.validate_model(result)
         record: dict[str, Any] = {
             "schema_version": 1,
             "request": request.to_dict() if request is not None else None,
@@ -42,7 +66,41 @@ class FileExecutionStore:
         self._write(path, record)
         return path
 
-    def load(self, execution_id: str) -> dict[str, Any]:
+    def load(self, execution_id: str) -> ExecutionRecord:
+        value = self.load_raw(execution_id)
+        if set(value) - {"schema_version", "request", "result"}:
+            raise ExecutionStoreError(
+                f"Execution artifact contains unexpected fields: {execution_id}"
+            )
+        if value.get("schema_version", 1) != 1:
+            raise ExecutionStoreError(
+                f"Execution artifact has unsupported schema version: {execution_id}"
+            )
+        request = value.get("request")
+        if request is not None and not isinstance(request, dict):
+            raise ExecutionStoreError(
+                f"Execution artifact request is not an object: {execution_id}"
+            )
+        payload = value.get("result")
+        if not isinstance(payload, dict):
+            raise ExecutionStoreError(
+                f"Execution artifact result is not an object: {execution_id}"
+            )
+        try:
+            result = ExecutionResult.from_dict(payload, sanitize_historical=True)
+            self.result_validator.validate_model(result)
+        except (ExecutionContractError, ExecutionResultValidationError) as error:
+            raise ExecutionStoreError(
+                f"Invalid execution artifact result {execution_id}: {error}"
+            ) from error
+        if result.execution_id != execution_id:
+            raise ExecutionStoreError(
+                f"Execution artifact identity mismatch: {execution_id}"
+            )
+        return ExecutionRecord(1, deepcopy(request), result)
+
+    def load_raw(self, execution_id: str) -> dict[str, Any]:
+        """Compatibility-only raw read; canonical runtime consumers use load()."""
         path = self._path(execution_id)
         if not path.is_file():
             raise ExecutionStoreError(f"Execution artifact not found: {execution_id}")
@@ -78,16 +136,22 @@ class FileExecutionStore:
                 newline="\n",
             ) as handle:
                 temporary_path = Path(handle.name)
-                json.dump(record, handle, indent=2, sort_keys=True, ensure_ascii=True)
+                json.dump(
+                    record,
+                    handle,
+                    indent=2,
+                    sort_keys=True,
+                    ensure_ascii=True,
+                    allow_nan=False,
+                )
                 handle.write("\n")
                 handle.flush()
                 os.fsync(handle.fileno())
             os.replace(temporary_path, path)
-        except OSError as error:
+        except (OSError, OverflowError, TypeError, ValueError) as error:
             raise ExecutionStoreError(
-                f"Could not persist execution artifact {path.stem}: {error}"
+                f"Could not persist execution artifact {path.stem}: invalid or unserializable canonical data"
             ) from error
         finally:
             if temporary_path is not None and temporary_path.exists():
                 temporary_path.unlink()
-

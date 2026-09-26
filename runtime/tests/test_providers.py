@@ -583,8 +583,8 @@ class ProviderExecutorTests(unittest.TestCase):
             claude=FakeAdapter("claude", available=False),
             codex=FakeAdapter("codex", available=False),
         ).execute(request())
-        self.assertEqual(result.status, "failed")
-        self.assertEqual(result.error["code"], "provider_unavailable")
+        self.assertEqual(result.status, "blocked")
+        self.assertEqual(result.blockers[0]["code"], "provider_unavailable")
         self.assertEqual(result.fallback_reason, "no_provider_available")
 
     def test_m_context_builder_loads_only_resolved_project_context(self) -> None:

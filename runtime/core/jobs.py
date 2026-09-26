@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from collections.abc import Mapping
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Callable
@@ -25,6 +26,15 @@ def utc_now() -> str:
 
 def new_job_id() -> str:
     return f"job-{uuid4().hex}"
+
+
+def _plain_json_value(value: Any) -> Any:
+    """Copy Mapping-based canonical values into JSON-native containers."""
+    if isinstance(value, Mapping):
+        return {str(key): _plain_json_value(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_plain_json_value(item) for item in value]
+    return deepcopy(value)
 
 
 class JobRuntime:
@@ -294,9 +304,27 @@ class JobRuntime:
     ) -> dict[str, Any]:
         job = self._load(job_id)
         updated = deepcopy(job)
-        updated["output_refs"] = [*updated["output_refs"], *deepcopy(output_refs)]
+        updated["output_refs"] = [
+            *updated["output_refs"],
+            *_plain_json_value(output_refs),
+        ]
         target = "reviewing" if updated["review_required"] else "completed"
         return self._transition_job(updated, target)
+
+    def record_execution_for_review(
+        self,
+        job_id: str,
+        output_refs: list[dict[str, Any]],
+    ) -> dict[str, Any]:
+        """Enter the existing Reviewer gate for a canonical needs_review result."""
+        job = self._load(job_id)
+        updated = deepcopy(job)
+        updated["output_refs"] = [
+            *updated["output_refs"],
+            *_plain_json_value(output_refs),
+        ]
+        updated["review_required"] = True
+        return self._transition_job(updated, "reviewing")
 
     def fail(
         self,
@@ -511,7 +539,7 @@ class JobRuntime:
         if output_refs:
             updated["output_refs"] = [
                 *updated["output_refs"],
-                *deepcopy(output_refs),
+                *_plain_json_value(output_refs),
             ]
         updated["last_updated_at"] = self.clock()
         return self._save(updated)

@@ -614,7 +614,7 @@ class ApprovalRuntime:
         if self.execution_store is None:
             return {"execution_id": execution_id, "artifact_loaded": False}
         try:
-            result = self.execution_store.load(execution_id).get("result", {})
+            result = self.execution_store.load(execution_id).result.to_dict()
         except ExecutionStoreError as error:
             raise ApprovalRuntimeError(str(error)) from error
         summary = {

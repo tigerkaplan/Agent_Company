@@ -129,6 +129,12 @@ class ReviewPackage:
                 "execution_mode",
                 "dry_run",
                 "output_refs",
+                "evidence",
+                "artifacts",
+                "blockers",
+                "next_actions",
+                "retryable",
+                "usage",
             )
         }
         sections = [

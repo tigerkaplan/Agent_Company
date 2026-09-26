@@ -26,8 +26,14 @@ Git HEAD `48e85dd` contains the committed Phase 8D Docker adaptation. Phases
 and Phases 8B and 8C are completed and closed after successful independent
 review. Phase 8D's independent architecture/security review passed with no
 critical, major, or required-fix findings. Phase 8D is COMPLETED / CLOSED and
-not deployed. Phase 8E is BLOCKED / NOT STARTED because the VPS has not yet
-been created.
+not deployed. Phase 8E is BLOCKED / PAUSED; deployment has not started because
+the VPS has not yet been created. Phase 8F is NOT STARTED.
+
+CORE-01 Canonical Result Contract is COMPLETED / CLOSED after its final
+independent closure review passed with no Critical or Major findings. CORE-02
+Continuation Policy is NEXT / NOT STARTED. CORE-03 through CORE-11 remain
+planned and unimplemented. The aggregate serialized-result byte ceiling remains
+FUTURE HARDENING / NON-BLOCKING.
 
 The runtime remains local-first. Phase 8D packages the canonical Phase 8C
 foreground lifecycle into one non-root image definition and fixed Compose
@@ -77,10 +83,11 @@ expanded.
 - `docs/` — physically present but empty and without a tracked detailed-doc
   convention, so this audit created no new docs hierarchy.
 
-Agent = WHO. Skill = HOW. `shared/projects/` is operational project state,
-`shared/knowledge/` is long-term synthesized knowledge, agent `MEMORY.md` files
-hold role-specific durable lessons, and `runtime/state/` is runtime operational
-state. These stores remain separate.
+Agent = WHO. Skill = HOW. Workflow = ORDER. Provider = execution engine.
+Execution Result = WHAT HAPPENED. `shared/projects/` is operational project
+state, `shared/knowledge/` is long-term synthesized knowledge, agent
+`MEMORY.md` files hold role-specific durable lessons, and `runtime/state/` is
+runtime operational state. These stores remain separate.
 
 ## Planned Structure
 

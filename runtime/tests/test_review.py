@@ -225,6 +225,34 @@ class ReviewRuntimeTests(ReviewTestHarness, unittest.TestCase):
         self.assertEqual(verification.status, "PASS")
         self.assertTrue(all(check.status == "PASS" for check in verification.checks))
 
+    def test_a2_needs_review_is_consumed_without_becoming_the_verdict(self) -> None:
+        job, request, original = self.prepare_execution(persist_execution=False)
+        needs_review = ExecutionResult(
+            execution_id=original.execution_id,
+            job_id=original.job_id,
+            status="needs_review",
+            summary="Execution produced work requiring independent review",
+            error=None,
+            provider=None,
+            started_at=original.started_at,
+            completed_at=original.completed_at,
+            evidence=(
+                {
+                    "kind": "observation",
+                    "status": "observed",
+                    "summary": "Reviewable work was produced",
+                },
+            ),
+        )
+        self.execution_store.create(request, needs_review)
+        review_run = self.reviewer_runtime(FakeReviewer("PASS")).run(
+            job, request, needs_review
+        )
+
+        self.assertEqual(review_run.result.decision, "PASS")
+        self.assertNotEqual(needs_review.status, review_run.result.decision)
+        self.assertTrue(review_run.result.model_review_performed)
+
     def test_b_deterministic_failure_skips_model_reviewer(self) -> None:
         job, request, result = self.prepare_execution(persist_execution=False)
         reviewer = FakeReviewer("PASS")

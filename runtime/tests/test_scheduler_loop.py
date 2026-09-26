@@ -212,6 +212,32 @@ class SchedulerLoopTests(unittest.TestCase):
         self.assertEqual(self.jobs.eligible()[0]["job_id"], retry["job_id"])
         self.assertEqual(queued["job_id"], failed["job_id"])
 
+    def test_f2_execution_result_retryability_does_not_schedule_retry(self) -> None:
+        queued = self.enqueue(max_attempts=3)
+        failure_worker = Worker(
+            self.jobs,
+            CanonicalReferenceResolver(RUNTIME_REPOSITORY),
+            LocalExecutor("failure", clock=self.clock),
+            self.executions,
+            approval_runtime=self.approvals,
+            clock=self.clock,
+            id_factory=SequenceIds("execution-failure"),
+            worker_id="worker-result-retry-metadata",
+            lease_seconds=30,
+        )
+        snapshot = self.make_loop(worker=failure_worker).run_once()
+        failed = self.jobs.show(str(queued["job_id"]))
+        retry_children = [
+            job
+            for job in self.jobs.list()
+            if job.get("parent_job_id") == queued["job_id"]
+        ]
+
+        self.assertEqual(snapshot["processed_count"], 1)
+        self.assertEqual(failed["status"], "failed")
+        self.assertFalse(failed["error"]["retryable"])
+        self.assertEqual(retry_children, [])
+
     def test_g_max_attempts_and_non_retryable_failures_are_terminal(self) -> None:
         exhausted = self.enqueue(max_attempts=1)
         self.jobs.claim(claimed_by="manual", lease_seconds=30)

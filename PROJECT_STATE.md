@@ -19,7 +19,73 @@
   2026-09-25 with no critical, major, or required-fix findings.
 - Phase 8D is COMPLETED / CLOSED. Its independent architecture/security review
   passed on 2026-09-25 with no critical, major, or required-fix findings.
-- Phase 8E is BLOCKED / NOT STARTED because the VPS has not yet been created.
+- Phase 8E is BLOCKED / PAUSED. Deployment has not started because the VPS has
+  not yet been created.
+- Phase 8F is NOT STARTED.
+
+## CORE-01 Canonical Execution Result — COMPLETED / CLOSED
+
+CORE-01 is a separate local core-runtime enhancement implemented on 2026-09-26
+and is not a Phase 8 deployment stage. It extends the existing provider-neutral
+`ExecutionResult` instead of creating a competing abstraction. The canonical
+contract now records bounded status, structured evidence, artifact references,
+concrete blockers, inert machine-readable next actions, explicit retryability,
+existing execution/provider/timestamp/error metadata, and optional usage
+metadata. Claude, Codex, future adapters, and local deterministic executors do
+not own the format.
+
+The execution-result status vocabulary is `succeeded`, `failed`, `blocked`,
+`needs_review`, and `needs_human`; retryability remains separate descriptive
+metadata and does not authorize Scheduler retry creation. `needs_review` enters
+the existing independent Reviewer gate. `blocked` and `needs_human` remain
+fail-closed without fabricating technical success or approval authority, and
+`next_actions` never execute automatically. `artifacts` is the single canonical
+artifact-reference field; `output_refs` is a derived compatibility alias and
+conflicting inputs fail closed.
+
+The initial independent CORE-01 review returned FIX with no Critical findings.
+CORE-01F repaired its Major findings: canonical nested values are deeply
+immutable, status invariants are exclusive, result retryability is separated
+from job retry authority, actual schema bounds are enforced, error details and
+secret handling are bounded, and persisted execution loading now returns a
+validated typed `ExecutionResult`. Historical reads supply safe defaults and
+bounded sanitization without rewriting source records.
+
+The final independent re-review also returned FIX with no Critical findings and
+five remaining Major findings. CORE-01F2 replaced the dict-subclass mapping with
+a true immutable `Mapping`, added quoted JSON/config credential redaction,
+bounded canonical integers to the signed 64-bit range while rejecting non-finite
+floats, moved artifact-alias normalization before schema validation, and removed
+the clean-import cycle through lazy package exports. JSON persistence now also
+converts unexpected serialization failures into a controlled store error.
+
+CORE-01R3 returned FIX with no Critical findings and four remaining Major
+findings. CORE-01F3 now prevents ordinary backing-slot replacement or deletion,
+normalizes only the artifact compatibility alias before strict new-record schema
+validation, applies one signed-64 magnitude policy to integers and finite floats,
+and converts serialization `OverflowError` into a sanitized atomic store error.
+Historical defaulting remains confined to the explicit compatibility load path.
+
+The final independent CORE-01 closure review returned PASS with no Critical or
+Major findings. Final validation passed: 30 result-contract/adversarial tests,
+131 focused execution/Worker/Reviewer/provider/Scheduler tests, 142 approval/
+controlled-write/Git/remote-Git regression tests, the full 547-test runtime
+regression, and 11 separate Reviewer adversarial probes. All 104 runtime Python
+files compiled, 34 repository JSON files parsed, fresh-process import probes
+passed, the production AST scan found zero `shell=True` calls, the production
+credential-literal scan found zero findings, and `git diff --check` passed with
+line-ending notices only. No live provider, network, or deployment call was
+made. CORE-01 is COMPLETED / CLOSED and remains uncommitted and unpushed.
+
+CORE-02 Continuation Policy is NEXT / NOT STARTED. The aggregate serialized-
+result byte ceiling remains FUTURE HARDENING / NON-BLOCKING and was not
+implemented during closure.
+
+Phase 8E remains BLOCKED / PAUSED; deployment has not started. Phase 8F remains
+NOT STARTED.
+CORE-01 performed no VPS, deployment,
+service-installation, public-exposure, Hermes, Phase 8F, continuation-policy,
+retry-policy, or Eval Framework work.
 
 ## Phase 8A Architecture Design Checkpoint
 
@@ -168,7 +234,8 @@ The following are explicit Phase 8E prerequisites, not open Phase 8D blockers:
 
 ## Not Implemented
 
-- Phase 8E is BLOCKED / NOT STARTED because the VPS has not yet been created.
+- Phase 8E is BLOCKED / PAUSED because the VPS has not yet been created;
+  deployment has not started.
   VPS deployment, backup/recovery automation, target-host smoke testing, and
   final review remain later Phase 8 work.
 - Operating-system supervisor installation, systemd, Windows Service, Task
@@ -256,7 +323,8 @@ COMPLETED / CLOSED and documentation-only. Phase 8B is COMPLETED / CLOSED after
 its successful final independent re-review. Phase 8C is COMPLETED / CLOSED
 after its successful final independent re-review. Phase 8D is COMPLETED /
 CLOSED after its successful independent architecture/security review, and
-Phase 8E is BLOCKED / NOT STARTED because the VPS has not yet been created. A
+Phase 8E is BLOCKED / PAUSED because the VPS has not yet been created, and
+deployment has not started. A
 different-provider full-repository audit and the other recorded
 Phase 8C hardening items remain recommended future validation, not a mandatory
 Phase 8 implementation gate.

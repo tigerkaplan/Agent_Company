@@ -11,7 +11,11 @@
 - Phase 8B: COMPLETED / CLOSED / NO DEPLOYMENT.
 - Phase 8C: COMPLETED / CLOSED / NO DEPLOYMENT.
 - Phase 8D: COMPLETED / CLOSED / NO DEPLOYMENT.
-- Phase 8E: BLOCKED / NOT STARTED; VPS not yet created.
+- CORE-01 Canonical Result Contract: COMPLETED / CLOSED.
+- CORE-02 Continuation Policy: NEXT / NOT STARTED.
+- Phase 8E: BLOCKED / PAUSED; deployment not started because the VPS has not
+  yet been created.
+- Phase 8F: NOT STARTED.
 - Phase 9: PLANNED.
 - Phase 10: PLANNED.
 
@@ -90,6 +94,25 @@ redefine or begin Phase 8.
 - CONNECTORS: no social-platform connector, API client, credential, scheduling,
   or autonomous publication capability is implemented.
 
+## Core Runtime Enhancements
+
+- CORE-01 Canonical Result Contract: COMPLETED / CLOSED.
+- CORE-02 Continuation Policy: NEXT / NOT STARTED.
+- CORE-03 Eval Framework: PLANNED.
+- CORE-04 Tool Discovery: PLANNED.
+- CORE-05 Time Budget: PLANNED.
+- CORE-06 Retry / Stop Policy: PLANNED.
+- CORE-07 Progress Events: PLANNED.
+- CORE-08 Context Discovery: PLANNED.
+- CORE-09 Context Cache Policy: PLANNED.
+- CORE-10 Effort Routing: PLANNED.
+- CORE-11 External Content Isolation: PLANNED.
+
+CORE-01 defines the canonical provider-agnostic Execution Result: WHAT HAPPENED.
+Its final independent closure review passed with no Critical or Major findings.
+CORE-02 through CORE-11 remain unimplemented. An aggregate serialized-result
+byte ceiling is FUTURE HARDENING / NON-BLOCKING.
+
 ## Phases 8A, 8B, 8C, And 8D Closed
 
 ### Phase 8: Always-On Runtime And Deployment
@@ -144,8 +167,8 @@ VPS, TLS, reverse proxy, Hermes component, merge authority, or deployment
 authority. Compose syntax and deterministic regressions pass, but a Docker
 daemon was unavailable, so the image build and live-container smoke remain
 unverified. These are Phase 8E runtime-validation prerequisites and do not
-reopen Phase 8D. Phase 8E is BLOCKED / NOT STARTED because the VPS has not yet
-been created.
+reopen Phase 8D. Phase 8E is BLOCKED / PAUSED because the VPS has not yet been
+created; deployment has not started. Phase 8F is NOT STARTED.
 
 Before Phase 8E production use, build the pinned image on the target Linux
 architecture; perform an SBOM/vulnerability scan and verify or update the base
@@ -214,6 +237,7 @@ Project packs must not create separate Agent Company runtimes per project unless
 - Public Telegram webhook mode and public webhook hosting: not implemented.
 - Broader Gmail, Drive, and Calendar runtime integrations: contract-only.
 - Phase 8D Docker adaptation and packaging: completed, closed, and not deployed.
-- Phase 8E VPS deployment: blocked and not started because the VPS has not yet
-  been created; deployment requires separate human approval.
+- Phase 8E VPS deployment: BLOCKED / PAUSED because the VPS has not yet been
+  created; deployment has not started and requires separate human approval.
+- Phase 8F backup/recovery: NOT STARTED.
 - Dedicated observability implementation: not started.

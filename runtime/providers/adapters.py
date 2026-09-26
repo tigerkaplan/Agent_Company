@@ -156,6 +156,27 @@ def build_provider_environment(
     return environment
 
 
+_SENSITIVE_ASSIGNMENT = re.compile(
+    r"(?ix)"
+    r"(?P<prefix>"
+    r"[\"']?"
+    r"(?:[A-Z0-9_]*(?:API_KEY|ACCESS_TOKEN|AUTH_TOKEN|CLIENT_SECRET|PASSWORD|"
+    r"PASSWD|PRIVATE_KEY|AUTHORIZATION|CREDENTIALS?|REFRESH_TOKEN|SECRET|TOKEN)|APIKEY)"
+    r"[\"']?\s*[:=]\s*"
+    r")"
+    r"(?:"
+    r"(?P<value_quote>[\"'])(?:\\.|(?!(?P=value_quote)).)*(?P=value_quote)"
+    r"|Bearer\s+[^\s,;}\]]+"
+    r"|[^\s,;}\]]+"
+    r")"
+)
+
+
+def _redact_sensitive_assignment(match: re.Match[str]) -> str:
+    quote = match.group("value_quote") or ""
+    return f"{match.group('prefix')}{quote}[REDACTED]{quote}"
+
+
 def sanitize_provider_text(value: str | bytes | None) -> str:
     if value is None:
         return ""
@@ -163,13 +184,25 @@ def sanitize_provider_text(value: str | bytes | None) -> str:
         text = value.decode("utf-8", errors="replace")
     else:
         text = str(value)
+    text = _SENSITIVE_ASSIGNMENT.sub(_redact_sensitive_assignment, text)
     text = re.sub(r"(?i)\bBearer\s+[^\s,;]+", "Bearer [REDACTED]", text)
     text = re.sub(r"\bsk-[A-Za-z0-9_-]{12,}\b", "[REDACTED_SECRET]", text)
     text = re.sub(
-        r"(?i)\b([A-Z0-9_]*(?:API_KEY|ACCESS_TOKEN|AUTH_TOKEN|PASSWORD|SECRET))"
-        r"\s*[:=]\s*([^\s,;]+)",
-        r"\1=[REDACTED]",
+        r"\b\d{7,12}:[A-Za-z0-9_-]{30,}\b",
+        "[REDACTED_TELEGRAM_TOKEN]",
         text,
+    )
+    text = re.sub(
+        r"\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})\b",
+        "[REDACTED_GITHUB_TOKEN]",
+        text,
+    )
+    text = re.sub(
+        r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----.*?"
+        r"(?:-----END (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|\Z)",
+        "[REDACTED_PRIVATE_KEY]",
+        text,
+        flags=re.DOTALL,
     )
     return text
 

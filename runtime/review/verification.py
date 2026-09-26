@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from typing import Any
 
 from runtime.actions.models import ExecutionScope, ScopeContractError
@@ -37,10 +38,10 @@ class DeterministicVerifier:
         checks: list[DeterministicCheck] = []
         checks.append(
             self._check(
-                "execution_succeeded",
-                result.status == "succeeded",
-                "Normalized execution status is succeeded",
-                "Normalized execution did not succeed",
+                "execution_reviewable",
+                result.status in {"succeeded", "needs_review"},
+                "Normalized execution produced work eligible for review",
+                "Normalized execution did not produce reviewable work",
                 (execution_ref,),
             )
         )
@@ -77,8 +78,8 @@ class DeterministicVerifier:
 
         try:
             stored = self.execution_store.load(result.execution_id)
-            stored_request = stored.get("request")
-            stored_result = stored.get("result")
+            stored_request = stored.request
+            stored_result = stored.result.to_dict()
             stored_valid = (
                 isinstance(stored_request, dict)
                 and isinstance(stored_result, dict)
@@ -89,6 +90,11 @@ class DeterministicVerifier:
                 and stored_result.get("execution_mode") == result.execution_mode
                 and stored_request.get("dry_run", False) == request.dry_run
                 and stored_result.get("dry_run", False) == result.dry_run
+                and stored_result.get("evidence") == list(result.evidence)
+                and stored_result.get("artifacts") == list(result.artifacts)
+                and stored_result.get("blockers") == list(result.blockers)
+                and stored_result.get("next_actions") == list(result.next_actions)
+                and stored_result.get("retryable") == result.retryable
             )
         except ExecutionStoreError:
             stored_valid = False
@@ -106,7 +112,7 @@ class DeterministicVerifier:
         execution_ref_present = any(
             reference.get("ref") == execution_ref["ref"]
             for reference in job_refs
-            if isinstance(reference, dict)
+            if isinstance(reference, Mapping)
         )
         checks.append(
             self._check(
@@ -172,7 +178,7 @@ class DeterministicVerifier:
             mutation_ref_present = any(
                 reference.get("ref") == mutation_ref["ref"]
                 for reference in (*result.output_refs, *job.get("output_refs", []))
-                if isinstance(reference, dict)
+                if isinstance(reference, Mapping)
             )
             fingerprints_valid = bool(changed) and all(
                 isinstance(path, str)

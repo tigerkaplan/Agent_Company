@@ -90,7 +90,7 @@ class ReviewContextBuilder:
                     content=bound_text(
                         sanitize_provider_text(
                             json.dumps(
-                                execution_record,
+                                execution_record.to_dict(),
                                 indent=2,
                                 sort_keys=True,
                                 ensure_ascii=True,

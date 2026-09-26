@@ -1,0 +1,306 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-company.local/schemas/execution-result.schema.json",
+  "title": "Agent Company Canonical Execution Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "execution_id",
+    "job_id",
+    "status",
+    "output_refs",
+    "evidence",
+    "artifacts",
+    "blockers",
+    "next_actions",
+    "retryable",
+    "summary",
+    "error",
+    "provider",
+    "started_at",
+    "completed_at",
+    "requested_provider",
+    "preferred_provider",
+    "fallback_used",
+    "fallback_reason",
+    "execution_mode",
+    "dry_run",
+    "usage"
+  ],
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "succeeded"}}},
+      "then": {
+        "properties": {
+          "error": {"type": "null"},
+          "blockers": {"maxItems": 0},
+          "retryable": {"const": false},
+          "next_actions": {
+            "items": {
+              "allOf": [
+                {"$ref": "#/$defs/next_action"},
+                {"properties": {"requires_human": {"const": false}}}
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "failed"}}},
+      "then": {
+        "properties": {
+          "error": {"$ref": "#/$defs/error"},
+          "blockers": {"maxItems": 0}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "blocked"}}},
+      "then": {
+        "properties": {
+          "error": {"type": "null"},
+          "blockers": {
+            "minItems": 1,
+            "items": {
+              "allOf": [
+                {"$ref": "#/$defs/blocker"},
+                {"properties": {"requires_human": {"const": false}}}
+              ]
+            }
+          },
+          "next_actions": {
+            "items": {
+              "allOf": [
+                {"$ref": "#/$defs/next_action"},
+                {"properties": {"requires_human": {"const": false}}}
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "needs_review"}}},
+      "then": {
+        "properties": {
+          "error": {"type": "null"},
+          "blockers": {"maxItems": 0},
+          "next_actions": {
+            "items": {
+              "allOf": [
+                {"$ref": "#/$defs/next_action"},
+                {"properties": {"requires_human": {"const": false}}}
+              ]
+            }
+          }
+        },
+        "anyOf": [
+          {"properties": {"summary": {"type": "string", "minLength": 1}}},
+          {"properties": {"evidence": {"minItems": 1}}},
+          {"properties": {"artifacts": {"minItems": 1}}}
+        ]
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "needs_human"}}},
+      "then": {
+        "properties": {
+          "error": {"type": "null"},
+          "blockers": {
+            "minItems": 1,
+            "contains": {
+              "type": "object",
+              "properties": {"requires_human": {"const": true}},
+              "required": ["requires_human"]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "execution_id": {"type": "string", "minLength": 1, "maxLength": 200},
+    "job_id": {"type": "string", "minLength": 1, "maxLength": 200},
+    "status": {
+      "type": "string",
+      "enum": ["succeeded", "failed", "blocked", "needs_review", "needs_human"]
+    },
+    "output_refs": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {"$ref": "#/$defs/ref"},
+      "description": "Compatibility alias for artifacts. New records contain the same references in both fields."
+    },
+    "evidence": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {"$ref": "#/$defs/evidence"}
+    },
+    "artifacts": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "blockers": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {"$ref": "#/$defs/blocker"}
+    },
+    "next_actions": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {"$ref": "#/$defs/next_action"}
+    },
+    "retryable": {"type": "boolean"},
+    "summary": {
+      "oneOf": [
+        {"type": "string", "minLength": 1, "maxLength": 4000},
+        {"type": "null"}
+      ]
+    },
+    "error": {
+      "oneOf": [
+        {"$ref": "#/$defs/error"},
+        {"type": "null"}
+      ]
+    },
+    "provider": {"$ref": "#/$defs/optional_provider"},
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "requested_provider": {"$ref": "#/$defs/optional_provider"},
+    "preferred_provider": {"$ref": "#/$defs/optional_provider"},
+    "fallback_used": {"type": "boolean"},
+    "fallback_reason": {
+      "oneOf": [
+        {"type": "string", "minLength": 1, "maxLength": 2000},
+        {"type": "null"}
+      ]
+    },
+    "execution_mode": {"type": "string", "enum": ["READ_ONLY", "CONTROLLED_WRITE"]},
+    "dry_run": {"type": "boolean"},
+    "usage": {
+      "oneOf": [
+        {"$ref": "#/$defs/usage"},
+        {"type": "null"}
+      ]
+    }
+  },
+  "$defs": {
+    "optional_provider": {
+      "oneOf": [
+        {"type": "string", "minLength": 1, "maxLength": 100},
+        {"type": "null"}
+      ]
+    },
+    "ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref_type", "ref"],
+      "properties": {
+        "ref_type": {
+          "type": "string",
+          "enum": [
+            "file",
+            "project_state",
+            "connector_contract",
+            "message",
+            "artifact",
+            "log",
+            "review",
+            "approval",
+            "provider_result",
+            "knowledge_source",
+            "other"
+          ]
+        },
+        "ref": {"type": "string", "minLength": 1, "maxLength": 2000},
+        "description": {"type": "string", "minLength": 1, "maxLength": 2000}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "status", "summary"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "deterministic_check",
+            "file_reference",
+            "command_result",
+            "observation",
+            "provider_output",
+            "other"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["passed", "failed", "observed", "not_run"]
+        },
+        "summary": {"type": "string", "minLength": 1, "maxLength": 2000},
+        "ref": {"$ref": "#/$defs/ref"}
+      }
+    },
+    "blocker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message", "retryable", "requires_human"],
+      "properties": {
+        "code": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"},
+        "message": {"type": "string", "minLength": 1, "maxLength": 2000},
+        "retryable": {"type": "boolean"},
+        "requires_human": {"type": "boolean"},
+        "ref": {"$ref": "#/$defs/ref"}
+      }
+    },
+    "next_action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "description", "requires_human", "automatic"],
+      "properties": {
+        "action": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"},
+        "description": {"type": "string", "minLength": 1, "maxLength": 2000},
+        "requires_human": {"type": "boolean"},
+        "automatic": {"type": "boolean", "const": false},
+        "ref": {"$ref": "#/$defs/ref"}
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message", "retryable"],
+      "properties": {
+        "code": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"},
+        "message": {"type": "string", "minLength": 1, "maxLength": 2000},
+        "retryable": {"type": "boolean"},
+        "details": {
+          "type": "object",
+          "maxProperties": 32,
+          "propertyNames": {"type": "string", "minLength": 1, "maxLength": 64},
+          "additionalProperties": {
+            "oneOf": [
+              {"type": "string", "maxLength": 1000},
+              {"type": "number", "minimum": -9223372036854775808, "maximum": 9223372036854775807},
+              {"type": "boolean"},
+              {"type": "null"}
+            ]
+          }
+        }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "duration_ms": {"type": "integer", "minimum": 0, "maximum": 9223372036854775807},
+        "input_units": {"type": "integer", "minimum": 0, "maximum": 9223372036854775807},
+        "output_units": {"type": "integer", "minimum": 0, "maximum": 9223372036854775807},
+        "total_units": {"type": "integer", "minimum": 0, "maximum": 9223372036854775807},
+        "unit": {"type": "string", "minLength": 1, "maxLength": 50}
+      }
+    }
+  }
+}

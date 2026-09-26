@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+import math
 import re
+from collections.abc import Mapping
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -63,6 +65,24 @@ class JobValidator:
                 raise JobValidationError(f"{path}: must match exactly one allowed schema")
             return
 
+        if "anyOf" in schema:
+            for candidate in schema["anyOf"]:
+                try:
+                    self._validate(value, candidate, path, root)
+                except JobValidationError:
+                    continue
+                break
+            else:
+                raise JobValidationError(f"{path}: must match an allowed schema")
+
+        if "not" in schema:
+            try:
+                self._validate(value, schema["not"], path, root)
+            except JobValidationError:
+                pass
+            else:
+                raise JobValidationError(f"{path}: matches a prohibited schema")
+
         if "type" in schema and not self._has_type(value, schema["type"]):
             raise JobValidationError(f"{path}: expected {schema['type']}")
 
@@ -76,20 +96,41 @@ class JobValidator:
         if isinstance(value, str):
             if len(value) < schema.get("minLength", 0):
                 raise JobValidationError(f"{path}: string is too short")
+            if "maxLength" in schema and len(value) > schema["maxLength"]:
+                raise JobValidationError(f"{path}: string is too long")
             if "pattern" in schema and re.fullmatch(schema["pattern"], value) is None:
                 raise JobValidationError(f"{path}: does not match required pattern")
             if schema.get("format") == "date-time":
                 self._validate_datetime(value, path)
 
-        if isinstance(value, int) and not isinstance(value, bool):
+        if isinstance(value, (int, float)) and not isinstance(value, bool):
+            if isinstance(value, float) and not math.isfinite(value):
+                raise JobValidationError(f"{path}: number must be finite")
             if "minimum" in schema and value < schema["minimum"]:
                 raise JobValidationError(f"{path}: must be at least {schema['minimum']}")
+            if "maximum" in schema and value > schema["maximum"]:
+                raise JobValidationError(f"{path}: must be at most {schema['maximum']}")
 
-        if isinstance(value, list) and "items" in schema:
-            for index, item in enumerate(value):
-                self._validate(item, schema["items"], f"{path}[{index}]", root)
+        if isinstance(value, list):
+            if len(value) < schema.get("minItems", 0):
+                raise JobValidationError(f"{path}: array has too few items")
+            if "maxItems" in schema and len(value) > schema["maxItems"]:
+                raise JobValidationError(f"{path}: array has too many items")
+            if "items" in schema:
+                for index, item in enumerate(value):
+                    self._validate(item, schema["items"], f"{path}[{index}]", root)
+            if "contains" in schema:
+                if not any(
+                    self._matches(item, schema["contains"], f"{path}[{index}]", root)
+                    for index, item in enumerate(value)
+                ):
+                    raise JobValidationError(f"{path}: array lacks a required item")
 
-        if isinstance(value, dict):
+        if isinstance(value, Mapping):
+            if len(value) < schema.get("minProperties", 0):
+                raise JobValidationError(f"{path}: object has too few properties")
+            if "maxProperties" in schema and len(value) > schema["maxProperties"]:
+                raise JobValidationError(f"{path}: object has too many properties")
             required = schema.get("required", [])
             missing = [name for name in required if name not in value]
             if missing:
@@ -102,17 +143,43 @@ class JobValidator:
                     raise JobValidationError(
                         f"{path}: unexpected fields: {', '.join(unexpected)}"
                     )
+            property_names = schema.get("propertyNames")
+            if property_names is not None:
+                for name in value:
+                    self._validate(name, property_names, f"{path} property name", root)
             for name, item in value.items():
                 if name in properties:
                     self._validate(item, properties[name], f"{path}.{name}", root)
+                elif isinstance(schema.get("additionalProperties"), dict):
+                    self._validate(
+                        item,
+                        schema["additionalProperties"],
+                        f"{path}.{name}",
+                        root,
+                    )
+
+    def _matches(
+        self,
+        value: Any,
+        schema: dict[str, Any],
+        path: str,
+        root: dict[str, Any],
+    ) -> bool:
+        try:
+            self._validate(value, schema, path, root)
+        except JobValidationError:
+            return False
+        return True
 
     @staticmethod
     def _has_type(value: Any, expected: str) -> bool:
         checks = {
-            "object": lambda item: isinstance(item, dict),
+            "object": lambda item: isinstance(item, Mapping),
             "array": lambda item: isinstance(item, list),
             "string": lambda item: isinstance(item, str),
             "integer": lambda item: isinstance(item, int) and not isinstance(item, bool),
+            "number": lambda item: isinstance(item, (int, float))
+            and not isinstance(item, bool),
             "boolean": lambda item: isinstance(item, bool),
             "null": lambda item: item is None,
         }
