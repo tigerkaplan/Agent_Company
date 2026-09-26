@@ -52,7 +52,8 @@
   Compose services, persistent canonical state, and no public exposure.
 - [x] Complete the Phase 8D independent implementation/security review with no
   critical, major, or required-fix findings and close Phase 8D.
-- [ ] Phase 8E is NEXT / NOT STARTED.
+- [ ] Phase 8E is BLOCKED / NOT STARTED because the VPS has not yet been
+  created.
 - [ ] Before Phase 8E production use, build the pinned image on the target Linux
   architecture and perform an SBOM/vulnerability scan.
 - [ ] Verify or update the base-image digest where appropriate.

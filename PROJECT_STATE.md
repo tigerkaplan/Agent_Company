@@ -2,8 +2,8 @@
 
 ## Current Checkpoint
 
-- Current Git HEAD is `ef498bd`. The working tree contains the Phase 8D Docker
-  adaptation described below; it is not committed or deployed.
+- Current Git HEAD is `48e85dd`, containing the committed Phase 8D Docker
+  adaptation described below. It is not deployed.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
@@ -19,7 +19,7 @@
   2026-09-25 with no critical, major, or required-fix findings.
 - Phase 8D is COMPLETED / CLOSED. Its independent architecture/security review
   passed on 2026-09-25 with no critical, major, or required-fix findings.
-- Phase 8E is NEXT / NOT STARTED.
+- Phase 8E is BLOCKED / NOT STARTED because the VPS has not yet been created.
 
 ## Phase 8A Architecture Design Checkpoint
 
@@ -168,8 +168,9 @@ The following are explicit Phase 8E prerequisites, not open Phase 8D blockers:
 
 ## Not Implemented
 
-- Phase 8E is NEXT / NOT STARTED. VPS deployment, backup/recovery automation,
-  target-host smoke testing, and final review remain later Phase 8 work.
+- Phase 8E is BLOCKED / NOT STARTED because the VPS has not yet been created.
+  VPS deployment, backup/recovery automation, target-host smoke testing, and
+  final review remain later Phase 8 work.
 - Operating-system supervisor installation, systemd, Windows Service, Task
   Scheduler integration, an automatic restart supervisor daemon, and forced
   process termination.
@@ -255,7 +256,7 @@ COMPLETED / CLOSED and documentation-only. Phase 8B is COMPLETED / CLOSED after
 its successful final independent re-review. Phase 8C is COMPLETED / CLOSED
 after its successful final independent re-review. Phase 8D is COMPLETED /
 CLOSED after its successful independent architecture/security review, and
-Phase 8E is NEXT / NOT STARTED. A
+Phase 8E is BLOCKED / NOT STARTED because the VPS has not yet been created. A
 different-provider full-repository audit and the other recorded
 Phase 8C hardening items remain recommended future validation, not a mandatory
 Phase 8 implementation gate.

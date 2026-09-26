@@ -21,13 +21,13 @@ Canonical definitions must remain separate from generated provider files. Claude
 
 ## Current State
 
-Git HEAD `ef498bd` contains the committed Phase 8C closure reconciliation.
-Phases 1-7 are closed, the Social Media capability is committed, Phase 8A is
-closed, and Phases 8B and 8C are completed and closed after successful
-independent review. The working tree implements Phase 8D Docker adaptation;
-its independent architecture/security review passed with no critical, major,
-or required-fix findings. Phase 8D is COMPLETED / CLOSED and not deployed.
-Phase 8E is NEXT / NOT STARTED.
+Git HEAD `48e85dd` contains the committed Phase 8D Docker adaptation. Phases
+1-7 are closed, the Social Media capability is committed, Phase 8A is closed,
+and Phases 8B and 8C are completed and closed after successful independent
+review. Phase 8D's independent architecture/security review passed with no
+critical, major, or required-fix findings. Phase 8D is COMPLETED / CLOSED and
+not deployed. Phase 8E is BLOCKED / NOT STARTED because the VPS has not yet
+been created.
 
 The runtime remains local-first. Phase 8D packages the canonical Phase 8C
 foreground lifecycle into one non-root image definition and fixed Compose
@@ -39,7 +39,7 @@ the canonical capability roadmap.
 
 ## Current Repository Structure
 
-This is the physical structure at the Phase 8D working-tree checkpoint;
+This is the physical structure at the committed Phase 8D checkpoint;
 generated contents and ignored local configuration are intentionally not
 expanded.
 

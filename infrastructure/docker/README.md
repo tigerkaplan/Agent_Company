@@ -10,7 +10,7 @@ authority.
 Phase 8D is COMPLETED / CLOSED after its independent architecture/security
 review passed with no critical, major, or required-fix findings. No image was
 built and no container was started because the Docker daemon was unavailable.
-Phase 8E is NEXT / NOT STARTED.
+Phase 8E is BLOCKED / NOT STARTED because the VPS has not yet been created.
 
 ## Container Model
 

@@ -11,7 +11,7 @@
 - Phase 8B: COMPLETED / CLOSED / NO DEPLOYMENT.
 - Phase 8C: COMPLETED / CLOSED / NO DEPLOYMENT.
 - Phase 8D: COMPLETED / CLOSED / NO DEPLOYMENT.
-- Phase 8E: NEXT / NOT STARTED.
+- Phase 8E: BLOCKED / NOT STARTED; VPS not yet created.
 - Phase 9: PLANNED.
 - Phase 10: PLANNED.
 
@@ -144,7 +144,8 @@ VPS, TLS, reverse proxy, Hermes component, merge authority, or deployment
 authority. Compose syntax and deterministic regressions pass, but a Docker
 daemon was unavailable, so the image build and live-container smoke remain
 unverified. These are Phase 8E runtime-validation prerequisites and do not
-reopen Phase 8D. Phase 8E is NEXT / NOT STARTED.
+reopen Phase 8D. Phase 8E is BLOCKED / NOT STARTED because the VPS has not yet
+been created.
 
 Before Phase 8E production use, build the pinned image on the target Linux
 architecture; perform an SBOM/vulnerability scan and verify or update the base
@@ -213,6 +214,6 @@ Project packs must not create separate Agent Company runtimes per project unless
 - Public Telegram webhook mode and public webhook hosting: not implemented.
 - Broader Gmail, Drive, and Calendar runtime integrations: contract-only.
 - Phase 8D Docker adaptation and packaging: completed, closed, and not deployed.
-- Phase 8E VPS deployment: next, not started, and requires separate human
-  approval.
+- Phase 8E VPS deployment: blocked and not started because the VPS has not yet
+  been created; deployment requires separate human approval.
 - Dedicated observability implementation: not started.

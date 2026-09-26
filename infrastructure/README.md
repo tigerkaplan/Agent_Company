@@ -12,7 +12,7 @@ infrastructure automation.
 - Phase 8C: COMPLETED / CLOSED after final independent re-review; no deployment.
 - Phase 8D: COMPLETED / CLOSED after successful independent review; no
   deployment.
-- Phase 8E: NEXT / NOT STARTED.
+- Phase 8E: BLOCKED / NOT STARTED; VPS not yet created.
 - Current runtime: local-first, file-backed, and single-worker.
 - Deployment: not performed.
 - Docker image definition and Compose packaging: implemented but not built or
@@ -129,8 +129,8 @@ until a separately reviewed derived image and credential mount exist. Telegram
 requires its token at runtime. Webhook-local remains bound to `127.0.0.1` in
 its container namespace. See `docker/README.md` for validation and operating
 details. Phase 8D is COMPLETED / CLOSED after successful independent review;
-Phase 8E deployment has not started. Docker-daemon-dependent validation remains
-an explicit Phase 8E prerequisite.
+Phase 8E deployment is blocked because the VPS has not yet been created.
+Docker-daemon-dependent validation remains an explicit Phase 8E prerequisite.
 
 ## Authority Boundary
 
