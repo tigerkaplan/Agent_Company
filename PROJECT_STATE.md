@@ -2,18 +2,17 @@
 
 ## Current Checkpoint
 
-- Current Git HEAD is `6da9e0f`, containing the committed CORE-03 post-commit
-  state reconciliation. CORE-04 closure is complete and awaiting commit; its
-  implementation and closure reconciliation remain uncommitted and undeployed.
+- CORE-04 implementation commit `35f03f8` contains the Tool Discovery /
+  Deferred Loading implementation and closure state. It is not deployed.
 - CORE-01 Canonical Result Contract is COMPLETED / CLOSED and committed at
   `3f6acb6`.
 - CORE-02 Continuation Policy is COMPLETED / CLOSED after CORE-02R6 PASS and is
   committed at `9d5ead1`.
 - CORE-03 Eval Framework is COMPLETED / CLOSED / COMMITTED at `80ead22` after
   CORE-03R5 PASS with no Critical, Major, or Minor findings.
-- CORE-04 Tool Discovery is CLOSED / READY TO COMMIT after CORE-04R5 PASS with
-  no Critical, Major, or Minor findings.
-- CORE-05 Time Budget is NOT STARTED.
+- CORE-04 Tool Discovery is CLOSED / COMMITTED at `35f03f8` after CORE-04R5
+  PASS with no Critical, Major, or Minor findings.
+- CORE-05 Time Budget is NEXT / NOT STARTED.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
@@ -386,7 +385,7 @@ At that pre-commit checkpoint, CORE-03 was CLOSED / READY TO COMMIT and CORE-04
 remained NOT STARTED. CORE-03 was subsequently committed at `80ead22`; CORE-04
 was then the next allowed checkpoint.
 
-## CORE-04 Tool Discovery — CLOSED / READY TO COMMIT
+## CORE-04 Tool Discovery — CLOSED / COMMITTED
 
 CORE-04 adds a provider-independent runtime capability under `runtime/tools/`;
 it does not create a Tool Discovery Agent or alter agent, skill, workflow, or
@@ -550,10 +549,16 @@ dynamic-import, or executable tool-layer network findings, and passed
 
 CORE-04 closure reconciliation changed canonical status documentation only; it
 did not change runtime behavior, tests, or schemas and did not rerun or replace
-the R5 full-regression evidence above. CORE-04 is CLOSED / READY TO COMMIT, but
-is not yet committed. CORE-05 is NOT STARTED. No live provider, external
-network, deployment, push, PR, commit, or external-system mutation was
+the R5 full-regression evidence above. At that pre-commit checkpoint, CORE-04
+was CLOSED / READY TO COMMIT and CORE-05 was NOT STARTED. No live provider,
+external network, deployment, push, PR, commit, or external-system mutation was
 performed during closure.
+
+CORE-04 implementation, repairs, tests, schemas, and closure documentation were
+subsequently committed at `35f03f8` (`feat: add tool discovery and deferred
+loading`). CORE-04 is CLOSED / COMMITTED. CORE-05 is NEXT / NOT STARTED and does
+not become active until this post-commit state reconciliation is committed and
+the working tree is verified clean.
 
 ## Phase 8A Architecture Design Checkpoint
 

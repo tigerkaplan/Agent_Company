@@ -9,13 +9,14 @@
   after CORE-02R6 PASS with no Critical, Major, or Minor findings.
 - [x] CORE-03 Eval Framework — COMPLETED / CLOSED / COMMITTED at `80ead22`
   after CORE-03R5 PASS with no Critical, Major, or Minor findings.
-- [x] CORE-04 Tool Discovery — CLOSED / READY TO COMMIT after CORE-04R5 PASS
-  with no Critical, Major, or Minor findings.
+- [x] CORE-04 Tool Discovery — CLOSED / COMMITTED at `35f03f8` after CORE-04R5
+  PASS with no Critical, Major, or Minor findings.
   - [x] Implementation complete.
   - [x] Bounded repairs complete.
   - [x] Independent re-review complete.
-  - [x] Closure reconciliation complete; commit remains pending.
-- [ ] CORE-05 Time Budget — NOT STARTED.
+  - [x] Closure reconciliation complete.
+  - [x] Implementation commit complete at `35f03f8`.
+- [ ] CORE-05 Time Budget — NEXT / NOT STARTED.
 - [ ] CORE-06 Retry / Stop Policy — PLANNED.
 - [ ] CORE-07 Progress Events — PLANNED.
 - [ ] CORE-08 Context Discovery — PLANNED.

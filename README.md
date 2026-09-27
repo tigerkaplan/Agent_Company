@@ -21,9 +21,8 @@ Canonical definitions must remain separate from generated provider files. Claude
 
 ## Current State
 
-Git HEAD `6da9e0f` contains the committed CORE-03 post-commit state
-reconciliation. CORE-04 implementation and closure-reconciliation changes are
-uncommitted.
+CORE-04 implementation commit `35f03f8` contains the committed Tool Discovery /
+Deferred Loading implementation and closure state.
 Phases 1-7 are closed, the Social Media capability is committed, Phase 8A is
 closed, and Phases 8B and 8C are completed and closed after successful
 independent review. Phase 8D's independent architecture/security review passed
@@ -36,13 +35,13 @@ CORE-01 Canonical Result Contract is COMPLETED / CLOSED and committed at
 `9d5ead1` after CORE-02R6 PASS with no Critical, Major, or Minor findings.
 CORE-03 Eval Framework is COMPLETED / CLOSED / COMMITTED at `80ead22` after
 CORE-03R5 PASS with no Critical, Major, or Minor findings. CORE-04 Tool
-Discovery is CLOSED / READY TO COMMIT after CORE-04R5 PASS with no Critical,
-Major, or Minor findings. It adds explicit immutable registration, exact
-capability-first matching, deterministic bounded selection, and selected-only
-definition/schema loading without granting tool or execution authority. CORE-05
-is NOT STARTED; CORE-06 through CORE-11 remain planned and unimplemented. The
-aggregate serialized-result byte ceiling remains FUTURE HARDENING /
-NON-BLOCKING.
+Discovery is CLOSED / COMMITTED at `35f03f8` after CORE-04R5 PASS with no
+Critical, Major, or Minor findings. It adds explicit immutable registration,
+exact capability-first matching, deterministic bounded selection, and
+selected-only definition/schema loading without granting tool or execution
+authority. CORE-05 is NEXT / NOT STARTED; CORE-06 through CORE-11 remain planned
+and unimplemented. The aggregate serialized-result byte ceiling remains FUTURE
+HARDENING / NON-BLOCKING.
 
 The runtime remains local-first. Phase 8D packages the canonical Phase 8C
 foreground lifecycle into one non-root image definition and fixed Compose

@@ -14,8 +14,8 @@
 - CORE-01 Canonical Result Contract: COMPLETED / CLOSED / COMMITTED at `3f6acb6`.
 - CORE-02 Continuation Policy: COMPLETED / CLOSED / COMMITTED at `9d5ead1`.
 - CORE-03 Eval Framework: COMPLETED / CLOSED / COMMITTED at `80ead22`.
-- CORE-04 Tool Discovery: CLOSED / READY TO COMMIT after CORE-04R5 PASS.
-- CORE-05 Time Budget: NOT STARTED.
+- CORE-04 Tool Discovery: CLOSED / COMMITTED at `35f03f8` after CORE-04R5 PASS.
+- CORE-05 Time Budget: NEXT / NOT STARTED.
 - Phase 8E: BLOCKED / PAUSED; deployment not started because the VPS has not
   yet been created.
 - Phase 8F: NOT STARTED.
@@ -102,8 +102,8 @@ redefine or begin Phase 8.
 - CORE-01 Canonical Result Contract: COMPLETED / CLOSED / COMMITTED at `3f6acb6`.
 - CORE-02 Continuation Policy: COMPLETED / CLOSED / COMMITTED at `9d5ead1`.
 - CORE-03 Eval Framework: COMPLETED / CLOSED / COMMITTED at `80ead22`.
-- CORE-04 Tool Discovery: CLOSED / READY TO COMMIT after CORE-04R5 PASS.
-- CORE-05 Time Budget: NOT STARTED.
+- CORE-04 Tool Discovery: CLOSED / COMMITTED at `35f03f8` after CORE-04R5 PASS.
+- CORE-05 Time Budget: NEXT / NOT STARTED.
 - CORE-06 Retry / Stop Policy: PLANNED.
 - CORE-07 Progress Events: PLANNED.
 - CORE-08 Context Discovery: PLANNED.
@@ -124,10 +124,10 @@ Critical, Major, or Minor findings. CORE-04 now provides an explicit immutable
 tool registry, capability-first deterministic discovery, separate bounded
 selection, and selected-only JSON definition/schema loading. Discovery and
 loading grant no execution or governance authority. CORE-04 is implemented,
-independently reviewed, closure-reconciled, and CLOSED / READY TO COMMIT after
-CORE-04R5 PASS with no Critical, Major, or Minor findings. CORE-05 is NOT
-STARTED; CORE-06 through CORE-11 remain unimplemented. An aggregate serialized-
-result byte ceiling is FUTURE HARDENING / NON-BLOCKING.
+independently reviewed, closure-reconciled, and CLOSED / COMMITTED at `35f03f8`
+after CORE-04R5 PASS with no Critical, Major, or Minor findings. CORE-05 is
+NEXT / NOT STARTED; CORE-06 through CORE-11 remain unimplemented. An aggregate
+serialized-result byte ceiling is FUTURE HARDENING / NON-BLOCKING.
 
 ## Phases 8A, 8B, 8C, And 8D Closed
 
