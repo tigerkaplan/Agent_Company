@@ -11,8 +11,10 @@
 - Phase 8B: COMPLETED / CLOSED / NO DEPLOYMENT.
 - Phase 8C: COMPLETED / CLOSED / NO DEPLOYMENT.
 - Phase 8D: COMPLETED / CLOSED / NO DEPLOYMENT.
-- CORE-01 Canonical Result Contract: COMPLETED / CLOSED.
-- CORE-02 Continuation Policy: CLOSED / READY TO COMMIT.
+- CORE-01 Canonical Result Contract: COMPLETED / CLOSED / COMMITTED at `3f6acb6`.
+- CORE-02 Continuation Policy: COMPLETED / CLOSED / COMMITTED at `9d5ead1`.
+- CORE-03 Eval Framework: COMPLETED / CLOSED / READY TO COMMIT.
+- CORE-04 Tool Discovery: NOT STARTED.
 - Phase 8E: BLOCKED / PAUSED; deployment not started because the VPS has not
   yet been created.
 - Phase 8F: NOT STARTED.
@@ -96,10 +98,10 @@ redefine or begin Phase 8.
 
 ## Core Runtime Enhancements
 
-- CORE-01 Canonical Result Contract: COMPLETED / CLOSED.
-- CORE-02 Continuation Policy: CLOSED / READY TO COMMIT.
-- CORE-03 Eval Framework: NOT STARTED.
-- CORE-04 Tool Discovery: PLANNED.
+- CORE-01 Canonical Result Contract: COMPLETED / CLOSED / COMMITTED at `3f6acb6`.
+- CORE-02 Continuation Policy: COMPLETED / CLOSED / COMMITTED at `9d5ead1`.
+- CORE-03 Eval Framework: COMPLETED / CLOSED / READY TO COMMIT.
+- CORE-04 Tool Discovery: NOT STARTED.
 - CORE-05 Time Budget: PLANNED.
 - CORE-06 Retry / Stop Policy: PLANNED.
 - CORE-07 Progress Events: PLANNED.
@@ -110,8 +112,14 @@ redefine or begin Phase 8.
 
 CORE-01 defines the canonical provider-agnostic Execution Result: WHAT HAPPENED.
 Its final independent closure review passed with no Critical or Major findings.
-CORE-02 is CLOSED / READY TO COMMIT after CORE-02R6 PASS with no Critical,
-Major, or Minor findings. CORE-03 is NOT STARTED; CORE-04 through CORE-11 remain
+CORE-02 is COMPLETED / CLOSED and committed at `9d5ead1` after CORE-02R6 PASS
+with no Critical, Major, or Minor findings. CORE-03 now provides separate
+provider-agnostic EvalSpec and EvalResult contracts, explicit deterministic
+evaluators, content identity/versioning, typed immutable persistence, and a
+minimal CLI. Eval is measurement evidence only: it grants no Reviewer,
+approval, continuation, retry, Git, or deployment authority. CORE-03 is
+COMPLETED / CLOSED / READY TO COMMIT after CORE-03R5 PASS with no Critical,
+Major, or Minor findings. CORE-04 is NOT STARTED; CORE-05 through CORE-11 remain
 unimplemented. An aggregate serialized-result byte ceiling is FUTURE HARDENING /
 NON-BLOCKING.
 

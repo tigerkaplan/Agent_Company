@@ -2,12 +2,14 @@
 
 ## Core Runtime Enhancements
 
-- [x] CORE-01 Canonical Result Contract — COMPLETED / CLOSED after final
-  independent closure review PASS with no Critical or Major findings.
-- [x] CORE-02 Continuation Policy — CLOSED / READY TO COMMIT after CORE-02R6
-  PASS with no Critical, Major, or Minor findings.
-- [ ] CORE-03 Eval Framework — NOT STARTED.
-- [ ] CORE-04 Tool Discovery — PLANNED.
+- [x] CORE-01 Canonical Result Contract — COMPLETED / CLOSED / COMMITTED at
+  `3f6acb6` after final independent closure review PASS with no Critical or
+  Major findings.
+- [x] CORE-02 Continuation Policy — COMPLETED / CLOSED / COMMITTED at `9d5ead1`
+  after CORE-02R6 PASS with no Critical, Major, or Minor findings.
+- [x] CORE-03 Eval Framework — COMPLETED / CLOSED / READY TO COMMIT after
+  CORE-03R5 PASS with no Critical, Major, or Minor findings.
+- [ ] CORE-04 Tool Discovery — NOT STARTED.
 - [ ] CORE-05 Time Budget — PLANNED.
 - [ ] CORE-06 Retry / Stop Policy — PLANNED.
 - [ ] CORE-07 Progress Events — PLANNED.

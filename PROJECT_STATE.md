@@ -2,11 +2,15 @@
 
 ## Current Checkpoint
 
-- Current Git HEAD is `3f6acb6`, containing the committed CORE-01 Canonical
-  Execution Result contract. It is not deployed.
-- CORE-02 Continuation Policy is CLOSED / READY TO COMMIT after CORE-02R6 PASS.
-  Its accumulated implementation and bounded repairs remain uncommitted.
-- CORE-03 Eval Framework is NOT STARTED.
+- Current Git HEAD is `9d5ead1`, containing the committed CORE-02 Continuation
+  Policy. It is not deployed.
+- CORE-01 Canonical Result Contract is COMPLETED / CLOSED and committed at
+  `3f6acb6`.
+- CORE-02 Continuation Policy is COMPLETED / CLOSED after CORE-02R6 PASS and is
+  committed at `9d5ead1`.
+- CORE-03 Eval Framework is COMPLETED / CLOSED / READY TO COMMIT after CORE-03R5
+  PASS with no Critical, Major, or Minor findings.
+- CORE-04 Tool Discovery is NOT STARTED.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
@@ -80,7 +84,7 @@ credential-literal scan found zero findings, and `git diff --check` passed with
 line-ending notices only. No live provider, network, or deployment call was
 made. CORE-01 is COMPLETED / CLOSED and committed at `3f6acb6`.
 
-## CORE-02 Continuation Policy — CLOSED / READY TO COMMIT
+## CORE-02 Continuation Policy — COMPLETED / CLOSED
 
 CORE-02 is a provider-independent deterministic continuation layer for explicit
 pre-authorized job plans. Continuation means CONTINUE AUTHORIZED UNFINISHED
@@ -212,15 +216,169 @@ JSON-compatible lifecycle, 19/19 runtime-loader tests, production `shell=True`
 scanning, changed-scope high-confidence secret scanning, and `git diff --check`
 also passed; the diff check emitted line-ending notices only.
 
-CORE-02 closure reconciliation is complete. CORE-02 is CLOSED / READY TO COMMIT
-and is not yet committed. CORE-03 Eval Framework is NOT STARTED. The aggregate
-serialized-result byte ceiling remains FUTURE HARDENING / NON-BLOCKING.
+CORE-02 closure reconciliation is complete. CORE-02 is COMPLETED / CLOSED and
+committed at `9d5ead1`. The aggregate serialized-result byte ceiling remains
+FUTURE HARDENING / NON-BLOCKING.
 
 Phase 8E remains BLOCKED / PAUSED; deployment has not started. Phase 8F remains
 NOT STARTED.
 CORE-01 performed no VPS, deployment,
 service-installation, public-exposure, Hermes, Phase 8F, continuation-policy,
 retry-policy, or Eval Framework work.
+
+## CORE-03 Eval Framework — COMPLETED / CLOSED / READY TO COMMIT
+
+CORE-03 is the first canonical provider-independent evaluation layer. It adds a
+separate `EvalSpec`, `EvalResult`, and structured check-result contract without
+changing `ExecutionResult.status` or creating an Eval Agent. A spec binds one
+exact execution/job pair to a canonical evaluator identity/version and an
+ordered set of bounded checks. A result distinguishes `pass`, `fail`, and
+`error`, retains machine-readable checks and evidence references, and leaves
+numeric score null for the deterministic milestone.
+
+The explicit registry implements the CORE-01 contract check, expected status,
+required evidence, required artifacts, forbidden conditions, and allowlisted
+structured field matching. Contract evaluation reuses the canonical CORE-01
+schema/model validator. Unregistered evaluator names, malformed configuration,
+malformed execution input, and invalid persisted evals fail closed; no dynamic
+import, arbitrary code, shell command, file execution, or provider invocation is
+available from EvalSpec input.
+
+Logical eval identity retains SHA-256 digests of the exact EvalSpec, exact
+supplied ExecutionResult payload, and deterministic semantic result content.
+The `eval-<32 hex>` ID is derived from that compact identity material;
+`created_at` is excluded. Model, validation, persistence-create, and load
+boundaries all verify the result digest and claimed ID. Typed atomic JSON
+persistence lives under `executions/evals/`, safely deduplicates the same
+semantic result, rejects identity collisions or tampering, and never overwrites
+a different historical result. The runtime CLI supports `eval run`, `eval
+list`, and `eval show` against persisted execution evidence.
+
+CORE-03 shares CORE-01's canonical secret-key and credential-shape detection.
+Structured field matching distinguishes missing fields from present nulls, and
+its comparisons remain allowlisted and type-strict. Aggregate result evidence
+is a deterministic ordered summary capped at 100 unique references while every
+check retains its complete bounded local evidence.
+
+Eval remains descriptive measurement evidence only. PASS cannot approve work,
+complete Reviewer workflow, authorize continuation or retry, clear a CORE-02
+recovery hold, mutate a job or authorized plan, invoke Git, deploy, or convert
+provider prose into authority. CORE-03 is COMPLETED / CLOSED / READY TO COMMIT
+after CORE-03R5 PASS. CORE-04 remains NOT STARTED.
+
+CORE-03 initial implementation validation passed: 24/24 targeted eval tests, 30/30
+CORE-01 result-contract tests, 61/61 CORE-02 continuation tests, 359/359 focused
+Worker/Scheduler/Reviewer/approval/controlled-write/Git/provider regressions,
+and a clean full 635/635 runtime-suite rerun. One earlier full rerun and one of
+three immediate isolated repeats hit the already documented Phase 8C timing
+test `test_i4_stop_after_start_publication_targets_new_owner`; two isolated
+repeats and the clean full rerun passed, and no CORE-03 path touches that host
+process code. All 116 runtime Python files compiled; all
+20 JSON schemas and the JSON-compatible lifecycle parsed; 68/68 host
+configuration/lifecycle loader tests and a fresh eval/CLI import probe passed.
+The production AST scan found zero `shell=True` calls, the changed-scope
+high-confidence credential-pattern scan found zero findings, stale current-state
+CORE-02/CORE-03 markers were absent, and `git diff --check` passed with
+line-ending notices only. No live provider, external network, deployment, push,
+PR, commit, external-system mutation, or CORE-04 work was performed.
+
+CORE-03R1 returned FIX with four Major findings and no Critical findings.
+CORE-03F repaired only those findings: persisted identity now verifies exact
+input digests and deterministic result semantics; CORE-01 and CORE-03 share one
+secret-detection policy; field matching distinguishes missing from null; and
+aggregate evidence is a bounded summary without dropping check-local evidence.
+Repair validation passed: 33/33 targeted eval tests, including 9/9 dedicated
+repair tests; 30/30 CORE-01 tests; 61/61 CORE-02 tests; 359/359 focused runtime
+regressions; and the full 644/644 runtime suite. All 117 runtime Python files
+compiled, all 20 JSON schemas and the JSON-compatible lifecycle parsed, 68/68
+host configuration/lifecycle loader tests passed, and fresh eval/CLI imports
+succeeded. Production `shell=True` scanning found zero findings. CORE-03 remains
+IMPLEMENTED / pending independent re-review; it is not closed. No live provider,
+external network, deployment, push, PR, commit, external-system mutation, or
+CORE-04 work was performed.
+
+CORE-03R2 returned FIX with one remaining Major finding: a typed result from an
+injected evaluator was not structurally bound to its originating check. The
+CORE-03F2 bounded repair treats evaluator output as untrusted structured data,
+revalidates every typed check result, and binds `check_id`, `evaluator_type`,
+and `severity` to the originating `EvalCheckSpec` before aggregation. Any
+malformed or identity-substituted output becomes a deterministic canonical
+`error` for the original check, so only normalized output reaches semantic
+identity and persistence. CORE-03 remains IMPLEMENTED / pending independent
+re-review; it is not closed. CORE-04 remains NOT STARTED.
+
+CORE-03F2 validation passed: 8/8 dedicated repair test methods covering all 12
+required adversarial cases, 41/41 CORE-03 tests, 30/30 CORE-01 tests, 61/61
+CORE-02 tests, 292/292 focused runtime regressions, and the full 652/652 runtime
+suite. Host configuration/lifecycle validation passed 68/68; all 117 runtime
+Python files compiled; all 20 JSON schemas and the JSON-compatible lifecycle
+parsed; eval/CLI imports succeeded; and production `shell=True` and
+high-confidence credential scans found zero findings. No live provider,
+external network, deployment, push, PR, commit, external-system mutation, or
+CORE-04 work was performed.
+
+CORE-03R3 returned FIX with one remaining Major finding: an injected evaluator
+could directly raise the runner's private output-validation exception and make
+untrusted exception text cross the canonical error boundary. CORE-03F3
+structurally separates evaluator invocation from runner-owned post-return
+validation. Every evaluator-originated exception now maps to a fixed canonical
+error for the original check, while the private validation exception is trusted
+only when runner validation creates it after evaluator return. Raw exception
+text is excluded from semantic identity and persistence. CORE-03 remains
+IMPLEMENTED / pending independent re-review; it is not closed. CORE-04 remains
+NOT STARTED.
+
+CORE-03F3 validation passed: 4/4 dedicated evaluator-exception repair tests,
+44/44 CORE-03 tests, 30/30 CORE-01 tests, 61/61 CORE-02 tests, 292/292 focused
+runtime regressions, and the full 655/655 runtime suite. Explicit normalized
+error persistence and Eval CLI tests passed 2/2; host configuration/lifecycle
+validation passed 68/68; all 117 runtime Python files compiled; all 20 JSON
+schemas and the JSON-compatible lifecycle parsed; and eval/CLI imports
+succeeded. Production `shell=True`, high-confidence credential, and Eval
+dangerous-API scans found zero findings. No live provider, external network,
+deployment, push, PR, commit, external-system mutation, or CORE-04 work was
+performed.
+
+CORE-03R4 returned FIX with one remaining Major finding: the runner passed
+canonical check and context objects directly to injected evaluator code, then
+reused those evaluator-visible objects as trusted error, identity, and evidence
+inputs. CORE-03F4 canonicalizes typed specs into new runner-owned models and
+gives every evaluator invocation a disposable reconstructed check and isolated
+context. Error construction, returned-output identity checks, later evaluators,
+semantic identity, and persistence now use only untouched runner-owned values.
+Evaluator-side mutation of check identity, execution references, payloads, or
+canonical results cannot mutate caller input or cross the normalized error
+boundary. CORE-03 remains IMPLEMENTED / pending independent re-review; it is
+not closed. CORE-04 remains NOT STARTED.
+
+CORE-03F4 validation passed: 5/5 dedicated mutable-input trust-boundary tests,
+49/49 CORE-03 tests, 30/30 CORE-01 tests, 61/61 CORE-02 tests, 292/292 focused
+runtime regressions, and the full 660/660 runtime suite. Explicit normalized
+error persistence and Eval CLI tests passed 2/2; host configuration/lifecycle
+validation passed 68/68; all 117 runtime Python files compiled; all 20 JSON
+schemas and the JSON-compatible lifecycle parsed; and eval/CLI imports
+succeeded. Production `shell=True`, high-confidence credential, and Eval
+dangerous-API scans found zero findings. No live provider, external network,
+deployment, push, PR, commit, external-system mutation, or CORE-04 work was
+performed.
+
+CORE-03R5 independently re-reviewed the CORE-03F4 trusted-snapshot isolation
+repair and returned PASS with no Critical, Major, or Minor findings. It verified
+that evaluator-side mutation cannot alter runner-owned check identity, execution
+references, payloads, later evaluator inputs, normalized errors, semantic
+identity, persistence identity, or caller-owned input. Independent validation
+passed: 5/5 dedicated mutation probes, 49/49 CORE-03 tests, 30/30 CORE-01 tests,
+61/61 CORE-02 tests, 292/292 focused runtime regressions, the full 660/660
+runtime suite, 2/2 normalized-error persistence and Eval CLI tests, and 68/68
+host configuration/lifecycle tests. All 117 runtime Python files compiled; all
+20 JSON schemas and the JSON-compatible lifecycle parsed; eval/CLI imports and
+production `shell=True`, high-confidence credential, and Eval dangerous-API
+scans passed.
+
+CORE-03 closure reconciliation changed canonical status documentation only. No
+runtime behavior, tests, schemas, live provider, external network, deployment,
+push, PR, commit, external-system mutation, or CORE-04 work was performed.
+CORE-03 is CLOSED / READY TO COMMIT. CORE-04 remains NOT STARTED.
 
 ## Phase 8A Architecture Design Checkpoint
 

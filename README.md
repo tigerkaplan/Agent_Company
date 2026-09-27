@@ -21,7 +21,7 @@ Canonical definitions must remain separate from generated provider files. Claude
 
 ## Current State
 
-Git HEAD `3f6acb6` contains the committed CORE-01 Canonical Result Contract.
+Git HEAD `9d5ead1` contains the committed CORE-02 Continuation Policy.
 Phases 1-7 are closed, the Social Media capability is committed, Phase 8A is
 closed, and Phases 8B and 8C are completed and closed after successful
 independent review. Phase 8D's independent architecture/security review passed
@@ -30,9 +30,11 @@ CLOSED and not deployed. Phase 8E is BLOCKED / PAUSED; deployment has not
 started because the VPS has not yet been created. Phase 8F is NOT STARTED.
 
 CORE-01 Canonical Result Contract is COMPLETED / CLOSED and committed at
-`3f6acb6`. CORE-02 Continuation Policy is CLOSED / READY TO COMMIT after
-CORE-02R6 PASS with no Critical, Major, or Minor findings. CORE-03 is NOT
-STARTED; CORE-04 through CORE-11 remain planned and unimplemented. The aggregate
+`3f6acb6`. CORE-02 Continuation Policy is COMPLETED / CLOSED and committed at
+`9d5ead1` after CORE-02R6 PASS with no Critical, Major, or Minor findings.
+CORE-03 Eval Framework is COMPLETED / CLOSED / READY TO COMMIT after CORE-03R5
+PASS with no Critical, Major, or Minor findings. CORE-04 is NOT STARTED;
+CORE-05 through CORE-11 remain planned and unimplemented. The aggregate
 serialized-result byte ceiling remains FUTURE HARDENING / NON-BLOCKING.
 
 The runtime remains local-first. Phase 8D packages the canonical Phase 8C
@@ -45,9 +47,8 @@ the canonical capability roadmap.
 
 ## Current Repository Structure
 
-This is the physical structure at the committed Phase 8D checkpoint;
-generated contents and ignored local configuration are intentionally not
-expanded.
+This is the physical structure in the current checkout; generated contents and
+ignored local configuration are intentionally not expanded.
 
 - `agents/` — 10 canonical roles: communications, knowledge-manager, marketing,
   operations, project-manager, research, reviewer, sales, social-media, and
@@ -61,7 +62,7 @@ expanded.
   telegram, and webhooks; runtime implementations exist only where explicitly
   represented by source.
 - `runtime/` — `actions/`, `approvals/`, `cli/`, `continuation/`, `core/`,
-  `execution/`, `executors/`, `git/`, `host/`, `jobs/`, `notifications/`,
+  `evals/`, `execution/`, `executors/`, `git/`, `host/`, `jobs/`, `notifications/`,
   `providers/`, `queue/`, `remote/`, `review/`, `scheduler/`, `storage/`,
   `tests/`, `webhooks/`, and `workers/`. `runtime/state/` is generated, ignored
   operational state, not source architecture.
@@ -84,7 +85,8 @@ expanded.
   convention, so this audit created no new docs hierarchy.
 
 Agent = WHO. Skill = HOW. Workflow = ORDER. Provider = execution engine.
-Execution Result = WHAT HAPPENED. `shared/projects/` is operational project
+Execution Result = WHAT HAPPENED. Eval = HOW THE RESULT / BEHAVIOR MET DECLARED
+EXPECTATIONS. `shared/projects/` is operational project
 state, `shared/knowledge/` is long-term synthesized knowledge, agent
 `MEMORY.md` files hold role-specific durable lessons, and `runtime/state/` is
 runtime operational state. These stores remain separate.

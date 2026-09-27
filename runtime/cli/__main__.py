@@ -26,6 +26,8 @@ from runtime.approvals.store import ApprovalStoreError
 from runtime.core.dispatch import CanonicalTaskDispatcher
 from runtime.core.jobs import JobRuntime, RuntimeError, utc_now
 from runtime.core.references import CanonicalReferenceResolver
+from runtime.evals.runner import EvalRunner, EvalRuntimeError
+from runtime.evals.store import EvalStoreError, FileEvalStore
 from runtime.executors.local import LocalExecutor
 from runtime.git.runtime import GitRuntime, GitRuntimeError
 from runtime.git.forge import ForgeError, GitHubCliPullRequestAdapter
@@ -59,7 +61,7 @@ from runtime.review.store import FileReviewStore, ReviewStoreError
 from runtime.scheduler.dispatch import CanonicalDispatchAdapter
 from runtime.scheduler.loop import SchedulerConfig, SchedulerLoop, SchedulerLoopError
 from runtime.scheduler.schedules import ScheduleRuntime, ScheduleRuntimeError
-from runtime.storage.execution_store import FileExecutionStore
+from runtime.storage.execution_store import ExecutionStoreError, FileExecutionStore
 from runtime.storage.scheduler_state_store import (
     FileSchedulerStateStore,
     SchedulerStateStoreError,
@@ -430,6 +432,18 @@ def build_parser() -> argparse.ArgumentParser:
     review_commands.add_parser("list", help="List normalized review decisions")
     review_show = review_commands.add_parser("show", help="Inspect one review decision")
     review_show.add_argument("review_id")
+
+    eval_resource = top.add_parser(
+        "eval", help="Run or inspect deterministic canonical evaluations"
+    )
+    eval_commands = eval_resource.add_subparsers(dest="command", required=True)
+    eval_run = eval_commands.add_parser(
+        "run", help="Evaluate one persisted ExecutionResult from a canonical EvalSpec"
+    )
+    eval_run.add_argument("--spec", dest="spec_path", type=Path, required=True)
+    eval_commands.add_parser("list", help="List persisted canonical EvalResults")
+    eval_show = eval_commands.add_parser("show", help="Inspect one canonical EvalResult")
+    eval_show.add_argument("eval_id")
 
     approval = top.add_parser("approval", help="Manage scoped human approvals")
     approval_commands = approval.add_subparsers(dest="command", required=True)
@@ -1174,6 +1188,18 @@ def run(arguments: list[str] | None = None) -> int:
                 result = reviews.load(args.review_id)["result"]
             else:
                 raise ReviewStoreError(f"Unsupported review command: {args.command}")
+        elif args.resource == "eval":
+            eval_store = FileEvalStore(args.execution_root / "evals")
+            if args.command == "run":
+                result = EvalRunner(eval_store).run_persisted(
+                    read_json_object(args.spec_path), executions
+                ).result.to_dict()
+            elif args.command == "list":
+                result = [item.to_dict() for item in eval_store.list()]
+            elif args.command == "show":
+                result = eval_store.load(args.eval_id).to_dict()
+            else:
+                raise EvalRuntimeError(f"Unsupported eval command: {args.command}")
         elif args.resource == "provider":
             router = build_provider_router(
                 repository_root(), environment=provider_environment
@@ -1396,6 +1422,9 @@ def run(arguments: list[str] | None = None) -> int:
         ScheduleRuntimeError,
         ProviderConfigError,
         ReviewStoreError,
+        EvalRuntimeError,
+        EvalStoreError,
+        ExecutionStoreError,
         ApprovalRuntimeError,
         ApprovalStoreError,
         GitRuntimeError,

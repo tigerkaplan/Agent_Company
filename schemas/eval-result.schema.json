@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-company.local/schemas/eval-result.schema.json",
+  "title": "Agent Company Canonical Eval Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "eval_id",
+    "identity",
+    "spec_id",
+    "execution_id",
+    "job_id",
+    "evaluator_id",
+    "evaluator_version",
+    "status",
+    "checks",
+    "score",
+    "evidence",
+    "failures",
+    "warnings",
+    "metadata",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "eval_id": {
+      "type": "string",
+      "pattern": "^eval-[0-9a-f]{32}$"
+    },
+    "identity": {"$ref": "#/$defs/identity"},
+    "spec_id": {"$ref": "#/$defs/id"},
+    "execution_id": {"$ref": "#/$defs/id"},
+    "job_id": {"$ref": "#/$defs/id"},
+    "evaluator_id": {"$ref": "#/$defs/id"},
+    "evaluator_version": {"type": "string", "minLength": 1, "maxLength": 50},
+    "status": {"type": "string", "enum": ["pass", "fail", "error"]},
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {"$ref": "#/$defs/check_result"}
+    },
+    "score": {"type": "null"},
+    "evidence": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "failures": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {"type": "string", "minLength": 1, "maxLength": 2000}
+    },
+    "warnings": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {"type": "string", "minLength": 1, "maxLength": 2000}
+    },
+    "metadata": {"$ref": "#/$defs/metadata"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "framework_version",
+        "spec_digest",
+        "execution_digest",
+        "result_digest"
+      ],
+      "properties": {
+        "framework_version": {"type": "string", "const": "1"},
+        "spec_digest": {"$ref": "#/$defs/digest"},
+        "execution_digest": {"$ref": "#/$defs/digest"},
+        "result_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,199}$"
+    },
+    "scalar": {
+      "oneOf": [
+        {"type": "string", "maxLength": 2000},
+        {"type": "number", "minimum": -9223372036854775808, "maximum": 9223372036854775807},
+        {"type": "boolean"},
+        {"type": "null"}
+      ]
+    },
+    "ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref_type", "ref"],
+      "properties": {
+        "ref_type": {
+          "type": "string",
+          "enum": [
+            "file",
+            "project_state",
+            "connector_contract",
+            "message",
+            "artifact",
+            "log",
+            "review",
+            "approval",
+            "provider_result",
+            "knowledge_source",
+            "other"
+          ]
+        },
+        "ref": {"type": "string", "minLength": 1, "maxLength": 2000},
+        "description": {"type": "string", "minLength": 1, "maxLength": 2000}
+      }
+    },
+    "check_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "check_id",
+        "evaluator_type",
+        "status",
+        "severity",
+        "expected",
+        "observed",
+        "message",
+        "evidence"
+      ],
+      "properties": {
+        "check_id": {"$ref": "#/$defs/id"},
+        "evaluator_type": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$"
+        },
+        "status": {"type": "string", "enum": ["pass", "fail", "error"]},
+        "severity": {"type": "string", "enum": ["critical", "major", "minor"]},
+        "expected": {"$ref": "#/$defs/scalar"},
+        "observed": {"$ref": "#/$defs/scalar"},
+        "message": {"type": "string", "minLength": 1, "maxLength": 2000},
+        "evidence": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {"$ref": "#/$defs/ref"}
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "maxProperties": 32,
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{0,63}$"
+      },
+      "additionalProperties": {"$ref": "#/$defs/scalar"}
+    }
+  }
+}

@@ -1,9 +1,12 @@
 # Execution Contracts
 
-CORE-01 Canonical Result Contract is COMPLETED / CLOSED after a successful
-final independent closure review with no Critical or Major findings. CORE-02
-Continuation Policy is CLOSED / READY TO COMMIT after CORE-02R6 PASS. An
-aggregate serialized-result byte ceiling remains FUTURE HARDENING / NON-BLOCKING.
+CORE-01 Canonical Result Contract is COMPLETED / CLOSED and committed at
+`3f6acb6` after a successful final independent closure review with no Critical
+or Major findings. CORE-02 Continuation Policy is COMPLETED / CLOSED and
+committed at `9d5ead1` after CORE-02R6 PASS. CORE-03 Eval Framework is COMPLETED
+/ CLOSED / READY TO COMMIT after CORE-03R5 PASS with no Critical, Major, or Minor
+findings. CORE-04 is NOT STARTED. An aggregate serialized-result byte ceiling
+remains FUTURE HARDENING / NON-BLOCKING.
 
 `ExecutionRequest` and `ExecutionResult` are provider-neutral, JSON-serializable runtime contracts. Execution Result = WHAT HAPPENED; it is not a provider response format, job lifecycle state, review decision, continuation policy, or authority to perform another action.
 
@@ -53,3 +56,10 @@ The `Executor` protocol performs exactly one request. Deterministic local succes
 Phase 6F treats `ExecutionResult.status == "succeeded"` as execution evidence, not verified completion. Both policy-required successful results and canonical `needs_review` results pass through deterministic verification and a separate normalized `ReviewResult` before the lifecycle can complete. `needs_human` preserves a fail-closed human-required result and creates only a scoped resolution request; it does not synthesize execution approval. Resumed execution revalidates the approved resolution and original `needs_human` request/result in their authoritative stores rather than trusting job-local duplicated references. Reviewer packages expose the structured CORE-01 fields directly rather than requiring provider-prose parsing.
 
 Phase 6H keeps `READ_ONLY` as the default. A `CONTROLLED_WRITE` result can succeed only when independently observed mutation evidence was validated and applied within the exact approved scope.
+
+CORE-03 evaluates this contract without overloading it. `EvalSpec` declares
+bounded expectations and `EvalResult` records deterministic measurement as
+`pass`, `fail`, or `error`; neither vocabulary changes `ExecutionResult.status`.
+The EvalRunner reuses the canonical CORE-01 validator, never infers evidence
+from provider prose, and has no Reviewer, approval, continuation, retry, Git, or
+deployment authority. See `../evals/README.md`.
