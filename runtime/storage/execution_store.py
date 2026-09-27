@@ -58,6 +58,10 @@ class FileExecutionStore:
                 f"Execution artifact already exists: {result.execution_id}"
             )
         self.result_validator.validate_model(result)
+        self._validate_request_result_binding(
+            request.to_dict() if request is not None else None,
+            result,
+        )
         record: dict[str, Any] = {
             "schema_version": 1,
             "request": request.to_dict() if request is not None else None,
@@ -97,6 +101,7 @@ class FileExecutionStore:
             raise ExecutionStoreError(
                 f"Execution artifact identity mismatch: {execution_id}"
             )
+        self._validate_request_result_binding(request, result)
         return ExecutionRecord(1, deepcopy(request), result)
 
     def load_raw(self, execution_id: str) -> dict[str, Any]:
@@ -117,10 +122,54 @@ class FileExecutionStore:
             )
         return value
 
+    def find_for_job(
+        self, job_id: str, *, linked_execution_ids: set[str] | None = None
+    ) -> ExecutionRecord | None:
+        """Find the one immutable execution result already committed for a job."""
+        if not self.root.exists():
+            return None
+        matches: list[ExecutionRecord] = []
+        for path in sorted(self.root.glob("*.json")):
+            record = self.load(path.stem)
+            if (
+                record.result.job_id == job_id
+                and record.result.execution_id not in (linked_execution_ids or set())
+            ):
+                matches.append(record)
+        if len(matches) > 1:
+            raise ExecutionStoreError(
+                f"Multiple execution artifacts are bound to job: {job_id}"
+            )
+        return matches[0] if matches else None
+
     def _path(self, execution_id: str) -> Path:
         if self._SAFE_ID.fullmatch(execution_id) is None:
             raise ExecutionStoreError("Execution ID contains unsupported path characters")
         return self.root / f"{execution_id}.json"
+
+    @staticmethod
+    def _validate_request_result_binding(
+        request: dict[str, Any] | None,
+        result: ExecutionResult,
+    ) -> None:
+        if request is None:
+            return
+        expected = {
+            "execution_id": result.execution_id,
+            "job_id": result.job_id,
+            "execution_mode": result.execution_mode,
+            "dry_run": result.dry_run,
+        }
+        actual = {
+            "execution_id": request.get("execution_id"),
+            "job_id": request.get("job_id"),
+            "execution_mode": request.get("execution_mode", "READ_ONLY"),
+            "dry_run": request.get("dry_run", False),
+        }
+        if actual != expected:
+            raise ExecutionStoreError(
+                "Execution artifact request does not match its canonical result"
+            )
 
     def _write(self, path: Path, record: dict[str, Any]) -> None:
         self.root.mkdir(parents=True, exist_ok=True)

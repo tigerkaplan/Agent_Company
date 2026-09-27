@@ -51,6 +51,31 @@ loops sharing that state root. Restart reconciles expired leases, retryable
 failures that lack a child attempt, due schedules, due retry jobs, and ordinary
 queued jobs. Completed jobs and emitted occurrences are not recreated.
 
+CORE-02 restart reconciliation also inspects completed step jobs whose canonical
+checkpoint is `ready`. It idempotently reserves or reactivates the deterministic
+next-step child, then leaves ordinary queue claims, leases, approval eligibility,
+and provider guards unchanged. A child that already exists is reused rather than
+duplicated.
+
+Before expired-lease retry handling, Scheduler reconciles immutable execution
+results that survived an interrupted job/checkpoint transition. A persisted
+result that cannot be bound to its exact canonical request blocks expired-lease
+retry for that cycle instead of risking duplicate external execution. Status
+derives one authoritative logical head, including its current attempt, per
+continuation chain, so retained ancestor snapshots are evidence rather than
+competing current states. A second job ID for the same canonical continuation
+position is invalid state and fails closed instead of being hidden by head
+tie-breaking. Ordinary and continuation retry ancestry use the same parent,
+attempt, lifecycle, provenance, uniqueness, and cycle validation.
+Scheduler recovery does not create continuation authority. Planned roots,
+children, and retries must all reload the same write-once authorized-plan
+snapshot; a missing snapshot or any full-plan/digest mismatch blocks recovery,
+eligibility, and claim rather than rebinding the current mutable plan.
+Independent durable creation evidence survives anchor-file loss. Evidence with
+a missing anchor is a persistent recovery hold, not an uninitialized store, so
+Scheduler restart, child reservation, retry recovery, and reconciliation cannot
+recreate even an identical anchor through ordinary runtime APIs.
+
 `scheduler stop` records a graceful stop request. The loop stops claiming new
 work after its current Worker call returns. Interrupt handling leaves any
 unfinished job claim in canonical job state for lease-based recovery rather than

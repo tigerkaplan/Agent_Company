@@ -9,7 +9,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import datetime
 from types import MappingProxyType
-from typing import Any
+from typing import Any, ClassVar
 
 from runtime.actions.models import EXECUTION_MODES, ExecutionScope, ScopeContractError
 
@@ -361,6 +361,36 @@ def _validate_safe_content(value: Any, path: str = "ExecutionResult") -> None:
 
 @dataclass(frozen=True)
 class ExecutionRequest:
+    PERSISTED_FIELDS: ClassVar[frozenset[str]] = frozenset(
+        {
+            "execution_id",
+            "job_id",
+            "task",
+            "task_class",
+            "project_id",
+            "agent",
+            "skill",
+            "workflow",
+            "capability",
+            "provider",
+            "risk_level",
+            "input_refs",
+            "context_refs",
+            "review_required",
+            "attempt",
+            "dry_run",
+            "approval_status",
+            "execution_mode",
+            "execution_scope",
+            "authorization_fingerprint",
+            "continuation_plan_digest",
+            "continuation_logical_job_id",
+            "continuation_sequence",
+            "continuation_step_id",
+            "continuation_execution_ref",
+        }
+    )
+
     execution_id: str
     job_id: str
     task: str
@@ -381,6 +411,11 @@ class ExecutionRequest:
     execution_mode: str = "READ_ONLY"
     execution_scope: dict[str, Any] | None = None
     authorization_fingerprint: str | None = None
+    continuation_plan_digest: str | None = None
+    continuation_logical_job_id: str | None = None
+    continuation_sequence: int | None = None
+    continuation_step_id: str | None = None
+    continuation_execution_ref: str | None = None
 
     def __post_init__(self) -> None:
         for name in ("execution_id", "job_id", "task", "task_class", "agent", "workflow", "capability", "risk_level"):
@@ -388,6 +423,30 @@ class ExecutionRequest:
                 raise ExecutionContractError(f"ExecutionRequest.{name} must be non-empty")
         if self.attempt < 1:
             raise ExecutionContractError("ExecutionRequest.attempt must be positive")
+        continuation_values = (
+            self.continuation_plan_digest,
+            self.continuation_logical_job_id,
+            self.continuation_sequence,
+            self.continuation_step_id,
+        )
+        if any(value is not None for value in continuation_values):
+            if any(value is None for value in continuation_values):
+                raise ExecutionContractError(
+                    "ExecutionRequest continuation authority must be complete"
+                )
+            if (
+                not isinstance(self.continuation_plan_digest, str)
+                or len(self.continuation_plan_digest) != 64
+                or not isinstance(self.continuation_logical_job_id, str)
+                or not self.continuation_logical_job_id
+                or not isinstance(self.continuation_sequence, int)
+                or self.continuation_sequence < 0
+                or not isinstance(self.continuation_step_id, str)
+                or not self.continuation_step_id
+            ):
+                raise ExecutionContractError(
+                    "ExecutionRequest continuation authority is invalid"
+                )
         if not isinstance(self.dry_run, bool):
             raise ExecutionContractError("ExecutionRequest.dry_run must be a boolean")
         if self.approval_status not in {"not_required", "required", "requested", "approved"}:
@@ -437,7 +496,48 @@ class ExecutionRequest:
             "execution_mode": self.execution_mode,
             "execution_scope": deepcopy(self.execution_scope),
             "authorization_fingerprint": self.authorization_fingerprint,
+            "continuation_plan_digest": self.continuation_plan_digest,
+            "continuation_logical_job_id": self.continuation_logical_job_id,
+            "continuation_sequence": self.continuation_sequence,
+            "continuation_step_id": self.continuation_step_id,
+            "continuation_execution_ref": self.continuation_execution_ref,
         }
+
+    @classmethod
+    def from_persisted_dict(cls, value: Any) -> ExecutionRequest:
+        """Load complete canonical evidence without inventing authority from defaults."""
+        if not isinstance(value, dict):
+            raise ExecutionContractError(
+                "Persisted ExecutionRequest must be a canonical object"
+            )
+        actual = set(value)
+        if actual != cls.PERSISTED_FIELDS:
+            missing = sorted(cls.PERSISTED_FIELDS - actual)
+            unexpected = sorted(actual - cls.PERSISTED_FIELDS)
+            details: list[str] = []
+            if missing:
+                details.append(f"missing fields: {', '.join(missing)}")
+            if unexpected:
+                details.append(f"unexpected fields: {', '.join(unexpected)}")
+            raise ExecutionContractError(
+                "Persisted ExecutionRequest is incomplete or noncanonical: "
+                + "; ".join(details)
+            )
+        values = deepcopy(value)
+        input_refs = values.get("input_refs")
+        context_refs = values.get("context_refs")
+        if not isinstance(input_refs, list) or not isinstance(context_refs, list):
+            raise ExecutionContractError(
+                "Persisted ExecutionRequest references must be canonical arrays"
+            )
+        values["input_refs"] = tuple(input_refs)
+        values["context_refs"] = tuple(context_refs)
+        try:
+            return cls(**values)
+        except TypeError as error:
+            raise ExecutionContractError(
+                "Persisted ExecutionRequest cannot be constructed canonically"
+            ) from error
 
 
 @dataclass(frozen=True)

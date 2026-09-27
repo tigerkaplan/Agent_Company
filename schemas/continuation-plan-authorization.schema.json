@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-company.local/schemas/continuation-plan-authorization.schema.json",
+  "title": "Agent Company Authorized Continuation Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "logical_job_id",
+    "plan_id",
+    "plan_digest",
+    "plan",
+    "authorized_at"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "logical_job_id": {"type": "string", "minLength": 1, "maxLength": 200},
+    "plan_id": {"type": "string", "minLength": 1, "maxLength": 200},
+    "plan_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "plan": {"$ref": "job.schema.json#/$defs/continuation_plan"},
+    "authorized_at": {"type": "string", "format": "date-time"}
+  }
+}

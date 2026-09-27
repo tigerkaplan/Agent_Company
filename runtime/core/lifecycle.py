@@ -65,7 +65,11 @@ class Lifecycle:
         actions = rule.get("actions")
         if rule.get("from") not in states or not isinstance(actions, dict):
             raise LifecycleError("Lifecycle approval resolution rule is invalid")
-        if set(actions) != {"EXECUTE_JOB", "COMPLETE_REVIEWED_JOB"}:
+        if set(actions) != {
+            "EXECUTE_JOB",
+            "COMPLETE_REVIEWED_JOB",
+            "RESOLVE_HUMAN_CONDITION",
+        }:
             raise LifecycleError("Lifecycle approval actions are incomplete")
         for action, decisions in actions.items():
             if not isinstance(decisions, dict) or set(decisions) != {

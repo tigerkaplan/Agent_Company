@@ -53,9 +53,18 @@
         }
       },
       "else": {
-        "properties": {
-          "execution_id": {"type": "string", "minLength": 1},
-          "review_id": {"type": "string", "minLength": 1}
+        "if": {"properties": {"requested_action": {"const": "RESOLVE_HUMAN_CONDITION"}}},
+        "then": {
+          "properties": {
+            "execution_id": {"type": "string", "minLength": 1},
+            "review_id": {"type": "null"}
+          }
+        },
+        "else": {
+          "properties": {
+            "execution_id": {"type": "string", "minLength": 1},
+            "review_id": {"type": "string", "minLength": 1}
+          }
         }
       }
     },
@@ -86,7 +95,7 @@
       "if": {
         "properties": {
           "requested_action": {
-            "enum": ["EXECUTE_JOB", "COMPLETE_REVIEWED_JOB"]
+            "enum": ["EXECUTE_JOB", "COMPLETE_REVIEWED_JOB", "RESOLVE_HUMAN_CONDITION"]
           }
         }
       },
@@ -140,6 +149,7 @@
       "enum": [
         "EXECUTE_JOB",
         "COMPLETE_REVIEWED_JOB",
+        "RESOLVE_HUMAN_CONDITION",
         "COMMIT_CHANGE_SET",
         "PUSH_GIT_COMMIT",
         "CREATE_PULL_REQUEST"

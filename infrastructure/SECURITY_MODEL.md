@@ -163,6 +163,12 @@ approve, or invoke it. Phase 8A/8B implement none of this sequence.
 - An older snapshot enters recovery hold. It must not resume provider execution,
   Telegram/webhook ingress, notifications, Git actions, or deployment until an
   operator reconciles possible external progress.
+- Continuation authority uses a write-once anchor plus independent creation
+  evidence. Loss or mismatch detectable from either retained record enters
+  recovery hold; ordinary runtime paths cannot recreate authority. These local
+  records are not cryptographic tamper proofing: a privileged actor able to
+  delete or coordinate changes to both remains inside the trusted-local-state
+  boundary and requires host controls, backup evidence, and operator response.
 
 ## Threat Model
 

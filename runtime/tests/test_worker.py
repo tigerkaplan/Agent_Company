@@ -290,10 +290,18 @@ class WorkerTests(unittest.TestCase):
                 outcome = worker.run_once()
                 job = self.runtime.show(str(queued["job_id"]))
                 self.assertEqual(outcome.result["status"], status)
-                self.assertEqual(job["status"], "failed")
-                self.assertEqual(job["error"]["code"], expected_code)
-                self.assertFalse(job["error"]["retryable"])
-                self.assertEqual(job["approval_status"], "not_required")
+                if status == "needs_human":
+                    self.assertEqual(job["status"], "waiting_approval")
+                    self.assertEqual(job["approval_status"], "requested")
+                    self.assertEqual(
+                        outcome.approval["requested_action"],
+                        "RESOLVE_HUMAN_CONDITION",
+                    )
+                else:
+                    self.assertEqual(job["status"], "failed")
+                    self.assertEqual(job["error"]["code"], expected_code)
+                    self.assertFalse(job["error"]["retryable"])
+                    self.assertEqual(job["approval_status"], "not_required")
 
     def test_g0_needs_review_enters_and_invokes_existing_reviewer_gate(self) -> None:
         queued = self.enqueue(review_required=False)

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass, replace
+import hashlib
+import json
 from typing import Any
 
 from runtime.actions.models import EXECUTION_MODES, ExecutionScope, ScopeContractError
@@ -14,6 +16,7 @@ APPROVAL_STATUSES = {"PENDING", "APPROVED", "REJECTED"}
 REQUESTED_ACTIONS = {
     "EXECUTE_JOB",
     "COMPLETE_REVIEWED_JOB",
+    "RESOLVE_HUMAN_CONDITION",
     "COMMIT_CHANGE_SET",
     *REMOTE_ACTIONS,
 }
@@ -31,6 +34,29 @@ REF_TYPES = {
     "knowledge_source",
     "other",
 }
+
+
+def approval_boundary_id(
+    job_id: str,
+    execution_id: str | None,
+    review_id: str | None,
+    requested_action: str,
+    authorization_fingerprint: str,
+) -> str:
+    """Return the deterministic identity of one exact approval boundary."""
+    boundary = json.dumps(
+        [
+            job_id,
+            execution_id,
+            review_id,
+            requested_action,
+            authorization_fingerprint,
+        ],
+        separators=(",", ":"),
+        ensure_ascii=True,
+    )
+    digest = hashlib.sha256(boundary.encode("utf-8")).hexdigest()[:32]
+    return f"approval-{digest}"
 
 
 class ApprovalContractError(ValueError):
@@ -123,6 +149,15 @@ class ApprovalRequest:
                 raise ApprovalContractError("Review approval cannot contain commit scope")
             if self.remote_scope is not None:
                 raise ApprovalContractError("Review approval cannot contain remote scope")
+        elif self.requested_action == "RESOLVE_HUMAN_CONDITION":
+            if not self.execution_id or self.review_id is not None:
+                raise ApprovalContractError(
+                    "Human-condition resolution requires one execution and no review"
+                )
+            if self.commit_scope is not None or self.remote_scope is not None:
+                raise ApprovalContractError(
+                    "Human-condition resolution cannot contain Git authority"
+                )
         elif not self.execution_id or not self.review_id:
             raise ApprovalContractError(
                 "Post-completion approval requires execution and review IDs"

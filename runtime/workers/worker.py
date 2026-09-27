@@ -8,6 +8,8 @@ from uuid import uuid4
 
 from runtime.approvals.runtime import ApprovalRuntime, ApprovalRuntimeError
 from runtime.approvals.store import FileApprovalStore
+from runtime.continuation.models import ContinuationContractError, ContinuationPolicy
+from runtime.continuation.runtime import ContinuationRuntime
 from runtime.core.jobs import JobRuntime, RuntimeError, utc_now
 from runtime.core.references import CanonicalReferenceResolver, ReferenceResolutionError
 from runtime.execution.models import ExecutionContractError, ExecutionRequest, ExecutionResult
@@ -33,6 +35,7 @@ class WorkerRunOutcome:
     review: dict[str, Any] | None = None
     approval: dict[str, Any] | None = None
     retry_job_id: str | None = None
+    continuation_job_id: str | None = None
     error: dict[str, Any] | None = None
 
     def to_dict(self) -> dict[str, Any]:
@@ -49,6 +52,8 @@ class WorkerRunOutcome:
             value["approval"] = self.approval
         if self.retry_job_id is not None:
             value["retry_job_id"] = self.retry_job_id
+        if self.continuation_job_id is not None:
+            value["continuation_job_id"] = self.continuation_job_id
         if self.error is not None:
             value["error"] = self.error
         return value
@@ -87,14 +92,19 @@ class Worker:
             review_store=(reviewer_runtime.store if reviewer_runtime is not None else None),
             clock=clock,
         )
+        self.continuation_runtime = ContinuationRuntime(
+            runtime, self.approval_runtime
+        )
 
     def run_once(self) -> WorkerRunOutcome:
         try:
+            self.recover_persisted_results()
+            self.continuation_runtime.recover()
             job = self.runtime.claim(
                 claimed_by=self.worker_id,
                 lease_seconds=self.lease_seconds,
             )
-        except RuntimeError as error:
+        except (RuntimeError, ApprovalRuntimeError) as error:
             return WorkerRunOutcome(
                 status="worker_error",
                 error={"code": "claim_error", "message": str(error)},
@@ -125,8 +135,17 @@ class Worker:
     def _run_job(self, job: dict[str, Any]) -> WorkerRunOutcome:
         execution_id = self.id_factory()
         try:
+            job = self.runtime.validate_execution_authority(
+                job["job_id"], self.worker_id
+            )
             context_refs = self.resolver.resolve(job)
             request = self._build_request(job, execution_id, context_refs)
+        except RuntimeError as error:
+            return WorkerRunOutcome(
+                status="worker_error",
+                job_id=job["job_id"],
+                error={"code": "authorization_error", "message": str(error)},
+            )
         except (ReferenceResolutionError, ExecutionContractError) as error:
             return self._record_preparation_failure(job, execution_id, error)
 
@@ -165,7 +184,114 @@ class Worker:
                 and isinstance(job.get("approval"), dict)
                 else None
             ),
+            continuation_plan_digest=(
+                job.get("continuation", {}).get("plan_digest")
+                if isinstance(job.get("continuation"), dict)
+                else None
+            ),
+            continuation_logical_job_id=(
+                job.get("continuation", {}).get("logical_job_id")
+                if isinstance(job.get("continuation"), dict)
+                else None
+            ),
+            continuation_sequence=(
+                job.get("continuation", {}).get("sequence")
+                if isinstance(job.get("continuation"), dict)
+                else None
+            ),
+            continuation_step_id=(
+                job.get("continuation", {}).get("current_step_id")
+                if isinstance(job.get("continuation"), dict)
+                else None
+            ),
+            continuation_execution_ref=(
+                job.get("continuation", {}).get("latest_execution_ref")
+                if isinstance(job.get("continuation"), dict)
+                else None
+            ),
         )
+
+    def recover_persisted_results(self) -> list[WorkerRunOutcome]:
+        """Advance running jobs whose immutable result survived an interrupted update."""
+        recovered: list[WorkerRunOutcome] = []
+        for job in self.runtime.list(status="running"):
+            linked = {
+                str(reference.get("ref", "")).split(":", 1)[1]
+                for reference in job.get("output_refs", [])
+                if isinstance(reference, dict)
+                and str(reference.get("ref", "")).startswith("runtime-execution:")
+            }
+            try:
+                record = self.execution_store.find_for_job(
+                    job["job_id"], linked_execution_ids=linked
+                )
+            except ExecutionStoreError as error:
+                recovered.append(
+                    WorkerRunOutcome(
+                        status="worker_error",
+                        job_id=job["job_id"],
+                        error={"code": "execution_reconciliation_error", "message": str(error)},
+                    )
+                )
+                continue
+            if record is None:
+                continue
+            if record.request is None:
+                recovered.append(
+                    WorkerRunOutcome(
+                        status="worker_error",
+                        job_id=job["job_id"],
+                        execution_id=record.result.execution_id,
+                        error={
+                            "code": "execution_reconciliation_error",
+                            "message": "Persisted execution has no canonical request",
+                        },
+                    )
+                )
+                continue
+            try:
+                request = ExecutionRequest.from_persisted_dict(record.request)
+                expected_request = self._build_request(
+                    job,
+                    record.result.execution_id,
+                    self.resolver.resolve(job),
+                )
+            except (
+                TypeError,
+                ExecutionContractError,
+                ReferenceResolutionError,
+            ) as error:
+                recovered.append(
+                    WorkerRunOutcome(
+                        status="worker_error",
+                        job_id=job["job_id"],
+                        execution_id=record.result.execution_id,
+                        error={
+                            "code": "execution_reconciliation_error",
+                            "message": str(error),
+                        },
+                    )
+                )
+                continue
+            if request.to_dict() != expected_request.to_dict():
+                recovered.append(
+                    WorkerRunOutcome(
+                        status="worker_error",
+                        job_id=job["job_id"],
+                        execution_id=record.result.execution_id,
+                        error={
+                            "code": "execution_reconciliation_error",
+                            "message": "Persisted execution does not match exact authorized work",
+                        },
+                    )
+                )
+                continue
+            recovered.append(
+                self._record_result(
+                    job, request, record.result, persist_result=False
+                )
+            )
+        return recovered
 
     def _execute_safely(self, request: ExecutionRequest) -> ExecutionResult:
         supported = getattr(self.executor, "supported_execution_modes", {"READ_ONLY"})
@@ -220,10 +346,13 @@ class Worker:
         job: dict[str, Any],
         request: ExecutionRequest | None,
         result: ExecutionResult,
+        *,
+        persist_result: bool = True,
     ) -> WorkerRunOutcome:
         serialized_result = result.to_dict()
         try:
-            self.execution_store.create(request, result)
+            if persist_result:
+                self.execution_store.create(request, result)
         except ExecutionStoreError as error:
             failure = {
                 "code": "execution_storage_error",
@@ -256,16 +385,26 @@ class Worker:
         review_result: dict[str, Any] | None = None
         approval_result: dict[str, Any] | None = None
         retry_job_id: str | None = None
+        continuation_job_id: str | None = None
         try:
+            continuation_decision = ContinuationPolicy.decide_execution(
+                job,
+                result_status=result.status,
+                execution_ref=f"runtime-execution:{result.execution_id}",
+            )
             if result.status in {"succeeded", "needs_review"}:
                 output_refs = [*serialized_result["output_refs"], artifact_ref]
                 if result.status == "needs_review":
                     updated = self.runtime.record_execution_for_review(
-                        job["job_id"], output_refs
+                        job["job_id"],
+                        output_refs,
+                        continuation=continuation_decision.checkpoint,
                     )
                 else:
                     updated = self.runtime.record_execution_success(
-                        job["job_id"], output_refs
+                        job["job_id"],
+                        output_refs,
+                        continuation=continuation_decision.checkpoint,
                     )
                 if updated["status"] == "reviewing" and self.reviewer_runtime is not None:
                     if request is None:
@@ -315,6 +454,11 @@ class Worker:
                         reason=review_run.result.reason,
                         review_ref=review_run.artifact_ref,
                         approval_ref=approval_ref,
+                        continuation=ContinuationPolicy.decide_review(
+                            updated,
+                            decision=review_run.result.decision,
+                            review_ref=str(review_run.artifact_ref["ref"]),
+                        ).checkpoint,
                     )
                     updated = review_transition["job"]
                     retry_job = review_transition["retry_job"]
@@ -344,6 +488,30 @@ class Worker:
                                     },
                                 )
                             approval_result = retry_approval.request.to_dict()
+                if updated["status"] == "completed":
+                    reservation = self.continuation_runtime.reserve(job["job_id"])
+                    if reservation is not None:
+                        continuation_job_id = reservation.job["job_id"]
+                        if reservation.approval is not None:
+                            approval_result = reservation.approval
+            elif result.status == "needs_human":
+                output_refs = [*serialized_result["output_refs"], artifact_ref]
+                blockers = serialized_result.get("blockers", [])
+                reason = (
+                    str(blockers[0].get("message"))
+                    if blockers and isinstance(blockers[0], dict)
+                    else "Explicit human input is required"
+                )
+                human_run = self.approval_runtime.request_human_condition(
+                    job["job_id"],
+                    result.execution_id,
+                    reason=reason,
+                    execution_ref=artifact_ref,
+                    output_refs=output_refs,
+                    continuation=continuation_decision.checkpoint,
+                )
+                updated = human_run.job or self.runtime.show(job["job_id"])
+                approval_result = human_run.request.to_dict()
             else:
                 error = self._normalise_result_error(result)
                 updated = self.runtime.fail(
@@ -353,8 +521,9 @@ class Worker:
                     retryable=False,
                     error_ref=artifact_ref,
                     output_refs=[*serialized_result["output_refs"], artifact_ref],
+                    continuation=continuation_decision.checkpoint,
                 )
-        except RuntimeError as error:
+        except (RuntimeError, ApprovalRuntimeError, ContinuationContractError) as error:
             return WorkerRunOutcome(
                 status="worker_error",
                 job_id=job["job_id"],
@@ -380,6 +549,7 @@ class Worker:
             review=review_result,
             approval=approval_result,
             retry_job_id=retry_job_id,
+            continuation_job_id=continuation_job_id,
             error=outcome_error,
         )
 

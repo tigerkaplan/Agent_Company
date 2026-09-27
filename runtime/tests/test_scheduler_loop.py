@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import json
 import tempfile
 import unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from runtime.approvals.factory import build_approval_runtime
+from runtime.continuation.models import ContinuationPolicy
 from runtime.core.jobs import JobRuntime, RuntimeError
 from runtime.core.references import CanonicalReferenceResolver
 from runtime.executors.local import LocalExecutor
@@ -306,6 +308,42 @@ class SchedulerLoopTests(unittest.TestCase):
         self.assertEqual(self.jobs.show(job["job_id"])["status"], "completed")
         self.assertEqual(self.state_store.load()["cycle_count"], 2)
 
+    def test_m2_restart_recovers_ready_continuation_through_queue(self) -> None:
+        plan = {
+            "plan_id": "scheduler-continuation",
+            "steps": [
+                {
+                    "step_id": "STEP-001",
+                    "task": "Run bounded local scheduler fixture",
+                },
+                {"step_id": "STEP-002", "task": "Run recovered second step"},
+            ],
+        }
+        created = self.jobs.create(self.payload(continuation_plan=plan))
+        self.jobs.enqueue(created["job_id"])
+        running = self.jobs.claim(claimed_by="crashed-worker", lease_seconds=30)
+        assert running is not None
+        decision = ContinuationPolicy.decide_execution(
+            running,
+            result_status="succeeded",
+            execution_ref="runtime-execution:before-restart",
+        )
+        self.jobs.record_execution_success(
+            running["job_id"], [], continuation=decision.checkpoint
+        )
+
+        snapshot = self.loop.run_once()
+
+        self.assertEqual(len(snapshot["recovered_continuations"]), 1)
+        child = self.jobs.show(snapshot["recovered_continuations"][0])
+        self.assertEqual(child["continuation_parent_job_id"], created["job_id"])
+        self.assertEqual(child["status"], "completed")
+        self.assertEqual(child["continuation"]["state"], "terminal")
+        logical = self.loop.inspect()["continuations"]
+        self.assertEqual(len(logical), 1)
+        self.assertEqual(logical[0]["head_job_id"], child["job_id"])
+        self.assertTrue(logical[0]["terminal"])
+
     def test_n_recurring_missed_occurrences_coalesce_to_next_future_time(self) -> None:
         schedule = self.schedules.create(self.schedule_payload())
         self.loop.run_once()
@@ -392,6 +430,36 @@ class SchedulerLoopTests(unittest.TestCase):
         recovered = self.make_loop(lease_seconds=5).run_once()
         self.assertEqual(len(recovered["recovered_claims"]), 1)
 
+    def test_t2_invalid_persisted_execution_blocks_expired_retry_recovery(self) -> None:
+        job = self.enqueue()
+        claimed = self.jobs.claim(
+            claimed_by=self.worker.worker_id,
+            lease_seconds=5,
+        )
+        self.assertIsNotNone(claimed)
+        request = self.worker._build_request(
+            claimed,
+            "execution-invalid-recovery",
+            self.worker.resolver.resolve(claimed),
+        )
+        result = self.executor.execute(request)
+        path = self.executions.create(request, result)
+        record = json.loads(path.read_text(encoding="utf-8"))
+        record["request"]["workflow"] = "different-workflow"
+        path.write_text(json.dumps(record), encoding="utf-8")
+        self.clock.advance(6)
+
+        recovered = self.make_loop(lease_seconds=5).run_once()
+        self.assertEqual(recovered["status"], "partial_failure")
+        self.assertEqual(recovered["recovered_claims"], [])
+        self.assertEqual(
+            recovered["reconciled_executions"][0]["status"], "worker_error"
+        )
+        self.assertEqual(self.jobs.show(job["job_id"])["status"], "running")
+        self.assertEqual(
+            [item for item in self.jobs.list() if item.get("parent_job_id")], []
+        )
+
     def test_u_audit_status_and_restart_recovery_are_persisted(self) -> None:
         job = self.enqueue()
         self.loop.run_once()
@@ -426,6 +494,28 @@ class SchedulerLoopTests(unittest.TestCase):
         self.assertEqual(self.jobs.show(job["job_id"])["status"], "queued")
         self.assertIsNone(self.state_store.load())
         self.assertEqual(self.state_store.list_events(), [])
+
+    def test_u4_authority_loss_keeps_scheduler_in_recovery_hold(self) -> None:
+        job = self.enqueue(
+            task="Planned step",
+            continuation_plan={
+                "plan_id": "plan-scheduler-hold",
+                "steps": [{"step_id": "STEP-001", "task": "Planned step"}],
+            },
+        )
+        logical_id = str(job["job_id"])
+        self.jobs.authorized_plan_store._path(logical_id).unlink()
+
+        result = self.loop.run_once()
+
+        self.assertEqual(result["status"], "partial_failure")
+        self.assertEqual(result["processed_count"], 0)
+        self.assertEqual(result["outcomes"], [])
+        self.assertTrue(
+            any("recovery hold" in error["message"] for error in result["errors"])
+        )
+        self.assertEqual(self.jobs.store.load(logical_id)["status"], "queued")
+        self.assertIsNone(self.executor.last_request)
 
     def test_v_second_scheduler_lock_is_rejected(self) -> None:
         self.state_store.acquire_run_lock()

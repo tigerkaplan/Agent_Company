@@ -5,14 +5,28 @@ from __future__ import annotations
 from copy import deepcopy
 from collections.abc import Mapping
 from datetime import datetime, timedelta, timezone
+import hashlib
 from pathlib import Path
 from typing import Any, Callable
 from uuid import uuid4
 
 from runtime.actions.authorization import authorization_fingerprint
 from runtime.actions.models import ExecutionScope, ScopeContractError
+from runtime.approvals.models import approval_boundary_id
+from runtime.approvals.store import ApprovalStoreError, FileApprovalStore
+from runtime.continuation.models import (
+    ContinuationContractError,
+    ContinuationPolicy,
+    continuation_plan_digest,
+)
+from runtime.continuation.store import (
+    AuthorizedPlanStoreError,
+    FileAuthorizedPlanStore,
+)
 from runtime.core.lifecycle import Lifecycle, LifecycleError
 from runtime.core.validation import JobValidationError, JobValidator
+from runtime.execution.models import ExecutionContractError, ExecutionRequest
+from runtime.storage.execution_store import ExecutionStoreError, FileExecutionStore
 from runtime.storage.file_store import FileJobStore, JobStoreError
 
 
@@ -48,6 +62,8 @@ class JobRuntime:
         "status",
         "attempt",
         "parent_job_id",
+        "continuation",
+        "continuation_parent_job_id",
         "error",
         "approval",
         "scheduled_at",
@@ -71,11 +87,25 @@ class JobRuntime:
         notification_emitter: Any | None = None,
     ) -> None:
         self.store = FileJobStore(state_root)
+        self.authorized_plan_store = FileAuthorizedPlanStore(
+            self.store.root / ".continuation-authority"
+        )
         self.clock = clock
         self.id_factory = id_factory
         self.lifecycle = lifecycle or Lifecycle()
         self.validator = validator or JobValidator()
         self.notification_emitter = notification_emitter
+        self.approval_store: FileApprovalStore | None = None
+        self.execution_store: FileExecutionStore | None = None
+
+    def configure_authority_stores(
+        self,
+        approval_store: FileApprovalStore,
+        execution_store: FileExecutionStore | None,
+    ) -> None:
+        """Attach canonical stores used to authenticate resumed human authority."""
+        self.approval_store = approval_store
+        self.execution_store = execution_store
 
     def create(self, payload: dict[str, Any]) -> dict[str, Any]:
         if not isinstance(payload, dict):
@@ -96,6 +126,7 @@ class JobRuntime:
             raise RuntimeError(str(error)) from error
         for job in jobs:
             self._validate(job)
+        self._validate_continuation_lineage(jobs)
         if status is not None:
             jobs = [job for job in jobs if job["status"] == status]
         return jobs
@@ -175,7 +206,15 @@ class JobRuntime:
             self.clock(), "scheduler clock"
         ):
             raise RuntimeError("Job claim lease has expired")
+        if not self._approval_allows_execution(job):
+            raise RuntimeError("Job authorization became stale before execution")
         return job
+
+    def validate_execution_authority(
+        self, job_id: str, claimed_by: str
+    ) -> dict[str, Any]:
+        """Reload and revalidate exact work immediately before executor delegation."""
+        return self.validate_claim(job_id, claimed_by)
 
     def heartbeat(
         self,
@@ -229,14 +268,17 @@ class JobRuntime:
         self,
         *,
         backoff_seconds: tuple[int, ...],
+        excluded_job_ids: set[str] | None = None,
     ) -> list[dict[str, Any]]:
         recovered: list[dict[str, Any]] = []
         now = self._parse_timestamp(self.clock(), "scheduler clock")
+        excluded = excluded_job_ids or set()
         try:
             with self.store.claim_transaction():
                 expired = [
                     job
                     for job in self.list(status="running")
+                    if job["job_id"] not in excluded
                     if self._parse_timestamp(job["lease_until"], "lease_until") <= now
                 ]
                 for job in expired:
@@ -301,6 +343,8 @@ class JobRuntime:
         self,
         job_id: str,
         output_refs: list[dict[str, Any]],
+        *,
+        continuation: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         job = self._load(job_id)
         updated = deepcopy(job)
@@ -308,6 +352,8 @@ class JobRuntime:
             *updated["output_refs"],
             *_plain_json_value(output_refs),
         ]
+        if continuation is not None:
+            updated["continuation"] = _plain_json_value(continuation)
         target = "reviewing" if updated["review_required"] else "completed"
         return self._transition_job(updated, target)
 
@@ -315,6 +361,8 @@ class JobRuntime:
         self,
         job_id: str,
         output_refs: list[dict[str, Any]],
+        *,
+        continuation: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Enter the existing Reviewer gate for a canonical needs_review result."""
         job = self._load(job_id)
@@ -324,7 +372,30 @@ class JobRuntime:
             *_plain_json_value(output_refs),
         ]
         updated["review_required"] = True
+        if continuation is not None:
+            updated["continuation"] = _plain_json_value(continuation)
         return self._transition_job(updated, "reviewing")
+
+    def record_execution_needs_human(
+        self,
+        job_id: str,
+        output_refs: list[dict[str, Any]],
+        *,
+        approval_ref: dict[str, Any],
+        continuation: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Persist a direct human condition without granting execution approval."""
+        job = self._load(job_id)
+        updated = deepcopy(job)
+        updated["output_refs"] = [
+            *updated["output_refs"],
+            *_plain_json_value(output_refs),
+        ]
+        if continuation is not None:
+            updated["continuation"] = _plain_json_value(continuation)
+        return self._transition_job(
+            updated, "waiting_approval", approval_ref=approval_ref
+        )
 
     def fail(
         self,
@@ -335,6 +406,7 @@ class JobRuntime:
         retryable: bool = True,
         error_ref: dict[str, Any] | None = None,
         output_refs: list[dict[str, Any]] | None = None,
+        continuation: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         job = self._load(job_id)
         return self._fail_job(
@@ -344,6 +416,7 @@ class JobRuntime:
             retryable=retryable,
             error_ref=error_ref,
             output_refs=output_refs,
+            continuation=continuation,
         )
 
     def apply_review_decision(
@@ -354,6 +427,7 @@ class JobRuntime:
         reason: str,
         review_ref: dict[str, Any],
         approval_ref: dict[str, Any] | None = None,
+        continuation: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         review_rule = self.lifecycle.review_decision_rule
         decisions = review_rule["decisions"]
@@ -367,6 +441,8 @@ class JobRuntime:
         if job["status"] != review_rule["from"]:
             raise RuntimeError("Review decisions may be applied only to reviewing jobs")
         updated = deepcopy(job)
+        if continuation is not None:
+            updated["continuation"] = _plain_json_value(continuation)
         if not any(
             reference.get("ref") == review_ref.get("ref")
             for reference in updated["output_refs"]
@@ -462,6 +538,19 @@ class JobRuntime:
                 raise RuntimeError("Approval is stale: execution state already exists")
             return
 
+        if action == "RESOLVE_HUMAN_CONDITION":
+            expected_execution = f"runtime-execution:{approval.get('execution_id')}"
+            if approval.get("review_id") is not None:
+                raise RuntimeError("Human-condition boundary cannot bind a review")
+            if execution_refs != {expected_execution} or review_refs:
+                raise RuntimeError(
+                    "Human-condition approval is stale: execution state has changed"
+                )
+            checkpoint = job.get("continuation")
+            if isinstance(checkpoint, dict) and checkpoint.get("state") != "waiting_human":
+                raise RuntimeError("Human-condition checkpoint is no longer waiting")
+            return
+
         expected_execution = f"runtime-execution:{approval.get('execution_id')}"
         expected_review = f"runtime-review:{approval.get('review_id')}"
         if execution_refs != {expected_execution} or review_refs != {expected_review}:
@@ -490,6 +579,8 @@ class JobRuntime:
         updated["approval"] = {
             "approval_id": approval["approval_id"],
             "requested_action": action,
+            "execution_id": approval.get("execution_id"),
+            "review_id": approval.get("review_id"),
             "status": decision,
             "recorded_at": approval["resolved_at"],
             "recorded_by": approval["decided_by"],
@@ -497,7 +588,35 @@ class JobRuntime:
             "authorization_fingerprint": approval["authorization_fingerprint"],
         }
         updated["status"] = target
+        if (
+            decision == "APPROVED"
+            and action == "COMPLETE_REVIEWED_JOB"
+            and isinstance(updated.get("continuation"), dict)
+        ):
+            try:
+                continuation_decision = ContinuationPolicy.decide_human_approval(updated)
+            except ContinuationContractError as error:
+                raise RuntimeError(str(error)) from error
+            updated["continuation"] = _plain_json_value(
+                continuation_decision.checkpoint
+            )
+        elif (
+            decision == "APPROVED"
+            and action == "RESOLVE_HUMAN_CONDITION"
+            and isinstance(updated.get("continuation"), dict)
+        ):
+            try:
+                continuation_decision = ContinuationPolicy.decide_human_resume(updated)
+            except ContinuationContractError as error:
+                raise RuntimeError(str(error)) from error
+            updated["continuation"] = _plain_json_value(
+                continuation_decision.checkpoint
+            )
         if decision == "REJECTED":
+            if isinstance(updated.get("continuation"), dict) and updated[
+                "continuation"
+            ].get("state") == "waiting_human":
+                updated["continuation"]["state"] = "stopped"
             updated["error"] = {
                 "code": "approval_rejected",
                 "message": approval.get("decision_reason")
@@ -517,6 +636,7 @@ class JobRuntime:
         retryable: bool,
         error_ref: dict[str, Any] | None = None,
         output_refs: list[dict[str, Any]] | None = None,
+        continuation: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         if not code.strip() or not message.strip():
             raise RuntimeError("Failure code and message must be non-empty")
@@ -541,6 +661,8 @@ class JobRuntime:
                 *updated["output_refs"],
                 *_plain_json_value(output_refs),
             ]
+        if continuation is not None:
+            updated["continuation"] = _plain_json_value(continuation)
         updated["last_updated_at"] = self.clock()
         return self._save(updated)
 
@@ -587,12 +709,20 @@ class JobRuntime:
             "execution_mode",
             "execution_scope",
             "dry_run",
+            "continuation_plan",
+            "continuation",
+            "continuation_parent_job_id",
         )
         payload = {
             name: deepcopy(failed[name])
             for name in copied_fields
             if name in failed
         }
+        if isinstance(payload.get("continuation"), dict):
+            payload["continuation"]["state"] = "active"
+            payload["continuation"].pop("next_step_id", None)
+            payload["continuation"].pop("latest_execution_ref", None)
+            payload["continuation"].pop("latest_review_ref", None)
         payload["output_refs"] = []
         payload["created_by"] = f"retry:{failed['job_id']}"
         payload["approval_status"] = self._retry_approval_status(failed)
@@ -634,14 +764,137 @@ class JobRuntime:
                 "attempt": attempt,
             }
         )
+        authorized_plan: dict[str, Any] | None = None
+        if "continuation_plan" in job and "continuation" not in job:
+            try:
+                job["continuation"] = ContinuationPolicy.initialize(job)
+                authorized_plan = self.authorized_plan_store.canonical_record(
+                    str(job["job_id"]),
+                    job["continuation_plan"],
+                    authorized_at=timestamp,
+                )
+            except (ContinuationContractError, AuthorizedPlanStoreError) as error:
+                raise RuntimeError(str(error)) from error
         if parent_job_id is not None:
             job["parent_job_id"] = parent_job_id
-        self._validate(job)
+        self._validate_against_persisted_lineage(
+            job, authorized_plan=authorized_plan
+        )
         try:
+            if authorized_plan is not None:
+                self.authorized_plan_store.create(
+                    str(job["job_id"]),
+                    job["continuation_plan"],
+                    authorized_at=timestamp,
+                )
             self.store.create(job)
-        except JobStoreError as error:
+        except (AuthorizedPlanStoreError, JobStoreError) as error:
             raise RuntimeError(str(error)) from error
         return deepcopy(job)
+
+    def reserve_continuation(self, parent_job_id: str) -> dict[str, Any] | None:
+        """Create one deterministic child for a ready persisted checkpoint."""
+        try:
+            with self.store.claim_transaction():
+                parent = self._load(parent_job_id)
+                checkpoint = parent.get("continuation")
+                if (
+                    parent["status"] != "completed"
+                    or not isinstance(checkpoint, dict)
+                    or checkpoint.get("state") != "ready"
+                ):
+                    return None
+                next_step_id = str(checkpoint.get("next_step_id", ""))
+                if not next_step_id:
+                    raise RuntimeError("Ready continuation checkpoint has no next step")
+                child_id = self._continuation_job_id(
+                    str(checkpoint["logical_job_id"]),
+                    str(checkpoint["plan_digest"]),
+                    int(checkpoint["sequence"]) + 1,
+                    next_step_id,
+                )
+                if self.store.exists(child_id):
+                    child = self._load(child_id)
+                    if (
+                        child.get("continuation_parent_job_id") != parent_job_id
+                        or child.get("continuation", {}).get("current_step_id")
+                        != next_step_id
+                        or child.get("continuation", {}).get("plan_digest")
+                        != checkpoint.get("plan_digest")
+                        or child.get("continuation_plan") != parent.get("continuation_plan")
+                    ):
+                        raise RuntimeError("Continuation identity is already bound elsewhere")
+                    return child
+
+                plan = parent.get("continuation_plan")
+                if not isinstance(plan, dict):
+                    raise RuntimeError("Continuation checkpoint has no authorized plan")
+                try:
+                    step = ContinuationPolicy.step(plan, next_step_id)
+                    child_checkpoint = ContinuationPolicy.checkpoint_for_child(
+                        parent, next_step_id
+                    )
+                except ContinuationContractError as error:
+                    raise RuntimeError(str(error)) from error
+                copied_fields = (
+                    "task_class",
+                    "project_id",
+                    "agent",
+                    "skill",
+                    "workflow",
+                    "capability",
+                    "provider",
+                    "risk_level",
+                    "max_attempts",
+                    "execution_mode",
+                    "execution_scope",
+                    "dry_run",
+                )
+                payload = {
+                    name: deepcopy(parent[name])
+                    for name in copied_fields
+                    if name in parent
+                }
+                requires_approval = bool(step.get("requires_human_approval", False))
+                requires_approval = requires_approval or (
+                    payload.get("risk_level") == "approval_required"
+                    or payload.get("execution_mode") == "CONTROLLED_WRITE"
+                    or parent.get("approval_status") != "not_required"
+                )
+                payload.update(
+                    {
+                        "task": step["task"],
+                        "review_required": bool(
+                            step.get("review_required", parent["review_required"])
+                        ),
+                        "approval_status": "required" if requires_approval else "not_required",
+                        "input_refs": deepcopy(step.get("input_refs", parent["input_refs"])),
+                        "output_refs": [],
+                        "created_by": f"continuation:{parent_job_id}",
+                        "continuation_plan": deepcopy(plan),
+                        "continuation": child_checkpoint,
+                        "continuation_parent_job_id": parent_job_id,
+                    }
+                )
+                if payload.get("execution_mode") == "CONTROLLED_WRITE":
+                    payload["review_required"] = True
+                timestamp = self.clock()
+                child = deepcopy(payload)
+                child.update(
+                    {
+                        "schema_version": 1,
+                        "job_id": child_id,
+                        "created_at": timestamp,
+                        "last_updated_at": timestamp,
+                        "status": "created",
+                        "attempt": 1,
+                    }
+                )
+                self._validate_against_persisted_lineage(child)
+                self.store.create(child)
+                return deepcopy(child)
+        except JobStoreError as error:
+            raise RuntimeError(str(error)) from error
 
     def _transition_job(
         self,
@@ -703,7 +956,7 @@ class JobRuntime:
         return self._save(updated) if save else updated
 
     def _save(self, job: dict[str, Any]) -> dict[str, Any]:
-        self._validate(job)
+        self._validate_against_persisted_lineage(job)
         try:
             self.store.save(job)
         except JobStoreError as error:
@@ -719,15 +972,39 @@ class JobRuntime:
                 pass
         return deepcopy(job)
 
+    def _validate_against_persisted_lineage(
+        self,
+        job: dict[str, Any],
+        *,
+        authorized_plan: dict[str, Any] | None = None,
+    ) -> None:
+        self._validate(job, authorized_plan=authorized_plan)
+        try:
+            persisted = self.store.list()
+        except JobStoreError as error:
+            raise RuntimeError(str(error)) from error
+        candidates = [
+            existing
+            for existing in persisted
+            if existing.get("job_id") != job.get("job_id")
+        ]
+        self._validate_continuation_lineage([*candidates, job])
+
     def _load(self, job_id: str) -> dict[str, Any]:
         try:
             job = self.store.load(job_id)
         except JobStoreError as error:
             raise RuntimeError(str(error)) from error
         self._validate(job)
+        self._validate_loaded_continuation_lineage(job)
         return job
 
-    def _validate(self, job: dict[str, Any]) -> None:
+    def _validate(
+        self,
+        job: dict[str, Any],
+        *,
+        authorized_plan: dict[str, Any] | None = None,
+    ) -> None:
         try:
             self.validator.validate(job)
         except JobValidationError as error:
@@ -738,8 +1015,139 @@ class JobRuntime:
             )
         if job["attempt"] > job["max_attempts"]:
             raise RuntimeError("Job attempt cannot exceed max_attempts")
+        plan = job.get("continuation_plan")
+        checkpoint = job.get("continuation")
+        if (plan is None) != (checkpoint is None):
+            raise RuntimeError(
+                "Continuation plan and checkpoint must be present together"
+            )
+        if isinstance(plan, dict) and isinstance(checkpoint, dict):
+            steps = plan.get("steps", [])
+            step_ids = [step.get("step_id") for step in steps]
+            if len(step_ids) != len(set(step_ids)):
+                raise RuntimeError("Continuation plan step IDs must be unique")
+            if checkpoint.get("plan_id") != plan.get("plan_id"):
+                raise RuntimeError("Continuation checkpoint plan ID does not match")
+            try:
+                expected_digest = continuation_plan_digest(plan)
+            except ContinuationContractError as error:
+                raise RuntimeError(str(error)) from error
+            if checkpoint.get("plan_digest") != expected_digest:
+                raise RuntimeError("Continuation plan digest does not match authorized plan")
+            authority = authorized_plan
+            if authority is None:
+                try:
+                    authority = self.authorized_plan_store.load(
+                        str(checkpoint.get("logical_job_id", ""))
+                    )
+                except AuthorizedPlanStoreError as error:
+                    raise RuntimeError(str(error)) from error
+            if (
+                authority.get("logical_job_id")
+                != checkpoint.get("logical_job_id")
+                or authority.get("plan_id") != plan.get("plan_id")
+                or authority.get("plan_digest") != expected_digest
+                or authority.get("plan") != plan
+            ):
+                raise RuntimeError(
+                    "Continuation plan does not match immutable authorized plan"
+                )
+            completed = checkpoint.get("completed_step_ids", [])
+            remaining = checkpoint.get("remaining_step_ids", [])
+            if len(completed) != len(set(completed)):
+                raise RuntimeError("Completed continuation step IDs must be unique")
+            if len(remaining) != len(set(remaining)):
+                raise RuntimeError("Remaining continuation step IDs must be unique")
+            if set(completed) & set(remaining):
+                raise RuntimeError("Continuation work cannot be complete and remaining")
+            if set(completed) | set(remaining) != set(step_ids):
+                raise RuntimeError("Continuation checkpoint must cover the authorized plan")
+            current = checkpoint.get("current_step_id")
+            state = checkpoint.get("state")
+            sequence = checkpoint.get("sequence")
+            if not isinstance(sequence, int) or not 0 <= sequence < len(step_ids):
+                raise RuntimeError("Continuation sequence does not identify a plan step")
+            if current != step_ids[sequence]:
+                raise RuntimeError("Continuation current step does not match sequence")
+            authorized_steps = authority["plan"]["steps"]
+            authorized_step = authorized_steps[sequence]
+            if current != authorized_step.get("step_id"):
+                raise RuntimeError(
+                    "Continuation current step does not match authorized plan"
+                )
+            if job.get("task") != authorized_step.get("task"):
+                raise RuntimeError("Job task does not match the authorized current step")
+            if "input_refs" in authorized_step and job.get(
+                "input_refs"
+            ) != authorized_step.get(
+                "input_refs"
+            ):
+                raise RuntimeError(
+                    "Job input references do not match the authorized current step"
+                )
+            self._validate_current_step_policy(job, authorized_step)
+            if state in {"active", "waiting_review", "waiting_human", "blocked", "stopped"}:
+                expected_completed = step_ids[:sequence]
+                expected_remaining = step_ids[sequence:]
+                if current not in remaining:
+                    raise RuntimeError("Active continuation step must remain incomplete")
+            else:
+                expected_completed = step_ids[: sequence + 1]
+                expected_remaining = step_ids[sequence + 1 :]
+                if current not in completed:
+                    raise RuntimeError("Ready or terminal continuation step must be complete")
+            if completed != expected_completed or remaining != expected_remaining:
+                raise RuntimeError(
+                    "Continuation checkpoint must preserve authorized plan order"
+                )
+            if state == "ready":
+                if not remaining or checkpoint.get("next_step_id") != remaining[0]:
+                    raise RuntimeError("Ready continuation must identify the next planned step")
+            elif "next_step_id" in checkpoint:
+                raise RuntimeError("Only a ready continuation may identify a next step")
+            if state == "terminal" and remaining:
+                raise RuntimeError("Terminal continuation cannot retain remaining work")
+            allowed_statuses = {
+                "active": {
+                    "created",
+                    "queued",
+                    "running",
+                    "waiting_approval",
+                    "failed",
+                    "cancelled",
+                },
+                "waiting_review": {"reviewing", "cancelled"},
+                "waiting_human": {"waiting_approval", "cancelled"},
+                "blocked": {"failed"},
+                "stopped": {"failed"},
+                "ready": {"completed"},
+                "terminal": {"completed"},
+            }
+            if job["status"] not in allowed_statuses.get(str(state), set()):
+                raise RuntimeError(
+                    "Continuation checkpoint state does not match job lifecycle state"
+                )
+        if job.get("continuation_parent_job_id") == job.get("job_id"):
+            raise RuntimeError("Continuation child cannot parent itself")
+        if (
+            job.get("continuation_parent_job_id") is not None
+            and job.get("continuation_parent_job_id") == job.get("parent_job_id")
+        ):
+            raise RuntimeError("Retry ancestry cannot masquerade as continuation ancestry")
         if job.get("approval_status") == "approved" and "approval" not in job:
             raise RuntimeError("Approved jobs require an explicit approval record")
+        if job.get("approval_status") == "approved":
+            approval = job.get("approval", {})
+            if approval.get("authorization_fingerprint") != authorization_fingerprint(job):
+                raise RuntimeError("Approval does not match the exact authorized work")
+            if (
+                job["status"] in {"created", "queued", "running"}
+                and approval.get("requested_action") == "RESOLVE_HUMAN_CONDITION"
+                and not self._approval_allows_execution(job)
+            ):
+                raise RuntimeError(
+                    "Resolved human condition does not match its execution evidence"
+                )
         if not isinstance(job.get("dry_run", False), bool):
             raise RuntimeError("Job dry_run must be a boolean")
         for field in (
@@ -799,29 +1207,473 @@ class JobRuntime:
     def _unused_job_id(self) -> str:
         for _ in range(10):
             candidate = self.id_factory()
-            if not self.store.exists(candidate):
+            if not self.store.exists(candidate) and not self.authorized_plan_store.exists(
+                candidate
+            ):
                 return candidate
         raise RuntimeError("Could not generate a unique job ID")
 
     @staticmethod
-    def _approval_allows_execution(job: dict[str, Any]) -> bool:
+    def _continuation_job_id(
+        logical_job_id: str, plan_digest: str, sequence: int, step_id: str
+    ) -> str:
+        boundary = f"{logical_job_id}\n{plan_digest}\n{sequence}\n{step_id}".encode("utf-8")
+        return f"job-cont-{hashlib.sha256(boundary).hexdigest()[:32]}"
+
+    def _approval_allows_execution(self, job: dict[str, Any]) -> bool:
         status = job.get("approval_status")
         if status == "not_required":
-            return True
+            return not self._current_step_requires_approval(job)
         approval = job.get("approval", {})
+        action = approval.get("requested_action")
         allowed = (
             status == "approved"
             and approval.get("status") == "APPROVED"
             and approval.get("actor_type") == "local_operator"
             and bool(approval.get("approval_id"))
         )
-        if not allowed:
+        exact_work_allowed = bool(
+            allowed
+            and action in {"EXECUTE_JOB", "RESOLVE_HUMAN_CONDITION"}
+            and approval.get("authorization_fingerprint")
+            == authorization_fingerprint(job)
+        )
+        if not exact_work_allowed:
             return False
-        if job.get("execution_mode", "READ_ONLY") == "CONTROLLED_WRITE":
-            return approval.get("authorization_fingerprint") == authorization_fingerprint(
-                job
+        if approval.get("approval_id") != approval_boundary_id(
+            str(job.get("job_id", "")),
+            approval.get("execution_id"),
+            approval.get("review_id"),
+            str(action),
+            str(approval.get("authorization_fingerprint", "")),
+        ):
+            return False
+        approval_refs = JobRuntime._ordered_refs_with_prefix(
+            job, "runtime-approval:"
+        )
+        if not approval_refs or approval_refs[-1] != (
+            f"runtime-approval:{approval.get('approval_id')}"
+        ):
+            return False
+        if action != "RESOLVE_HUMAN_CONDITION":
+            return True
+        execution_id = approval.get("execution_id")
+        if not isinstance(execution_id, str) or not execution_id:
+            return False
+        expected_ref = f"runtime-execution:{execution_id}"
+        if JobRuntime._refs_with_prefix(job, "runtime-execution:") != {
+            expected_ref
+        }:
+            return False
+        checkpoint = job.get("continuation")
+        checkpoint_matches = not isinstance(checkpoint, dict) or checkpoint.get(
+            "latest_execution_ref"
+        ) == expected_ref
+        return checkpoint_matches and self._human_resolution_artifacts_match(
+            job, approval
+        )
+
+    @staticmethod
+    def _current_step(job: dict[str, Any]) -> dict[str, Any] | None:
+        plan = job.get("continuation_plan")
+        checkpoint = job.get("continuation")
+        if not isinstance(plan, dict) or not isinstance(checkpoint, dict):
+            return None
+        current = checkpoint.get("current_step_id")
+        for step in plan.get("steps", []):
+            if isinstance(step, dict) and step.get("step_id") == current:
+                return step
+        return None
+
+    @classmethod
+    def _current_step_requires_approval(cls, job: dict[str, Any]) -> bool:
+        step = cls._current_step(job)
+        if step is None:
+            return False
+        return bool(step.get("requires_human_approval", False)) or (
+            step.get("risk_level") == "approval_required"
+            or step.get("execution_mode") == "CONTROLLED_WRITE"
+        )
+
+    def _validate_current_step_policy(
+        self, job: dict[str, Any], step: dict[str, Any]
+    ) -> None:
+        if self._current_step_requires_approval(job) and job.get(
+            "approval_status"
+        ) == "not_required":
+            raise RuntimeError(
+                "Job approval policy is weaker than the authorized current step"
             )
+        step_requires_review = bool(step.get("review_required", False)) or (
+            step.get("execution_mode") == "CONTROLLED_WRITE"
+        )
+        if step_requires_review and job.get("review_required") is not True:
+            raise RuntimeError(
+                "Job review policy is weaker than the authorized current step"
+            )
+        if "execution_mode" in step and job.get(
+            "execution_mode", "READ_ONLY"
+        ) != step.get("execution_mode"):
+            raise RuntimeError(
+                "Job execution mode does not match the authorized current step"
+            )
+        if step.get("dry_run") is True and job.get("dry_run", False) is not True:
+            raise RuntimeError(
+                "Job dry-run policy is weaker than the authorized current step"
+            )
+        if "risk_level" in step:
+            ranks = {"low": 0, "medium": 1, "high": 2, "approval_required": 3}
+            if ranks[str(job.get("risk_level"))] < ranks[str(step["risk_level"])]:
+                raise RuntimeError(
+                    "Job risk policy is weaker than the authorized current step"
+                )
+        if step.get("execution_scope") is not None:
+            try:
+                canonical_scope = ExecutionScope.from_dict(step["execution_scope"])
+                actual_scope = ExecutionScope.from_dict(job.get("execution_scope") or {})
+            except ScopeContractError as error:
+                raise RuntimeError(f"Invalid current-step execution scope: {error}") from error
+            if not self._scope_is_no_broader(actual_scope, canonical_scope):
+                raise RuntimeError(
+                    "Job execution scope is broader than the authorized current step"
+                )
+
+    @staticmethod
+    def _scope_is_no_broader(
+        actual: ExecutionScope, canonical: ExecutionScope
+    ) -> bool:
+        def covered(path: str, boundaries: tuple[str, ...]) -> bool:
+            folded = path.casefold()
+            return any(
+                folded == boundary.casefold()
+                or folded.startswith(boundary.casefold() + "/")
+                for boundary in boundaries
+            )
+
+        if Path(actual.project_root).resolve() != Path(
+            canonical.project_root
+        ).resolve():
+            return False
+        if not all(
+            covered(path, canonical.allowed_paths) for path in actual.allowed_paths
+        ):
+            return False
+        if not all(
+            covered(path, actual.forbidden_paths)
+            for path in canonical.forbidden_paths
+        ):
+            return False
+        if (
+            canonical.write_mode == "CREATE_OR_MODIFY"
+            and actual.write_mode != canonical.write_mode
+        ):
+            return False
+        if actual.max_changed_files > canonical.max_changed_files:
+            return False
+        if actual.max_artifact_bytes > canonical.max_artifact_bytes:
+            return False
+        for field in ("allow_tests", "allow_git_reads", "allow_protected_paths"):
+            if getattr(actual, field) and not getattr(canonical, field):
+                return False
+        if canonical.dry_run and not actual.dry_run:
+            return False
         return True
+
+    def _human_resolution_artifacts_match(
+        self, job: dict[str, Any], compact: dict[str, Any]
+    ) -> bool:
+        if self.approval_store is None or self.execution_store is None:
+            return False
+        approval_id = compact.get("approval_id")
+        execution_id = compact.get("execution_id")
+        if not isinstance(approval_id, str) or not isinstance(execution_id, str):
+            return False
+        try:
+            persisted_approval = self.approval_store.load(approval_id)
+            execution_record = self.execution_store.load(execution_id)
+            request = ExecutionRequest.from_persisted_dict(execution_record.request)
+        except (
+            ApprovalStoreError,
+            ExecutionStoreError,
+            ExecutionContractError,
+        ):
+            return False
+        fingerprint = authorization_fingerprint(job)
+        execution_ref = f"runtime-execution:{execution_id}"
+        approval_ref = f"runtime-approval:{approval_id}"
+        evidence_refs = {
+            str(reference.get("ref"))
+            for reference in persisted_approval.evidence_refs
+            if isinstance(reference, dict)
+        }
+        return bool(
+            persisted_approval.status == "APPROVED"
+            and persisted_approval.requested_action == "RESOLVE_HUMAN_CONDITION"
+            and persisted_approval.job_id == job.get("job_id")
+            and persisted_approval.execution_id == execution_id
+            and persisted_approval.review_id is None
+            and persisted_approval.authorization_fingerprint == fingerprint
+            and persisted_approval.approval_id == approval_id
+            and persisted_approval.risk_level == job.get("risk_level")
+            and persisted_approval.execution_mode
+            == job.get("execution_mode", "READ_ONLY")
+            and persisted_approval.execution_scope == job.get("execution_scope")
+            and persisted_approval.dry_run == job.get("dry_run", False)
+            and approval_ref
+            in self._refs_with_prefix(job, "runtime-approval:")
+            and execution_ref in evidence_refs
+            and execution_record.result.status == "needs_human"
+            and execution_record.result.job_id == job.get("job_id")
+            and request.execution_id == execution_id
+            and request.job_id == job.get("job_id")
+            and authorization_fingerprint(request.to_dict()) == fingerprint
+        )
+
+    def logical_statuses(self) -> list[dict[str, Any]]:
+        """Derive one authoritative head per logical continuation without rewriting history."""
+        jobs = self.list()
+        grouped: dict[str, list[dict[str, Any]]] = {}
+        for job in jobs:
+            checkpoint = job.get("continuation")
+            if isinstance(checkpoint, dict):
+                grouped.setdefault(str(checkpoint["logical_job_id"]), []).append(job)
+        statuses: list[dict[str, Any]] = []
+        for logical_id, members in sorted(grouped.items()):
+            head = max(
+                members,
+                key=lambda item: (
+                    int(item["continuation"]["sequence"]),
+                    int(item["attempt"]),
+                    str(item["created_at"]),
+                    str(item["job_id"]),
+                ),
+            )
+            checkpoint = head["continuation"]
+            statuses.append(
+                {
+                    "logical_job_id": logical_id,
+                    "head_job_id": head["job_id"],
+                    "head_status": head["status"],
+                    "plan_digest": checkpoint["plan_digest"],
+                    "sequence": checkpoint["sequence"],
+                    "attempt": head["attempt"],
+                    "current_step_id": checkpoint["current_step_id"],
+                    "completed_step_ids": deepcopy(checkpoint["completed_step_ids"]),
+                    "remaining_step_ids": deepcopy(checkpoint["remaining_step_ids"]),
+                    "state": checkpoint["state"],
+                    "terminal": head["status"] == "completed"
+                    and checkpoint["state"] == "terminal"
+                    and not checkpoint["remaining_step_ids"],
+                    "final_result_ref": checkpoint.get("latest_execution_ref")
+                    if checkpoint["state"] == "terminal"
+                    else None,
+                }
+            )
+        return statuses
+
+    def logical_status(self, logical_job_id: str) -> dict[str, Any]:
+        for status in self.logical_statuses():
+            if status["logical_job_id"] == logical_job_id:
+                return status
+        raise RuntimeError(f"Logical continuation not found: {logical_job_id}")
+
+    def _validate_continuation_lineage(self, jobs: list[dict[str, Any]]) -> None:
+        by_id = {str(job["job_id"]): job for job in jobs}
+        retry_positions: dict[tuple[str, int], str] = {}
+        continuation_positions: dict[
+            tuple[str, str, str, int, str, int], str
+        ] = {}
+        for job in jobs:
+            checkpoint = job.get("continuation")
+            retry_parent_id = job.get("parent_job_id")
+            continuation_parent_id = job.get("continuation_parent_job_id")
+            if retry_parent_id is not None:
+                if retry_parent_id == job["job_id"]:
+                    raise RuntimeError("Retry job cannot parent itself")
+                retry_parent = by_id.get(str(retry_parent_id))
+                if retry_parent is None:
+                    raise RuntimeError("Retry parent is missing")
+                if retry_parent.get("status") != "failed":
+                    raise RuntimeError("Retry parent must be a failed job")
+                if int(job["attempt"]) != int(retry_parent["attempt"]) + 1:
+                    raise RuntimeError("Retry attempt must advance exactly once")
+                if job.get("created_by") != f"retry:{retry_parent_id}":
+                    raise RuntimeError("Retry provenance does not match its parent")
+                preserved_retry_fields = (
+                    "task",
+                    "task_class",
+                    "project_id",
+                    "agent",
+                    "skill",
+                    "workflow",
+                    "capability",
+                    "provider",
+                    "risk_level",
+                    "review_required",
+                    "max_attempts",
+                    "input_refs",
+                    "execution_mode",
+                    "execution_scope",
+                    "dry_run",
+                    "continuation_plan",
+                    "continuation_parent_job_id",
+                )
+                if any(
+                    retry_parent.get(field) != job.get(field)
+                    for field in preserved_retry_fields
+                ):
+                    raise RuntimeError("Retry ancestry changed canonical job identity")
+                position = (str(retry_parent_id), int(job["attempt"]))
+                existing_retry = retry_positions.setdefault(
+                    position, str(job["job_id"])
+                )
+                if existing_retry != str(job["job_id"]):
+                    raise RuntimeError("Retry parent has competing child attempts")
+                parent_checkpoint = retry_parent.get("continuation")
+                if isinstance(checkpoint, dict):
+                    if not isinstance(parent_checkpoint, dict) or any(
+                        parent_checkpoint.get(field) != checkpoint.get(field)
+                        for field in (
+                            "logical_job_id",
+                            "plan_id",
+                            "plan_digest",
+                            "sequence",
+                            "current_step_id",
+                            "completed_step_ids",
+                            "remaining_step_ids",
+                        )
+                    ):
+                        raise RuntimeError(
+                            "Retry ancestry changed continuation authority"
+                        )
+                elif parent_checkpoint is not None:
+                    raise RuntimeError(
+                        "Ordinary retry cannot discard continuation authority"
+                    )
+            elif int(job["attempt"]) != 1:
+                raise RuntimeError("A non-retry job must start at attempt one")
+
+            if not isinstance(checkpoint, dict):
+                if continuation_parent_id is not None:
+                    raise RuntimeError(
+                        "Continuation ancestry requires a continuation checkpoint"
+                    )
+                continue
+            sequence = int(checkpoint["sequence"])
+            if sequence == 0:
+                if continuation_parent_id is not None:
+                    raise RuntimeError("Initial continuation step cannot have a continuation parent")
+                if retry_parent_id is None:
+                    if checkpoint["logical_job_id"] != job["job_id"]:
+                        raise RuntimeError("Initial continuation logical root is unrelated")
+                    if int(job["attempt"]) != 1:
+                        raise RuntimeError("Initial continuation root must start at attempt one")
+                continue
+            if continuation_parent_id is None:
+                raise RuntimeError("Continuation child requires canonical parent ancestry")
+            expected_child_id = self._continuation_job_id(
+                str(checkpoint["logical_job_id"]),
+                str(checkpoint["plan_digest"]),
+                sequence,
+                str(checkpoint["current_step_id"]),
+            )
+            if retry_parent_id is None and job["job_id"] != expected_child_id:
+                raise RuntimeError(
+                    "Continuation child ID does not match its canonical position"
+                )
+            parent = by_id.get(str(continuation_parent_id))
+            parent_checkpoint = parent.get("continuation") if parent else None
+            if not isinstance(parent_checkpoint, dict) or any(
+                parent_checkpoint.get(field) != checkpoint.get(field)
+                for field in ("logical_job_id", "plan_digest")
+            ):
+                raise RuntimeError("Continuation child is attached to an unrelated logical root")
+            if int(parent_checkpoint["sequence"]) != sequence - 1:
+                raise RuntimeError("Continuation sequence does not advance from its parent")
+            if (
+                parent.get("status") != "completed"
+                or parent_checkpoint.get("state") != "ready"
+                or parent_checkpoint.get("next_step_id")
+                != checkpoint.get("current_step_id")
+            ):
+                raise RuntimeError(
+                    "Continuation parent is not the completed ready prior step"
+                )
+            if retry_parent_id is None and int(job["attempt"]) != 1:
+                raise RuntimeError("Continuation child must start at attempt one")
+            preserved_continuation_fields = (
+                "task_class",
+                "project_id",
+                "agent",
+                "skill",
+                "workflow",
+                "capability",
+                "provider",
+                "risk_level",
+                "max_attempts",
+                "execution_mode",
+                "execution_scope",
+                "dry_run",
+                "continuation_plan",
+            )
+            if any(
+                parent.get(field) != job.get(field)
+                for field in preserved_continuation_fields
+            ):
+                raise RuntimeError(
+                    "Continuation ancestry changed canonical job identity"
+                )
+
+            continuation_position = (
+                str(checkpoint["logical_job_id"]),
+                str(continuation_parent_id),
+                str(checkpoint["plan_digest"]),
+                sequence,
+                str(checkpoint["current_step_id"]),
+                int(job["attempt"]),
+            )
+            existing_child = continuation_positions.setdefault(
+                continuation_position, str(job["job_id"])
+            )
+            if existing_child != str(job["job_id"]):
+                raise RuntimeError(
+                    "Continuation lineage has competing canonical children"
+                )
+
+        for job in jobs:
+            seen = {str(job["job_id"])}
+            parent_id = job.get("parent_job_id")
+            while parent_id is not None:
+                current_id = str(parent_id)
+                if current_id in seen:
+                    raise RuntimeError("Retry ancestry contains a cycle")
+                seen.add(current_id)
+                parent = by_id.get(current_id)
+                if parent is None:
+                    break
+                parent_id = parent.get("parent_job_id")
+
+    def _validate_loaded_continuation_lineage(self, job: dict[str, Any]) -> None:
+        try:
+            jobs = self.store.list()
+        except JobStoreError as error:
+            raise RuntimeError(str(error)) from error
+        by_id = {str(candidate["job_id"]): candidate for candidate in jobs}
+        pending = [job]
+        seen = {str(job["job_id"])}
+        while pending:
+            current = pending.pop()
+            for field in ("parent_job_id", "continuation_parent_job_id"):
+                parent_id = current.get(field)
+                if parent_id is None or str(parent_id) in seen:
+                    continue
+                parent = by_id.get(str(parent_id))
+                if parent is None:
+                    continue
+                self._validate(parent)
+                seen.add(str(parent_id))
+                pending.append(parent)
+        self._validate_continuation_lineage(jobs)
 
     @staticmethod
     def _validate_approval_ref(approval_ref: dict[str, Any]) -> None:

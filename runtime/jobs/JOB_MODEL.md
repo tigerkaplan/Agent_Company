@@ -33,9 +33,12 @@ A canonical job is one executable unit of work created by the runtime after the 
 | `project_id` | Optional project identifier. Project state remains in `../../shared/projects/`, not inside the job. |
 | `skill` | Optional canonical skill used for HOW. Some jobs may use a workflow without a specific reusable skill. |
 | `provider` | Optional execution provider. It may remain unresolved until execution time and may be changed by provider routing/fallback without changing the canonical agent, skill, workflow, task class, or capability. |
-| `parent_job_id` | Optional parent job reference for decomposed work, review jobs, or retry jobs. |
+| `parent_job_id` | Optional failed-attempt parent reference used only for retry ancestry. |
+| `continuation_plan` | Optional explicit pre-authorized bounded step plan. Provider output cannot create or extend it. |
+| `continuation` | Runtime-managed bounded checkpoint for one logical job and current authorized step. |
+| `continuation_parent_job_id` | Explicit provenance link to the prior successful step job; distinct from retry ancestry. |
 | `error` | Optional structured error state for the current attempt. |
-| `approval` | Compact audit metadata for one resolved scoped approval, including its exact authorization fingerprint. The full request remains a separate artifact. |
+| `approval` | Compact audit metadata for one resolved scoped approval, including its exact authorization fingerprint and, for a resolved human condition, the exact execution ID. The full persisted approval and execution artifacts remain authoritative. |
 
 ## Distinctions
 
@@ -48,7 +51,8 @@ A canonical job is one executable unit of work created by the runtime after the 
 - Approval request state (`PENDING`, `APPROVED`, or `REJECTED`) remains separate from job lifecycle state and is linked through `output_refs`.
 - `review_required` and the `reviewing` lifecycle state keep reviewer work distinct from executor work.
 - Review decisions are stored as separate runtime artifacts and referenced from `output_refs`; provider text never becomes a lifecycle transition directly.
-- Controlled-write jobs require explicit approval and independent review. Approval binds the exact attempt, project, capability, risk, mode, and execution scope.
+- Controlled-write jobs require explicit approval and independent review. Execution approval binds the exact task class, agent, skill, workflow, task, input references, review requirement, continuation plan digest, logical job, sequence, current step, attempt, project, capability, risk, mode, and execution scope.
+- A continuation step may explicitly require approval/review and may constrain mode, dry-run, risk, and execution scope. Job state may tighten but never weaken those canonical step requirements.
 
 ## Retry Rule
 
@@ -62,4 +66,30 @@ Phase 6B implements only the simplest traceable retry. A failed attempt remains 
 - execution mode and scope copied without broadening; controlled-write retries always require a fresh scoped approval.
 
 Retry does not mutate the failed job, bypass approval, or change the canonical agent, skill, workflow, task class, or capability merely because a provider was unavailable.
+
+Continuation means continuing authorized unfinished work after a valid step.
+It creates a deterministic child execution record bound to the same logical job
+ID, immutable plan digest, sequence, and current step;
+it is not a retry and does not consume or reset retry authority. Progress text,
+provider JSON, artifacts, and `next_actions` cannot create a continuation plan.
+Completed and remaining step IDs must be the exact ordered prefix and suffix of
+the plan. Retry and continuation parents must satisfy their distinct lifecycle,
+attempt, and identity invariants for every retry, including retries without a
+continuation checkpoint. One deterministic continuation-child position may not
+have competing job IDs. `logical_statuses()` selects one authoritative
+current head and reports its attempt while all
+ancestor step records remain available as historical evidence. A direct
+`needs_human` result uses `RESOLVE_HUMAN_CONDITION`, which can resume only the
+exact waiting step after the approval and execution stores independently prove
+the compact binding; it does not grant general execution approval.
+The job-embedded continuation plan and digest are mutable representations, not
+their own authority. One write-once authorized-plan snapshot is persisted for
+the logical root at initial planned-job creation, preceded by independent
+durable creation evidence containing the same canonical authority. Root, child,
+and retry loads must match both records exactly. If creation evidence exists but
+the anchor is missing, the logical job enters recovery hold; ordinary creation
+cannot restore even a byte-identical plan. Missing or malformed authority, plan
+changes, step-policy changes, reordered steps, or a recomputed digest fail
+closed. Load and restart recovery never synthesize or refresh authority, and
+CORE-02 defines no operator restoration flow.
 It is rejected when the failed job has exhausted `max_attempts` or its error explicitly records `retryable: false`.

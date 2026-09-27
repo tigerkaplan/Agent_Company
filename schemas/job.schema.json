@@ -223,6 +223,23 @@
     "approval": {
       "type": "object",
       "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "required": ["requested_action"],
+            "properties": {
+              "requested_action": {"const": "RESOLVE_HUMAN_CONDITION"}
+            }
+          },
+          "then": {
+            "required": ["execution_id"],
+            "properties": {
+              "execution_id": {"type": "string", "minLength": 1},
+              "review_id": {"type": "null"}
+            }
+          }
+        }
+      ],
       "required": [
         "approval_id",
         "requested_action",
@@ -239,7 +256,19 @@
         },
         "requested_action": {
           "type": "string",
-          "enum": ["EXECUTE_JOB", "COMPLETE_REVIEWED_JOB"]
+          "enum": ["EXECUTE_JOB", "COMPLETE_REVIEWED_JOB", "RESOLVE_HUMAN_CONDITION"]
+        },
+        "execution_id": {
+          "oneOf": [
+            {"type": "string", "minLength": 1},
+            {"type": "null"}
+          ]
+        },
+        "review_id": {
+          "oneOf": [
+            {"type": "string", "minLength": 1},
+            {"type": "null"}
+          ]
         },
         "status": {
           "type": "string",
@@ -302,6 +331,16 @@
     "parent_job_id": {
       "type": "string",
       "minLength": 1
+    },
+    "continuation_parent_job_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "continuation_plan": {
+      "$ref": "#/$defs/continuation_plan"
+    },
+    "continuation": {
+      "$ref": "#/$defs/continuation_checkpoint"
     },
     "created_by": {
       "type": "string",
@@ -370,6 +409,118 @@
     }
   },
   "$defs": {
+    "continuation_plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plan_id", "steps"],
+      "properties": {
+        "plan_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "items": {"$ref": "#/$defs/continuation_step"}
+        }
+      }
+    },
+    "continuation_step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["step_id", "task"],
+      "properties": {
+        "step_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "task": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10000
+        },
+        "input_refs": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {"$ref": "#/$defs/ref"}
+        },
+        "review_required": {"type": "boolean"},
+        "requires_human_approval": {"type": "boolean"},
+        "execution_mode": {
+          "type": "string",
+          "enum": ["READ_ONLY", "CONTROLLED_WRITE"]
+        },
+        "dry_run": {"type": "boolean"},
+        "risk_level": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "approval_required"]
+        },
+        "execution_scope": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/execution_scope"}
+          ]
+        }
+      }
+    },
+    "continuation_checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "logical_job_id",
+        "plan_id",
+        "plan_digest",
+        "sequence",
+        "current_step_id",
+        "completed_step_ids",
+        "remaining_step_ids",
+        "state"
+      ],
+      "properties": {
+        "logical_job_id": {"type": "string", "minLength": 1, "maxLength": 200},
+        "plan_id": {"type": "string", "minLength": 1, "maxLength": 200},
+        "plan_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "sequence": {"type": "integer", "minimum": 0, "maximum": 999999},
+        "current_step_id": {"type": "string", "minLength": 1, "maxLength": 200},
+        "completed_step_ids": {
+          "type": "array",
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1, "maxLength": 200}
+        },
+        "remaining_step_ids": {
+          "type": "array",
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1, "maxLength": 200}
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "active",
+            "waiting_review",
+            "waiting_human",
+            "blocked",
+            "ready",
+            "stopped",
+            "terminal"
+          ]
+        },
+        "next_step_id": {"type": "string", "minLength": 1, "maxLength": 200},
+        "latest_execution_ref": {
+          "type": "string",
+          "pattern": "^runtime-execution:[A-Za-z0-9._-]+$"
+        },
+        "latest_review_ref": {
+          "type": "string",
+          "pattern": "^runtime-review:[A-Za-z0-9._-]+$"
+        }
+      }
+    },
     "execution_scope": {
       "type": "object",
       "additionalProperties": false,

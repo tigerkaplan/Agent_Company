@@ -98,6 +98,7 @@ class SchedulerLoop:
         future = [job for job in queued if job["job_id"] not in eligible_ids]
         waiting = [job for job in jobs if job["status"] == "waiting_approval"]
         retry_queue = [job for job in jobs if job.get("schedule_reason") == "retry_backoff"]
+        continuations = self.jobs.logical_statuses()
         expired = [
             job
             for job in jobs
@@ -123,6 +124,7 @@ class SchedulerLoop:
             "due_schedules": [schedule["schedule_id"] for schedule in due_schedules],
             "waiting_approvals": [job["job_id"] for job in waiting],
             "retry_queue": [job["job_id"] for job in retry_queue],
+            "continuations": continuations,
             "expired_claims": [job["job_id"] for job in expired],
             "next_due_at": min(candidates) if candidates else None,
         }
@@ -202,8 +204,44 @@ class SchedulerLoop:
                 "errors": [{"code": "schedule_tick_error", "message": "Schedule tick failed"}],
             }
             errors.extend(schedule_result["errors"])
-        recovered = self._recover_expired(errors)
+        try:
+            reconciled_executions = self.worker.recover_persisted_results()
+        except (RuntimeError, ApprovalRuntimeError) as error:
+            reconciled_executions = []
+            errors.append(
+                {"code": "execution_reconciliation_error", "message": str(error)}
+            )
+        reconciliation_blocked_job_ids = {
+            str(outcome.job_id)
+            for outcome in reconciled_executions
+            if outcome.status == "worker_error" and outcome.job_id is not None
+        }
+        for outcome in reconciled_executions:
+            if outcome.status == "worker_error" and outcome.error is not None:
+                errors.append(
+                    {
+                        "code": str(
+                            outcome.error.get(
+                                "code", "execution_reconciliation_error"
+                            )
+                        ),
+                        "message": str(
+                            outcome.error.get(
+                                "message", "Execution reconciliation failed"
+                            )
+                        ),
+                    }
+                )
+        recovered = self._recover_expired(
+            errors,
+            excluded_job_ids=reconciliation_blocked_job_ids,
+        )
         recovered_retries = self._recover_failed_retries(errors)
+        try:
+            recovered_continuations = self.worker.continuation_runtime.recover()
+        except (RuntimeError, ApprovalRuntimeError) as error:
+            recovered_continuations = []
+            errors.append({"code": "continuation_recovery_error", "message": str(error)})
         provider_runs = 0
         processed = 0
         while processed < self.config.max_jobs_per_cycle and not self._stop.is_set():
@@ -251,17 +289,29 @@ class SchedulerLoop:
             "checked_at": checked_at,
             "schedule_result": schedule_result,
             "recovered_claims": recovered,
+            "reconciled_executions": [
+                outcome.to_dict() for outcome in reconciled_executions
+            ],
             "recovered_retries": recovered_retries,
+            "recovered_continuations": [
+                job["job_id"] for job in recovered_continuations
+            ],
             "processed_count": processed,
             "provider_runs": provider_runs,
             "outcomes": outcomes,
             "errors": errors,
         }
 
-    def _recover_expired(self, errors: list[dict[str, str]]) -> list[dict[str, Any]]:
+    def _recover_expired(
+        self,
+        errors: list[dict[str, str]],
+        *,
+        excluded_job_ids: set[str] | None = None,
+    ) -> list[dict[str, Any]]:
         try:
             recovered = self.jobs.recover_expired_claims(
-                backoff_seconds=self.config.retry_backoff_seconds
+                backoff_seconds=self.config.retry_backoff_seconds,
+                excluded_job_ids=excluded_job_ids,
             )
         except RuntimeError as error:
             errors.append({"code": "claim_recovery_error", "message": str(error)})

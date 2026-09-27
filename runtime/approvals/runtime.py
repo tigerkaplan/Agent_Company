@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import hashlib
-import json
 from copy import deepcopy
 from typing import Any, Callable
 
@@ -13,8 +11,10 @@ from runtime.approvals.models import (
     ApprovalContractError,
     ApprovalRequest,
     ApprovalRun,
+    approval_boundary_id,
 )
 from runtime.approvals.store import ApprovalStoreError, FileApprovalStore
+from runtime.continuation.models import ContinuationPolicy
 from runtime.core.jobs import JobRuntime, RuntimeError, utc_now
 from runtime.git.models import GitContractError, commit_authorization_fingerprint
 from runtime.git.remote_models import REMOTE_ACTIONS, remote_authorization_fingerprint
@@ -49,6 +49,7 @@ class ApprovalRuntime:
         self.review_store = review_store
         self.clock = clock
         self.notification_emitter = notification_emitter
+        self.job_runtime.configure_authority_stores(store, execution_store)
 
     def request_execution(
         self,
@@ -121,6 +122,47 @@ class ApprovalRuntime:
             request=request,
             artifact_ref=self.artifact_ref(request.approval_id),
         )
+
+    def request_human_condition(
+        self,
+        job_id: str,
+        execution_id: str,
+        *,
+        reason: str,
+        execution_ref: dict[str, Any],
+        output_refs: list[dict[str, Any]],
+        continuation: Any = None,
+    ) -> ApprovalRun:
+        """Request a decision for one direct execution human condition."""
+        job = self.job_runtime.show(job_id)
+        if job["status"] != "running":
+            raise ApprovalRuntimeError(
+                "Direct human-condition resolution requires a running job"
+            )
+        candidate = deepcopy(job)
+        candidate["output_refs"] = [*candidate["output_refs"], *deepcopy(output_refs)]
+        if continuation is not None:
+            candidate["continuation"] = continuation
+        request = self._request(
+            job=candidate,
+            execution_id=execution_id,
+            review_id=None,
+            requested_action="RESOLVE_HUMAN_CONDITION",
+            reason=reason,
+            evidence_refs=self._normalize_refs((execution_ref,)),
+        )
+        artifact_ref = self.artifact_ref(request.approval_id)
+        try:
+            updated = self.job_runtime.record_execution_needs_human(
+                job_id,
+                output_refs,
+                approval_ref=artifact_ref,
+                continuation=continuation,
+            )
+        except RuntimeError as error:
+            raise ApprovalRuntimeError(str(error)) from error
+        self._notify_approval_requested(request, updated)
+        return ApprovalRun(request=request, artifact_ref=artifact_ref, job=updated)
 
     def request_commit_change_set(
         self,
@@ -450,7 +492,41 @@ class ApprovalRuntime:
                     review_ref=review_ref,
                     approval_ref=approval_ref,
                 )
-        except (RuntimeError, ReviewStoreError) as error:
+                return
+            if (
+                request.requested_action == "RESOLVE_HUMAN_CONDITION"
+                and job["status"] == "running"
+                and request.execution_id is not None
+            ):
+                if self.execution_store is None:
+                    raise ApprovalRuntimeError(
+                        "Execution store is required to restore a human boundary"
+                    )
+                record = self.execution_store.load(request.execution_id)
+                if (
+                    record.result.job_id != request.job_id
+                    or record.result.status != "needs_human"
+                ):
+                    raise ApprovalRuntimeError(
+                        "Persisted execution does not match the human boundary"
+                    )
+                execution_ref = {
+                    "ref_type": "artifact",
+                    "ref": f"runtime-execution:{request.execution_id}",
+                    "description": "Immutable normalized execution record",
+                }
+                decision = ContinuationPolicy.decide_execution(
+                    job,
+                    result_status="needs_human",
+                    execution_ref=str(execution_ref["ref"]),
+                )
+                self.job_runtime.record_execution_needs_human(
+                    request.job_id,
+                    [*record.result.to_dict()["output_refs"], execution_ref],
+                    approval_ref=approval_ref,
+                    continuation=decision.checkpoint,
+                )
+        except (RuntimeError, ReviewStoreError, ExecutionStoreError) as error:
             raise ApprovalRuntimeError(str(error)) from error
 
     def _request(
@@ -672,19 +748,13 @@ class ApprovalRuntime:
         requested_action: str,
         authorization_fingerprint: str,
     ) -> str:
-        boundary = json.dumps(
-            [
-                job_id,
-                execution_id,
-                review_id,
-                requested_action,
-                authorization_fingerprint,
-            ],
-            separators=(",", ":"),
-            ensure_ascii=True,
+        return approval_boundary_id(
+            job_id,
+            execution_id,
+            review_id,
+            requested_action,
+            authorization_fingerprint,
         )
-        digest = hashlib.sha256(boundary.encode("utf-8")).hexdigest()[:32]
-        return f"approval-{digest}"
 
     @classmethod
     def _normalize_refs(

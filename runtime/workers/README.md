@@ -31,6 +31,9 @@ queued -> running -> resolve references -> ExecutionRequest -> Executor
       APPROVED                   -> completed without re-execution
       REJECTED                   -> failed, non-retryable
   failure                        -> failed
+  needs_human                    -> PENDING RESOLVE_HUMAN_CONDITION
+    APPROVED                     -> queued exact same incomplete step
+    REJECTED                     -> failed, non-retryable
 ```
 
 Missing canonical configuration produces an explicit failed execution artifact and a failed job. Provider failures are classified as `provider_unavailable`, `provider_timeout`, `provider_execution_failed`, `invalid_provider_output`, or `runtime_error`. A malformed job that cannot satisfy the canonical model returns an explicit worker error and remains available for inspection.
@@ -55,5 +58,34 @@ A worker must not:
 ## Local Coordination
 
 The Worker remains a one-job execution coordinator. Phase 6M adds a separate foreground Scheduler loop that evaluates eligibility, creates a claim, delegates the claimed job to Worker, refreshes its lease through heartbeat, and recovers expired claims after bounded backoff. Scheduler concurrency is fixed at one and an OS-backed scheduler lock prevents two loops sharing one scheduler state root.
+
+CORE-02 inserts a provider-independent continuation decision after a successful
+execution step and, where required, after Reviewer PASS or explicit approval.
+Authorized remaining work produces one persisted deterministic child job; the
+Worker never calls the provider recursively. Failed, blocked, unresolved-review,
+and unresolved-human results do not autonomously continue. `next_actions` and
+provider progress prose remain non-authoritative.
+
+Every approved job is revalidated against its exact-work fingerprint at claim
+and immediately before executor delegation. The fingerprint binds canonical
+task class, agent, skill, workflow, task, input references, review requirement,
+plan digest, logical job, sequence, current step, and existing scope/risk
+fields. On restart, Worker reconciles an unlinked immutable execution result
+only when its canonical request exactly matches the result, current job,
+resolved context, and continuation authority. Missing or mismatched requests
+fail closed. Every persisted request field must be explicitly present; dataclass
+defaults cannot create reconciliation authority. A resolved direct human
+condition additionally requires the matching approved approval artifact and
+complete `needs_human` execution artifact before eligibility, claim, and
+immediately-before-execution validation succeed.
+
+For planned jobs, every load and immediately-before-execution check also
+requires the logical root's immutable authorized-plan snapshot. The mutable job
+plan and checkpoint digest must match that full snapshot exactly. Recomputed
+mutable digests, missing historical snapshots, and policy rewrites fail before
+executor delegation. A separate durable creation-evidence manifest distinguishes
+first initialization from authority loss. If the anchor is missing after that
+evidence exists, Worker remains in recovery hold with zero executor delegation;
+ordinary store creation, approval, or review cannot restore authority.
 
 Provider mode must still be selected explicitly and is bounded by scheduler cycle/day guards. For review-required jobs it may consume one execution call and one separate review call. There is no distributed queue, parallel provider execution, connector runtime, or installed daemon/service. Automated tests use fake provider adapters and must not call real providers.

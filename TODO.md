@@ -4,8 +4,9 @@
 
 - [x] CORE-01 Canonical Result Contract — COMPLETED / CLOSED after final
   independent closure review PASS with no Critical or Major findings.
-- [ ] CORE-02 Continuation Policy — NEXT / NOT STARTED.
-- [ ] CORE-03 Eval Framework — PLANNED.
+- [x] CORE-02 Continuation Policy — CLOSED / READY TO COMMIT after CORE-02R6
+  PASS with no Critical, Major, or Minor findings.
+- [ ] CORE-03 Eval Framework — NOT STARTED.
 - [ ] CORE-04 Tool Discovery — PLANNED.
 - [ ] CORE-05 Time Budget — PLANNED.
 - [ ] CORE-06 Retry / Stop Policy — PLANNED.

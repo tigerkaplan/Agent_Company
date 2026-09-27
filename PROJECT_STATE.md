@@ -2,8 +2,11 @@
 
 ## Current Checkpoint
 
-- Current Git HEAD is `48e85dd`, containing the committed Phase 8D Docker
-  adaptation described below. It is not deployed.
+- Current Git HEAD is `3f6acb6`, containing the committed CORE-01 Canonical
+  Execution Result contract. It is not deployed.
+- CORE-02 Continuation Policy is CLOSED / READY TO COMMIT after CORE-02R6 PASS.
+  Its accumulated implementation and bounded repairs remain uncommitted.
+- CORE-03 Eval Framework is NOT STARTED.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
@@ -75,11 +78,143 @@ files compiled, 34 repository JSON files parsed, fresh-process import probes
 passed, the production AST scan found zero `shell=True` calls, the production
 credential-literal scan found zero findings, and `git diff --check` passed with
 line-ending notices only. No live provider, network, or deployment call was
-made. CORE-01 is COMPLETED / CLOSED and remains uncommitted and unpushed.
+made. CORE-01 is COMPLETED / CLOSED and committed at `3f6acb6`.
 
-CORE-02 Continuation Policy is NEXT / NOT STARTED. The aggregate serialized-
-result byte ceiling remains FUTURE HARDENING / NON-BLOCKING and was not
-implemented during closure.
+## CORE-02 Continuation Policy — CLOSED / READY TO COMMIT
+
+CORE-02 is a provider-independent deterministic continuation layer for explicit
+pre-authorized job plans. Continuation means CONTINUE AUTHORIZED UNFINISHED
+WORK; retry remains REPEAT FAILED WORK. The policy never derives authority from
+provider prose, provider JSON, artifacts, retryability, or `next_actions`.
+
+Bounded checkpoints are persisted atomically inside canonical job records and
+retain the logical job ID, plan ID, immutable plan digest, continuation sequence, current step,
+completed and remaining step IDs, latest execution/review references, and gate
+state. Successful non-terminal steps reserve one deterministic child job through
+the existing queue and Scheduler. Child identity binds logical job, plan digest,
+sequence, and step. Exact-work fingerprints bind task, task class, canonical
+agent, skill, workflow, material input references, review requirement, mode,
+dry-run, risk, scope, logical root, plan identity and digest, continuation
+sequence, current step, attempt, and the existing execution authority; they are
+revalidated at approval, enqueue, claim, and execution boundaries. Reviewer and
+human gates remain authoritative, including the distinct resolvable
+direct-execution `RESOLVE_HUMAN_CONDITION` boundary; no recursive provider loop
+was introduced.
+
+Persisted execution results are reconciled before expired-lease retry recovery,
+so an interrupted job/checkpoint update does not repeat an already-recorded
+external execution. Reconciliation now requires a canonical request whose full
+serialized identity matches the current job, resolved context, result, and
+continuation checkpoint; missing or mismatched evidence blocks same-cycle
+expired-lease retry. Ordered prefix/suffix and ancestry validation rejects
+duplicates, reordering, skipped steps, task mismatch, unrelated roots,
+self-parented retry, invalid attempt progression, lifecycle-inconsistent
+parents, and sequence rollback. Scheduler status derives one authoritative
+logical head with its latest attempt, current step, continuation sequence,
+completed and remaining work, gate state, terminality, and final execution
+reference where applicable, while retaining every ancestor step record as
+historical evidence. Competing authoritative heads fail closed rather than
+being resolved by tie-breaking.
+
+The second independent CORE-02 re-review returned FIX with one Critical and
+four Major findings. CORE-02F2 repaired only those findings: the five omitted
+execution-material authorization fields are now bound; persisted request/result
+identity is exact and requestless success cannot reconcile; the logical view
+reports its latest attempt; retry and continuation ancestry/lifecycle rules fail
+closed; and a resolved human condition retains and revalidates its exact
+execution ID through resumed execution. That repair checkpoint did not close
+CORE-02; another independent re-review was required.
+
+The third independent CORE-02 re-review returned FIX with two Critical and
+three Major findings. CORE-02F3 repaired only those findings: current-step
+approval, review, execution-mode, dry-run, risk, and write-scope policy is
+monotonic; persisted execution requests require every canonical serialized
+field; competing continuation children fail closed; ordinary and continuation
+retry ancestry rejects invalid lifecycle, progression, provenance, forks, and
+cycles; and resumed human-condition execution requires matching authoritative
+approval and execution-store artifacts. That repair checkpoint did not close
+CORE-02; another independent re-review was required.
+
+The fourth independent CORE-02 re-review returned FIX with one Critical
+finding: a coordinated rewrite of the mutable embedded plan, its digest, and
+the matching job-local policy could replace the originally authorized work.
+CORE-02F4 repaired only that finding. Each logical continuation root now has
+one write-once canonical authorized-plan record outside the mutable job record.
+It retains the full ordered plan snapshot and its digest; every planned-job
+load requires the current plan and checkpoint identity to match that snapshot.
+Continuation children and retries reuse the root record, while missing,
+changed, or recomputed authority fails closed without automatic refresh or
+rebinding. That repair checkpoint did not close CORE-02; another independent
+re-review was required.
+
+The fifth independent CORE-02 re-review returned FIX with one Critical and one
+Major finding. Deleting the authorized-plan anchor erased the store's only
+write-once evidence, so ordinary creation could rebind downgraded work; the
+store's handwritten validation also accepted plans rejected by canonical
+schemas. CORE-02F5 repaired only those findings. Initial authority creation now
+persists an independent full-record creation-evidence manifest before the
+anchor. Evidence with a missing anchor is a durable recovery hold across
+restart, and ordinary creation rejects both identical and modified replacement
+plans. Anchor and evidence records are validated against the canonical
+authorized-plan schema and shared job-plan definitions on creation and load,
+with duplicate step IDs rejected by the same runtime semantic rule. That repair
+checkpoint did not close CORE-02; another independent re-review was required.
+
+CORE-02F3 validation passed: 53 focused CORE-02 tests, 81 CORE-02/Scheduler-loop
+targeted tests, 333 focused CORE-02/CORE-01/Worker/Scheduler/Reviewer/approval/
+controlled-write/Git/provider tests, and a clean full 602-test runtime-suite
+rerun. The first full-suite run had one isolated Phase 8C host-process timing
+failure; that test then passed four consecutive isolated reruns and the clean
+full rerun. Python compilation passed. All 17 JSON schemas and the
+JSON-compatible canonical lifecycle parsed; runtime configuration loader
+coverage passed. The production AST scan found zero `shell=True` calls, the
+changed-scope high-confidence secret scan found zero findings, and
+`git diff --check` passed with line-ending notices only. No live provider,
+network, commit, push, deployment, VPS, Phase 8F, CORE-03, or retry/stop-policy
+work was performed.
+
+CORE-02F4 validation passed: 57 focused CORE-02 tests, 107 CORE-02/Scheduler
+targeted tests, 337 focused CORE-02/CORE-01/Worker/Scheduler/Reviewer/approval/
+controlled-write/Git/provider tests, and the full 606-test runtime suite. The
+exact coordinated R4 rewrite failed before executor delegation with zero
+executor calls; individual approval, review, mode, dry-run, risk, scope, task,
+input, step-ID, step-order, and digest mutations also failed closed. Python
+compilation passed. All 18 JSON schemas and the JSON-compatible canonical
+lifecycle parsed; runtime configuration loader coverage passed. The production
+AST scan found zero `shell=True` calls, the changed-scope high-confidence secret
+scan found zero findings, and `git diff --check` passed with line-ending notices
+only. The known Phase 8C timing failure did not recur. No live provider,
+network, commit, push, deployment, VPS, Phase 8F, CORE-03, retry/stop-policy, or
+closure-reconciliation work was performed.
+
+CORE-02F5 validation passed: 61 focused CORE-02 tests, 112 CORE-02/Scheduler
+targeted tests, 342 focused CORE-02/CORE-01/Worker/Scheduler/Reviewer/approval/
+controlled-write/Git/provider tests, and the full 611-test runtime suite.
+Deletion followed by identical or modified ordinary creation remained in
+recovery hold with zero executor calls; an actual Scheduler cycle claimed and
+executed nothing. Malformed authority create/load matrices rejected missing,
+empty, unexpected, duplicate, overlength, invalid-policy, invalid-digest,
+timestamp, input, and scope cases, while valid restart/child/retry paths passed.
+Python compilation passed. All 18 JSON schemas and the JSON-compatible
+canonical lifecycle parsed; runtime configuration loader coverage passed. The
+production AST scan found zero `shell=True` calls, the changed-scope
+high-confidence secret scan found zero findings, and `git diff --check` passed
+with line-ending notices only. No live provider, network, commit, push,
+deployment, VPS, Phase 8F, CORE-03, retry/stop-policy, operator authority-
+restoration flow, or closure-reconciliation work was performed.
+
+CORE-02R6 independently re-ran the authority-loss, rebinding, store-validation,
+Scheduler/Worker/gate, R5/R4, and CORE-01 regression checks and returned PASS
+with no Critical, Major, or Minor findings. Validation passed: 61/61 CORE-02
+tests, 112/112 CORE-02/Scheduler tests, 342/342 focused regression tests, and the
+full 611/611 runtime suite. Python compilation, all 18 JSON schemas, the
+JSON-compatible lifecycle, 19/19 runtime-loader tests, production `shell=True`
+scanning, changed-scope high-confidence secret scanning, and `git diff --check`
+also passed; the diff check emitted line-ending notices only.
+
+CORE-02 closure reconciliation is complete. CORE-02 is CLOSED / READY TO COMMIT
+and is not yet committed. CORE-03 Eval Framework is NOT STARTED. The aggregate
+serialized-result byte ceiling remains FUTURE HARDENING / NON-BLOCKING.
 
 Phase 8E remains BLOCKED / PAUSED; deployment has not started. Phase 8F remains
 NOT STARTED.

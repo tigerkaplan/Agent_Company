@@ -21,19 +21,19 @@ Canonical definitions must remain separate from generated provider files. Claude
 
 ## Current State
 
-Git HEAD `48e85dd` contains the committed Phase 8D Docker adaptation. Phases
-1-7 are closed, the Social Media capability is committed, Phase 8A is closed,
-and Phases 8B and 8C are completed and closed after successful independent
-review. Phase 8D's independent architecture/security review passed with no
-critical, major, or required-fix findings. Phase 8D is COMPLETED / CLOSED and
-not deployed. Phase 8E is BLOCKED / PAUSED; deployment has not started because
-the VPS has not yet been created. Phase 8F is NOT STARTED.
+Git HEAD `3f6acb6` contains the committed CORE-01 Canonical Result Contract.
+Phases 1-7 are closed, the Social Media capability is committed, Phase 8A is
+closed, and Phases 8B and 8C are completed and closed after successful
+independent review. Phase 8D's independent architecture/security review passed
+with no critical, major, or required-fix findings. Phase 8D is COMPLETED /
+CLOSED and not deployed. Phase 8E is BLOCKED / PAUSED; deployment has not
+started because the VPS has not yet been created. Phase 8F is NOT STARTED.
 
-CORE-01 Canonical Result Contract is COMPLETED / CLOSED after its final
-independent closure review passed with no Critical or Major findings. CORE-02
-Continuation Policy is NEXT / NOT STARTED. CORE-03 through CORE-11 remain
-planned and unimplemented. The aggregate serialized-result byte ceiling remains
-FUTURE HARDENING / NON-BLOCKING.
+CORE-01 Canonical Result Contract is COMPLETED / CLOSED and committed at
+`3f6acb6`. CORE-02 Continuation Policy is CLOSED / READY TO COMMIT after
+CORE-02R6 PASS with no Critical, Major, or Minor findings. CORE-03 is NOT
+STARTED; CORE-04 through CORE-11 remain planned and unimplemented. The aggregate
+serialized-result byte ceiling remains FUTURE HARDENING / NON-BLOCKING.
 
 The runtime remains local-first. Phase 8D packages the canonical Phase 8C
 foreground lifecycle into one non-root image definition and fixed Compose
@@ -60,10 +60,10 @@ expanded.
 - `integrations/` — github, gmail, google-calendar, google-drive, obsidian,
   telegram, and webhooks; runtime implementations exist only where explicitly
   represented by source.
-- `runtime/` — `actions/`, `approvals/`, `cli/`, `core/`, `execution/`,
-  `executors/`, `git/`, `host/`, `jobs/`, `notifications/`, `providers/`,
-  `queue/`, `remote/`, `review/`, `scheduler/`, `storage/`, `tests/`,
-  `webhooks/`, and `workers/`. `runtime/state/` is generated, ignored
+- `runtime/` — `actions/`, `approvals/`, `cli/`, `continuation/`, `core/`,
+  `execution/`, `executors/`, `git/`, `host/`, `jobs/`, `notifications/`,
+  `providers/`, `queue/`, `remote/`, `review/`, `scheduler/`, `storage/`,
+  `tests/`, `webhooks/`, and `workers/`. `runtime/state/` is generated, ignored
   operational state, not source architecture.
 - `infrastructure/` — `HOST_ARCHITECTURE.md`, `SECURITY_MODEL.md`, its README,
   and `docker/` with non-secret per-service configuration and operating notes.

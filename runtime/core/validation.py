@@ -1,4 +1,4 @@
-"""Dependency-free validation for the JSON Schema features used by job records."""
+"""Dependency-free validation for canonical runtime JSON schemas."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ def default_schema_path() -> Path:
 
 
 class JobValidator:
-    """Validate the JSON Schema subset used by schemas/job.schema.json."""
+    """Validate the JSON Schema subset used by canonical runtime records."""
 
     def __init__(self, schema_path: Path | None = None) -> None:
         self.schema_path = schema_path or default_schema_path()
@@ -28,7 +28,7 @@ class JobValidator:
             self.schema = json.load(handle)
 
     def validate(self, value: dict[str, Any]) -> None:
-        self._validate(value, self.schema, "$", self.schema)
+        self._validate(value, self.schema, "$", self.schema, self.schema_path)
 
     def _validate(
         self,
@@ -36,28 +36,31 @@ class JobValidator:
         schema: dict[str, Any],
         path: str,
         root: dict[str, Any],
+        schema_path: Path,
     ) -> None:
         if "$ref" in schema:
-            schema = self._resolve_ref(schema["$ref"], root)
+            schema, root, schema_path = self._resolve_ref(
+                schema["$ref"], root, schema_path
+            )
 
         for candidate in schema.get("allOf", []):
-            self._validate(value, candidate, path, root)
+            self._validate(value, candidate, path, root, schema_path)
 
         if "if" in schema:
             condition_matches = True
             try:
-                self._validate(value, schema["if"], path, root)
+                self._validate(value, schema["if"], path, root, schema_path)
             except JobValidationError:
                 condition_matches = False
             branch = schema.get("then") if condition_matches else schema.get("else")
             if branch is not None:
-                self._validate(value, branch, path, root)
+                self._validate(value, branch, path, root, schema_path)
 
         if "oneOf" in schema:
             matches = 0
             for candidate in schema["oneOf"]:
                 try:
-                    self._validate(value, candidate, path, root)
+                    self._validate(value, candidate, path, root, schema_path)
                 except JobValidationError:
                     continue
                 matches += 1
@@ -68,7 +71,7 @@ class JobValidator:
         if "anyOf" in schema:
             for candidate in schema["anyOf"]:
                 try:
-                    self._validate(value, candidate, path, root)
+                    self._validate(value, candidate, path, root, schema_path)
                 except JobValidationError:
                     continue
                 break
@@ -77,7 +80,7 @@ class JobValidator:
 
         if "not" in schema:
             try:
-                self._validate(value, schema["not"], path, root)
+                self._validate(value, schema["not"], path, root, schema_path)
             except JobValidationError:
                 pass
             else:
@@ -116,12 +119,31 @@ class JobValidator:
                 raise JobValidationError(f"{path}: array has too few items")
             if "maxItems" in schema and len(value) > schema["maxItems"]:
                 raise JobValidationError(f"{path}: array has too many items")
+            if schema.get("uniqueItems") is True:
+                canonical = [
+                    json.dumps(item, sort_keys=True, separators=(",", ":"), allow_nan=False)
+                    for item in value
+                ]
+                if len(canonical) != len(set(canonical)):
+                    raise JobValidationError(f"{path}: array items must be unique")
             if "items" in schema:
                 for index, item in enumerate(value):
-                    self._validate(item, schema["items"], f"{path}[{index}]", root)
+                    self._validate(
+                        item,
+                        schema["items"],
+                        f"{path}[{index}]",
+                        root,
+                        schema_path,
+                    )
             if "contains" in schema:
                 if not any(
-                    self._matches(item, schema["contains"], f"{path}[{index}]", root)
+                    self._matches(
+                        item,
+                        schema["contains"],
+                        f"{path}[{index}]",
+                        root,
+                        schema_path,
+                    )
                     for index, item in enumerate(value)
                 ):
                     raise JobValidationError(f"{path}: array lacks a required item")
@@ -146,16 +168,29 @@ class JobValidator:
             property_names = schema.get("propertyNames")
             if property_names is not None:
                 for name in value:
-                    self._validate(name, property_names, f"{path} property name", root)
+                    self._validate(
+                        name,
+                        property_names,
+                        f"{path} property name",
+                        root,
+                        schema_path,
+                    )
             for name, item in value.items():
                 if name in properties:
-                    self._validate(item, properties[name], f"{path}.{name}", root)
+                    self._validate(
+                        item,
+                        properties[name],
+                        f"{path}.{name}",
+                        root,
+                        schema_path,
+                    )
                 elif isinstance(schema.get("additionalProperties"), dict):
                     self._validate(
                         item,
                         schema["additionalProperties"],
                         f"{path}.{name}",
                         root,
+                        schema_path,
                     )
 
     def _matches(
@@ -164,9 +199,10 @@ class JobValidator:
         schema: dict[str, Any],
         path: str,
         root: dict[str, Any],
+        schema_path: Path,
     ) -> bool:
         try:
-            self._validate(value, schema, path, root)
+            self._validate(value, schema, path, root, schema_path)
         except JobValidationError:
             return False
         return True
@@ -187,14 +223,41 @@ class JobValidator:
             raise JobValidationError(f"Unsupported schema type: {expected}")
         return checks[expected](value)
 
-    @staticmethod
-    def _resolve_ref(reference: str, root: dict[str, Any]) -> dict[str, Any]:
-        if not reference.startswith("#/"):
+    def _resolve_ref(
+        self,
+        reference: str,
+        root: dict[str, Any],
+        schema_path: Path,
+    ) -> tuple[dict[str, Any], dict[str, Any], Path]:
+        document, separator, fragment = reference.partition("#")
+        resolved_path = schema_path
+        resolved_root = root
+        if document:
+            resolved_path = (schema_path.parent / document).resolve()
+            allowed_root = self.schema_path.parent.resolve()
+            try:
+                resolved_path.relative_to(allowed_root)
+            except ValueError as error:
+                raise JobValidationError(
+                    f"Schema reference escapes its canonical directory: {reference}"
+                ) from error
+            try:
+                with resolved_path.open("r", encoding="utf-8") as handle:
+                    resolved_root = json.load(handle)
+            except (OSError, json.JSONDecodeError) as error:
+                raise JobValidationError(
+                    f"Could not load schema reference: {reference}"
+                ) from error
+        if not separator or not fragment:
+            return resolved_root, resolved_root, resolved_path
+        if not fragment.startswith("/"):
             raise JobValidationError(f"Unsupported schema reference: {reference}")
-        current: Any = root
-        for part in reference[2:].split("/"):
+        current: Any = resolved_root
+        for part in fragment[1:].split("/"):
             current = current[part.replace("~1", "/").replace("~0", "~")]
-        return current
+        if not isinstance(current, dict):
+            raise JobValidationError(f"Schema reference is not an object: {reference}")
+        return current, resolved_root, resolved_path
 
     @staticmethod
     def _validate_datetime(value: str, path: str) -> None:

@@ -65,6 +65,10 @@
       "COMPLETE_REVIEWED_JOB": {
         "APPROVED": {"target": "completed"},
         "REJECTED": {"target": "failed"}
+      },
+      "RESOLVE_HUMAN_CONDITION": {
+        "APPROVED": {"target": "queued"},
+        "REJECTED": {"target": "failed"}
       }
     },
     "requires": [

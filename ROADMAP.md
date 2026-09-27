@@ -12,7 +12,7 @@
 - Phase 8C: COMPLETED / CLOSED / NO DEPLOYMENT.
 - Phase 8D: COMPLETED / CLOSED / NO DEPLOYMENT.
 - CORE-01 Canonical Result Contract: COMPLETED / CLOSED.
-- CORE-02 Continuation Policy: NEXT / NOT STARTED.
+- CORE-02 Continuation Policy: CLOSED / READY TO COMMIT.
 - Phase 8E: BLOCKED / PAUSED; deployment not started because the VPS has not
   yet been created.
 - Phase 8F: NOT STARTED.
@@ -97,8 +97,8 @@ redefine or begin Phase 8.
 ## Core Runtime Enhancements
 
 - CORE-01 Canonical Result Contract: COMPLETED / CLOSED.
-- CORE-02 Continuation Policy: NEXT / NOT STARTED.
-- CORE-03 Eval Framework: PLANNED.
+- CORE-02 Continuation Policy: CLOSED / READY TO COMMIT.
+- CORE-03 Eval Framework: NOT STARTED.
 - CORE-04 Tool Discovery: PLANNED.
 - CORE-05 Time Budget: PLANNED.
 - CORE-06 Retry / Stop Policy: PLANNED.
@@ -110,8 +110,10 @@ redefine or begin Phase 8.
 
 CORE-01 defines the canonical provider-agnostic Execution Result: WHAT HAPPENED.
 Its final independent closure review passed with no Critical or Major findings.
-CORE-02 through CORE-11 remain unimplemented. An aggregate serialized-result
-byte ceiling is FUTURE HARDENING / NON-BLOCKING.
+CORE-02 is CLOSED / READY TO COMMIT after CORE-02R6 PASS with no Critical,
+Major, or Minor findings. CORE-03 is NOT STARTED; CORE-04 through CORE-11 remain
+unimplemented. An aggregate serialized-result byte ceiling is FUTURE HARDENING /
+NON-BLOCKING.
 
 ## Phases 8A, 8B, 8C, And 8D Closed
 
