@@ -7,9 +7,9 @@
   Major findings.
 - [x] CORE-02 Continuation Policy — COMPLETED / CLOSED / COMMITTED at `9d5ead1`
   after CORE-02R6 PASS with no Critical, Major, or Minor findings.
-- [x] CORE-03 Eval Framework — COMPLETED / CLOSED / READY TO COMMIT after
-  CORE-03R5 PASS with no Critical, Major, or Minor findings.
-- [ ] CORE-04 Tool Discovery — NOT STARTED.
+- [x] CORE-03 Eval Framework — COMPLETED / CLOSED / COMMITTED at `80ead22`
+  after CORE-03R5 PASS with no Critical, Major, or Minor findings.
+- [ ] CORE-04 Tool Discovery — NEXT / NOT STARTED.
 - [ ] CORE-05 Time Budget — PLANNED.
 - [ ] CORE-06 Retry / Stop Policy — PLANNED.
 - [ ] CORE-07 Progress Events — PLANNED.

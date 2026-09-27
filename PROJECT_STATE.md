@@ -2,15 +2,15 @@
 
 ## Current Checkpoint
 
-- Current Git HEAD is `9d5ead1`, containing the committed CORE-02 Continuation
-  Policy. It is not deployed.
+- Current Git HEAD is `80ead22`, containing the committed CORE-03 Eval
+  Framework. It is not deployed.
 - CORE-01 Canonical Result Contract is COMPLETED / CLOSED and committed at
   `3f6acb6`.
 - CORE-02 Continuation Policy is COMPLETED / CLOSED after CORE-02R6 PASS and is
   committed at `9d5ead1`.
-- CORE-03 Eval Framework is COMPLETED / CLOSED / READY TO COMMIT after CORE-03R5
-  PASS with no Critical, Major, or Minor findings.
-- CORE-04 Tool Discovery is NOT STARTED.
+- CORE-03 Eval Framework is COMPLETED / CLOSED / COMMITTED at `80ead22` after
+  CORE-03R5 PASS with no Critical, Major, or Minor findings.
+- CORE-04 Tool Discovery is NEXT / NOT STARTED.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
@@ -226,7 +226,7 @@ CORE-01 performed no VPS, deployment,
 service-installation, public-exposure, Hermes, Phase 8F, continuation-policy,
 retry-policy, or Eval Framework work.
 
-## CORE-03 Eval Framework — COMPLETED / CLOSED / READY TO COMMIT
+## CORE-03 Eval Framework — COMPLETED / CLOSED / COMMITTED
 
 CORE-03 is the first canonical provider-independent evaluation layer. It adds a
 separate `EvalSpec`, `EvalResult`, and structured check-result contract without
@@ -263,8 +263,8 @@ check retains its complete bounded local evidence.
 Eval remains descriptive measurement evidence only. PASS cannot approve work,
 complete Reviewer workflow, authorize continuation or retry, clear a CORE-02
 recovery hold, mutate a job or authorized plan, invoke Git, deploy, or convert
-provider prose into authority. CORE-03 is COMPLETED / CLOSED / READY TO COMMIT
-after CORE-03R5 PASS. CORE-04 remains NOT STARTED.
+provider prose into authority. CORE-03 is COMPLETED / CLOSED / COMMITTED at
+`80ead22` after CORE-03R5 PASS. CORE-04 is NEXT / NOT STARTED.
 
 CORE-03 initial implementation validation passed: 24/24 targeted eval tests, 30/30
 CORE-01 result-contract tests, 61/61 CORE-02 continuation tests, 359/359 focused
@@ -378,7 +378,9 @@ scans passed.
 CORE-03 closure reconciliation changed canonical status documentation only. No
 runtime behavior, tests, schemas, live provider, external network, deployment,
 push, PR, commit, external-system mutation, or CORE-04 work was performed.
-CORE-03 is CLOSED / READY TO COMMIT. CORE-04 remains NOT STARTED.
+At that pre-commit checkpoint, CORE-03 was CLOSED / READY TO COMMIT and CORE-04
+remained NOT STARTED. CORE-03 was subsequently committed at `80ead22`; CORE-04
+is now NEXT / NOT STARTED.
 
 ## Phase 8A Architecture Design Checkpoint
 
