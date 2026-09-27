@@ -86,6 +86,19 @@ credential readiness inspection, or provider Worker construction.
   evidence, not approval.
 - Providers execute already-authorized packages. They cannot select policy,
   approve, invoke Git, merge, deploy, or expand mounted paths.
+- CORE-04 tool discovery uses only explicit registration and canonical
+  descriptor records stored as immutable tuple content, detached from caller
+  and public-snapshot objects. Each authoritative boundary revalidates that
+  content and derives its registry digest from the exact records used by
+  discovery, selection, and loading; Python privacy, frozen dataclasses, and
+  slotted attributes are not integrity boundaries. Shared credential-shape
+  detection protects serializable tool evidence, and candidate selection
+  validates each streamed item before consuming the next while retaining a
+  strict bound. Descriptor-schema and runtime reference rules agree, followed
+  by resolved-path containment beneath one trusted root. Discovery/loading
+  performs no network discovery, directory scan, dynamic import, shell fallback,
+  or tool invocation. Deferred loading returns selected inert data only;
+  declared authority class is a requirement, not a grant.
 - Commit, push, and pull-request creation remain separate persisted actions.
   Merge, release, and deployment remain absent.
 

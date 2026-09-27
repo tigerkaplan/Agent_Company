@@ -2,15 +2,18 @@
 
 ## Current Checkpoint
 
-- Current Git HEAD is `80ead22`, containing the committed CORE-03 Eval
-  Framework. It is not deployed.
+- Current Git HEAD is `6da9e0f`, containing the committed CORE-03 post-commit
+  state reconciliation. CORE-04 closure is complete and awaiting commit; its
+  implementation and closure reconciliation remain uncommitted and undeployed.
 - CORE-01 Canonical Result Contract is COMPLETED / CLOSED and committed at
   `3f6acb6`.
 - CORE-02 Continuation Policy is COMPLETED / CLOSED after CORE-02R6 PASS and is
   committed at `9d5ead1`.
 - CORE-03 Eval Framework is COMPLETED / CLOSED / COMMITTED at `80ead22` after
   CORE-03R5 PASS with no Critical, Major, or Minor findings.
-- CORE-04 Tool Discovery is NEXT / NOT STARTED.
+- CORE-04 Tool Discovery is CLOSED / READY TO COMMIT after CORE-04R5 PASS with
+  no Critical, Major, or Minor findings.
+- CORE-05 Time Budget is NOT STARTED.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
@@ -264,7 +267,8 @@ Eval remains descriptive measurement evidence only. PASS cannot approve work,
 complete Reviewer workflow, authorize continuation or retry, clear a CORE-02
 recovery hold, mutate a job or authorized plan, invoke Git, deploy, or convert
 provider prose into authority. CORE-03 is COMPLETED / CLOSED / COMMITTED at
-`80ead22` after CORE-03R5 PASS. CORE-04 is NEXT / NOT STARTED.
+`80ead22` after CORE-03R5 PASS. At that closure checkpoint, CORE-04 had not
+started.
 
 CORE-03 initial implementation validation passed: 24/24 targeted eval tests, 30/30
 CORE-01 result-contract tests, 61/61 CORE-02 continuation tests, 359/359 focused
@@ -380,7 +384,176 @@ runtime behavior, tests, schemas, live provider, external network, deployment,
 push, PR, commit, external-system mutation, or CORE-04 work was performed.
 At that pre-commit checkpoint, CORE-03 was CLOSED / READY TO COMMIT and CORE-04
 remained NOT STARTED. CORE-03 was subsequently committed at `80ead22`; CORE-04
-is now NEXT / NOT STARTED.
+was then the next allowed checkpoint.
+
+## CORE-04 Tool Discovery — CLOSED / READY TO COMMIT
+
+CORE-04 adds a provider-independent runtime capability under `runtime/tools/`;
+it does not create a Tool Discovery Agent or alter agent, skill, workflow, or
+provider routing. Immutable `ToolDescriptor` metadata records stable identity,
+exact capabilities, authority/risk requirements, compatibility, availability,
+status, tags, preference, and trusted-root-relative definition/schema
+references. `ToolDiscoveryRequest` applies bounded capability and policy
+constraints. `ToolDiscoveryResult` records deterministic candidates,
+match/ineligibility evidence, bounded rejections, an immutable registry digest,
+and registered/considered/matched/selected/loaded counts.
+
+`ToolRegistry` performs explicit registration only. It validates compact
+descriptor schemas, rejects duplicate IDs and conflicting versions, and stores
+canonical serialized records as immutable tuple content detached from
+caller/public descriptor objects. Every authoritative boundary revalidates that
+content and derives the registry digest from it; separately replaceable trusted
+record/digest slots do not exist. Public snapshots reconstruct disposable
+descriptor views. Ordering is deterministic: selectable state, least additional
+capability exposure, preference rank, fixed tool-class order, stable tool ID,
+then version. A canonical `no_match` result never invents a tool or falls back
+to shell access. Selection is separate and recomputes discovery against the
+canonical state, so callers and providers cannot promote hidden, unavailable,
+ineligible, or mutated tools. Selection validates each iterable item immediately
+and stops at the first unknown or duplicate ID or at the request bound plus one.
+Required-capability schema and runtime bounds are both 20, and shared canonical
+secret detection rejects credential-shaped serializable tool text.
+
+`ToolDefinitionLoader` loads only selected JSON definitions and schemas. It
+enforces normalized resolved-path containment beneath one trusted root, bounded
+files, fixed definition-schema validation, a bounded local JSON Schema subset,
+and exact descriptor/load identity. Non-selected definitions are not read and
+non-selected schemas are not parsed. Loaded definitions are inert immutable
+data with an opaque adapter ID; there is no dynamic import, callable, execution,
+network discovery, filesystem scan, shell fallback, or provider-created tool.
+
+Candidate, selected, loaded, and authorized remain distinct. Discovery/loading
+cannot approve work, complete Reviewer decisions, continue or retry jobs, clear
+recovery hold, authorize controlled write, invoke Git, deploy, or change CORE-01,
+CORE-02, or CORE-03 semantics. Evidence remains ephemeral in immutable result
+objects because it changes no job or authority state; no CORE-09 cache or new
+persistence store was introduced.
+
+CORE-04R1 returned FIX for exposed-descriptor mutation, missing shared secret
+detection, a 100-versus-20 required-capability bound mismatch, and eager
+selection-iterable materialization. CORE-04F repaired only those findings:
+private canonical serialized records now anchor registry state and digest,
+public descriptors are disposable reconstructions, serializable tool strings
+reuse shared credential detection, schema/runtime required-capability bounds
+are both 20, and selection rejects overflow after at most the bound plus one
+item.
+
+CORE-04F validation passed: 28/28 CORE-04 deterministic/adversarial tests,
+including five focused repair probes and the 100-registered/one-selected
+deferred-loading proof; 30/30 CORE-01,
+61/61 CORE-02, and 49/49 CORE-03 regression tests; 287/287 focused Worker,
+Scheduler, Reviewer, Approval, controlled-write, Git, remote-Git, provider, and
+job-runtime regressions; and the full 688/688 runtime suite. The separate host
+configuration/lifecycle set passed 68/68. All 130 runtime/integration Python
+files compiled; 23 JSON schemas and the JSON-compatible lifecycle parsed; fresh
+tool/CLI/provider/Worker imports passed; and production `shell=True`, high-
+confidence credential, and dangerous dynamic-import/tool-loading scans found
+zero findings. Final `git diff --check` passed with line-ending notices only.
+No live provider, external network, deployment, push, PR, commit, external-
+system mutation, or CORE-05 work was performed. At that repair checkpoint,
+CORE-04 was IMPLEMENTED / pending independent re-review and CORE-05 was NOT
+STARTED.
+
+CORE-04R2 returned FIX for coordinated replacement of former registry
+record/digest/snapshot slots, descriptor-reference schema/runtime disagreement,
+and delayed rejection of unknown streamed selection IDs. CORE-04F2 repaired only
+those findings: registry and snapshot canonical records are now structurally
+immutable tuple content whose digest is derived at every authoritative boundary;
+selection and loading fail closed on malformed or stale state; descriptor schema
+and runtime reference validation agree for normal, traversal, absolute, URL,
+mixed-separator, empty, and overlength cases; and selection rejects unknown and
+duplicate IDs at the exact streamed item where encountered. Python privacy,
+frozen dataclasses, and slotted attributes are explicitly not claimed as an
+integrity boundary.
+
+CORE-04F2 validation passed: 31/31 complete CORE-04 tests, including all three
+bounded-repair adversarial tests and the retained deferred-loading proof; 30/30
+CORE-01, 61/61 CORE-02, and 49/49 CORE-03 regression tests; 287/287 focused
+Worker, Scheduler, Reviewer, Approval, controlled-write, Git, remote-Git,
+provider, and job-runtime regressions; and the full 691/691 runtime suite. The
+separate host configuration/lifecycle set passed 68/68. All 130
+runtime/integration Python files compiled; 23 JSON schemas and the
+JSON-compatible lifecycle parsed; runtime-loader initialization and fresh
+tool/CLI/provider/Worker imports passed; and production `shell=True`,
+high-confidence credential, dangerous dynamic-import/tool-loading, and
+executable network-use scans found zero findings. The broad network-text scan's
+only match was the inert fixed JSON Schema dialect URI. Final `git diff --check`
+passed with line-ending notices only. No live provider, external network,
+deployment, push, PR, commit, external-system mutation, or CORE-05 work was
+performed. At that repair checkpoint, CORE-04 was IMPLEMENTED / pending
+independent re-review and CORE-05 remained NOT STARTED.
+
+CORE-04R3 returned FIX with one Minor schema/model/runtime parity finding: the
+descriptor JSON Schema accepted 29 prohibited C0 control characters in deferred
+definition/schema references that the runtime model rejected. CORE-04F3 changed
+only the shared descriptor reference schema pattern and its parity coverage.
+Both reference fields now reject U+0000-U+0008, U+000B-U+000C, and
+U+000E-U+001F at schema and runtime layers, including after an explicitly
+permitted newline; ordinary nested references and the existing tab, newline,
+and carriage-return semantics remain accepted.
+
+CORE-04F3 validation passed: the dedicated exhaustive F3 test and existing path
+matrix passed; an independent 126-check parity probe passed; 32/32 complete
+CORE-04 tests, 30/30 CORE-01, 61/61 CORE-02, 49/49 CORE-03, 287/287 focused, and
+692/692 full runtime tests passed. The host configuration/lifecycle set passed
+68/68. All 130 runtime/integration Python files compiled; 23 JSON schemas and
+the JSON-compatible lifecycle parsed; runtime-loader initialization and fresh
+tool/CLI/provider/Worker imports passed; and production `shell=True`,
+high-confidence credential, dangerous dynamic-import/tool-loading, and
+executable network-use scans found zero findings. The only broad network-text
+match remained the inert fixed JSON Schema dialect URI. `git diff --check`
+passed with line-ending notices only. No live provider, external network,
+deployment, push, PR, commit, external-system mutation, or CORE-05 work was
+performed. At that repair checkpoint, CORE-04 was IMPLEMENTED / pending
+independent re-review and CORE-05 remained NOT STARTED.
+
+CORE-04R4 returned FIX with one Minor LF-boundary parity finding: the remaining
+backslash, colon, and traversal schema lookaheads used dot scans that stopped at
+LF, while `$` treated a final LF differently from runtime path segmentation.
+CORE-04F4 changed only the shared descriptor reference pattern and parity tests.
+All relevant lookaheads now scan the entire string with an all-character class,
+and terminal dot segments use an explicit no-character-remains assertion. The
+runtime's existing TAB, LF, CR, relative-directory, and dot-in-filename policy
+was not changed.
+
+CORE-04F4 validation passed: the dedicated table-driven LF test and retained
+reference/control tests passed; an independent sweep compared 16,195 reference
+values across both fields (32,390 schema/runtime checks) with zero mismatches;
+33/33 complete CORE-04 tests, 30/30 CORE-01, 61/61 CORE-02, 49/49 CORE-03,
+287/287 focused, and 693/693 full runtime tests passed. The host
+configuration/lifecycle set passed 68/68. All 130 runtime/integration Python
+files compiled; 23 JSON schemas and the JSON-compatible lifecycle parsed;
+runtime-loader initialization and fresh tool/CLI/provider/Worker imports passed;
+and production `shell=True`, high-confidence credential, dangerous
+dynamic-import/tool-loading, and executable network-use scans found zero
+findings. The only broad network-text match remained the inert fixed JSON Schema
+dialect URI. `git diff --check` passed with line-ending notices only. No live
+provider, external network, deployment, push, PR, commit, external-system
+mutation, or CORE-05 work was performed. At that repair checkpoint, CORE-04 was
+IMPLEMENTED / pending independent re-review and CORE-05 remained NOT STARTED.
+
+CORE-04R5 independently re-reviewed the final LF-boundary repair and returned
+PASS with no Critical, Major, or Minor findings. It confirmed zero mismatches
+across 100,000 independently generated schema/runtime reference comparisons,
+all 29 prohibited C0 controls, aligned TAB/LF/CR and exact dot-segment
+semantics, trusted-root resolved-path containment, canonical registry/digest
+integrity, exact-item streaming rejection, shared secret handling, genuine
+selected-only deferred loading, six-field descriptor/load identity binding,
+inert loaded definitions, provider neutrality, and unchanged authority
+boundaries. R5 independently passed 33/33 CORE-04 tests, 30/30 CORE-01 tests,
+61/61 CORE-02 tests, 49/49 CORE-03 tests, 287/287 focused regressions, 693/693
+full runtime tests, and 68/68 host/lifecycle tests. It compiled 130 Python
+files, parsed 23 JSON schemas and the JSON-compatible lifecycle, passed loader
+and import probes, found zero production `shell=True`, credential/private-key,
+dynamic-import, or executable tool-layer network findings, and passed
+`git diff --check` with line-ending notices only.
+
+CORE-04 closure reconciliation changed canonical status documentation only; it
+did not change runtime behavior, tests, or schemas and did not rerun or replace
+the R5 full-regression evidence above. CORE-04 is CLOSED / READY TO COMMIT, but
+is not yet committed. CORE-05 is NOT STARTED. No live provider, external
+network, deployment, push, PR, commit, or external-system mutation was
+performed during closure.
 
 ## Phase 8A Architecture Design Checkpoint
 

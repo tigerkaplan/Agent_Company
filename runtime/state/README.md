@@ -20,6 +20,11 @@ Generated job records are stored as stable, pretty-printed JSON files under `job
 
 Job records must contain references rather than credentials, provider tokens, full project state, or duplicated knowledge content.
 
+CORE-04 discovery and deferred-loading evidence remains ephemeral because it
+does not mutate job or authority state. Immutable `ToolDiscoveryResult` and
+`ToolLoadResult` values expose selection/load evidence to the current runtime
+caller; no competing tool-discovery store or persistent cache is introduced.
+
 ## Project State
 
 Project state lives under `../../shared/projects/*`. Jobs may reference project state by `project_id` or file reference, but runtime state must not become a second project-state system.

@@ -2,9 +2,12 @@
 
 The runtime is the local-first execution coordination layer. It accepts already-classified work from the orchestrator, creates canonical jobs, manages job lifecycle state, queues work, and later lets workers execute jobs through provider abstractions.
 
+CORE-04 Tool Discovery is CLOSED / READY TO COMMIT after CORE-04R5 PASS with no
+Critical, Major, or Minor findings. CORE-05 is NOT STARTED.
+
 Phase 6F adds deterministic verification and a Reviewer Runtime after Phase 6E provider execution. Phase 6G adds persisted scoped human approval requests. Phase 6H adds explicit execution modes and staged controlled mutation. Phase 6I adds an exact local Git change-set and commit gate after reviewed completion. Phase 6J adds separately approved exact-branch push and pull-request creation gates. Phase 6M adds the bounded autonomous Scheduler, claims, leases, retry backoff, restart recovery, and audit status. Phase 8B adds one configurable state base root while preserving the repository-local `runtime/state/` default. Phase 8C adds a supervisor-neutral lifecycle wrapper, fixed process types, atomic host-process records, local singleton locks, graceful signals, and a host heartbeat. CORE-03 adds deterministic provider-neutral evaluation under `evals/`. Jobs remain under `jobs/`, execution/provider/review/mutation/Git/eval artifacts under `executions/`, approvals under `approvals/`, schedules under `schedules/`, scheduler operational state under `scheduler-runtime/`, and lifecycle metadata under `host/processes/` beneath that root. Legal job transitions still come directly from `jobs/lifecycle.yaml`.
 
-The runtime does not classify business intent. Classification, canonical agent routing, workflow selection, risk assessment, review triggers, provider capability resolution, and approval rules remain governed by `../orchestrator/`, `../CONSTITUTION.md`, and `../AGENTS.md`.
+The runtime does not classify business intent. Classification, canonical agent routing, workflow selection, risk assessment, review triggers, provider capability resolution, and approval rules remain governed by `../orchestrator/`, `../CONSTITUTION.md`, and `../AGENTS.md`. CORE-04 adds capability-first tool discovery and deferred definition loading under `tools/`; it does not replace agent, skill, workflow, or provider routing.
 
 ## Canonical Boundaries
 
@@ -20,6 +23,8 @@ The runtime does not classify business intent. Classification, canonical agent r
 - Job = ONE EXECUTABLE UNIT OF WORK
 - Execution Result = WHAT HAPPENED
 - Eval = HOW THE RESULT / BEHAVIOR MET DECLARED EXPECTATIONS
+- Tool Discovery = WHICH EXPLICITLY REGISTERED TOOLS MATCH A REQUIRED CAPABILITY
+- Deferred Loading = WHEN A SELECTED TOOL'S FULL DEFINITION IS LOADED
 
 ## Execution Separation
 
@@ -36,6 +41,8 @@ The runtime does not classify business intent. Classification, canonical agent r
 - Controlled Git Runtime = exact change set, commit approval, staging, commit, and evidence.
 - Remote Git Runtime = remote inspection, separate push/PR approvals, exact push, and remote evidence.
 - Scheduler = decides when due, already-authorized work may enter the Worker.
+- ToolRegistry = discovers compact capability metadata without loading schemas.
+- ToolDefinitionLoader = loads only explicitly selected definitions as inert data.
 
 ## Role
 
@@ -51,6 +58,7 @@ The runtime:
 - keeps provider execution behind the provider abstraction in `../providers/`;
 - preserves connector boundaries from `../integrations/`.
 - measures exact persisted execution results without changing job or authority state.
+- discovers candidate tools and loads selected definitions without invoking them or granting authority.
 
 ## Local Runtime Boundary
 
@@ -67,6 +75,14 @@ canonical ExecutionResult against a bounded EvalSpec and persists structured
 `pass`, `fail`, or `error` measurement evidence under `executions/evals/`.
 Eval never completes review, grants approval, continues or retries a job, clears
 a recovery hold, invokes Git, or calls a provider. See `evals/README.md`.
+
+CORE-04 tool discovery is also separate from execution and provider routing. It
+matches immutable compact descriptors by exact capability and bounded policy,
+then loads full JSON definitions and input schemas only for selected tool IDs.
+Candidate, selected, loaded, and authorized are distinct states. No discovery
+or load operation invokes a tool or creates Approval, Reviewer, continuation,
+retry, recovery-hold, controlled-write, Git, or deployment authority. See
+`tools/README.md`.
 
 `NEEDS_HUMAN` creates a `PENDING` approval bound to the exact job, execution, review, and `COMPLETE_REVIEWED_JOB` action. Approval completes that reviewed job without re-execution; rejection fails it. Pre-execution governance creates an `EXECUTE_JOB` approval whose acceptance queues only that job. See `approvals/README.md`.
 

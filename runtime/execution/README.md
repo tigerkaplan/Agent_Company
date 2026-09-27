@@ -5,8 +5,10 @@ CORE-01 Canonical Result Contract is COMPLETED / CLOSED and committed at
 or Major findings. CORE-02 Continuation Policy is COMPLETED / CLOSED and
 committed at `9d5ead1` after CORE-02R6 PASS. CORE-03 Eval Framework is COMPLETED
 / CLOSED / COMMITTED at `80ead22` after CORE-03R5 PASS with no Critical, Major,
-or Minor findings. CORE-04 is NEXT / NOT STARTED. An aggregate serialized-result
-byte ceiling remains FUTURE HARDENING / NON-BLOCKING.
+or Minor findings. CORE-04 Tool Discovery is CLOSED / READY TO COMMIT after
+CORE-04R5 PASS with no Critical, Major, or Minor findings; CORE-05 is NOT
+STARTED. An aggregate serialized-result byte ceiling remains FUTURE HARDENING /
+NON-BLOCKING.
 
 `ExecutionRequest` and `ExecutionResult` are provider-neutral, JSON-serializable runtime contracts. Execution Result = WHAT HAPPENED; it is not a provider response format, job lifecycle state, review decision, continuation policy, or authority to perform another action.
 
