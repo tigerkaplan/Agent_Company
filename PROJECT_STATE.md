@@ -12,7 +12,9 @@
   CORE-03R5 PASS with no Critical, Major, or Minor findings.
 - CORE-04 Tool Discovery is CLOSED / COMMITTED at `35f03f8` after CORE-04R5
   PASS with no Critical, Major, or Minor findings.
-- CORE-05 Time Budget is NEXT / NOT STARTED.
+- CORE-05 Time / Execution Budget is CLOSED / READY TO COMMIT after CORE-05R3
+  PASS and remains uncommitted.
+- CORE-06 Retry / Stop Policy is NOT STARTED.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
@@ -28,7 +30,7 @@
   2026-09-25 with no critical, major, or required-fix findings.
 - Phase 8D is COMPLETED / CLOSED. Its independent architecture/security review
   passed on 2026-09-25 with no critical, major, or required-fix findings.
-- Phase 8E is BLOCKED / PAUSED. Deployment has not started because the VPS has
+- Phase 8E is PAUSED / BLOCKED. Deployment has not started because the VPS has
   not yet been created.
 - Phase 8F is NOT STARTED.
 
@@ -222,7 +224,7 @@ CORE-02 closure reconciliation is complete. CORE-02 is COMPLETED / CLOSED and
 committed at `9d5ead1`. The aggregate serialized-result byte ceiling remains
 FUTURE HARDENING / NON-BLOCKING.
 
-Phase 8E remains BLOCKED / PAUSED; deployment has not started. Phase 8F remains
+Phase 8E remains PAUSED / BLOCKED; deployment has not started. Phase 8F remains
 NOT STARTED.
 CORE-01 performed no VPS, deployment,
 service-installation, public-exposure, Hermes, Phase 8F, continuation-policy,
@@ -556,9 +558,131 @@ performed during closure.
 
 CORE-04 implementation, repairs, tests, schemas, and closure documentation were
 subsequently committed at `35f03f8` (`feat: add tool discovery and deferred
-loading`). CORE-04 is CLOSED / COMMITTED. CORE-05 is NEXT / NOT STARTED and does
-not become active until this post-commit state reconciliation is committed and
-the working tree is verified clean.
+loading`). At that committed CORE-04 closure checkpoint, CORE-04 was CLOSED /
+COMMITTED and CORE-05 was NEXT / NOT STARTED; CORE-05 could not become active
+until the post-commit state reconciliation was committed and the working tree
+was verified clean.
+
+CORE-05 subsequently began only after that reconciliation was committed and
+the clean working tree was verified at `6d681d3`.
+
+## CORE-05 Time / Execution Budget — CLOSED / READY TO COMMIT
+
+CORE-05 adds a small provider-independent runtime capability under
+`runtime/budget/`. An optional immutable policy bounds active elapsed
+milliseconds and/or Worker-to-Executor execution units for one logical job.
+Unset dimensions are distinct from a configured zero. Runtime/model/schema
+bounds reject booleans, negative values, unknown dimensions, oversized values,
+malformed identity, and noncanonical persisted state.
+
+Policy creation writes independent durable creation evidence before the policy
+anchor and binds both to a deterministic logical-job budget ID and SHA-256
+digest. Usage persists separately through atomic replacement under a local
+budget lock. Admission and reservation are one serialized operation, so two
+workers cannot spend the last unit. Reservation consumes the unit before
+reference resolution or Executor delegation; duplicate execution identities do
+not charge twice and cannot authorize a second call.
+
+Active time begins after exact job authority validation and successful
+reservation, immediately before reference resolution, and ends immediately
+after the Executor returns or raises. In-process measurement uses a monotonic
+clock. Raw monotonic values are never persisted. Queue, schedule, approval,
+Reviewer, human, continuation-pause, and post-execution lifecycle time do not
+count. Restart recovery conservatively charges any active reservation through
+the trusted persisted wall-clock recovery observation. Persisted usage never
+decreases, and detected clock rollback latches a fail-closed fault rather than
+increasing remaining capacity. CORE-05 denies new starts after exhaustion but
+does not forecast duration or force-kill in-flight work.
+
+The initial job, ordinary retry children, and CORE-02 continuation children
+retain one exact budget binding and accumulate usage without reset. Budget
+availability is never sufficient authority: it cannot approve, complete
+Reviewer work, create continuation or retry authority, clear recovery hold,
+authorize controlled write or Git, or deploy. Provider requests to increase,
+reset, or reinterpret budget have zero canonical effect. Exhaustion fails the
+claimed job with structured evidence and zero Executor calls; it fabricates no
+successful `ExecutionResult`, retry, or continuation.
+
+CORE-05 intentionally defines no token/cost accounting, monetary policy,
+provider-rate limiting, retry/stop decision semantics, progress events, effort
+routing, dashboard, unsafe force-kill, operator budget mutation, or separate
+tool-call dimension. CORE-04 discovery/loading consumes no unit, and a future
+tool-call counter requires a canonical tool-invocation boundary that does not
+exist in the current runtime.
+
+Initial implementation validation passed 24/24 CORE-05 deterministic and
+adversarial tests, including exact-limit concurrency, duplicate identity,
+crash/restart, continuation/retry inheritance, rollback, malformed state,
+provider mutation, and authority-boundary cases. CORE-01 passed 30/30, CORE-02
+61/61, CORE-03 49/49, and CORE-04 33/33 within the clean 717/717 full runtime
+suite. The focused Worker, Scheduler, Reviewer, Approval, controlled-write,
+Git, remote-Git, provider, and job-runtime set passed 484/484. All 135
+runtime/integration Python files compiled; 25 JSON schemas and the
+JSON-compatible lifecycle parsed; lifecycle/runtime-loader and fresh import
+probes passed; production `shell=True` and high-confidence credential scans
+found zero findings; and `git diff --check` passed with line-ending notices
+only.
+
+CORE-05R1 subsequently returned FIX for two bounded defects: a coherent rewrite
+of the single mutable usage-state file could restore consumed capacity, and
+ordinary lock-path/open `OSError` cases could escape the canonical error
+boundary. CORE-05F repaired only those findings. Usage state now advances under
+the budget lock through a store-managed sequence, append-only digest-chained
+evidence, an independent high-water head, and then the current state. Evidence
+binds the immutable policy, unit and elapsed high-water values, complete
+reservation-history digest, and complete state digest. Old-state replay,
+coherent zero/reset, partial decrement, removed charged identities, evidence
+tampering, and interrupted evidence/head/state ordering fail closed. Expected
+lock initialization/open/acquisition failures now become deterministic
+canonical budget errors without raw OS detail, unlocked fallback, budget
+mutation, or Executor/provider calls.
+
+Bounded-repair validation passed 36/36 CORE-05 tests, including 12 repair tests,
+496/496 focused regressions, and 729/729 full runtime tests. The preserved
+CORE-01/02/03/04 groups passed 30/30, 61/61, 49/49, and 33/33. All 135 Python
+files compiled; 26 JSON schemas and the JSON-compatible lifecycle parsed;
+runtime-loader/import probes passed; production `shell=True`, credential, and
+budget path/traversal scans found no issue; and `git diff --check` passed with
+line-ending notices only.
+
+CORE-05R2 then returned FIX for two remaining bounded defects: authoritative
+loads checked only the current event and its immediate predecessor rather than
+the complete chain to genesis, and a coordinated rewrite of mutable state,
+head, and current event with recomputed public digests could restore capacity.
+CORE-05F2 repairs only those defects. Each transition now persists a
+content-addressed immutable event and an independent write-once sequence claim.
+Every load deterministically validates the bounded, linear claim/event history
+from exact policy-bound genesis through the derived current event, rejecting
+missing or unexpected artifacts, gaps, duplicate sequences, branches, broken
+links, content-address mismatch, historical corruption, and state/head drift.
+Write-once first-use evidence also prevents a previously used budget from being
+accepted as fresh genesis after later ledger loss. Mutable head and state are
+verified caches, not historical authority.
+
+Second bounded-repair validation passed all 23 F2-specific tests and 59/59
+CORE-05 tests, including the exact coherent zero-unit, zero-elapsed, combined,
+current-event redigest, old-snapshot, genesis-rebind, full-chain tamper, crash,
+restart, idempotency, and concurrency cases. The named focused regression set
+passed 524/524 and the full runtime suite passed 752/752. The preserved
+CORE-01/02/03/04 groups remained 30/30, 61/61, 49/49, and 33/33 within those
+runs. All 135 Python files compiled; 27 JSON schemas and the JSON-compatible
+lifecycle parsed; runtime-loader/import probes passed; production `shell=True`,
+high-confidence credential, and budget path/traversal scans found no issue;
+and `git diff --check` passed with line-ending notices only.
+
+CORE-05R3 independently returned `PASS — READY FOR CORE-05 CLOSURE
+RECONCILIATION` with no Critical, Major, or Minor findings. It verified the
+59/59 CORE-05 target, the protected CORE-01 through CORE-04 suites (30/30,
+61/61, 49/49, and 33/33), all 524 focused logical tests, all 228 complementary
+tests, all 752 current cases, compilation of 135 Python files, parsing of 27
+schemas and lifecycle manifests, zero forbidden-pattern scan hits, and exact
+cross-process `ALLOW` / `DENY` behavior. Two transient local Git subprocess
+timeouts in the aggregate run passed on isolated rerun.
+
+CORE-05 closure reconciliation is complete. CORE-05 is CLOSED / READY TO COMMIT
+and remains uncommitted. CORE-06 is NOT STARTED. No live provider, external
+network, deployment, push, PR, commit, or external-system mutation was
+performed.
 
 ## Phase 8A Architecture Design Checkpoint
 
@@ -707,7 +831,7 @@ The following are explicit Phase 8E prerequisites, not open Phase 8D blockers:
 
 ## Not Implemented
 
-- Phase 8E is BLOCKED / PAUSED because the VPS has not yet been created;
+- Phase 8E is PAUSED / BLOCKED because the VPS has not yet been created;
   deployment has not started.
   VPS deployment, backup/recovery automation, target-host smoke testing, and
   final review remain later Phase 8 work.
@@ -796,7 +920,7 @@ COMPLETED / CLOSED and documentation-only. Phase 8B is COMPLETED / CLOSED after
 its successful final independent re-review. Phase 8C is COMPLETED / CLOSED
 after its successful final independent re-review. Phase 8D is COMPLETED /
 CLOSED after its successful independent architecture/security review, and
-Phase 8E is BLOCKED / PAUSED because the VPS has not yet been created, and
+Phase 8E is PAUSED / BLOCKED because the VPS has not yet been created, and
 deployment has not started. A
 different-provider full-repository audit and the other recorded
 Phase 8C hardening items remain recommended future validation, not a mandatory

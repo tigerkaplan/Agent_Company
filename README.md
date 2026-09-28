@@ -22,12 +22,13 @@ Canonical definitions must remain separate from generated provider files. Claude
 ## Current State
 
 CORE-04 implementation commit `35f03f8` contains the committed Tool Discovery /
-Deferred Loading implementation and closure state.
+Deferred Loading implementation and closure state. CORE-05 Time / Execution
+Budget is CLOSED / READY TO COMMIT after CORE-05R3 PASS and remains uncommitted.
 Phases 1-7 are closed, the Social Media capability is committed, Phase 8A is
 closed, and Phases 8B and 8C are completed and closed after successful
 independent review. Phase 8D's independent architecture/security review passed
 with no critical, major, or required-fix findings. Phase 8D is COMPLETED /
-CLOSED and not deployed. Phase 8E is BLOCKED / PAUSED; deployment has not
+CLOSED and not deployed. Phase 8E is PAUSED / BLOCKED; deployment has not
 started because the VPS has not yet been created. Phase 8F is NOT STARTED.
 
 CORE-01 Canonical Result Contract is COMPLETED / CLOSED and committed at
@@ -39,9 +40,14 @@ Discovery is CLOSED / COMMITTED at `35f03f8` after CORE-04R5 PASS with no
 Critical, Major, or Minor findings. It adds explicit immutable registration,
 exact capability-first matching, deterministic bounded selection, and
 selected-only definition/schema loading without granting tool or execution
-authority. CORE-05 is NEXT / NOT STARTED; CORE-06 through CORE-11 remain planned
-and unimplemented. The aggregate serialized-result byte ceiling remains FUTURE
-HARDENING / NON-BLOCKING.
+authority. CORE-05 adds immutable logical-job active-time/execution-unit bounds,
+atomic admission/reservation, a complete genesis-validated content-addressed
+usage ledger with independently verified state/head caches, restart-safe
+accounting, and structured fail-closed exhaustion without granting
+approval, review, continuation, retry, write, Git, or deployment authority. It
+is CLOSED / READY TO COMMIT after CORE-05R3 PASS and remains uncommitted. CORE-06
+is NOT STARTED. CORE-07 through CORE-11 remain planned and unimplemented. The
+aggregate serialized-result byte ceiling remains FUTURE HARDENING / NON-BLOCKING.
 
 The runtime remains local-first. Phase 8D packages the canonical Phase 8C
 foreground lifecycle into one non-root image definition and fixed Compose

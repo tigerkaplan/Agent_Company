@@ -13,6 +13,8 @@ configured Executor.
 - Worker = execution, review, and approval-aware coordination.
 - Executor and provider adapter = actual execution behind the Worker boundary.
 - Approval Runtime = the only authority that resolves human-required states.
+- Execution Budget Runtime = atomic capacity admission/accounting after all
+  ordinary authority gates; it grants no authority itself.
 
 The Scheduler does not select agents, skills, routes, providers, or approval
 outcomes. It never creates commit, push, pull-request, merge, release, or
@@ -75,6 +77,12 @@ Independent durable creation evidence survives anchor-file loss. Evidence with
 a missing anchor is a persistent recovery hold, not an uninitialized store, so
 Scheduler restart, child reservation, retry recovery, and reconciliation cannot
 recreate even an identical anchor through ordinary runtime APIs.
+
+CORE-05 restart reconciliation also finalizes any persisted active budget
+reservation conservatively before later claims. Retry and continuation jobs use
+the original logical budget, so scheduler recovery cannot reset consumed time
+or units. Exhaustion blocks a new Executor start but does not decide retry,
+continuation, approval, review, Git, or deployment policy.
 
 `scheduler stop` records a graceful stop request. The loop stops claiming new
 work after its current Worker call returns. Interrupt handling leaves any

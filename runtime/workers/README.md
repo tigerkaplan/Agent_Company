@@ -12,6 +12,8 @@ A worker must:
 - resolve agent, optional skill, workflow, and capability references from canonical repository structures;
 - resolve an optional `project_id` to ordered project-state references without copying project contents;
 - verify approval state before risky or externally consequential execution;
+- atomically reserve configured logical-job execution capacity after authority
+  validation and before any Executor delegation;
 - resolve the explicit execution mode and preserve its exact approved scope;
 - build an `ExecutionRequest` and call one Executor;
 - capture result references and execution evidence;
@@ -35,6 +37,14 @@ queued -> running -> resolve references -> ExecutionRequest -> Executor
     APPROVED                     -> queued exact same incomplete step
     REJECTED                     -> failed, non-retryable
 ```
+
+When CORE-05 is configured, the flow is `authority revalidation -> budget
+admission/reservation -> resolve references -> Executor -> elapsed
+finalization`. Exhaustion fails the claimed job with structured budget evidence
+and zero Executor calls; it does not fabricate an `ExecutionResult`, retry, or
+continue. Active elapsed time excludes queue, approval, Reviewer, human, and
+continuation waits. Restart recovery conservatively closes uncertain active
+reservations before new admission.
 
 Missing canonical configuration produces an explicit failed execution artifact and a failed job. Provider failures are classified as `provider_unavailable`, `provider_timeout`, `provider_execution_failed`, `invalid_provider_output`, or `runtime_error`. A malformed job that cannot satisfy the canonical model returns an explicit worker error and remains available for inspection.
 

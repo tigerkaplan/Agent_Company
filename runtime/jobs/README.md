@@ -9,3 +9,8 @@ The canonical job model is defined in `JOB_MODEL.md`. Legal lifecycle states and
 Jobs may reference project state, connector inputs, generated outputs, and execution evidence, but they must not embed project state, credentials, connector secrets, or provider-specific business logic.
 
 Human approval state is stored separately under `../state/approvals/` and linked through compact refs. The job keeps only its lifecycle-facing approval status and resolved audit summary; provider or reviewer text cannot populate that summary.
+
+An optional `execution_budget` field is a runtime-managed immutable binding to
+the logical job's CORE-05 policy and restart-safe usage state. Retry and
+continuation jobs retain the same binding; budget availability never replaces
+ordinary approval, continuation, recovery-hold, Reviewer, or lifecycle gates.

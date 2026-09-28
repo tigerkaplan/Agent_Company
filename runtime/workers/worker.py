@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import time
 from typing import Any, Callable
 from uuid import uuid4
 
 from runtime.approvals.runtime import ApprovalRuntime, ApprovalRuntimeError
 from runtime.approvals.store import FileApprovalStore
+from runtime.budget.models import BudgetDecision
+from runtime.budget.runtime import ExecutionBudgetRuntime
 from runtime.continuation.models import ContinuationContractError, ContinuationPolicy
 from runtime.continuation.runtime import ContinuationRuntime
 from runtime.core.jobs import JobRuntime, RuntimeError, utc_now
@@ -37,6 +40,7 @@ class WorkerRunOutcome:
     retry_job_id: str | None = None
     continuation_job_id: str | None = None
     error: dict[str, Any] | None = None
+    budget: dict[str, Any] | None = None
 
     def to_dict(self) -> dict[str, Any]:
         value: dict[str, Any] = {"status": self.status}
@@ -56,6 +60,8 @@ class WorkerRunOutcome:
             value["continuation_job_id"] = self.continuation_job_id
         if self.error is not None:
             value["error"] = self.error
+        if self.budget is not None:
+            value["budget"] = self.budget
         return value
 
 
@@ -75,6 +81,7 @@ class Worker:
         id_factory: Callable[[], str] = new_execution_id,
         worker_id: str | None = None,
         lease_seconds: int = 300,
+        monotonic_clock: Callable[[], float] = time.monotonic,
     ) -> None:
         self.runtime = runtime
         self.resolver = resolver
@@ -95,9 +102,15 @@ class Worker:
         self.continuation_runtime = ContinuationRuntime(
             runtime, self.approval_runtime
         )
+        self.budget_runtime = ExecutionBudgetRuntime(
+            runtime.budget_store,
+            wall_clock=clock,
+            monotonic_clock=monotonic_clock,
+        )
 
     def run_once(self) -> WorkerRunOutcome:
         try:
+            self.recover_budget_state()
             self.recover_persisted_results()
             self.continuation_runtime.recover()
             job = self.runtime.claim(
@@ -134,10 +147,21 @@ class Worker:
 
     def _run_job(self, job: dict[str, Any]) -> WorkerRunOutcome:
         execution_id = self.id_factory()
+        budget_binding: Any | None = None
+        budget_decision: BudgetDecision | None = None
         try:
             job = self.runtime.validate_execution_authority(
                 job["job_id"], self.worker_id
             )
+            budget_binding = job.get("execution_budget")
+            if budget_binding is not None:
+                budget_decision = self.budget_runtime.reserve_execution(
+                    budget_binding,
+                    execution_id=execution_id,
+                    job_id=job["job_id"],
+                )
+                if budget_decision.status != "ALLOW":
+                    return self._record_budget_denial(job, budget_decision)
             context_refs = self.resolver.resolve(job)
             request = self._build_request(job, execution_id, context_refs)
         except RuntimeError as error:
@@ -147,10 +171,37 @@ class Worker:
                 error={"code": "authorization_error", "message": str(error)},
             )
         except (ReferenceResolutionError, ExecutionContractError) as error:
-            return self._record_preparation_failure(job, execution_id, error)
+            if budget_binding is not None:
+                budget_decision = self.budget_runtime.finalize_execution(
+                    budget_binding, execution_id=execution_id
+                )
+            return self._record_preparation_failure(
+                job, execution_id, error, budget_decision=budget_decision
+            )
 
         result = self._execute_safely(request)
-        return self._record_result(job, request, result)
+        if budget_binding is not None:
+            budget_decision = self.budget_runtime.finalize_execution(
+                budget_binding, execution_id=execution_id
+            )
+        return self._record_result(
+            job, request, result, budget_decision=budget_decision
+        )
+
+    def recover_budget_state(self) -> list[BudgetDecision]:
+        """Conservatively close active logical-budget windows after restart."""
+        decisions: list[BudgetDecision] = []
+        seen: set[str] = set()
+        for job in self.runtime.list():
+            binding = job.get("execution_budget")
+            if not isinstance(binding, dict):
+                continue
+            budget_id = str(binding.get("budget_id", ""))
+            if budget_id in seen:
+                continue
+            seen.add(budget_id)
+            decisions.append(self.budget_runtime.recover(binding))
+        return decisions
 
     @staticmethod
     def _build_request(
@@ -330,6 +381,8 @@ class Worker:
         job: dict[str, Any],
         execution_id: str,
         error: Exception,
+        *,
+        budget_decision: BudgetDecision | None = None,
     ) -> WorkerRunOutcome:
         result = self._failure_result(
             execution_id=execution_id,
@@ -339,7 +392,55 @@ class Worker:
             execution_mode=job.get("execution_mode", "READ_ONLY"),
             dry_run=job.get("dry_run", False),
         )
-        return self._record_result(job, None, result)
+        return self._record_result(
+            job, None, result, budget_decision=budget_decision
+        )
+
+    def _record_budget_denial(
+        self, job: dict[str, Any], decision: BudgetDecision
+    ) -> WorkerRunOutcome:
+        code = (
+            "execution_budget_exhausted"
+            if decision.status == "DENY_EXHAUSTED"
+            else "execution_budget_error"
+        )
+        message = (
+            "Configured execution budget is exhausted; no execution was started"
+            if decision.status == "DENY_EXHAUSTED"
+            else "Execution budget could not be trusted; no execution was started"
+        )
+        state = decision.state
+        budget_id = state.get("budget_id")
+        reference = None
+        if isinstance(budget_id, str) and budget_id:
+            reference = {
+                "ref_type": "other",
+                "ref": f"runtime-budget:{budget_id}",
+                "description": "Canonical logical-job execution budget state",
+            }
+        try:
+            updated = self.runtime.fail(
+                job["job_id"],
+                code=code,
+                message=message,
+                retryable=False,
+                error_ref=reference,
+                output_refs=[reference] if reference is not None else None,
+            )
+            status = updated["status"]
+        except RuntimeError:
+            status = "worker_error"
+        return WorkerRunOutcome(
+            status=status,
+            job_id=job["job_id"],
+            error={
+                "code": code,
+                "message": message,
+                "retryable": False,
+                "decision": decision.to_dict(),
+            },
+            budget=decision.to_dict(),
+        )
 
     def _record_result(
         self,
@@ -348,6 +449,7 @@ class Worker:
         result: ExecutionResult,
         *,
         persist_result: bool = True,
+        budget_decision: BudgetDecision | None = None,
     ) -> WorkerRunOutcome:
         serialized_result = result.to_dict()
         try:
@@ -375,6 +477,7 @@ class Worker:
                 execution_id=result.execution_id,
                 result=serialized_result,
                 error=failure,
+                budget=(budget_decision.to_dict() if budget_decision else None),
             )
 
         artifact_ref = {
@@ -551,6 +654,7 @@ class Worker:
             retry_job_id=retry_job_id,
             continuation_job_id=continuation_job_id,
             error=outcome_error,
+            budget=(budget_decision.to_dict() if budget_decision else None),
         )
 
     def _failure_result(

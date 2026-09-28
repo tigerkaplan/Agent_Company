@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-company.local/schemas/budget-usage-claim.schema.json",
+  "title": "Agent Company Execution Budget Usage Claim",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "budget_id",
+    "logical_job_id",
+    "policy_digest",
+    "state_sequence",
+    "event_digest",
+    "previous_claim_digest",
+    "claim_digest"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "budget_id": {"type": "string", "pattern": "^budget-[a-f0-9]{32}$"},
+    "logical_job_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "policy_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "state_sequence": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9223372036854775807
+    },
+    "event_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "previous_claim_digest": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        {"type": "null"}
+      ]
+    },
+    "claim_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}

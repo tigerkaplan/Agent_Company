@@ -14,6 +14,14 @@ from runtime.actions.authorization import authorization_fingerprint
 from runtime.actions.models import ExecutionScope, ScopeContractError
 from runtime.approvals.models import approval_boundary_id
 from runtime.approvals.store import ApprovalStoreError, FileApprovalStore
+from runtime.budget.models import (
+    BudgetBinding,
+    BudgetContractError,
+    BudgetPolicy,
+    ExecutionBudgetSpec,
+    budget_id_for,
+)
+from runtime.budget.store import ExecutionBudgetStoreError, FileExecutionBudgetStore
 from runtime.continuation.models import (
     ContinuationContractError,
     ContinuationPolicy,
@@ -89,6 +97,9 @@ class JobRuntime:
         self.store = FileJobStore(state_root)
         self.authorized_plan_store = FileAuthorizedPlanStore(
             self.store.root / ".continuation-authority"
+        )
+        self.budget_store = FileExecutionBudgetStore(
+            self.store.root / ".execution-budgets"
         )
         self.clock = clock
         self.id_factory = id_factory
@@ -712,6 +723,7 @@ class JobRuntime:
             "continuation_plan",
             "continuation",
             "continuation_parent_job_id",
+            "execution_budget",
         )
         payload = {
             name: deepcopy(failed[name])
@@ -748,6 +760,7 @@ class JobRuntime:
     ) -> dict[str, Any]:
         timestamp = self.clock()
         job = deepcopy(payload)
+        job_id = self._unused_job_id()
         job.setdefault("input_refs", [])
         job.setdefault("output_refs", [])
         job.setdefault("max_attempts", 1)
@@ -757,13 +770,20 @@ class JobRuntime:
         job.update(
             {
                 "schema_version": 1,
-                "job_id": self._unused_job_id(),
+                "job_id": job_id,
                 "created_at": timestamp,
                 "last_updated_at": timestamp,
                 "status": "created",
                 "attempt": attempt,
             }
         )
+        if "execution_budget" in job and parent_job_id is None:
+            try:
+                spec = ExecutionBudgetSpec.from_input(job["execution_budget"])
+                policy = BudgetPolicy.create(job_id, spec, created_at=timestamp)
+                job["execution_budget"] = self.budget_store.create(policy).to_dict()
+            except (BudgetContractError, ExecutionBudgetStoreError) as error:
+                raise RuntimeError(str(error)) from error
         authorized_plan: dict[str, Any] | None = None
         if "continuation_plan" in job and "continuation" not in job:
             try:
@@ -849,6 +869,7 @@ class JobRuntime:
                     "execution_mode",
                     "execution_scope",
                     "dry_run",
+                    "execution_budget",
                 )
                 payload = {
                     name: deepcopy(parent[name])
@@ -1015,6 +1036,25 @@ class JobRuntime:
             )
         if job["attempt"] > job["max_attempts"]:
             raise RuntimeError("Job attempt cannot exceed max_attempts")
+        budget_value = job.get("execution_budget")
+        if budget_value is not None:
+            try:
+                binding = BudgetBinding.from_dict(budget_value)
+                self.budget_store.load_policy(binding)
+            except (BudgetContractError, ExecutionBudgetStoreError) as error:
+                raise RuntimeError(f"Invalid execution budget: {error}") from error
+            checkpoint_for_budget = job.get("continuation")
+            if isinstance(checkpoint_for_budget, dict):
+                if binding.logical_job_id != checkpoint_for_budget.get("logical_job_id"):
+                    raise RuntimeError(
+                        "Execution budget does not match continuation logical identity"
+                    )
+            elif job.get("parent_job_id") is None and binding.logical_job_id != job.get(
+                "job_id"
+            ):
+                raise RuntimeError(
+                    "Initial execution budget does not match its logical job root"
+                )
         plan = job.get("continuation_plan")
         checkpoint = job.get("continuation")
         if (plan is None) != (checkpoint is None):
@@ -1209,7 +1249,7 @@ class JobRuntime:
             candidate = self.id_factory()
             if not self.store.exists(candidate) and not self.authorized_plan_store.exists(
                 candidate
-            ):
+            ) and not self.budget_store.exists(budget_id_for(candidate)):
                 return candidate
         raise RuntimeError("Could not generate a unique job ID")
 
@@ -1517,6 +1557,7 @@ class JobRuntime:
                     "dry_run",
                     "continuation_plan",
                     "continuation_parent_job_id",
+                    "execution_budget",
                 )
                 if any(
                     retry_parent.get(field) != job.get(field)
@@ -1615,6 +1656,7 @@ class JobRuntime:
                 "execution_scope",
                 "dry_run",
                 "continuation_plan",
+                "execution_budget",
             )
             if any(
                 parent.get(field) != job.get(field)

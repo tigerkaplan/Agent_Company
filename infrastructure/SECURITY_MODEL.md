@@ -99,6 +99,26 @@ credential readiness inspection, or provider Worker construction.
   performs no network discovery, directory scan, dynamic import, shell fallback,
   or tool invocation. Deferred loading returns selected inert data only;
   declared authority class is a requirement, not a grant.
+- CORE-05 execution budgets use immutable policy plus separate creation
+  evidence, atomically locked restart-safe usage, deterministic logical-job
+  inheritance, monotonic in-process timing, and conservative crash recovery.
+  Content-addressed immutable events and separate write-once sequence claims
+  form one linear usage ledger committed before the verified high-water head
+  and current-state cache. Every load validates the complete bounded chain from
+  deterministic policy-bound genesis and rejects gaps, branches, duplicates,
+  removal, replay, broken links, unexpected files, or content/storage-identity
+  mismatch. Separate first-use evidence prevents deletion of post-genesis
+  history from making a used budget appear fresh. Missing/malformed state,
+  stale bindings, coherent current-state/head/event rollback, removed
+  reservations, counter decrement, duplicate reservations, interrupted
+  persistence, and clock rollback fail closed.
+  Expected lock I/O failures produce canonical errors without unlocked fallback.
+  Remaining capacity is not approval, review, continuation, retry,
+  controlled-write, Git, or deployment authority, and provider output cannot
+  change limits or usage. This is an application/runtime-layer integrity
+  boundary; it does not claim protection from a privileged OS actor that can
+  coherently replace or delete all policy, creation, first-use, ledger, head,
+  and state evidence.
 - Commit, push, and pull-request creation remain separate persisted actions.
   Merge, release, and deployment remain absent.
 

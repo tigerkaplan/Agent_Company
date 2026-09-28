@@ -342,6 +342,9 @@
     "continuation": {
       "$ref": "#/$defs/continuation_checkpoint"
     },
+    "execution_budget": {
+      "$ref": "#/$defs/execution_budget_binding"
+    },
     "created_by": {
       "type": "string",
       "minLength": 1
@@ -409,6 +412,24 @@
     }
   },
   "$defs": {
+    "execution_budget_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["budget_id", "logical_job_id", "policy_digest"],
+      "properties": {
+        "budget_id": {
+          "type": "string",
+          "pattern": "^budget-[a-f0-9]{32}$"
+        },
+        "logical_job_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "policy_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
     "continuation_plan": {
       "type": "object",
       "additionalProperties": false,

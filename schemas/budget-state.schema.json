@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-company.local/schemas/budget-state.schema.json",
+  "title": "Agent Company Execution Budget State",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "budget_id",
+    "logical_job_id",
+    "policy_digest",
+    "state_sequence",
+    "consumed_elapsed_ms",
+    "consumed_execution_units",
+    "last_observed_at",
+    "clock_rollback_detected",
+    "reservations"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "budget_id": {
+      "type": "string",
+      "pattern": "^budget-[a-f0-9]{32}$"
+    },
+    "logical_job_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "policy_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "state_sequence": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9223372036854775807
+    },
+    "consumed_elapsed_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9223372036854775807
+    },
+    "consumed_execution_units": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100000
+    },
+    "last_observed_at": {"type": "string", "format": "date-time"},
+    "clock_rollback_detected": {"type": "boolean"},
+    "reservations": {
+      "type": "array",
+      "maxItems": 100000,
+      "items": {"$ref": "#/$defs/reservation"}
+    }
+  },
+  "$defs": {
+    "reservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_id",
+        "job_id",
+        "reserved_at",
+        "last_accounted_at",
+        "elapsed_ms",
+        "state"
+      ],
+      "properties": {
+        "execution_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "job_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "reserved_at": {"type": "string", "format": "date-time"},
+        "last_accounted_at": {"type": "string", "format": "date-time"},
+        "elapsed_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "state": {
+          "type": "string",
+          "enum": ["active", "finalized", "reconciled"]
+        },
+        "finalized_at": {"type": "string", "format": "date-time"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": ["state"],
+            "properties": {"state": {"enum": ["finalized", "reconciled"]}}
+          },
+          "then": {"required": ["finalized_at"]},
+          "else": {"not": {"required": ["finalized_at"]}}
+        }
+      ]
+    }
+  }
+}

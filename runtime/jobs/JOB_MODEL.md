@@ -37,6 +37,7 @@ A canonical job is one executable unit of work created by the runtime after the 
 | `continuation_plan` | Optional explicit pre-authorized bounded step plan. Provider output cannot create or extend it. |
 | `continuation` | Runtime-managed bounded checkpoint for one logical job and current authorized step. |
 | `continuation_parent_job_id` | Explicit provenance link to the prior successful step job; distinct from retry ancestry. |
+| `execution_budget` | Optional runtime-managed binding to one immutable logical-job execution budget. Input creation may specify only bounded elapsed/execution-unit dimensions; persisted jobs carry only budget ID, logical job ID, and policy digest. |
 | `error` | Optional structured error state for the current attempt. |
 | `approval` | Compact audit metadata for one resolved scoped approval, including its exact authorization fingerprint and, for a resolved human condition, the exact execution ID. The full persisted approval and execution artifacts remain authoritative. |
 
@@ -66,6 +67,12 @@ Phase 6B implements only the simplest traceable retry. A failed attempt remains 
 - execution mode and scope copied without broadening; controlled-write retries always require a fresh scoped approval.
 
 Retry does not mutate the failed job, bypass approval, or change the canonical agent, skill, workflow, task class, or capability merely because a provider was unavailable.
+
+Where configured, retry and continuation children preserve the exact same
+logical-job execution-budget binding. A new physical job or attempt never
+resets consumed elapsed time or execution units. Budget availability grants no
+retry, continuation, approval, review, controlled-write, Git, or deployment
+authority.
 
 Continuation means continuing authorized unfinished work after a valid step.
 It creates a deterministic child execution record bound to the same logical job

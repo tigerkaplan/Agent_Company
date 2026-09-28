@@ -6,9 +6,10 @@ or Major findings. CORE-02 Continuation Policy is COMPLETED / CLOSED and
 committed at `9d5ead1` after CORE-02R6 PASS. CORE-03 Eval Framework is COMPLETED
 / CLOSED / COMMITTED at `80ead22` after CORE-03R5 PASS with no Critical, Major,
 or Minor findings. CORE-04 Tool Discovery is CLOSED / COMMITTED at `35f03f8`
-after CORE-04R5 PASS with no Critical, Major, or Minor findings; CORE-05 is
-NEXT / NOT STARTED. An aggregate serialized-result byte ceiling remains FUTURE
-HARDENING / NON-BLOCKING.
+after CORE-04R5 PASS with no Critical, Major, or Minor findings. CORE-05 Time /
+Execution Budget is CLOSED / READY TO COMMIT after CORE-05R3 PASS and remains
+uncommitted; CORE-06 is NOT STARTED. An aggregate serialized-result byte ceiling
+remains FUTURE HARDENING / NON-BLOCKING.
 
 `ExecutionRequest` and `ExecutionResult` are provider-neutral, JSON-serializable runtime contracts. Execution Result = WHAT HAPPENED; it is not a provider response format, job lifecycle state, review decision, continuation policy, or authority to perform another action.
 
@@ -65,3 +66,11 @@ bounded expectations and `EvalResult` records deterministic measurement as
 The EvalRunner reuses the canonical CORE-01 validator, never infers evidence
 from provider prose, and has no Reviewer, approval, continuation, retry, Git, or
 deployment authority. See `../evals/README.md`.
+
+CORE-05 admission happens before an `ExecutionRequest` is delegated and is
+accounted outside `ExecutionResult`. A reserved execution unit is canonical
+runtime usage whether the eventual result succeeds or fails; active elapsed
+time is measured by trusted runtime clocks, not provider timestamps or reported
+usage. Budget exhaustion creates no fake successful result, and provider result
+content cannot increase, reset, or otherwise mutate the logical-job budget. See
+`../budget/README.md`.

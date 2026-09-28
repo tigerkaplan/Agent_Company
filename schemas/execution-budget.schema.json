@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-company.local/schemas/execution-budget.schema.json",
+  "title": "Agent Company Execution Budget Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "budget_id",
+    "logical_job_id",
+    "policy_version",
+    "max_elapsed_ms",
+    "max_execution_units",
+    "created_at",
+    "policy_digest"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "budget_id": {
+      "type": "string",
+      "pattern": "^budget-[a-f0-9]{32}$"
+    },
+    "logical_job_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "policy_version": {"type": "integer", "const": 1},
+    "max_elapsed_ms": {
+      "oneOf": [
+        {"type": "integer", "minimum": 0, "maximum": 604800000},
+        {"type": "null"}
+      ]
+    },
+    "max_execution_units": {
+      "oneOf": [
+        {"type": "integer", "minimum": 0, "maximum": 100000},
+        {"type": "null"}
+      ]
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "policy_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "not": {
+    "properties": {
+      "max_elapsed_ms": {"type": "null"},
+      "max_execution_units": {"type": "null"}
+    },
+    "required": ["max_elapsed_ms", "max_execution_units"]
+  }
+}

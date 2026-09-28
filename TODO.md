@@ -16,8 +16,20 @@
   - [x] Independent re-review complete.
   - [x] Closure reconciliation complete.
   - [x] Implementation commit complete at `35f03f8`.
-- [ ] CORE-05 Time Budget — NEXT / NOT STARTED.
-- [ ] CORE-06 Retry / Stop Policy — PLANNED.
+- [ ] CORE-05 Time / Execution Budget — CLOSED / READY TO COMMIT after CORE-05R3
+  PASS; not committed.
+  - [x] Immutable bounded logical-job policy and schemas.
+  - [x] Atomic execution-unit reservation and restart-safe active-time usage.
+  - [x] Continuation/retry inheritance, crash recovery, and fail-closed
+    exhaustion.
+  - [x] Targeted and regression implementation validation.
+  - [x] Initial independent review and bounded R1 repairs.
+  - [x] R2 full-chain and coherent-current-layer bounded repairs.
+  - [x] Independent re-review complete: CORE-05R3 PASS with no Critical, Major,
+    or Minor findings.
+  - [x] Closure reconciliation complete.
+  - [ ] Implementation commit.
+- [ ] CORE-06 Retry / Stop Policy — NOT STARTED.
 - [ ] CORE-07 Progress Events — PLANNED.
 - [ ] CORE-08 Context Discovery — PLANNED.
 - [ ] CORE-09 Context Cache Policy — PLANNED.
@@ -78,7 +90,7 @@
   Compose services, persistent canonical state, and no public exposure.
 - [x] Complete the Phase 8D independent implementation/security review with no
   critical, major, or required-fix findings and close Phase 8D.
-- [ ] Phase 8E is BLOCKED / PAUSED because the VPS has not yet been created;
+- [ ] Phase 8E is PAUSED / BLOCKED because the VPS has not yet been created;
   deployment has not started.
 - [ ] Before Phase 8E production use, build the pinned image on the target Linux
   architecture and perform an SBOM/vulnerability scan.

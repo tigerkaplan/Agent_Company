@@ -205,6 +205,16 @@ class SchedulerLoop:
             }
             errors.extend(schedule_result["errors"])
         try:
+            budget_recovery = self.worker.recover_budget_state()
+        except RuntimeError as error:
+            budget_recovery = []
+            errors.append({"code": "budget_recovery_error", "message": str(error)})
+        for decision in budget_recovery:
+            if decision.status == "ERROR":
+                errors.append(
+                    {"code": "budget_recovery_error", "message": decision.reason}
+                )
+        try:
             reconciled_executions = self.worker.recover_persisted_results()
         except (RuntimeError, ApprovalRuntimeError) as error:
             reconciled_executions = []
