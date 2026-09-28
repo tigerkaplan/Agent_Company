@@ -1,7 +1,8 @@
 # Tool Discovery And Deferred Loading
 
 CORE-04 is CLOSED / COMMITTED at `35f03f8` after CORE-04R5 PASS with no Critical,
-Major, or Minor findings. CORE-05 is NEXT / NOT STARTED.
+Major, or Minor findings. CORE-05 is CLOSED / COMMITTED at `63813b5` after
+CORE-05R3 PASS; CORE-06 is NEXT / NOT STARTED.
 
 CORE-04 is a provider-independent runtime capability. It does not create a Tool
 Discovery Agent. `ToolRegistry` answers which explicitly registered tools could

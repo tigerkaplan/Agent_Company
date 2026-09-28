@@ -14,13 +14,17 @@
 - CORE-01 Canonical Result Contract: COMPLETED / CLOSED / COMMITTED at `3f6acb6`.
 - CORE-02 Continuation Policy: COMPLETED / CLOSED / COMMITTED at `9d5ead1`.
 - CORE-03 Eval Framework: COMPLETED / CLOSED / COMMITTED at `80ead22`.
-- CORE-04 Tool Discovery: CLOSED / COMMITTED at `35f03f8` after CORE-04R5 PASS.
-- CORE-05 Time / Execution Budget: CLOSED / READY TO COMMIT after CORE-05R3 PASS;
-  remains uncommitted.
-- CORE-06 Retry / Stop Policy: NOT STARTED.
+- CORE-04 Tool / Skill Discovery: CLOSED / COMMITTED at `35f03f8` after
+  CORE-04R5 PASS.
+- CORE-05 Time / Execution Budget: CLOSED / COMMITTED at `63813b5` after
+  CORE-05R3 PASS.
+- CORE-06 Retry / Stop Policy: NEXT / NOT STARTED.
+- CORE-07 through CORE-11: NOT STARTED.
 - Phase 8E: PAUSED / BLOCKED; deployment not started because the VPS has not
   yet been created.
 - Phase 8F: NOT STARTED.
+- Phase 8G: NOT STARTED.
+- Phase 8H: NOT STARTED.
 - Phase 9: PLANNED.
 - Phase 10: PLANNED.
 
@@ -104,15 +108,16 @@ redefine or begin Phase 8.
 - CORE-01 Canonical Result Contract: COMPLETED / CLOSED / COMMITTED at `3f6acb6`.
 - CORE-02 Continuation Policy: COMPLETED / CLOSED / COMMITTED at `9d5ead1`.
 - CORE-03 Eval Framework: COMPLETED / CLOSED / COMMITTED at `80ead22`.
-- CORE-04 Tool Discovery: CLOSED / COMMITTED at `35f03f8` after CORE-04R5 PASS.
-- CORE-05 Time / Execution Budget: CLOSED / READY TO COMMIT after CORE-05R3 PASS;
-  remains uncommitted.
-- CORE-06 Retry / Stop Policy: NOT STARTED.
-- CORE-07 Progress Events: PLANNED.
-- CORE-08 Context Discovery: PLANNED.
-- CORE-09 Context Cache Policy: PLANNED.
-- CORE-10 Effort Routing: PLANNED.
-- CORE-11 External Content Isolation: PLANNED.
+- CORE-04 Tool / Skill Discovery: CLOSED / COMMITTED at `35f03f8` after
+  CORE-04R5 PASS.
+- CORE-05 Time / Execution Budget: CLOSED / COMMITTED at `63813b5` after
+  CORE-05R3 PASS.
+- CORE-06 Retry / Stop Policy: NEXT / NOT STARTED.
+- CORE-07 Progress Events: NOT STARTED.
+- CORE-08 Context Discovery Before Action: NOT STARTED.
+- CORE-09 Context / Prompt Cache Policy: NOT STARTED.
+- CORE-10 Compute / Effort Policy: NOT STARTED.
+- CORE-11 External Content Isolation: NOT STARTED.
 
 CORE-01 defines the canonical provider-agnostic Execution Result: WHAT HAPPENED.
 Its final independent closure review passed with no Critical or Major findings.
@@ -133,10 +138,19 @@ provides immutable logical-job elapsed/execution-unit policy, atomic admission
 and reservation, complete genesis-to-head validation of one content-addressed
 append-only usage ledger, verified state/head caches, restart-safe accounting,
 conservative crash recovery, and structured fail-closed exhaustion without
-granting execution or governance authority. CORE-05 is CLOSED / READY TO COMMIT
-after CORE-05R3 PASS and remains uncommitted. CORE-06 is NOT STARTED; CORE-07
-through CORE-11 remain unimplemented. An aggregate
+granting execution or governance authority. CORE-05 is CLOSED / COMMITTED at
+`63813b5` after CORE-05R3 PASS. CORE-06 is NEXT / NOT STARTED; CORE-07 through
+CORE-11 are NOT STARTED. An aggregate
 serialized-result byte ceiling is FUTURE HARDENING / NON-BLOCKING.
+
+### CORE-06 Accepted Scope — Next / Not Started
+
+CORE-06 will define provider-neutral Retry Policy and Stop Policy, bounded
+no-progress and stuck detection, cycle detection, unit-scoped repair,
+repair-scope enforcement, safe retry of only the failed unit, local retry
+limits, and the Retry -> Replan boundary. It must not treat provider prose,
+`retryable`, `next_actions`, an available budget, or an unfinished job as retry
+authority. No CORE-06 implementation or directory exists yet.
 
 ## Phases 8A, 8B, 8C, And 8D Closed
 
@@ -193,7 +207,7 @@ authority. Compose syntax and deterministic regressions pass, but a Docker
 daemon was unavailable, so the image build and live-container smoke remain
 unverified. These are Phase 8E runtime-validation prerequisites and do not
 reopen Phase 8D. Phase 8E is PAUSED / BLOCKED because the VPS has not yet been
-created; deployment has not started. Phase 8F is NOT STARTED.
+created; deployment has not started. Phases 8F through 8H are NOT STARTED.
 
 Before Phase 8E production use, build the pinned image on the target Linux
 architecture; perform an SBOM/vulnerability scan and verify or update the base
@@ -209,60 +223,165 @@ audit, real subprocess singleton-race validation, native Windows signal/ACL
 validation, and more race-resistant status-lock probing. Phase 8B's
 race-resistant directory-handle containment item also remains non-blocking.
 
-## Planned
+## Accepted V1 Roadmap — Planned / Not Started
 
-### Planned Canonical Capability Expansion
+The following plan is accepted V1 scope, not implemented current capability.
+Its labels define ownership and sequencing only; they grant no execution,
+approval, review, write, Git, deployment, or provider authority.
 
-The current 10 canonical agents may later be joined by Finance & Pricing,
-Analytics, Content, and Design. The target remains approximately 14 durable
-canonical roles, not a collection of 20-30 micro-agents. Planned, unimplemented
-skill expansion includes Finance/Pricing, Analytics, Content, Design, Sales lead
-generation, SEO, and Reviewer QA/Security packs. Agent and skill definitions
-remain separate.
+### A. Governance
 
-### Phase 9: Observability, Control Room, And Hardening
+#### GOV-01 — Task & Authority Contract
 
-Goal: make the system operationally understandable and production-ready.
+GOV-01 will define the canonical Task Contract: objective, inputs, expected
+outputs, allowed tools, write scope, acceptance criteria, required checks,
+required evidence, and explicit stop conditions. It also owns Risk / Delegation
+Levels L0-L5, blast radius, reversibility, approval requirements, and
+Evidence-Gated Task Completion.
 
-- OBSERVABILITY: plan structured logs, metrics, runtime health, provider usage, and cost/token accounting where available.
-- OBSERVABILITY: expose job, queue, scheduler, approval, reviewer, failure, retry, and recovery visibility.
-- OBSERVABILITY: define audit trails and recovery tooling.
-- CORE: plan security hardening for the runtime and remote interfaces.
-- REMOTE INTERFACE: evaluate a Control Room as an operations and visualization layer over canonical Agent Company state.
+Executor or agent success is not task completion. `DONE` requires successful
+execution plus satisfied acceptance criteria, required evidence, and every
+required review or gate.
 
-The repository does not currently contain `apps/control-room`. A future Control Room must not become a second source of truth.
+#### GOV-02 — Capability Governance
 
-### Post-Phase-9 Decision Engine Evaluation
+GOV-02 will define Capability Certification, Decision Audit Trace,
+policy/authority provenance, blast-radius gates, and reversibility gates.
 
-Only after Phase 9 observability exists, evaluate a bounded
-`orchestrator/decision-engine/` with rules, scoring, classification, ranking,
-confidence, and adapters. JEV may be considered only as an optional adapter for
-classification, ranking, filtering, bounded choice, and confidence gating. It
-is not an agent, human approval authority, or Claude/Codex-style execution
-provider. Observability must measure whether it actually reduces token usage,
-provider calls, cost, or routing mistakes before Phase 10 project packs.
+### B. Graph Orchestration
 
-### Phase 10: Project / Capability Packs
+#### ORCH-01 — Graph Execution Runtime
 
-Goal: use the stable Agent Company core for real projects and domain-specific capabilities.
+ORCH-01 is not CORE-12. A loop operates inside a node; a graph connects nodes.
+Planned scope includes Planner / Splitter, Worker nodes, deterministic nodes,
+gate nodes, human gates, dependencies, fan-out, fan-in/merge, correction,
+replan, and learning edges, edge validation, isolated fan-out contexts, and
+unit-level repair integration.
 
-- PROJECT PACKS: express project-specific functionality through project state, skills, workflows, connector configuration, and domain-specific capability packs.
-- PROJECT PACKS: keep Brightshore, YouTube, Instagram, Etsy, Travel, and Product
-  Research/Amazon-style research as example pack candidates rather than
-  committed implementation scope or canonical agents.
-- RUNTIME: use the same shared Agent Company runtime for project packs.
-- CORE: require user approval before consequential purchase, publication, account, financial, production, or external communication actions.
+Deterministic nodes may perform merge, deduplication, sorting, hashing, diff,
+schema validation, test execution, artifact verification, counting, or
+dependency resolution.
 
-Project packs must not create separate Agent Company runtimes per project unless a later approved architecture explicitly changes that rule.
+### C. Knowledge / Memory / RAG
+
+Knowledge is what the system knows. Memory is what happened or was learned.
+State is what is happening now. These remain separate.
+
+- MEM-01 — Knowledge / Memory Foundation: provider-neutral `MemoryInterface`,
+  project isolation, provenance, confidence, and verification semantics.
+- MEM-02 — Knowledge Lifecycle + Retrieval / RAG: capture, normalize,
+  deduplicate, classify, connect, store, retrieve, rerank, build a context pack,
+  act, verify, and learn. Anchored evidence-backed memory may link to files,
+  symbols, tasks, workflows, decisions, runs, tests, evidence, agents, or
+  capabilities and record provenance, verification, confidence, validity, and
+  supersession.
+- MEM-02B — Learning Constraint Pipeline: observation -> candidate lesson ->
+  evidence -> deduplication -> scope -> validation/review -> promotion -> active
+  planning constraint. A PASS does not automatically become a permanent rule.
+- MEM-03 — Memory Providers: local provider first. Hindsight is only a future
+  prototype provider behind `MemoryInterface`; SwarmVault and Vault Curate are
+  reference patterns, not core dependencies.
+
+### D. Agent Expansion
+
+The current canonical agent count is 10. V1 targets 14 by later adding:
+
+11. Finance & Pricing
+12. Analytics
+13. Content
+14. Design
+
+SEO, AEO, GEO, JEV, Memory, SAGE, Sentinel, Chimera, Lead Finder, Firecrawl,
+and DataForSEO are not canonical agents.
+
+### E. Capability Expansion
+
+- CAP-SALES: lead finding, lead research, qualification, outreach, and
+  follow-up.
+- CAP-SEARCH-GROWTH-01: one cross-agent Search Growth system covering SEO, AEO,
+  GEO, search intent, commercial keyword strategy, technical and on-page SEO,
+  internal linking, content funnel, authority building, AI-search readiness,
+  answer extractability, conversion, experiments, and seasonal planning.
+- CAP-REV-01: QA, Security, Knowledge, Release, and Change Impact Review. Change
+  Impact Review considers the task, acceptance criteria, diff, changed symbols,
+  dependencies, architecture decisions, related memory, previous failures, and
+  tests.
+- Code Intelligence / Repository Index: planned under CORE-08 and the Software
+  capability, covering symbols, dependencies, call relationships, affected
+  files, repository context, and related architectural memory.
+
+### F. Phase 9
+
+- Phase 9A — Observability: task success, cost per completed task, latency,
+  provider calls, tool errors, retries, continuation, replans, escalation, and
+  eval history. Later graph metrics include planned/executed/skipped nodes,
+  parallel branches, repairs, replans, gate failures, human interventions,
+  rollbacks, critical-path time, provider/token cost, and wall-clock time.
+- Phase 9B — Control Room: Projects, Agents, Jobs, Approvals, Providers, Costs,
+  Reviews, Evals, Graph execution, Knowledge, Memory, Decisions, Lessons,
+  Planning Constraints, and Context Packs. It remains a view/operator layer
+  over canonical state, never a second source of truth.
+- Phase 9C — Operating Layer: Morning Map, State Delta, Weekly Close / Weekly
+  Compounding, Lessons Learned, Automation Opportunities, and Pre-flight Review.
+
+### G. Decision Engine / JEV
+
+- DEC-01 — Provider-neutral Decision Engine: deterministic rules, scoring,
+  classification, ranking, confidence, and escalation. Generation belongs to
+  an execution provider, bounded decisions to the Decision Engine or possible
+  JEV adapter, and exact rules to deterministic code. Decision authority stays
+  separate from execution authority.
+- DEC-02 — JEV Pilot: initially limited to low-risk next-worker routing,
+  context relevance, and ranking, and expanded only if Phase 9 metrics show
+  benefit. JEV is not an agent, Reviewer, approval/security authority, or normal
+  generation provider.
+
+### H. Deployment
+
+- Phase 8E — Real VPS deployment: PAUSED / NOT COMPLETE.
+- Phase 8F — Backup / Recovery: NOT STARTED.
+- Phase 8G — Production smoke tests: NOT STARTED.
+- Phase 8H — Final deployment security review: NOT STARTED.
+
+All four remain required before the system can be described as
+production-deployed or always-on.
+
+### I. Phase 10 — Project / Domain Packs
+
+Brightshore is the first production Project Pack. A pack may contain skills,
+workflows, knowledge, policies, connector requirements, and project
+configuration, but never duplicates the Agent Company runtime or canonical
+agents. YouTube, social content, digital products, travel, Etsy, and other
+packs are later expansion and do not block V1 unless explicitly approved.
+
+## Canonical V1 Definition
+
+V1 consists of CORE-01 through CORE-11; GOV-01 and GOV-02; ORCH-01; the
+Knowledge / Memory / RAG foundation; 14 canonical agents; essential Sales,
+Search Growth, and Reviewer capabilities; Code Intelligence; Phase 9A through
+9C; DEC-01 and the bounded DEC-02 pilot; Phase 8E through 8H deployment and
+security completion; and Brightshore as the first production Project Pack.
+
+## Later / Important — Not V1 Blockers
+
+- Persistent Agent Mailbox.
+- Git Worktree Isolation.
+- Advanced Agent Teams / parallel execution.
+- Credential / Secret Broker.
+- Advanced Knowledge Graph.
+- Multi-model Council / disagreement escalation.
+- Additional memory providers.
+- Advanced context compaction.
 
 ## Deferred Or Not Implemented
 
-- Merge: deferred and not implemented.
-- Deployment: deferred and not implemented.
-- Public Telegram webhook mode and public webhook hosting: not implemented.
-- Broader Gmail, Drive, and Calendar runtime integrations: contract-only.
-- Phase 8D Docker adaptation and packaging: completed, closed, and not deployed.
-- Phase 8E VPS deployment: PAUSED / BLOCKED because the VPS has not yet been
-  created; deployment has not started and requires separate human approval.
-- Phase 8F backup/recovery: NOT STARTED.
-- Dedicated observability implementation: not started.
+- Merge, release, and deployment authority are not implemented.
+- Public Telegram webhook mode and public webhook hosting are not implemented.
+- Broader Gmail, Drive, and Calendar runtime integrations remain contract-only.
+- Phase 8D Docker adaptation and packaging is completed, closed, and not
+  deployed.
+- Phase 8E is PAUSED / NOT COMPLETE and requires separate human approval.
+- Phases 8F, 8G, and 8H are NOT STARTED.
+- Governance, graph orchestration, memory/RAG runtime, agents 11-14, capability
+  expansion, Code Intelligence, Phase 9, Decision Engine/JEV, and Phase 10 are
+  planned and unimplemented.

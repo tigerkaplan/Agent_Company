@@ -9,15 +9,15 @@
   after CORE-02R6 PASS with no Critical, Major, or Minor findings.
 - [x] CORE-03 Eval Framework — COMPLETED / CLOSED / COMMITTED at `80ead22`
   after CORE-03R5 PASS with no Critical, Major, or Minor findings.
-- [x] CORE-04 Tool Discovery — CLOSED / COMMITTED at `35f03f8` after CORE-04R5
+- [x] CORE-04 Tool / Skill Discovery — CLOSED / COMMITTED at `35f03f8` after CORE-04R5
   PASS with no Critical, Major, or Minor findings.
   - [x] Implementation complete.
   - [x] Bounded repairs complete.
   - [x] Independent re-review complete.
   - [x] Closure reconciliation complete.
   - [x] Implementation commit complete at `35f03f8`.
-- [ ] CORE-05 Time / Execution Budget — CLOSED / READY TO COMMIT after CORE-05R3
-  PASS; not committed.
+- [x] CORE-05 Time / Execution Budget — CLOSED / COMMITTED at `63813b5` after
+  CORE-05R3 PASS.
   - [x] Immutable bounded logical-job policy and schemas.
   - [x] Atomic execution-unit reservation and restart-safe active-time usage.
   - [x] Continuation/retry inheritance, crash recovery, and fail-closed
@@ -28,15 +28,76 @@
   - [x] Independent re-review complete: CORE-05R3 PASS with no Critical, Major,
     or Minor findings.
   - [x] Closure reconciliation complete.
-  - [ ] Implementation commit.
-- [ ] CORE-06 Retry / Stop Policy — NOT STARTED.
-- [ ] CORE-07 Progress Events — PLANNED.
-- [ ] CORE-08 Context Discovery — PLANNED.
-- [ ] CORE-09 Context Cache Policy — PLANNED.
-- [ ] CORE-10 Effort Routing — PLANNED.
-- [ ] CORE-11 External Content Isolation — PLANNED.
+  - [x] Implementation commit complete at `63813b5`.
+- [ ] CORE-06 Retry / Stop Policy — NEXT / NOT STARTED.
+  - [ ] Define retry and stop policy without treating `retryable` as authority.
+  - [ ] Add bounded no-progress, stuck, and cycle detection.
+  - [ ] Define unit-scoped repair and enforce repair scope.
+  - [ ] Retry only the failed unit when safe, within local retry limits.
+  - [ ] Define the Retry -> Replan boundary.
+- [ ] CORE-07 Progress Events — NOT STARTED.
+- [ ] CORE-08 Context Discovery Before Action — NOT STARTED.
+- [ ] CORE-09 Context / Prompt Cache Policy — NOT STARTED.
+- [ ] CORE-10 Compute / Effort Policy — NOT STARTED.
+- [ ] CORE-11 External Content Isolation — NOT STARTED.
 - [ ] FUTURE HARDENING / NON-BLOCKING: add an aggregate serialized-result byte
   ceiling.
+
+## Accepted V1 Backlog — NOT STARTED
+
+- [ ] GOV-01 Task & Authority Contract: canonical task contract, L0-L5 risk and
+  delegation levels, blast radius, reversibility, approvals, explicit stop
+  conditions, and evidence-gated completion.
+- [ ] GOV-02 Capability Governance: capability certification, decision audit
+  trace, policy/authority provenance, and blast-radius/reversibility gates.
+- [ ] ORCH-01 Graph Execution Runtime: planner/splitter, worker and deterministic
+  nodes, gates, dependencies, fan-out/fan-in, correction/replan/learning edges,
+  edge validation, isolated branch contexts, and unit-level repair integration.
+  ORCH-01 is not CORE-12; loops remain inside nodes and graphs connect nodes.
+- [ ] MEM-01 Knowledge / Memory Foundation: provider-neutral MemoryInterface,
+  project isolation, provenance, confidence, and verification semantics while
+  preserving Knowledge != Memory != State.
+- [ ] MEM-02 Knowledge Lifecycle + Retrieval / RAG: normalized, deduplicated,
+  classified, connected, evidence-backed retrieval, reranking, context packs,
+  action verification, and learning.
+- [ ] MEM-02B Learning Constraint Pipeline: promote observations to planning
+  constraints only after evidence, deduplication, scoping, and review; PASS is
+  not automatically a permanent rule.
+- [ ] MEM-03 Memory Providers: local provider first; Hindsight only as a future
+  provider behind MemoryInterface; SwarmVault/Vault Curate are references, not
+  core dependencies.
+- [ ] Add canonical Agent 11 Finance & Pricing.
+- [ ] Add canonical Agent 12 Analytics.
+- [ ] Add canonical Agent 13 Content.
+- [ ] Add canonical Agent 14 Design.
+- [ ] CAP-SALES: lead finding, research, qualification, outreach, and follow-up.
+- [ ] CAP-SEARCH-GROWTH-01: one cross-agent SEO/AEO/GEO and search-growth system;
+  do not create SEO, AEO, or GEO agents.
+- [ ] CAP-REV-01: QA, Security, Knowledge, Release, and Change Impact Review.
+- [ ] Add Code Intelligence / Repository Index under CORE-08 and the Software
+  capability: symbols, dependencies, calls, affected files, context, and
+  related architectural memory.
+- [ ] Phase 9A Observability.
+- [ ] Phase 9B Control Room over canonical state.
+- [ ] Phase 9C Operating Layer.
+- [ ] DEC-01 provider-neutral Decision Engine with deterministic rules, scoring,
+  classification, ranking, confidence, and escalation; decision authority must
+  remain separate from execution authority.
+- [ ] DEC-02 bounded JEV pilot for low-risk next-worker routing, context
+  relevance, and ranking, only if Phase 9 metrics justify it.
+- [ ] Phase 10 Project / Domain Packs, beginning with Brightshore, without
+  duplicating the runtime or canonical agents.
+
+## Later / Important — Not V1 Blockers
+
+- [ ] Persistent Agent Mailbox.
+- [ ] Git Worktree Isolation.
+- [ ] Advanced Agent Teams / parallel execution.
+- [ ] Credential / Secret Broker.
+- [ ] Advanced Knowledge Graph.
+- [ ] Multi-model Council / disagreement escalation.
+- [ ] Additional memory providers.
+- [ ] Advanced context compaction.
 
 ## Phase 7 Planning
 
@@ -105,7 +166,8 @@
   separate explicit approval.
 - [ ] Require exact human approval before Phase 8E VPS deployment or any later public exposure.
 - [ ] Phase 8F backup/recovery is NOT STARTED.
-- [ ] Complete Phase 8G smoke testing and Phase 8H final independent security review.
+- [ ] Phase 8G production smoke testing is NOT STARTED.
+- [ ] Phase 8H final deployment security review is NOT STARTED.
 
 Non-blocking Phase 8C future hardening: different-provider full-repository
 audit, real subprocess singleton-race validation, native Windows signal/ACL

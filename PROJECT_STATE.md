@@ -10,11 +10,12 @@
   committed at `9d5ead1`.
 - CORE-03 Eval Framework is COMPLETED / CLOSED / COMMITTED at `80ead22` after
   CORE-03R5 PASS with no Critical, Major, or Minor findings.
-- CORE-04 Tool Discovery is CLOSED / COMMITTED at `35f03f8` after CORE-04R5
+- CORE-04 Tool / Skill Discovery is CLOSED / COMMITTED at `35f03f8` after CORE-04R5
   PASS with no Critical, Major, or Minor findings.
-- CORE-05 Time / Execution Budget is CLOSED / READY TO COMMIT after CORE-05R3
-  PASS and remains uncommitted.
-- CORE-06 Retry / Stop Policy is NOT STARTED.
+- CORE-05 Time / Execution Budget is CLOSED / COMMITTED at `63813b5` after
+  CORE-05R3 PASS with no Critical, Major, or Minor findings.
+- CORE-06 Retry / Stop Policy is NEXT / NOT STARTED.
+- CORE-07 through CORE-11 are NOT STARTED.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
@@ -33,6 +34,7 @@
 - Phase 8E is PAUSED / BLOCKED. Deployment has not started because the VPS has
   not yet been created.
 - Phase 8F is NOT STARTED.
+- Phase 8G and Phase 8H are NOT STARTED.
 
 ## CORE-01 Canonical Execution Result — COMPLETED / CLOSED
 
@@ -566,7 +568,7 @@ was verified clean.
 CORE-05 subsequently began only after that reconciliation was committed and
 the clean working tree was verified at `6d681d3`.
 
-## CORE-05 Time / Execution Budget — CLOSED / READY TO COMMIT
+## CORE-05 Time / Execution Budget — CLOSED / COMMITTED
 
 CORE-05 adds a small provider-independent runtime capability under
 `runtime/budget/`. An optional immutable policy bounds active elapsed
@@ -683,6 +685,32 @@ CORE-05 closure reconciliation is complete. CORE-05 is CLOSED / READY TO COMMIT
 and remains uncommitted. CORE-06 is NOT STARTED. No live provider, external
 network, deployment, push, PR, commit, or external-system mutation was
 performed.
+
+CORE-05 implementation, repairs, review evidence, and closure documentation
+were subsequently committed at `63813b5` (`feat: add time and execution
+budget`). At this post-commit checkpoint, CORE-05 is CLOSED / COMMITTED;
+CORE-06 is NEXT / NOT STARTED; CORE-07 through CORE-11 are NOT STARTED.
+
+## Post-CORE-05 Documentation / Roadmap / Repository Tree Checkpoint
+
+The post-commit repository tree contains the committed CORE-05 implementation
+at `runtime/budget/`; the repository uses that singular path. No CORE-06 through
+CORE-11 implementation directory exists. The current canonical agent count is
+10, and the accepted V1 target is 14 after later addition of Finance & Pricing,
+Analytics, Content, and Design.
+
+`ROADMAP.md` now records the accepted V1 sequence after CORE-01 through CORE-11:
+GOV-01 and GOV-02, ORCH-01 Graph Execution Runtime, MEM-01 through MEM-03,
+agent and capability expansion, Phase 9A through 9C, DEC-01 and the bounded
+DEC-02 JEV pilot, Phase 8E through 8H completion, and Brightshore as the first
+Phase 10 production Project Pack. These are planned, not implemented. JEV,
+SEO/AEO/GEO, Memory, and named tools or patterns are not canonical agents.
+
+`README.md` is the canonical repository-tree summary. It separates current
+physical paths from absent future target paths and records the DOC-TREE policy:
+structural implementation is followed by validation, review, closure, commit,
+repository-tree audit, and documentation reconciliation. This checkpoint
+created no future directories and changed no runtime behavior.
 
 ## Phase 8A Architecture Design Checkpoint
 

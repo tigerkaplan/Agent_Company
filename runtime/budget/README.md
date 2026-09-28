@@ -1,7 +1,7 @@
 # Execution Budget
 
-CORE-05 is CLOSED / READY TO COMMIT after CORE-05R3 PASS with no Critical,
-Major, or Minor findings. It remains uncommitted; CORE-06 is NOT STARTED.
+CORE-05 is CLOSED / COMMITTED at `63813b5` after CORE-05R3 PASS with no
+Critical, Major, or Minor findings. CORE-06 is NEXT / NOT STARTED.
 
 CORE-05 is a provider-independent runtime capability for bounding how much
 already-authorized execution capacity one logical job may consume. It is not an

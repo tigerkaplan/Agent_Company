@@ -478,16 +478,16 @@ Implementation is acceptable only when all of the following are evidenced:
   The successful independent review found no critical, major, or required-fix
   findings. No VPS, service/supervisor, public ingress, production provider,
   live Telegram/provider execution, merge, or deployment authority was added.
-- **Phase 8E - VPS deployment — BLOCKED / PAUSED:** the VPS has not yet been
+- **Phase 8E - VPS deployment — PAUSED / BLOCKED:** the VPS has not yet been
   created and deployment has not started. The vendor-neutral host build and
   exact reviewed deployment plan require separate human deployment approval
   and the recorded target-host runtime validation evidence.
 - **Phase 8F - Backup and recovery — NOT STARTED:** automated encrypted snapshots, retention,
   offline validation, restore rehearsal, and documented RPO/RTO evidence.
-- **Phase 8G - Deployment smoke test:** restart, lease, Telegram offset, webhook
+- **Phase 8G - Deployment smoke test — NOT STARTED:** restart, lease, Telegram offset, webhook
   provenance, notification dedupe, provider, firewall, and rollback tests on the
   approved target without merge authority.
-- **Phase 8H - Final security review:** independent review of the actual host,
+- **Phase 8H - Final security review — NOT STARTED:** independent review of the actual host,
   secrets, firewall, process definitions, artifacts, recovery evidence, and all
   authority boundaries before production acceptance.
 
