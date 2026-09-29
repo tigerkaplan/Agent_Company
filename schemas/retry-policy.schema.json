@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-company.local/schemas/retry-policy.schema.json",
+  "title": "Canonical Retry Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "policy_id", "logical_job_id", "policy_version",
+    "max_total_attempts", "allowed_failure_classes", "denied_failure_classes",
+    "no_progress_threshold", "stuck_threshold", "cycle_threshold",
+    "cycle_window", "history_limit", "exhaustion_action", "created_at",
+    "policy_digest"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "policy_id": {"type": "string", "pattern": "^retry-policy-[a-f0-9]{32}$"},
+    "logical_job_id": {"$ref": "#/$defs/id"},
+    "policy_version": {"type": "integer", "const": 1},
+    "max_total_attempts": {"type": "integer", "minimum": 1, "maximum": 32},
+    "allowed_failure_classes": {"$ref": "#/$defs/classes"},
+    "denied_failure_classes": {"$ref": "#/$defs/classes"},
+    "no_progress_threshold": {"$ref": "#/$defs/threshold"},
+    "stuck_threshold": {"$ref": "#/$defs/threshold"},
+    "cycle_threshold": {"$ref": "#/$defs/threshold"},
+    "cycle_window": {"type": "integer", "minimum": 2, "maximum": 16},
+    "history_limit": {"type": "integer", "minimum": 1, "maximum": 32},
+    "exhaustion_action": {"type": "string", "enum": ["REPLAN_REQUIRED", "STOP"]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "policy_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "maxLength": 200, "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"},
+    "digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "threshold": {"oneOf": [{"type": "null"}, {"type": "integer", "minimum": 1, "maximum": 16}]},
+    "classes": {
+      "type": "array", "maxItems": 10, "uniqueItems": true,
+      "items": {"type": "string", "enum": [
+        "transient_execution", "transient_runtime", "transient_storage",
+        "lease_expired", "review_repair", "permanent_failure",
+        "authority_failure", "budget_failure", "policy_failure", "malformed_state"
+      ]}
+    }
+  }
+}

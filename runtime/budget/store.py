@@ -696,7 +696,7 @@ class FileExecutionBudgetStore:
     def _read(path: Path, label: str) -> Any:
         try:
             return json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as error:
+        except (OSError, ValueError, RecursionError) as error:
             raise ExecutionBudgetStoreError(f"Could not read {label}: {error}") from error
 
     def _write(self, path: Path, value: dict[str, Any]) -> None:

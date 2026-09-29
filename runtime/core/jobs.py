@@ -11,7 +11,7 @@ from typing import Any, Callable
 from uuid import uuid4
 
 from runtime.actions.authorization import authorization_fingerprint
-from runtime.actions.models import ExecutionScope, ScopeContractError
+from runtime.actions.models import ExecutionScope, ScopeContractError, scope_path_contains
 from runtime.approvals.models import approval_boundary_id
 from runtime.approvals.store import ApprovalStoreError, FileApprovalStore
 from runtime.budget.models import (
@@ -34,6 +34,16 @@ from runtime.continuation.store import (
 from runtime.core.lifecycle import Lifecycle, LifecycleError
 from runtime.core.validation import JobValidationError, JobValidator
 from runtime.execution.models import ExecutionContractError, ExecutionRequest
+from runtime.retry.models import (
+    RetryBinding,
+    RetryContractError,
+    RetryPolicy,
+    RetryPolicySpec,
+    policy_id_for,
+    retry_work_digest,
+)
+from runtime.retry.runtime import RetryRuntime
+from runtime.retry.store import FileRetryStore, RetryStoreError
 from runtime.storage.execution_store import ExecutionStoreError, FileExecutionStore
 from runtime.storage.file_store import FileJobStore, JobStoreError
 
@@ -72,6 +82,7 @@ class JobRuntime:
         "parent_job_id",
         "continuation",
         "continuation_parent_job_id",
+        "retry_authorization",
         "error",
         "approval",
         "scheduled_at",
@@ -101,6 +112,7 @@ class JobRuntime:
         self.budget_store = FileExecutionBudgetStore(
             self.store.root / ".execution-budgets"
         )
+        self.retry_store = FileRetryStore(self.store.root / ".retry-policy")
         self.clock = clock
         self.id_factory = id_factory
         self.lifecycle = lifecycle or Lifecycle()
@@ -108,6 +120,11 @@ class JobRuntime:
         self.notification_emitter = notification_emitter
         self.approval_store: FileApprovalStore | None = None
         self.execution_store: FileExecutionStore | None = None
+        self.retry_runtime = RetryRuntime(
+            self.retry_store,
+            budget_store=self.budget_store,
+            clock=clock,
+        )
 
     def configure_authority_stores(
         self,
@@ -117,6 +134,7 @@ class JobRuntime:
         """Attach canonical stores used to authenticate resumed human authority."""
         self.approval_store = approval_store
         self.execution_store = execution_store
+        self.retry_runtime.execution_store = execution_store
 
     def create(self, payload: dict[str, Any]) -> dict[str, Any]:
         if not isinstance(payload, dict):
@@ -138,6 +156,8 @@ class JobRuntime:
         for job in jobs:
             self._validate(job)
         self._validate_continuation_lineage(jobs)
+        for job in jobs:
+            self._validate_retry_authorization(job)
         if status is not None:
             jobs = [job for job in jobs if job["status"] == status]
         return jobs
@@ -225,7 +245,12 @@ class JobRuntime:
         self, job_id: str, claimed_by: str
     ) -> dict[str, Any]:
         """Reload and revalidate exact work immediately before executor delegation."""
-        return self.validate_claim(job_id, claimed_by)
+        job = self.validate_claim(job_id, claimed_by)
+        try:
+            self.retry_runtime.validate_authorization(job, for_execution=True)
+        except RetryStoreError as error:
+            raise RuntimeError(str(error)) from error
+        return job
 
     def heartbeat(
         self,
@@ -298,18 +323,23 @@ class JobRuntime:
                         code="claim_lease_expired",
                         message="Worker claim expired before a terminal result was persisted",
                         retryable=True,
+                        failure_class="lease_expired",
                     )
-                    retry_job = None
-                    if failed["attempt"] < failed["max_attempts"]:
-                        delay = backoff_seconds[
-                            min(failed["attempt"] - 1, len(backoff_seconds) - 1)
-                        ]
-                        retry_job = self.retry(
-                            failed["job_id"],
-                            next_run_at=self._format_timestamp(now + timedelta(seconds=delay)),
-                            enqueue=True,
-                        )
-                    recovered.append({"failed_job": failed, "retry_job": retry_job})
+                    delay = backoff_seconds[
+                        min(failed["attempt"] - 1, len(backoff_seconds) - 1)
+                    ]
+                    retry_result = self._retry_locked(
+                        failed["job_id"],
+                        next_run_at=self._format_timestamp(now + timedelta(seconds=delay)),
+                        enqueue=True,
+                    )
+                    recovered.append(
+                        {
+                            "failed_job": failed,
+                            "retry_job": retry_result["retry_job"],
+                            "retry_decision": retry_result["decision"],
+                        }
+                    )
         except JobStoreError as error:
             raise RuntimeError(str(error)) from error
         return recovered
@@ -415,6 +445,8 @@ class JobRuntime:
         code: str = "execution_failed",
         message: str = "Job execution failed",
         retryable: bool = True,
+        failure_class: str | None = None,
+        progress_evidence_digest: str | None = None,
         error_ref: dict[str, Any] | None = None,
         output_refs: list[dict[str, Any]] | None = None,
         continuation: dict[str, Any] | None = None,
@@ -425,6 +457,8 @@ class JobRuntime:
             code=code,
             message=message,
             retryable=retryable,
+            failure_class=failure_class,
+            progress_evidence_digest=progress_evidence_digest,
             error_ref=error_ref,
             output_refs=output_refs,
             continuation=continuation,
@@ -492,16 +526,6 @@ class JobRuntime:
             )
             return {"job": failed, "retry_job": None}
 
-        if updated["attempt"] >= updated["max_attempts"]:
-            failed = self._fail_job(
-                updated,
-                code="review_retry_exhausted",
-                message="Reviewer requested retry but max_attempts is exhausted",
-                retryable=False,
-                error_ref=review_ref,
-            )
-            return {"job": failed, "retry_job": None}
-
         failed = self._fail_job(
             updated,
             code="review_retry_requested",
@@ -509,10 +533,11 @@ class JobRuntime:
             retryable=True,
             error_ref=review_ref,
         )
-        retry_job = self.retry(failed["job_id"])
-        if retry_job["approval_status"] == "not_required":
+        retry_result = self.retry_or_stop(failed["job_id"])
+        retry_job = retry_result["retry_job"]
+        if retry_job is not None and retry_job["approval_status"] == "not_required":
             retry_job = self.enqueue(retry_job["job_id"])
-        return {"job": failed, "retry_job": retry_job}
+        return {"job": failed, "retry_job": retry_job, "retry_decision": retry_result["decision"]}
 
     def validate_approval_resolution(
         self,
@@ -636,6 +661,11 @@ class JobRuntime:
                 "ref": deepcopy(approval_ref),
             }
         updated["last_updated_at"] = self.clock()
+        if decision == "REJECTED":
+            try:
+                self.retry_runtime.record_failure(updated)
+            except RetryStoreError as error:
+                raise RuntimeError(str(error)) from error
         return self._save(updated)
 
     def _fail_job(
@@ -645,6 +675,8 @@ class JobRuntime:
         code: str,
         message: str,
         retryable: bool,
+        failure_class: str | None = None,
+        progress_evidence_digest: str | None = None,
         error_ref: dict[str, Any] | None = None,
         output_refs: list[dict[str, Any]] | None = None,
         continuation: dict[str, Any] | None = None,
@@ -662,6 +694,29 @@ class JobRuntime:
             "message": message.strip(),
             "retryable": retryable,
         }
+        if failure_class is not None:
+            if failure_class not in {
+                "transient_execution",
+                "transient_runtime",
+                "transient_storage",
+                "lease_expired",
+                "review_repair",
+                "permanent_failure",
+                "authority_failure",
+                "budget_failure",
+                "policy_failure",
+                "malformed_state",
+            }:
+                raise RuntimeError("Failure class is not canonical")
+            error_record["failure_class"] = failure_class
+        if progress_evidence_digest is not None:
+            if (
+                not isinstance(progress_evidence_digest, str)
+                or len(progress_evidence_digest) != 64
+                or any(character not in "0123456789abcdef" for character in progress_evidence_digest)
+            ):
+                raise RuntimeError("Progress evidence digest must be a SHA-256 digest")
+            error_record["progress_evidence_digest"] = progress_evidence_digest
         if error_ref is not None:
             error_record["ref"] = deepcopy(error_ref)
         updated["error"] = error_record
@@ -675,6 +730,10 @@ class JobRuntime:
         if continuation is not None:
             updated["continuation"] = _plain_json_value(continuation)
         updated["last_updated_at"] = self.clock()
+        try:
+            self.retry_runtime.record_failure(updated)
+        except RetryStoreError as error:
+            raise RuntimeError(str(error)) from error
         return self._save(updated)
 
     def retry(
@@ -684,15 +743,51 @@ class JobRuntime:
         next_run_at: str | None = None,
         enqueue: bool = False,
     ) -> dict[str, Any]:
+        result = self.retry_or_stop(
+            job_id, next_run_at=next_run_at, enqueue=enqueue
+        )
+        retry_job = result["retry_job"]
+        if retry_job is None:
+            decision = result["decision"]
+            raise RuntimeError(
+                f"Retry policy decision {decision['decision']}: "
+                f"{decision['reason_code']}"
+            )
+        return retry_job
+
+    def retry_or_stop(
+        self,
+        job_id: str,
+        *,
+        next_run_at: str | None = None,
+        enqueue: bool = False,
+    ) -> dict[str, Any]:
+        try:
+            with self.store.claim_transaction():
+                return self._retry_locked(
+                    job_id, next_run_at=next_run_at, enqueue=enqueue
+                )
+        except JobStoreError as error:
+            raise RuntimeError(str(error)) from error
+
+    def _retry_locked(
+        self,
+        job_id: str,
+        *,
+        next_run_at: str | None = None,
+        enqueue: bool = False,
+    ) -> dict[str, Any]:
         failed = self._load(job_id)
         if failed["status"] != "failed":
             raise RuntimeError("Only a failed job can be retried")
-        if failed["attempt"] >= failed["max_attempts"]:
-            raise RuntimeError(
-                f"Job has exhausted max_attempts ({failed['max_attempts']})"
-            )
-        if failed.get("error", {}).get("retryable") is False:
-            raise RuntimeError("Job failure is marked as non-retryable")
+        try:
+            decision = self.retry_runtime.reserve(failed)
+        except RetryStoreError as error:
+            raise RuntimeError(str(error)) from error
+        if decision.decision != "RETRY":
+            return {"decision": decision.to_dict(), "retry_job": None}
+        if decision.retry_job_id is None or decision.authorization is None:
+            raise RuntimeError("Canonical RETRY decision has no reserved attempt")
         existing = [
             job for job in self.list() if job.get("parent_job_id") == failed["job_id"]
         ]
@@ -702,7 +797,14 @@ class JobRuntime:
             retry_job = existing[0]
             if enqueue and retry_job["status"] == "created" and self._approval_allows_execution(retry_job):
                 retry_job = self.enqueue(retry_job["job_id"])
-            return retry_job
+            return {"decision": decision.to_dict(), "retry_job": retry_job}
+
+        try:
+            if any(self.retry_store.load_anchor(kind, decision.retry_job_id) is not None
+                   for kind in ("materialized", "execution", "failure")):
+                raise RetryStoreError("Reserved retry child was removed; consumed identity cannot be recreated")
+        except RetryStoreError as error:
+            raise RuntimeError(str(error)) from error
 
         copied_fields = (
             "task",
@@ -724,6 +826,7 @@ class JobRuntime:
             "continuation",
             "continuation_parent_job_id",
             "execution_budget",
+            "retry_policy",
         )
         payload = {
             name: deepcopy(failed[name])
@@ -738,18 +841,28 @@ class JobRuntime:
         payload["output_refs"] = []
         payload["created_by"] = f"retry:{failed['job_id']}"
         payload["approval_status"] = self._retry_approval_status(failed)
+        payload["retry_authorization"] = deepcopy(decision.authorization)
         retry_job = self._create_attempt(
             payload,
             attempt=failed["attempt"] + 1,
             parent_job_id=failed["job_id"],
+            job_id_override=decision.retry_job_id,
         )
+        try:
+            with self.retry_store.transaction():
+                self.retry_store.anchor("materialized", retry_job["job_id"], {
+                    "job_id": retry_job["job_id"], "decision_id": decision.decision_id,
+                    "attempt": retry_job["attempt"], "work_digest": retry_work_digest(retry_job),
+                })
+        except RetryStoreError as error:
+            raise RuntimeError(str(error)) from error
         if next_run_at is not None:
             retry_job = self.schedule(
                 retry_job["job_id"], next_run_at, reason="retry_backoff"
             )
         elif enqueue:
             retry_job = self.enqueue(retry_job["job_id"])
-        return retry_job
+        return {"decision": decision.to_dict(), "retry_job": retry_job}
 
     def _create_attempt(
         self,
@@ -757,10 +870,13 @@ class JobRuntime:
         *,
         attempt: int,
         parent_job_id: str | None,
+        job_id_override: str | None = None,
     ) -> dict[str, Any]:
         timestamp = self.clock()
         job = deepcopy(payload)
-        job_id = self._unused_job_id()
+        job_id = job_id_override or self._unused_job_id()
+        if job_id_override is not None and self.store.exists(job_id_override):
+            raise RuntimeError("Reserved retry identity already exists")
         job.setdefault("input_refs", [])
         job.setdefault("output_refs", [])
         job.setdefault("max_attempts", 1)
@@ -777,6 +893,29 @@ class JobRuntime:
                 "attempt": attempt,
             }
         )
+        retry_value = job.get("retry_policy")
+        is_internal_binding = (
+            isinstance(retry_value, dict)
+            and set(retry_value) == {"policy_id", "logical_job_id", "policy_digest"}
+            and (
+                parent_job_id is not None
+                or job.get("continuation_parent_job_id") is not None
+            )
+        )
+        try:
+            if is_internal_binding:
+                retry_binding = RetryBinding.from_dict(retry_value)
+                self.retry_store.load_policy(retry_binding.to_dict())
+            else:
+                retry_spec = RetryPolicySpec.from_input(
+                    retry_value, max_attempts=job["max_attempts"]
+                )
+                retry_policy = RetryPolicy.create(
+                    job_id, retry_spec, created_at=timestamp
+                )
+                job["retry_policy"] = self.retry_store.create(retry_policy).to_dict()
+        except (RetryContractError, RetryStoreError) as error:
+            raise RuntimeError(str(error)) from error
         if "execution_budget" in job and parent_job_id is None:
             try:
                 spec = ExecutionBudgetSpec.from_input(job["execution_budget"])
@@ -870,6 +1009,7 @@ class JobRuntime:
                     "execution_scope",
                     "dry_run",
                     "execution_budget",
+                    "retry_policy",
                 )
                 payload = {
                     name: deepcopy(parent[name])
@@ -1010,6 +1150,7 @@ class JobRuntime:
             if existing.get("job_id") != job.get("job_id")
         ]
         self._validate_continuation_lineage([*candidates, job])
+        self._validate_retry_authorization(job)
 
     def _load(self, job_id: str) -> dict[str, Any]:
         try:
@@ -1018,7 +1159,16 @@ class JobRuntime:
             raise RuntimeError(str(error)) from error
         self._validate(job)
         self._validate_loaded_continuation_lineage(job)
+        self._validate_retry_authorization(job)
         return job
+
+    def _validate_retry_authorization(self, job: dict[str, Any]) -> None:
+        if job.get("parent_job_id") is None:
+            return
+        try:
+            self.retry_runtime.validate_authorization(job, for_execution=False)
+        except RetryStoreError as error:
+            raise RuntimeError(str(error)) from error
 
     def _validate(
         self,
@@ -1036,6 +1186,21 @@ class JobRuntime:
             )
         if job["attempt"] > job["max_attempts"]:
             raise RuntimeError("Job attempt cannot exceed max_attempts")
+        retry_value = job.get("retry_policy")
+        if retry_value is not None:
+            try:
+                retry_binding = RetryBinding.from_dict(retry_value)
+                retry_policy = self.retry_store.load_policy(retry_binding.to_dict())
+            except (RetryContractError, RetryStoreError) as error:
+                raise RuntimeError(f"Invalid retry policy: {error}") from error
+            if retry_policy.max_total_attempts != job["max_attempts"]:
+                raise RuntimeError("Retry policy attempt limit does not match job")
+            checkpoint_for_retry = job.get("continuation")
+            if isinstance(checkpoint_for_retry, dict):
+                if retry_binding.logical_job_id != checkpoint_for_retry.get("logical_job_id"):
+                    raise RuntimeError("Retry policy does not match continuation logical root")
+            elif job.get("parent_job_id") is None and retry_binding.logical_job_id != job.get("job_id"):
+                raise RuntimeError("Retry policy does not match logical job root")
         budget_value = job.get("execution_budget")
         if budget_value is not None:
             try:
@@ -1383,10 +1548,8 @@ class JobRuntime:
         actual: ExecutionScope, canonical: ExecutionScope
     ) -> bool:
         def covered(path: str, boundaries: tuple[str, ...]) -> bool:
-            folded = path.casefold()
             return any(
-                folded == boundary.casefold()
-                or folded.startswith(boundary.casefold() + "/")
+                scope_path_contains(boundary, path, project_root=canonical.project_root)
                 for boundary in boundaries
             )
 
@@ -1558,12 +1721,15 @@ class JobRuntime:
                     "continuation_plan",
                     "continuation_parent_job_id",
                     "execution_budget",
+                    "retry_policy",
                 )
                 if any(
                     retry_parent.get(field) != job.get(field)
                     for field in preserved_retry_fields
                 ):
                     raise RuntimeError("Retry ancestry changed canonical job identity")
+                if job.get("retry_authorization", {}).get("source_job_id") != retry_parent_id:
+                    raise RuntimeError("Retry authorization does not match its parent")
                 position = (str(retry_parent_id), int(job["attempt"]))
                 existing_retry = retry_positions.setdefault(
                     position, str(job["job_id"])
@@ -1580,13 +1746,14 @@ class JobRuntime:
                             "plan_digest",
                             "sequence",
                             "current_step_id",
-                            "completed_step_ids",
-                            "remaining_step_ids",
                         )
                     ):
                         raise RuntimeError(
                             "Retry ancestry changed continuation authority"
                         )
+                    # _validate authenticates each checkpoint's ordered prefix
+                    # against the persisted plan. A successful retry may finish
+                    # its own unit without changing plan/sequence/unit identity.
                 elif parent_checkpoint is not None:
                     raise RuntimeError(
                         "Ordinary retry cannot discard continuation authority"
@@ -1657,6 +1824,7 @@ class JobRuntime:
                 "dry_run",
                 "continuation_plan",
                 "execution_budget",
+                "retry_policy",
             )
             if any(
                 parent.get(field) != job.get(field)
@@ -1743,8 +1911,8 @@ class JobRuntime:
             and str(reference.get("ref", "")).startswith(prefix)
         ]
 
-    @staticmethod
-    def _retry_approval_status(job: dict[str, Any]) -> str:
-        if job["approval_status"] == "not_required":
-            return "not_required"
-        return "required"
+    def _retry_approval_status(self, job: dict[str, Any]) -> str:
+        try:
+            return "required" if self.retry_runtime.approval_required(job) else "not_required"
+        except RetryStoreError as error:
+            raise RuntimeError(str(error)) from error

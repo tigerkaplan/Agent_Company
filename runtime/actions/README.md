@@ -8,6 +8,16 @@ Every controlled-write job carries an exact `execution_scope` with an absolute t
 
 ## Staged Mutation
 
+CORE-06F3 uses the same filesystem-aware path matcher for parent scope,
+failed-unit repair intersection, plan-scope comparison, and staged mutation
+validation. Windows names use ordinal comparison rather than linguistic Unicode
+casefolding, with positive alternate case requiring proven filesystem identity;
+POSIX names retain exact case. Distinct straße/strasse paths cannot share
+authority. Uncertain future aliases grant no scope, while forbidden case aliases
+remain denied even before creation. Unauthorized sibling or mixed changes fail
+before target application; valid authorized repair still requires Approval and
+Reviewer.
+
 The provider does not write directly to the target repository. The runtime copies only authorized paths into an intentionally non-Git temporary workspace, invokes an eligible adapter there, fingerprints pre/post file state, computes changed/created/deleted files and a bounded diff, validates every observed path, and only then applies validated changes to the target. Codex receives `--skip-git-repo-check` and the fixed native Windows `elevated` sandbox implementation override only through this validated controlled-write workspace path; its process temp variables also resolve to the staged workspace. READ_ONLY behavior is unchanged. Target fingerprints are checked again before apply so stale concurrent changes fail with `validation_failed`.
 
 Requested and effective Codex sandbox modes are separate evidence fields. The parser accepts only `read-only`, `workspace-write`, or `danger-full-access`, optionally followed by bounded bracketed startup diagnostics. Those diagnostics do not alter `ExecutionScope`. Every Codex execution requires an exact requested/effective mode match: a different mode fails as `provider_sandbox_mismatch`, while absent or malformed startup metadata fails as `provider_sandbox_unverified`. Controlled-write failures are non-retryable and preserve staged evidence without calling `_apply()`.

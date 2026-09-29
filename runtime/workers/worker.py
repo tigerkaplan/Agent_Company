@@ -15,9 +15,11 @@ from runtime.continuation.models import ContinuationContractError, ContinuationP
 from runtime.continuation.runtime import ContinuationRuntime
 from runtime.core.jobs import JobRuntime, RuntimeError, utc_now
 from runtime.core.references import CanonicalReferenceResolver, ReferenceResolutionError
+from runtime.execution.failures import AUTHORITY_FAILURES, INTEGRITY_FAILURES, POLICY_FAILURES
 from runtime.execution.models import ExecutionContractError, ExecutionRequest, ExecutionResult
 from runtime.executors.base import Executor
 from runtime.review.runtime import ReviewerRuntime, ReviewRuntimeError
+from runtime.retry.store import RetryStoreError
 from runtime.storage.execution_store import ExecutionStoreError, FileExecutionStore
 
 
@@ -41,6 +43,7 @@ class WorkerRunOutcome:
     continuation_job_id: str | None = None
     error: dict[str, Any] | None = None
     budget: dict[str, Any] | None = None
+    retry_decision: dict[str, Any] | None = None
 
     def to_dict(self) -> dict[str, Any]:
         value: dict[str, Any] = {"status": self.status}
@@ -62,6 +65,8 @@ class WorkerRunOutcome:
             value["error"] = self.error
         if self.budget is not None:
             value["budget"] = self.budget
+        if self.retry_decision is not None:
+            value["retry_decision"] = self.retry_decision
         return value
 
 
@@ -102,6 +107,10 @@ class Worker:
         self.continuation_runtime = ContinuationRuntime(
             runtime, self.approval_runtime
         )
+        # A supplied ApprovalRuntime may have been built before the execution
+        # store. Retry request authentication still uses this worker's store.
+        self.runtime.execution_store = execution_store
+        self.runtime.retry_runtime.execution_store = execution_store
         self.budget_runtime = ExecutionBudgetRuntime(
             runtime.budget_store,
             wall_clock=clock,
@@ -128,9 +137,25 @@ class Worker:
         return self._run_job(job)
 
     def run_claimed(self, job_id: str) -> WorkerRunOutcome:
+        candidate: dict[str, Any] = {}
         try:
+            candidate = self.runtime.show(job_id)
+            if candidate.get("retry_authorization") is not None:
+                reservation = self.runtime.retry_runtime.execution_reservation(candidate)
+                if reservation is not None:
+                    return self._reserved_outcome(candidate, reservation)
             job = self.runtime.validate_claim(job_id, self.worker_id)
-        except RuntimeError as error:
+        except (RuntimeError, RetryStoreError, ExecutionStoreError) as error:
+            # Another delivery may have completed after this delivery read the
+            # claim. Reuse only revalidated canonical reservation evidence.
+            if candidate.get("retry_authorization") is not None:
+                try:
+                    canonical = self.runtime.show(job_id)
+                    reservation = self.runtime.retry_runtime.execution_reservation(canonical)
+                    if reservation is not None:
+                        return self._reserved_outcome(canonical, reservation)
+                except (RuntimeError, RetryStoreError, ExecutionStoreError):
+                    pass
             return WorkerRunOutcome(
                 status="worker_error",
                 job_id=job_id,
@@ -153,6 +178,9 @@ class Worker:
             job = self.runtime.validate_execution_authority(
                 job["job_id"], self.worker_id
             )
+            reservation, fresh = self.runtime.retry_runtime.reserve_execution(job, execution_id)
+            if not fresh:
+                return self._reserved_outcome(job, reservation)
             budget_binding = job.get("execution_budget")
             if budget_binding is not None:
                 budget_decision = self.budget_runtime.reserve_execution(
@@ -164,7 +192,16 @@ class Worker:
                     return self._record_budget_denial(job, budget_decision)
             context_refs = self.resolver.resolve(job)
             request = self._build_request(job, execution_id, context_refs)
-        except RuntimeError as error:
+            self.runtime.retry_runtime.admit_execution(job, request)
+        except (RuntimeError, RetryStoreError, ExecutionStoreError) as error:
+            if job.get("retry_authorization") is not None:
+                try:
+                    canonical = self.runtime.show(job["job_id"])
+                    reservation = self.runtime.retry_runtime.execution_reservation(canonical)
+                    if reservation is not None:
+                        return self._reserved_outcome(canonical, reservation)
+                except (RuntimeError, RetryStoreError, ExecutionStoreError):
+                    pass
             return WorkerRunOutcome(
                 status="worker_error",
                 job_id=job["job_id"],
@@ -179,7 +216,18 @@ class Worker:
                 job, execution_id, error, budget_decision=budget_decision
             )
 
-        result = self._execute_safely(request)
+        try:
+            result = self._execute_safely(request)
+        except RetryStoreError as error:
+            if budget_binding is not None:
+                budget_decision = self.budget_runtime.finalize_execution(
+                    budget_binding, execution_id=execution_id
+                )
+            return WorkerRunOutcome(
+                status="worker_error", job_id=job["job_id"], execution_id=execution_id,
+                error={"code": "retry_evidence_error", "message": str(error), "retryable": False},
+                budget=(budget_decision.to_dict() if budget_decision else None),
+            )
         if budget_binding is not None:
             budget_decision = self.budget_runtime.finalize_execution(
                 budget_binding, execution_id=execution_id
@@ -187,6 +235,22 @@ class Worker:
         return self._record_result(
             job, request, result, budget_decision=budget_decision
         )
+
+    def _reserved_outcome(self, job: dict[str, Any], reservation: dict[str, Any]) -> WorkerRunOutcome:
+        """A consumed attempt returns state/evidence; it never delegates again."""
+        execution_id = reservation["execution_id"]
+        if not self.execution_store.exists(execution_id):
+            return WorkerRunOutcome(status="execution_reserved", job_id=job["job_id"], execution_id=execution_id)
+        record = self.execution_store.load(execution_id)
+        if record.result.job_id != job["job_id"]:
+            raise ExecutionStoreError("Reserved execution result belongs to different work")
+        try:
+            request = ExecutionRequest.from_persisted_dict(record.request)
+            self.runtime.retry_runtime.validate_admission(job, request)
+        except (RetryStoreError, ExecutionContractError) as error:
+            raise ExecutionStoreError(str(error)) from error
+        return WorkerRunOutcome(status=job["status"], job_id=job["job_id"], execution_id=execution_id,
+                                result=record.result.to_dict(), error=job.get("error"))
 
     def recover_budget_state(self) -> list[BudgetDecision]:
         """Conservatively close active logical-budget windows after restart."""
@@ -260,6 +324,8 @@ class Worker:
                 if isinstance(job.get("continuation"), dict)
                 else None
             ),
+            retry_repair_scope=(job.get("retry_authorization", {}).get("repair_scope")
+                                if isinstance(job.get("retry_authorization"), dict) else None),
         )
 
     def recover_persisted_results(self) -> list[WorkerRunOutcome]:
@@ -307,10 +373,16 @@ class Worker:
                     record.result.execution_id,
                     self.resolver.resolve(job),
                 )
+                self.runtime.retry_runtime.validate_admission(job, request)
+                if job.get("retry_authorization") is not None:
+                    reservation = self.runtime.retry_runtime.execution_reservation(job)
+                    if reservation is not None and reservation["execution_id"] != request.execution_id:
+                        raise RetryStoreError("Persisted result differs from consumed retry execution")
             except (
                 TypeError,
                 ExecutionContractError,
                 ReferenceResolutionError,
+                RetryStoreError,
             ) as error:
                 recovered.append(
                     WorkerRunOutcome(
@@ -347,13 +419,10 @@ class Worker:
     def _execute_safely(self, request: ExecutionRequest) -> ExecutionResult:
         supported = getattr(self.executor, "supported_execution_modes", {"READ_ONLY"})
         if request.execution_mode not in supported:
-            return self._failure_result(
-                execution_id=request.execution_id,
-                job_id=request.job_id,
+            return self._runtime_failure_result(
+                request, "policy_failure",
                 code="controlled_execution_failed",
                 message="Selected executor does not support the requested execution mode",
-                execution_mode=request.execution_mode,
-                dry_run=request.dry_run,
             )
         try:
             result = self.executor.execute(request)
@@ -361,20 +430,45 @@ class Worker:
                 raise ExecutionContractError(
                     "Executor did not return the canonical ExecutionResult contract"
                 )
-            if result.execution_id != request.execution_id or result.job_id != request.job_id:
+            if (result.execution_id != request.execution_id or result.job_id != request.job_id
+                    or result.execution_mode != request.execution_mode or result.dry_run != request.dry_run):
                 raise ExecutionContractError(
-                    "Executor result IDs do not match the execution request"
+                    "Executor result does not match the execution request"
                 )
-            return result
+            self.execution_store.result_validator.validate_model(result)
+        except INTEGRITY_FAILURES:
+            return self._runtime_failure_result(
+                request, "malformed_state", code="executor_error",
+                message="Executor violated a canonical runtime contract; details were not persisted",
+            )
+        except AUTHORITY_FAILURES:
+            return self._runtime_failure_result(
+                request, "authority_failure", code="executor_error",
+                message="Trusted runtime authority rejected execution; details were not persisted",
+            )
+        except POLICY_FAILURES:
+            return self._runtime_failure_result(
+                request, "policy_failure", code="executor_error",
+                message="Trusted runtime policy rejected execution; details were not persisted",
+            )
         except Exception:
-            return self._failure_result(
-                execution_id=request.execution_id,
-                job_id=request.job_id,
+            result = self._failure_result(
+                execution_id=request.execution_id, job_id=request.job_id,
                 code="executor_error",
                 message="Executor raised an exception; details were not persisted",
                 execution_mode=request.execution_mode,
                 dry_run=request.dry_run,
             )
+        if result.status == "failed":
+            self.runtime.retry_runtime.record_runtime_failure(request, self._observed_failure_class(request, result))
+        return result
+
+    def _runtime_failure_result(self, request: ExecutionRequest, failure_class: str, *, code: str, message: str) -> ExecutionResult:
+        self.runtime.retry_runtime.record_runtime_failure(request, failure_class)
+        return self._failure_result(
+            execution_id=request.execution_id, job_id=request.job_id, code=code, message=message,
+            execution_mode=request.execution_mode, dry_run=request.dry_run, retryable=False,
+        )
 
     def _record_preparation_failure(
         self,
@@ -455,18 +549,19 @@ class Worker:
         try:
             if persist_result:
                 self.execution_store.create(request, result)
-        except ExecutionStoreError as error:
+        except INTEGRITY_FAILURES as error:
             failure = {
                 "code": "execution_storage_error",
                 "message": str(error),
-                "retryable": True,
+                "retryable": False,
             }
             try:
                 updated = self.runtime.fail(
                     job["job_id"],
                     code=failure["code"],
                     message=failure["message"],
-                    retryable=True,
+                    retryable=False,
+                    failure_class="malformed_state",
                 )
                 status = updated["status"]
             except RuntimeError:
@@ -488,6 +583,7 @@ class Worker:
         review_result: dict[str, Any] | None = None
         approval_result: dict[str, Any] | None = None
         retry_job_id: str | None = None
+        retry_decision: dict[str, Any] | None = None
         continuation_job_id: str | None = None
         try:
             continuation_decision = ContinuationPolicy.decide_execution(
@@ -563,6 +659,7 @@ class Worker:
                             review_ref=str(review_run.artifact_ref["ref"]),
                         ).checkpoint,
                     )
+                    retry_decision = review_transition.get("retry_decision")
                     updated = review_transition["job"]
                     retry_job = review_transition["retry_job"]
                     if retry_job is not None:
@@ -622,6 +719,7 @@ class Worker:
                     code=error["code"],
                     message=error["message"],
                     retryable=False,
+                    failure_class=self._trusted_failure_class(request, result),
                     error_ref=artifact_ref,
                     output_refs=[*serialized_result["output_refs"], artifact_ref],
                     continuation=continuation_decision.checkpoint,
@@ -655,7 +753,40 @@ class Worker:
             continuation_job_id=continuation_job_id,
             error=outcome_error,
             budget=(budget_decision.to_dict() if budget_decision else None),
+            retry_decision=retry_decision,
         )
+
+    def _trusted_failure_class(self, request: ExecutionRequest | None, result: ExecutionResult) -> str:
+        if request is None or result.status != "failed":
+            return "permanent_failure"
+        try:
+            return self.runtime.retry_runtime.runtime_failure_class(request)
+        except RetryStoreError:
+            # Missing provenance cannot turn an integrity denial into a transient.
+            return "malformed_state"
+
+    def _observed_failure_class(self, request: ExecutionRequest, result: ExecutionResult) -> str:
+        if request.execution_mode != "CONTROLLED_WRITE":
+            return "transient_execution"
+        # Read independently observed runtime evidence, never the provider's
+        # error label, retryable flag, metadata, or free text.
+        controlled = getattr(self.executor, "controlled_write_runtime", None)
+        if controlled is None:
+            return "permanent_failure"
+        try:
+            evidence = controlled.store.load(result.execution_id)
+        except ValueError:
+            return "malformed_state"
+        if (evidence.get("execution_id") != request.execution_id or evidence.get("job_id") != request.job_id
+                or evidence.get("execution_mode") != request.execution_mode):
+            return "malformed_state"
+        if evidence.get("scope_violations"):
+            return "authority_failure"
+        if evidence.get("validation", {}).get("status") == "failed":
+            return "policy_failure"
+        if not evidence.get("proposed_changed_files"):
+            return "permanent_failure"
+        return "transient_execution"
 
     def _failure_result(
         self,
@@ -666,6 +797,7 @@ class Worker:
         message: str,
         execution_mode: str = "READ_ONLY",
         dry_run: bool = False,
+        retryable: bool = True,
     ) -> ExecutionResult:
         started_at = self.clock()
         completed_at = self.clock()
@@ -675,12 +807,13 @@ class Worker:
             status="failed",
             output_refs=(),
             summary=None,
-            error={"code": code, "message": message, "retryable": True},
+            error={"code": code, "message": message, "retryable": retryable},
             next_actions=(
                 {
-                    "action": "retry_execution",
-                    "description": "Retry after the execution blocker has been resolved",
-                    "requires_human": False,
+                    "action": "retry_execution" if retryable else "inspect_failure",
+                    "description": ("Retry after the execution blocker has been resolved" if retryable
+                                    else "Inspect the trusted runtime denial before any new work"),
+                    "requires_human": not retryable,
                     "automatic": False,
                 },
             ),

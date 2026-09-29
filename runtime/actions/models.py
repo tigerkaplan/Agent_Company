@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -11,6 +12,15 @@ from typing import Any
 
 EXECUTION_MODES = {"READ_ONLY", "CONTROLLED_WRITE"}
 WRITE_MODES = {"CREATE_OR_MODIFY", "CREATE_MODIFY_DELETE"}
+
+if os.name == "nt":
+    import ctypes
+    from ctypes import wintypes
+
+    _compare_ordinal = ctypes.WinDLL("kernel32", use_last_error=True).CompareStringOrdinal
+    _compare_ordinal.argtypes = (wintypes.LPCWSTR, ctypes.c_int, wintypes.LPCWSTR,
+                                ctypes.c_int, wintypes.BOOL)
+    _compare_ordinal.restype = ctypes.c_int
 
 
 class ScopeContractError(ValueError):
@@ -56,6 +66,57 @@ def normalize_relative_path(value: str) -> str:
     return normalized
 
 
+def scope_path_key(value: str) -> str:
+    """A conservative namespace key, never Unicode linguistic equivalence."""
+    normalized = normalize_relative_path(value)
+    # Windows ordinarily ignores ASCII case; POSIX namespaces need not. Do not
+    # casefold/lower Unicode: distinct names (e.g. straße/strasse) must survive.
+    if os.name == "nt":
+        return normalized.translate(str.maketrans("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"))
+    return normalized
+
+
+def _scope_names_equal(left: str, right: str) -> bool:
+    if left == right:
+        return True
+    if os.name != "nt":
+        return False
+    # The OS ordinal comparison preserves namespace spelling/length rather than
+    # applying linguistic Unicode casefold expansions such as sharp-s -> ss.
+    result = _compare_ordinal(left, -1, right, -1, True)
+    if result == 0:
+        raise ScopeContractError("Filesystem scope names could not be compared")
+    return result == 2  # CSTR_EQUAL
+
+
+def scope_path_contains(boundary: str, relative: str, *, project_root: str,
+                        case_aliases_require_identity: bool = True) -> bool:
+    """Compare path components without expanding filesystem authority.
+
+    Exact spelling works even for not-yet-created paths. Alternate ordinal case
+    on Windows is accepted only when the filesystem proves the boundary is the
+    same object; case-sensitive directories and ambiguous future names deny.
+    """
+    boundary = normalize_relative_path(boundary)
+    relative = normalize_relative_path(relative)
+    boundary_parts, relative_parts = boundary.split("/"), relative.split("/")
+    if len(relative_parts) < len(boundary_parts):
+        return False
+    prefix = "/".join(relative_parts[:len(boundary_parts)])
+    if prefix == boundary:
+        return True
+    if not _scope_names_equal(prefix, boundary):
+        return False
+    if not case_aliases_require_identity:
+        # Negative scope may conservatively reject ambiguous future aliases;
+        # absence of a forbidden file must never make its case alias writable.
+        return True
+    try:
+        return (Path(project_root) / boundary).samefile(Path(project_root) / prefix)
+    except OSError:
+        return False
+
+
 @dataclass(frozen=True)
 class ExecutionScope:
     project_root: str
@@ -89,11 +150,11 @@ class ExecutionScope:
         normalized_forbidden = tuple(
             normalize_relative_path(item) for item in self.forbidden_paths
         )
-        if len({item.casefold() for item in normalized_allowed}) != len(normalized_allowed):
+        if any(_scope_names_equal(left, right) for index, left in enumerate(normalized_allowed)
+               for right in normalized_allowed[index + 1:]):
             raise ScopeContractError("allowed_paths contains duplicate paths")
-        if len({item.casefold() for item in normalized_forbidden}) != len(
-            normalized_forbidden
-        ):
+        if any(_scope_names_equal(left, right) for index, left in enumerate(normalized_forbidden)
+               for right in normalized_forbidden[index + 1:]):
             raise ScopeContractError("forbidden_paths contains duplicate paths")
         object.__setattr__(self, "allowed_paths", normalized_allowed)
         object.__setattr__(self, "forbidden_paths", normalized_forbidden)
@@ -172,13 +233,14 @@ class ExecutionScope:
         return hashlib.sha256(encoded).hexdigest()
 
     def permits(self, relative: str) -> bool:
-        folded = relative.casefold()
+        relative = normalize_relative_path(relative)
         allowed = any(
-            folded == item.casefold() or folded.startswith(item.casefold() + "/")
+            scope_path_contains(item, relative, project_root=self.project_root)
             for item in self.allowed_paths
         )
         forbidden = any(
-            folded == item.casefold() or folded.startswith(item.casefold() + "/")
+            scope_path_contains(item, relative, project_root=self.project_root,
+                                case_aliases_require_identity=False)
             for item in self.forbidden_paths
         )
         return allowed and not forbidden

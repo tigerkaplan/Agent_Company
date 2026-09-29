@@ -333,6 +333,7 @@ class ExecutionRequest:
             "continuation_sequence",
             "continuation_step_id",
             "continuation_execution_ref",
+            "retry_repair_scope",
         }
     )
 
@@ -361,6 +362,7 @@ class ExecutionRequest:
     continuation_sequence: int | None = None
     continuation_step_id: str | None = None
     continuation_execution_ref: str | None = None
+    retry_repair_scope: dict[str, Any] | None = None
 
     def __post_init__(self) -> None:
         for name in ("execution_id", "job_id", "task", "task_class", "agent", "workflow", "capability", "risk_level"):
@@ -394,6 +396,14 @@ class ExecutionRequest:
                 )
         if not isinstance(self.dry_run, bool):
             raise ExecutionContractError("ExecutionRequest.dry_run must be a boolean")
+        if self.retry_repair_scope is not None:
+            from runtime.retry.models import RetryContractError, validate_repair_scope
+            try:
+                validate_repair_scope(self.retry_repair_scope, capability=self.capability,
+                                      execution_mode=self.execution_mode, execution_scope=self.execution_scope,
+                                      unit_id=self.continuation_step_id)
+            except (RetryContractError, ScopeContractError) as error:
+                raise ExecutionContractError(str(error)) from error
         if self.approval_status not in {"not_required", "required", "requested", "approved"}:
             raise ExecutionContractError(
                 "ExecutionRequest.approval_status is not a canonical approval state"
@@ -446,6 +456,7 @@ class ExecutionRequest:
             "continuation_sequence": self.continuation_sequence,
             "continuation_step_id": self.continuation_step_id,
             "continuation_execution_ref": self.continuation_execution_ref,
+            "retry_repair_scope": deepcopy(self.retry_repair_scope),
         }
 
     @classmethod

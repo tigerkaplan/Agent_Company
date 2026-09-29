@@ -35,7 +35,11 @@ from runtime.providers.models import (
     ProviderSelection,
 )
 from runtime.providers.routing import ProviderRouter
-from runtime.storage.execution_store import ExecutionStoreError, FileExecutionStore
+from runtime.storage.execution_store import (
+    ExecutionRecord,
+    ExecutionStoreError,
+    FileExecutionStore,
+)
 from runtime.tests.test_providers import request
 
 
@@ -255,6 +259,26 @@ class ExecutionResultContractTests(unittest.TestCase):
                     "details": {"chain_of_thought": "must not persist"},
                 },
             )
+
+    def test_execution_artifact_schema_version_is_strictly_typed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            store = FileExecutionStore(Path(temporary))
+            canonical_result = result(execution_id="execution-envelope-version")
+            path = store.create(None, canonical_result)
+
+            loaded = store.load(canonical_result.execution_id)
+            self.assertEqual(loaded.schema_version, 1)
+            self.assertEqual(ExecutionRecord(1, None, canonical_result).schema_version, 1)
+
+            artifact = json.loads(path.read_text(encoding="utf-8"))
+            for invalid_version in (True, False, 0, 2, "1"):
+                with self.subTest(schema_version=invalid_version):
+                    artifact["schema_version"] = invalid_version
+                    path.write_text(json.dumps(artifact), encoding="utf-8")
+                    with self.assertRaises(ExecutionStoreError):
+                        store.load(canonical_result.execution_id)
+                    with self.assertRaises(ExecutionStoreError):
+                        ExecutionRecord(invalid_version, None, canonical_result)
 
     def test_legacy_persisted_result_loads_through_narrow_adapter(self) -> None:
         legacy = {

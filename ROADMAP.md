@@ -18,7 +18,8 @@
   CORE-04R5 PASS.
 - CORE-05 Time / Execution Budget: CLOSED / COMMITTED at `63813b5` after
   CORE-05R3 PASS.
-- CORE-06 Retry / Stop Policy: NEXT / NOT STARTED.
+- CORE-06 Retry / Stop Policy: CLOSED / READY TO COMMIT after CORE-06R6 PASS;
+  implementation remains uncommitted.
 - CORE-07 through CORE-11: NOT STARTED.
 - Phase 8E: PAUSED / BLOCKED; deployment not started because the VPS has not
   yet been created.
@@ -112,7 +113,8 @@ redefine or begin Phase 8.
   CORE-04R5 PASS.
 - CORE-05 Time / Execution Budget: CLOSED / COMMITTED at `63813b5` after
   CORE-05R3 PASS.
-- CORE-06 Retry / Stop Policy: NEXT / NOT STARTED.
+- CORE-06 Retry / Stop Policy: CLOSED / READY TO COMMIT after CORE-06R6 PASS;
+  implementation remains uncommitted.
 - CORE-07 Progress Events: NOT STARTED.
 - CORE-08 Context Discovery Before Action: NOT STARTED.
 - CORE-09 Context / Prompt Cache Policy: NOT STARTED.
@@ -139,18 +141,25 @@ and reservation, complete genesis-to-head validation of one content-addressed
 append-only usage ledger, verified state/head caches, restart-safe accounting,
 conservative crash recovery, and structured fail-closed exhaustion without
 granting execution or governance authority. CORE-05 is CLOSED / COMMITTED at
-`63813b5` after CORE-05R3 PASS. CORE-06 is NEXT / NOT STARTED; CORE-07 through
-CORE-11 are NOT STARTED. An aggregate
+`63813b5` after CORE-05R3 PASS. CORE-06 is CLOSED / READY TO COMMIT after CORE-06R6 PASS;
+its implementation remains uncommitted. CORE-07 through CORE-11 are NOT STARTED.
+An aggregate
 serialized-result byte ceiling is FUTURE HARDENING / NON-BLOCKING.
 
-### CORE-06 Accepted Scope — Next / Not Started
+### CORE-06 Accepted Scope — CLOSED / READY TO COMMIT
 
-CORE-06 will define provider-neutral Retry Policy and Stop Policy, bounded
+CORE-06 defines provider-neutral Retry Policy and Stop Policy, bounded
 no-progress and stuck detection, cycle detection, unit-scoped repair,
 repair-scope enforcement, safe retry of only the failed unit, local retry
 limits, and the Retry -> Replan boundary. It must not treat provider prose,
 `retryable`, `next_actions`, an available budget, or an unfinished job as retry
-authority. No CORE-06 implementation or directory exists yet.
+authority. The implementation is under `runtime/retry/`, with policy/state
+schemas and Worker/Scheduler/job integration. `REPLAN_REQUIRED` is a boundary
+only; automatic graph replanning remains owned by future ORCH-01. CORE-06 is
+CLOSED / READY TO COMMIT after R6 PASS. Exact-work and approval requirements
+are preserved, restart/concurrency safety prevents consumed-attempt replay,
+and canonical corruption fails closed. Retry remains separate from continuation
+and retains the same CORE-05 logical budget without reset or refund.
 
 ## Phases 8A, 8B, 8C, And 8D Closed
 

@@ -8,7 +8,9 @@ committed at `9d5ead1` after CORE-02R6 PASS. CORE-03 Eval Framework is COMPLETED
 or Minor findings. CORE-04 Tool Discovery is CLOSED / COMMITTED at `35f03f8`
 after CORE-04R5 PASS with no Critical, Major, or Minor findings. CORE-05 Time /
 Execution Budget is CLOSED / COMMITTED at `63813b5` after CORE-05R3 PASS;
-CORE-06 is NEXT / NOT STARTED. An aggregate serialized-result byte ceiling
+CORE-06 is CLOSED / READY TO COMMIT after CORE-06R6 PASS, remains uncommitted,
+and keeps `retryable`
+descriptive rather than authoritative. An aggregate serialized-result byte ceiling
 remains FUTURE HARDENING / NON-BLOCKING.
 
 `ExecutionRequest` and `ExecutionResult` are provider-neutral, JSON-serializable runtime contracts. Execution Result = WHAT HAPPENED; it is not a provider response format, job lifecycle state, review decision, continuation policy, or authority to perform another action.

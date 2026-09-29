@@ -214,7 +214,7 @@ class SchedulerLoopTests(unittest.TestCase):
         self.assertEqual(self.jobs.eligible()[0]["job_id"], retry["job_id"])
         self.assertEqual(queued["job_id"], failed["job_id"])
 
-    def test_f2_execution_result_retryability_does_not_schedule_retry(self) -> None:
+    def test_f2_canonical_failure_policy_not_retryable_metadata_schedules_retry(self) -> None:
         queued = self.enqueue(max_attempts=3)
         failure_worker = Worker(
             self.jobs,
@@ -238,7 +238,12 @@ class SchedulerLoopTests(unittest.TestCase):
         self.assertEqual(snapshot["processed_count"], 1)
         self.assertEqual(failed["status"], "failed")
         self.assertFalse(failed["error"]["retryable"])
-        self.assertEqual(retry_children, [])
+        self.assertEqual(len(retry_children), 1)
+        self.assertFalse(failed["error"]["retryable"])
+        self.assertEqual(
+            retry_children[0]["retry_authorization"]["repair_scope"]["failed_unit_id"],
+            queued["job_id"],
+        )
 
     def test_g_max_attempts_and_non_retryable_failures_are_terminal(self) -> None:
         exhausted = self.enqueue(max_attempts=1)
@@ -248,8 +253,12 @@ class SchedulerLoopTests(unittest.TestCase):
             self.jobs.retry(exhausted["job_id"])
         terminal = self.enqueue(task="terminal")
         self.jobs.claim(claimed_by="manual", lease_seconds=30)
-        self.jobs.fail(terminal["job_id"], retryable=False)
-        with self.assertRaisesRegex(RuntimeError, "non-retryable"):
+        self.jobs.fail(
+            terminal["job_id"],
+            code="invalid_authorization",
+            retryable=True,
+        )
+        with self.assertRaisesRegex(RuntimeError, "authority_failure"):
             self.jobs.retry(terminal["job_id"])
 
     def test_h_claim_is_bounded_and_duplicate_claim_is_blocked(self) -> None:

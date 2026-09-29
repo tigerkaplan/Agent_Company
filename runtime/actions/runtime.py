@@ -8,12 +8,13 @@ import os
 import re
 import shutil
 import tempfile
+from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from runtime.actions.authorization import authorization_fingerprint
-from runtime.actions.models import ExecutionScope, ScopeContractError
+from runtime.actions.models import ExecutionScope, ScopeContractError, normalize_relative_path, scope_path_contains
 from runtime.actions.store import FileMutationArtifactStore
 from runtime.execution.models import ExecutionRequest
 from runtime.providers.models import ProviderExecutionResult
@@ -87,6 +88,17 @@ class ControlledWriteRuntime:
                 "Controlled write is not bound to the current approved job scope",
                 (),
             )
+
+        repair = deepcopy(request.retry_repair_scope)
+        if repair is not None:
+            from runtime.retry.models import RetryContractError, validate_repair_scope
+            try:
+                validate_repair_scope(repair, capability=request.capability, execution_mode=request.execution_mode,
+                                      execution_scope=request.execution_scope, unit_id=request.continuation_step_id)
+                if not repair["allowed_paths"]:
+                    raise RetryContractError("Failed unit has no canonical write-repair allocation")
+            except (RetryContractError, ScopeContractError) as error:
+                return self._rejected(request, scope, "write_not_authorized", str(error), ())
 
         try:
             target_root = Path(scope.project_root).resolve(strict=True)
@@ -184,6 +196,13 @@ class ControlledWriteRuntime:
                     }
                 )
             violations.extend(self._mutation_violations(scope, changed, deleted))
+            if repair is not None:
+                for path in changed:
+                    normalized = normalize_relative_path(path)
+                    if not any(scope_path_contains(boundary, normalized, project_root=scope.project_root)
+                               for boundary in repair["allowed_paths"]):
+                        violations.append({"code": "mutation_scope_violation", "path": path,
+                                           "message": "Mutation is outside the failed-unit retry repair scope"})
             diff = (
                 self._diff(workspace, baseline, created, modified, deleted)
                 if baseline_after == before and not baseline_violations
@@ -335,7 +354,7 @@ class ControlledWriteRuntime:
             "proposed_changed_files": [],
             "applied_changed_files": [],
             "mutation_kind": "none",
-            "scope_violations": list(violations),
+            "scope_violations": list(violations) or [{"code": code, "path": None, "message": message}],
             "pre_fingerprints": {},
             "post_fingerprints": {},
             "target_post_fingerprints": {},

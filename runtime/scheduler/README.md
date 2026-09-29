@@ -15,6 +15,8 @@ configured Executor.
 - Approval Runtime = the only authority that resolves human-required states.
 - Execution Budget Runtime = atomic capacity admission/accounting after all
   ordinary authority gates; it grants no authority itself.
+- Retry Runtime = canonical failed-unit retry/stop decision and deterministic
+  attempt reservation; it does not replan.
 
 The Scheduler does not select agents, skills, routes, providers, or approval
 outcomes. It never creates commit, push, pull-request, merge, release, or
@@ -29,9 +31,12 @@ and persist `claimed_by`, `claimed_at`, `lease_until`, and `heartbeat_at` before
 the Worker receives the job.
 
 The initial loop is intentionally sequential: `max_concurrent_jobs` must be one.
-A heartbeat extends the active lease. Expired claims fail with a retryable,
-bounded error and create at most one canonical child attempt after deterministic
-backoff. Non-retryable and exhausted attempts remain terminal.
+A heartbeat extends the active lease. Expired claims fail with a canonical
+lease-expiry class and may create at most one policy-authorized child attempt
+after deterministic backoff. Descriptive `retryable` metadata is ignored as
+authority. Exhaustion, permanent failure, stale authority, unsafe scope,
+no-progress, stuck, and cycle conditions stop local retry or surface
+`REPLAN_REQUIRED` according to policy.
 
 ## Scheduling And Recurrence
 
@@ -49,8 +54,9 @@ One-time schedules remain retained and disabled after successful dispatch.
 
 Scheduler state and bounded audit events are stored below
 `runtime/state/scheduler-runtime/` by default. An OS-backed run lock prevents two
-loops sharing that state root. Restart reconciles expired leases, retryable
-failures that lack a child attempt, due schedules, due retry jobs, and ordinary
+loops sharing that state root. Restart reconciles expired leases,
+policy-eligible failures that lack a child attempt, due schedules, due retry
+jobs, and ordinary
 queued jobs. Completed jobs and emitted occurrences are not recreated.
 
 CORE-02 restart reconciliation also inspects completed step jobs whose canonical

@@ -308,20 +308,16 @@ class ExecutionBudgetTests(unittest.TestCase):
     def test_07_time_exhaustion_prevents_new_admission_without_executor_call(self) -> None:
         job = self.create(max_elapsed_ms=100, max_execution_units=2)
         self.jobs.enqueue(job["job_id"])
-        first_executor = AdvancingExecutor(self.monotonic, elapsed_ms=100)
+        first_executor = AdvancingExecutor(self.monotonic, elapsed_ms=100, status="failed")
         self.worker(first_executor, execution_prefix="execution-time").run_once()
-        retry_source = self.jobs.show(job["job_id"])
-        retry_source["error"] = {"code": "synthetic", "message": "retry", "retryable": True}
-        retry_source["status"] = "failed"
-        retry_source["last_updated_at"] = self.clock()
-        self.jobs.store.save(retry_source)
-        retry = self.jobs.retry(job["job_id"], enqueue=True)
+        retry_result = self.jobs.retry_or_stop(job["job_id"], enqueue=True)
+        self.assertIsNone(retry_result["retry_job"])
+        self.assertEqual(retry_result["decision"]["decision"], "STOP")
+        self.assertEqual(retry_result["decision"]["reason_code"], "budget_exhausted")
         second_executor = AdvancingExecutor(self.monotonic, elapsed_ms=1)
         outcome = self.worker(second_executor, execution_prefix="execution-denied").run_once()
-        self.assertEqual(outcome.status, "failed")
-        self.assertEqual(outcome.error["code"], "execution_budget_exhausted")
+        self.assertEqual(outcome.status, "no_work")
         self.assertEqual(second_executor.calls, 0)
-        self.assertEqual(retry["execution_budget"], job["execution_budget"])
 
     def test_08_continuation_child_inherits_one_logical_budget(self) -> None:
         plan = {
@@ -365,7 +361,11 @@ class ExecutionBudgetTests(unittest.TestCase):
         queued = self.jobs.claim(claimed_by="worker-retry-test")
         assert queued is not None
         failed = self.jobs.fail(
-            queued["job_id"], code="synthetic", message="retry", retryable=True
+            queued["job_id"],
+            code="synthetic",
+            message="retry",
+            retryable=True,
+            failure_class="transient_runtime",
         )
         retry = self.jobs.retry(failed["job_id"])
         self.assertEqual(retry["execution_budget"], job["execution_budget"])

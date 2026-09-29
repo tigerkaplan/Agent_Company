@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-company.local/schemas/retry-state.schema.json",
+  "title": "Canonical Retry State",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "policy_id", "logical_job_id", "policy_digest", "revision", "history", "updated_at", "state_digest"],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "policy_id": {"type": "string", "pattern": "^retry-policy-[a-f0-9]{32}$"},
+    "logical_job_id": {"$ref": "#/$defs/id"},
+    "policy_digest": {"$ref": "#/$defs/digest"},
+    "revision": {"type": "integer", "minimum": 0, "maximum": 32},
+    "history": {"type": "array", "maxItems": 32, "items": {"$ref": "#/$defs/entry"}},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "state_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "maxLength": 200, "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"},
+    "digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "nullable_ref": {"oneOf": [{"type": "null"}, {"type": "string", "pattern": "^runtime-execution:[A-Za-z0-9._-]+$"}]},
+    "repair_scope": {
+      "type": "object", "additionalProperties": false,
+      "required": ["failed_unit_id", "capability", "execution_mode", "allowed_paths", "execution_scope_digest"],
+      "properties": {
+        "failed_unit_id": {"$ref": "#/$defs/id"},
+        "capability": {"$ref": "#/$defs/id"},
+        "execution_mode": {"type": "string", "enum": ["READ_ONLY", "CONTROLLED_WRITE"]},
+        "allowed_paths": {"type": "array", "maxItems": 64, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 512}},
+        "execution_scope_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "authorization": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["schema_version", "decision_id", "source_job_id", "retry_job_id", "logical_job_id", "failed_unit_id", "original_execution_ref", "retry_sequence", "attempt", "policy_id", "policy_digest", "work_digest", "repair_scope", "authorization_digest"],
+          "properties": {
+            "schema_version": {"type": "integer", "const": 1},
+            "decision_id": {"type": "string", "pattern": "^retry-decision-[a-f0-9]{32}$"},
+            "source_job_id": {"$ref": "#/$defs/id"},
+            "retry_job_id": {"type": "string", "pattern": "^job-retry-[a-f0-9]{32}$"},
+            "logical_job_id": {"$ref": "#/$defs/id"},
+            "failed_unit_id": {"$ref": "#/$defs/id"},
+            "original_execution_ref": {"$ref": "#/$defs/nullable_ref"},
+            "retry_sequence": {"type": "integer", "minimum": 1, "maximum": 32},
+            "attempt": {"type": "integer", "minimum": 2, "maximum": 32},
+            "policy_id": {"type": "string", "pattern": "^retry-policy-[a-f0-9]{32}$"},
+            "policy_digest": {"$ref": "#/$defs/digest"},
+            "work_digest": {"$ref": "#/$defs/digest"},
+            "repair_scope": {"$ref": "#/$defs/repair_scope"},
+            "authorization_digest": {"$ref": "#/$defs/digest"}
+          }
+        }
+      ]
+    },
+    "entry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["sequence", "decision_id", "decision", "reason_code", "source_job_id", "retry_job_id", "attempt", "retry_sequence", "failed_unit_id", "original_execution_ref", "work_digest", "failure_class", "failure_signature", "progress_signature", "state_signature", "repair_scope", "authorization", "recorded_at"],
+      "properties": {
+        "sequence": {"type": "integer", "minimum": 1, "maximum": 32},
+        "decision_id": {"type": "string", "pattern": "^retry-decision-[a-f0-9]{32}$"},
+        "decision": {"type": "string", "enum": ["RETRY", "STOP", "REPLAN_REQUIRED", "NEEDS_HUMAN", "ERROR"]},
+        "reason_code": {"type": "string", "minLength": 1, "maxLength": 100},
+        "source_job_id": {"$ref": "#/$defs/id"},
+        "retry_job_id": {"oneOf": [{"type": "null"}, {"type": "string", "pattern": "^job-retry-[a-f0-9]{32}$"}]},
+        "attempt": {"type": "integer", "minimum": 1, "maximum": 32},
+        "retry_sequence": {"type": "integer", "minimum": 1, "maximum": 32},
+        "failed_unit_id": {"$ref": "#/$defs/id"},
+        "original_execution_ref": {"$ref": "#/$defs/nullable_ref"},
+        "work_digest": {"$ref": "#/$defs/digest"},
+        "failure_class": {"type": "string", "enum": ["transient_execution", "transient_runtime", "transient_storage", "lease_expired", "review_repair", "permanent_failure", "authority_failure", "budget_failure", "policy_failure", "malformed_state"]},
+        "failure_signature": {"$ref": "#/$defs/digest"},
+        "progress_signature": {"$ref": "#/$defs/digest"},
+        "state_signature": {"$ref": "#/$defs/digest"},
+        "repair_scope": {"$ref": "#/$defs/repair_scope"},
+        "authorization": {"$ref": "#/$defs/authorization"},
+        "recorded_at": {"type": "string", "format": "date-time"}
+      }
+    }
+  }
+}

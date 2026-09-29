@@ -29,12 +29,22 @@
     or Minor findings.
   - [x] Closure reconciliation complete.
   - [x] Implementation commit complete at `63813b5`.
-- [ ] CORE-06 Retry / Stop Policy — NEXT / NOT STARTED.
-  - [ ] Define retry and stop policy without treating `retryable` as authority.
-  - [ ] Add bounded no-progress, stuck, and cycle detection.
-  - [ ] Define unit-scoped repair and enforce repair scope.
-  - [ ] Retry only the failed unit when safe, within local retry limits.
-  - [ ] Define the Retry -> Replan boundary.
+- [x] CORE-06 Retry / Stop Policy — CLOSED / READY TO COMMIT after CORE-06R6
+  PASS; implementation remains uncommitted.
+  - [x] Define retry and stop policy without treating `retryable` as authority.
+  - [x] Add bounded no-progress, stuck, and cycle detection.
+  - [x] Define unit-scoped repair and enforce repair scope.
+  - [x] Retry only the failed unit when safe, within local retry limits.
+  - [x] Define the Retry -> Replan boundary without automatic replanning.
+  - [x] Complete targeted implementation and regression validation.
+  - [x] CORE-06R1 independent review returned FIX; bounded F1–F8 repairs applied.
+  - [x] CORE-06R2 returned FIX; bounded CORE-06F2A repairs applied with adversarial tests.
+  - [x] CORE-06R3 returned FIX; only its four Major findings received bounded CORE-06F3 repairs.
+  - [x] CORE-06R4 returned FIX; only its three Major findings received bounded CORE-06F4 repairs.
+  - [x] Independent re-review complete: CORE-06R6 PASS with no Critical, Major,
+    or Minor findings; external evidence recorded in PROJECT_STATE.md.
+  - [x] Closure reconciliation complete.
+  - [ ] Implementation commit (not authorized by CORE-06C).
 - [ ] CORE-07 Progress Events — NOT STARTED.
 - [ ] CORE-08 Context Discovery Before Action — NOT STARTED.
 - [ ] CORE-09 Context / Prompt Cache Policy — NOT STARTED.

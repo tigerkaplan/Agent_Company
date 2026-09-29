@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from runtime.core.validation import JobValidationError, JobValidator
 from runtime.execution.models import ExecutionContractError, ExecutionRequest, ExecutionResult
 from runtime.execution.validation import (
     ExecutionResultValidationError,
@@ -22,6 +23,13 @@ class ExecutionStoreError(ValueError):
     """Raised when an execution artifact cannot be persisted."""
 
 
+EXECUTION_ARTIFACT_SCHEMA_VERSION = 1
+
+
+def default_execution_artifact_schema_path() -> Path:
+    return Path(__file__).resolve().parents[2] / "schemas" / "execution-artifact.schema.json"
+
+
 @dataclass(frozen=True)
 class ExecutionRecord:
     """Typed persisted record; the canonical result is always revalidated on load."""
@@ -29,6 +37,13 @@ class ExecutionRecord:
     schema_version: int
     request: dict[str, Any] | None
     result: ExecutionResult
+
+    def __post_init__(self) -> None:
+        if (
+            type(self.schema_version) is not int
+            or self.schema_version != EXECUTION_ARTIFACT_SCHEMA_VERSION
+        ):
+            raise ExecutionStoreError("Execution artifact schema version is invalid")
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -45,7 +60,13 @@ class FileExecutionStore:
 
     def __init__(self, root: Path) -> None:
         self.root = Path(root)
+        self.artifact_validator = JobValidator(
+            default_execution_artifact_schema_path()
+        )
         self.result_validator = ExecutionResultValidator()
+
+    def exists(self, execution_id: str) -> bool:
+        return self._path(execution_id).is_file()
 
     def create(
         self,
@@ -63,7 +84,7 @@ class FileExecutionStore:
             result,
         )
         record: dict[str, Any] = {
-            "schema_version": 1,
+            "schema_version": EXECUTION_ARTIFACT_SCHEMA_VERSION,
             "request": request.to_dict() if request is not None else None,
             "result": result.to_dict(),
         }
@@ -76,7 +97,16 @@ class FileExecutionStore:
             raise ExecutionStoreError(
                 f"Execution artifact contains unexpected fields: {execution_id}"
             )
-        if value.get("schema_version", 1) != 1:
+        try:
+            self.artifact_validator.validate(value)
+        except JobValidationError as error:
+            raise ExecutionStoreError(
+                f"Invalid execution artifact envelope {execution_id}: {error}"
+            ) from error
+        if (
+            type(value.get("schema_version")) is not int
+            or value["schema_version"] != EXECUTION_ARTIFACT_SCHEMA_VERSION
+        ):
             raise ExecutionStoreError(
                 f"Execution artifact has unsupported schema version: {execution_id}"
             )
@@ -102,7 +132,9 @@ class FileExecutionStore:
                 f"Execution artifact identity mismatch: {execution_id}"
             )
         self._validate_request_result_binding(request, result)
-        return ExecutionRecord(1, deepcopy(request), result)
+        return ExecutionRecord(
+            EXECUTION_ARTIFACT_SCHEMA_VERSION, deepcopy(request), result
+        )
 
     def load_raw(self, execution_id: str) -> dict[str, Any]:
         """Compatibility-only raw read; canonical runtime consumers use load()."""
@@ -112,7 +144,7 @@ class FileExecutionStore:
         try:
             with path.open("r", encoding="utf-8") as handle:
                 value = json.load(handle)
-        except (OSError, json.JSONDecodeError) as error:
+        except (OSError, ValueError, RecursionError) as error:
             raise ExecutionStoreError(
                 f"Could not read execution artifact {execution_id}: {error}"
             ) from error

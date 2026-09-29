@@ -47,7 +47,7 @@ class FileJobStore:
         try:
             with path.open("r", encoding="utf-8") as handle:
                 value = json.load(handle)
-        except (OSError, json.JSONDecodeError) as error:
+        except (OSError, ValueError, RecursionError) as error:
             raise JobStoreError(f"Could not read job {job_id}: {error}") from error
         if not isinstance(value, dict):
             raise JobStoreError(f"Job record is not an object: {job_id}")
@@ -66,12 +66,28 @@ class FileJobStore:
         self.root.mkdir(parents=True, exist_ok=True)
         lock_path = self.root / ".claim.lock"
         deadline = time.monotonic() + timeout_seconds
-        handle = lock_path.open("a+b")
-        handle.seek(0)
-        if handle.read(1) == b"":
-            handle.seek(0)
-            handle.write(b"0")
-            handle.flush()
+        handle = None
+        while handle is None:
+            candidate = None
+            try:
+                try:
+                    candidate = lock_path.open("x+b")
+                    candidate.write(b"0")
+                    candidate.flush()
+                except FileExistsError:
+                    candidate = lock_path.open("r+b")
+                    if os.fstat(candidate.fileno()).st_size == 0:
+                        candidate.write(b"0")
+                        candidate.flush()
+                handle = candidate
+            except OSError as error:
+                if candidate is not None:
+                    candidate.close()
+                if time.monotonic() >= deadline:
+                    raise JobStoreError(
+                        "Timed out opening the canonical claim lock"
+                    ) from error
+                time.sleep(0.01)
         acquired = False
         while not acquired:
             try:
@@ -119,7 +135,7 @@ class FileJobStore:
         try:
             with path.open("r", encoding="utf-8") as handle:
                 value = json.load(handle)
-        except (OSError, json.JSONDecodeError) as error:
+        except (OSError, ValueError, RecursionError) as error:
             raise JobStoreError(f"Could not read job file {path.name}: {error}") from error
         if not isinstance(value, dict):
             raise JobStoreError(f"Job file is not an object: {path.name}")

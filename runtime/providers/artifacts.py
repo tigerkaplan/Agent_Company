@@ -71,7 +71,7 @@ class FileProviderArtifactStore:
             raise ProviderArtifactError(f"Provider artifact not found: {execution_id}")
         try:
             value = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as error:
+        except (OSError, ValueError, RecursionError) as error:
             raise ProviderArtifactError(
                 f"Could not read provider artifact {execution_id}: {error}"
             ) from error

@@ -133,7 +133,7 @@ class ApprovalRuntimeTests(unittest.TestCase):
             skill=None,
             workflow=str(created["workflow"]),
             capability=str(created["capability"]),
-            provider="codex",
+            provider=created.get("provider"),
             risk_level=risk_level,
             input_refs=(),
             context_refs=(),
@@ -373,7 +373,7 @@ class ApprovalRuntimeTests(unittest.TestCase):
             reason="Evidence is insufficient",
         )
         self.assertEqual(outcome["job"]["status"], "failed")
-        with self.assertRaisesRegex(JobRuntimeError, "non-retryable"):
+        with self.assertRaisesRegex(JobRuntimeError, "approval_denied"):
             self.jobs.retry(str(waiting["job_id"]))
 
     def test_p_review_boundary_binds_exact_execution_and_review(self) -> None:

@@ -14,3 +14,10 @@ An optional `execution_budget` field is a runtime-managed immutable binding to
 the logical job's CORE-05 policy and restart-safe usage state. Retry and
 continuation jobs retain the same binding; budget availability never replaces
 ordinary approval, continuation, recovery-hold, Reviewer, or lifecycle gates.
+
+Every newly created job also receives a runtime-managed immutable
+`retry_policy` binding. Retry children carry one exact `retry_authorization`
+that binds their source failure, logical root, failed unit, attempt sequence,
+policy, material work, original execution reference when present, and repair
+scope. `max_attempts` counts total attempts including the initial execution.
+The descriptive error `retryable` flag is never retry authority.

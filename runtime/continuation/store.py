@@ -173,7 +173,7 @@ class FileAuthorizedPlanStore:
     def _read(path: Path, logical_job_id: str, label: str) -> Any:
         try:
             return json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as error:
+        except (OSError, ValueError, RecursionError) as error:
             raise AuthorizedPlanStoreError(
                 f"Could not read authorized continuation {label} "
                 f"{logical_job_id}: {error}"

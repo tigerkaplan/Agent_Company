@@ -550,7 +550,9 @@ class WorkerReviewTests(ReviewTestHarness, unittest.TestCase):
         failed = self.runtime.show(str(created["job_id"]))
         self.assertEqual(outcome.status, "failed")
         self.assertIsNone(outcome.retry_job_id)
-        self.assertEqual(failed["error"]["code"], "review_retry_exhausted")
+        self.assertEqual(failed["error"]["code"], "review_retry_requested")
+        self.assertEqual(outcome.retry_decision["decision"], "REPLAN_REQUIRED")
+        self.assertEqual(outcome.retry_decision["reason_code"], "local_attempt_limit_exhausted")
 
     def test_t_needs_human_enters_existing_waiting_boundary(self) -> None:
         created, outcome, _ = self.run_worker_decision("NEEDS_HUMAN")

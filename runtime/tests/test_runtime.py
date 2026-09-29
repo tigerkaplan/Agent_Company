@@ -197,10 +197,14 @@ class JobRuntimeTests(unittest.TestCase):
                 )
             )
 
-    def test_non_retryable_failure_cannot_be_retried(self) -> None:
+    def test_retryable_metadata_does_not_replace_canonical_policy(self) -> None:
         running = self.create_running()
-        failed = self.runtime.fail(str(running["job_id"]), retryable=False)
-        with self.assertRaisesRegex(JobRuntimeError, "non-retryable"):
+        failed = self.runtime.fail(
+            str(running["job_id"]),
+            code="invalid_authorization",
+            retryable=True,
+        )
+        with self.assertRaisesRegex(JobRuntimeError, "authority_failure"):
             self.runtime.retry(str(failed["job_id"]))
 
     def test_schema_statuses_match_canonical_lifecycle(self) -> None:

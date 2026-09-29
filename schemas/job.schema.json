@@ -314,7 +314,8 @@
     },
     "max_attempts": {
       "type": "integer",
-      "minimum": 1
+      "minimum": 1,
+      "maximum": 32
     },
     "input_refs": {
       "type": "array",
@@ -344,6 +345,12 @@
     },
     "execution_budget": {
       "$ref": "#/$defs/execution_budget_binding"
+    },
+    "retry_policy": {
+      "$ref": "#/$defs/retry_policy_binding"
+    },
+    "retry_authorization": {
+      "$ref": "retry-state.schema.json#/$defs/authorization"
     },
     "created_by": {
       "type": "string",
@@ -405,6 +412,25 @@
         "retryable": {
           "type": "boolean"
         },
+        "failure_class": {
+          "type": "string",
+          "enum": [
+            "transient_execution",
+            "transient_runtime",
+            "transient_storage",
+            "lease_expired",
+            "review_repair",
+            "permanent_failure",
+            "authority_failure",
+            "budget_failure",
+            "policy_failure",
+            "malformed_state"
+          ]
+        },
+        "progress_evidence_digest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
         "ref": {
           "$ref": "#/$defs/ref"
         }
@@ -412,6 +438,16 @@
     }
   },
   "$defs": {
+    "retry_policy_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_id", "logical_job_id", "policy_digest"],
+      "properties": {
+        "policy_id": {"type": "string", "pattern": "^retry-policy-[a-f0-9]{32}$"},
+        "logical_job_id": {"type": "string", "minLength": 1, "maxLength": 200, "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"},
+        "policy_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
     "execution_budget_binding": {
       "type": "object",
       "additionalProperties": false,

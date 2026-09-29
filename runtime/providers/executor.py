@@ -6,10 +6,11 @@ from typing import Callable
 
 from runtime.actions.runtime import ControlledWriteRuntime
 from runtime.core.jobs import utc_now
-from runtime.execution.models import ExecutionRequest, ExecutionResult
+from runtime.execution.failures import TRUSTED_EXECUTION_FAILURES
+from runtime.execution.models import ExecutionContractError, ExecutionRequest, ExecutionResult
 from runtime.providers.artifacts import FileProviderArtifactStore
 from runtime.providers.context import ExecutionContextBuilder
-from runtime.providers.models import ProviderSelection
+from runtime.providers.models import ProviderExecutionResult, ProviderSelection
 from runtime.providers.routing import ProviderRouter
 
 
@@ -117,6 +118,8 @@ class ProviderExecutor:
                 mutation_ref = controlled.artifact_ref
             else:
                 provider_result = adapter.execute(request, package)
+            if not isinstance(provider_result, ProviderExecutionResult):
+                raise ExecutionContractError("Provider adapter did not return its canonical result contract")
             artifact_ref = self.artifact_store.create(
                 request.execution_id, selection, provider_result
             )
@@ -213,6 +216,10 @@ class ProviderExecutor:
                 execution_mode=request.execution_mode,
                 dry_run=request.dry_run,
             )
+        except TRUSTED_EXECUTION_FAILURES:
+            # Preserve typed canonical denials for the Worker. Flattening them
+            # into provider runtime_error would lose trusted retry provenance.
+            raise
         except Exception:
             return ExecutionResult(
                 execution_id=request.execution_id,

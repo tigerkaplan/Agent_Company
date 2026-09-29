@@ -46,8 +46,9 @@ atomic admission/reservation, a complete genesis-validated content-addressed
 usage ledger with independently verified state/head caches, restart-safe
 accounting, and structured fail-closed exhaustion without granting
 approval, review, continuation, retry, write, Git, or deployment authority. It
-is CLOSED / COMMITTED at `63813b5` after CORE-05R3 PASS. CORE-06 is NEXT / NOT
-STARTED. CORE-07 through CORE-11 are NOT STARTED. The
+is CLOSED / COMMITTED at `63813b5` after CORE-05R3 PASS. CORE-06 Retry / Stop
+Policy is CLOSED / READY TO COMMIT after CORE-06R6 PASS; its implementation
+remains uncommitted. CORE-07 through CORE-11 are NOT STARTED. The
 aggregate serialized-result byte ceiling remains FUTURE HARDENING / NON-BLOCKING.
 
 The runtime remains local-first. Phase 8D packages the canonical Phase 8C
@@ -76,9 +77,11 @@ ignored local configuration are intentionally not expanded.
   represented by source.
 - `runtime/` — `actions/`, `approvals/`, `budget/`, `cli/`, `continuation/`,
   `core/`, `evals/`, `execution/`, `executors/`, `git/`, `host/`, `jobs/`,
-  `notifications/`, `providers/`, `queue/`, `remote/`, `review/`, `scheduler/`,
-  `storage/`, `tests/`, `tools/`, `webhooks/`, and `workers/`.
-  `runtime/budget/` is the committed CORE-05 implementation. `runtime/state/`
+  `notifications/`, `providers/`, `queue/`, `remote/`, `review/`, `retry/`,
+  `scheduler/`, `storage/`, `tests/`, `tools/`, `webhooks/`, and `workers/`.
+  `runtime/budget/` is the committed CORE-05 implementation and
+  `runtime/retry/` is the uncommitted CORE-06 implementation, CLOSED / READY
+  TO COMMIT after CORE-06R6 PASS. `runtime/state/`
   contains its tracked boundary README plus ignored operational state; it is not
   a future source-architecture namespace.
 - `infrastructure/` — `HOST_ARCHITECTURE.md`, `SECURITY_MODEL.md`, its README,
@@ -112,7 +115,6 @@ Every path in this section is PLANNED and absent from the current physical tree.
 It records structural ownership only; implementation checkpoints create paths
 when real content exists.
 
-- CORE-06: `runtime/retry-stop/`.
 - CORE-07: `runtime/progress/`.
 - CORE-08: `runtime/context/` and `runtime/code-intelligence/`.
 - CORE-09: `runtime/cache/`.

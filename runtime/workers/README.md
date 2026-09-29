@@ -46,6 +46,42 @@ continue. Active elapsed time excludes queue, approval, Reviewer, human, and
 continuation waits. Restart recovery conservatively closes uncertain active
 reservations before new admission.
 
+CORE-06 normalizes a failed canonical execution to trusted runtime failure
+evidence before retry policy sees it. Provider error labels, prose,
+`retryable`, and `next_actions` remain persisted execution evidence but do not
+select the retry class. Retry children are exact-work revalidated at load,
+claim, and immediately before Executor delegation, and retain the same budget,
+approval, review, continuation, capability, and controlled-write boundaries.
+
+CORE-06F1 consumes one canonical retry execution identity atomically before
+delegation. Duplicate deliveries return its state/result; a consumed attempt
+without a persisted result returns `execution_reserved` and is not delegated
+again on restart. Immutable request admission authenticates failed work, and
+structured `retry_decision` preserves Reviewer `REPLAN_REQUIRED` outcomes.
+Controlled-write failure classification reads independently observed runtime
+denial evidence instead of provider error labels.
+
+CORE-06F2A adds independent attempt-admission evidence: deleting both execution
+reservation files after delegation requires a recovery hold, not a fresh
+execution. Trusted unsupported-mode, malformed-result, canonical integrity,
+policy, and authority failures retain typed provenance across provider wrappers
+and restart reconciliation. Immutable original Approval policy cannot be
+downgraded through mutable job status; a gated retry still needs fresh approval.
+
+CORE-06F3 adds independent consumed-attempt evidence before reservation and
+recognizes surviving per-execution admission/results if attempt indexes are
+lost. The same retry cannot delegate twice after those losses, with or without
+budget configuration. Worker and ProviderExecutor share typed trusted failure
+classes; canonical persistence/schema/integrity errors, including result-save
+failures, are non-retryable rather than generic transient provider failures.
+
+CORE-06F4 recognizes failed-attempt and runtime-failure evidence independently
+of lost reservation/admission/result indexes. Current verified terminal retry
+history revokes stale-child execution at reservation and admission, while
+historical reads and structured stop reporting remain available. Canonical
+UTF-8/JSON decoding errors are normalized into typed trusted storage failures;
+they do not select transient retry or invoke a provider adapter from corrupt context.
+
 Missing canonical configuration produces an explicit failed execution artifact and a failed job. Provider failures are classified as `provider_unavailable`, `provider_timeout`, `provider_execution_failed`, `invalid_provider_output`, or `runtime_error`. A malformed job that cannot satisfy the canonical model returns an explicit worker error and remains available for inspection.
 
 Controlled-write failures retain specific categories including `write_not_authorized`, `write_scope_invalid`, `path_escape_attempt`, `protected_path_violation`, `mutation_scope_violation`, `mutation_evidence_missing`, `controlled_execution_failed`, and `validation_failed`. They are not converted into a fake read-only success.

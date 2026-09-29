@@ -351,8 +351,6 @@ class SchedulerLoop:
                 if (
                     failed["status"] != "failed"
                     or failed["job_id"] in retry_sources
-                    or failed.get("error", {}).get("retryable") is not True
-                    or failed["attempt"] >= failed["max_attempts"]
                 ):
                     continue
                 delay = self._backoff(failed["attempt"])
@@ -360,9 +358,22 @@ class SchedulerLoop:
                     self.jobs._parse_timestamp(self.clock(), "scheduler clock")
                     + timedelta(seconds=delay)
                 )
-                retry_job = self.jobs.retry(
+                retry_result = self.jobs.retry_or_stop(
                     failed["job_id"], next_run_at=run_at, enqueue=True
                 )
+                retry_job = retry_result["retry_job"]
+                if retry_job is None:
+                    recovered.append(
+                        {
+                            "job_id": failed["job_id"],
+                            "retry_decision": retry_result["decision"],
+                        }
+                    )
+                    self._audit(
+                        "job_retry_stopped",
+                        job_id=failed["job_id"],
+                    )
+                    continue
                 retry_job = self._ensure_retry_approval(retry_job)
                 recovered.append(retry_job)
                 self._audit("job_retry_recovered", job_id=retry_job["job_id"])
@@ -376,17 +387,18 @@ class SchedulerLoop:
         original = self.jobs.show(outcome.job_id)
         retry_job = self.jobs.show(outcome.retry_job_id) if outcome.retry_job_id else None
         if retry_job is None and original["status"] == "failed":
-            error = original.get("error", {})
-            if error.get("retryable") is not True or original["attempt"] >= original["max_attempts"]:
-                return
             delay = self._backoff(original["attempt"])
             run_at = self.jobs._format_timestamp(
                 self.jobs._parse_timestamp(self.clock(), "scheduler clock")
                 + timedelta(seconds=delay)
             )
-            retry_job = self.jobs.retry(
+            retry_result = self.jobs.retry_or_stop(
                 original["job_id"], next_run_at=run_at, enqueue=True
             )
+            retry_job = retry_result["retry_job"]
+            if retry_job is None:
+                self._audit("job_retry_stopped", job_id=original["job_id"])
+                return
         elif retry_job is not None and retry_job["status"] == "queued":
             delay = self._backoff(original["attempt"])
             run_at = self.jobs._format_timestamp(

@@ -14,7 +14,8 @@
   PASS with no Critical, Major, or Minor findings.
 - CORE-05 Time / Execution Budget is CLOSED / COMMITTED at `63813b5` after
   CORE-05R3 PASS with no Critical, Major, or Minor findings.
-- CORE-06 Retry / Stop Policy is NEXT / NOT STARTED.
+- CORE-06 Retry / Stop Policy is CLOSED / READY TO COMMIT after CORE-06R6
+  PASS. The implementation remains uncommitted at HEAD `065b3e9`.
 - CORE-07 through CORE-11 are NOT STARTED.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
@@ -711,6 +712,283 @@ physical paths from absent future target paths and records the DOC-TREE policy:
 structural implementation is followed by validation, review, closure, commit,
 repository-tree audit, and documentation reconciliation. This checkpoint
 created no future directories and changed no runtime behavior.
+
+## CORE-06 Closure Reconciliation - CLOSED / READY TO COMMIT
+
+CORE-06R6 final decision: PASS - READY FOR CORE-06 CLOSURE. The human supplied
+this authoritative external independent-review report during CORE-06C on
+2026-09-29; the report was produced in the preceding review step and had not
+previously been reconciled into repository documentation. R6 changed no
+repository files and retained HEAD `065b3e9`.
+
+External R6 evidence (reported review results, not rerun by this closure):
+
+- Schema version validation: PASS; corrupted artifact retry: PASS.
+- Execution store: 31/31; CORE-06: 161/161; full regression: 914/914.
+- CORE-01-05: 233/233; focused regression: 268/268.
+- 30 schema JSON files parsed; `git diff --check`: PASS.
+- Critical: NONE; Major: NONE; Minor: NONE.
+
+The final Retry / Stop Policy provides bounded retry, no-progress/stuck/cycle
+detection, and repair scoped to the failed unit. `REPLAN_REQUIRED` stops local
+retry without invoking a Planner or changing a plan. Exact-work identity,
+original approval requirements, review gates, and authorized repair scope are
+preserved. Atomic reservations and independent persisted evidence prevent
+restart/concurrent delivery from reopening consumed attempts; terminal policy
+history revokes stale retry authority. Canonical corruption, including invalid
+artifact schema versions, fails closed rather than authorizing provider retry.
+Retry remains separate from CORE-02 continuation and retains the same CORE-05
+logical budget and consumed usage without reset, refund, or extension.
+
+CORE-06C fresh closure validation: `python -m unittest discover -s runtime/tests
+-p 'test_retry*.py'` passed 161/161 tests. `git diff --check` passed. Final
+status/diff inspection confirmed an empty index, unchanged HEAD `065b3e9`,
+and documentation-only closure edits with existing implementation preserved.
+
+CORE-06C changes canonical documentation only. CORE-01-05 remain CLOSED /
+COMMITTED; CORE-06 is CLOSED / READY TO COMMIT and remains uncommitted at HEAD
+`065b3e9`. CORE-07 and ORCH-01 remain NOT STARTED. Phase 8E remains PAUSED /
+BLOCKED with deployment not started; Phases 8F-8H remain NOT STARTED.
+Historical implementation and FIX/repair checkpoints below preserve their
+then-current review status and do not supersede this closure.
+
+## CORE-06 Initial Implementation Checkpoint — Before CORE-06R1
+
+CORE-06 adds a provider-independent retry policy, typed decisions, immutable
+logical-job policy binding, bounded restart-safe decision history, deterministic
+attempt identity, exact-work authorization, and unit-scoped repair enforcement
+under `runtime/retry/`. Total attempts include the initial attempt. Retry never
+resets its count, continuation lineage, logical CORE-05 budget, consumed usage,
+approval, review, recovery-hold, controlled-write, Git, or deployment state.
+
+Scheduler retry and expired-lease recovery now ask canonical policy rather than
+treating `retryable` as authority. Trusted failure class, exact work, policy,
+attempt history, accepted progress-evidence digests, approval/recovery state,
+and CORE-05 exhaustion drive deterministic `RETRY`, `STOP`,
+`REPLAN_REQUIRED`, `NEEDS_HUMAN`, or `ERROR` decisions. Provider prose,
+provider error labels, `next_actions`, Eval results, available budget,
+continuation eligibility, and tool loading cannot authorize retry.
+
+No-progress, stuck, and self/two-state/longer-cycle detection use bounded
+canonical signatures and persist across restart. Retry reservation precedes
+deterministic child creation; duplicate delivery and concurrent reservation
+converge on one attempt. Existing execution-result reconciliation and CORE-05
+reservation accounting preserve crash consistency without duplicating recorded
+success or refunding uncertain work.
+
+Implementation validation passed 51/51 CORE-06 tests, 30/30 CORE-01, 61/61
+CORE-02, 49/49 CORE-03, 33/33 CORE-04, 59/59 CORE-05, 268/268 focused
+Worker/Scheduler/Reviewer/Approval/controlled-write/Git/remote-Git/provider
+regressions, and the full 803/803 runtime suite. A Windows claim-lock
+initialization race exposed by the first aggregate concurrency run was repaired;
+the dedicated same-attempt concurrency case then passed 20 consecutive stress
+runs and the final aggregate suite. All 140 repository Python files compiled,
+29 JSON schemas and the JSON-compatible lifecycle parsed, 56/56 runtime/host
+loader tests and fresh import probes passed, production `shell=True` and
+changed-scope credential scans found zero findings, retry path/traversal and
+bounded-directory tests passed, and `git diff --check` passed with line-ending
+notices only.
+
+`REPLAN_REQUIRED` is only a stop/control boundary. It does not modify a plan,
+call a Planner, create a graph, or grant new authority. CORE-07 and ORCH-01
+remain NOT STARTED. At this initial checkpoint, before CORE-06R1, CORE-06 had
+not yet been independently reviewed, closed, or committed. No live provider,
+network, deployment, push, PR, or external-system
+mutation was performed.
+
+## Historical CORE-06F1 Bounded R1 Repair — IMPLEMENTED / Pending Independent Re-Review
+
+CORE-06R1 returned FIX. CORE-06F1 repairs only its eight concrete findings;
+implementation validation is not independent acceptance or closure.
+
+- F1: consume a write-once retry execution reservation atomically before budget
+  admission or Executor delegation. Duplicate delivery reuses canonical state
+  or result; crash/restart cannot reopen the consumed attempt. Request admission
+  anchors are execution-scoped so ordinary CORE-02 human resume remains distinct.
+- F2: carry failed-unit repair constraints into controlled-write validation and
+  intersect them with existing approved scope. Unallocated multi-unit parent
+  scopes fail closed. Canonical path normalization rejects traversal/escape;
+  provider mutation of request constraints cannot broaden the validation snapshot.
+- F3: verify bounded content-addressed decision events against chained write-once
+  sequence claims, first-use evidence, and the high-water cache. Failure,
+  materialization, and execution anchors prevent count/identity rollback or
+  recreation of deleted consumed children.
+- F4: exclude provider error labels, wording, metadata, and actions from detection
+  signatures; trusted failure class, work, and accepted progress remain identity.
+- F5: classify independently observed controlled-write scope/authority/policy
+  denials as non-retryable, not from provider labels or free-text matching.
+- F6: anchor work and complete request digest before delegation and immutable
+  canonical failure evidence before failure persistence; first retry authenticates
+  the persisted request and rejects material source/request changes.
+- F7: Reviewer retry uses structured `retry_or_stop`, retaining
+  `REPLAN_REQUIRED` through Worker outcomes instead of generic lifecycle errors.
+- F8: reject boolean/non-integer policy versions consistently in model, schema,
+  and store; repair paths retain bounded canonical model/runtime checks.
+
+Final validation: 78/78 CORE-06 (51 original plus 27 new repair tests), 232/232
+CORE-01–05, 268/268 focused, and 830/830 full runtime regression passed. Direct
+duplicate-delivery stress covered 15 eight-thread rounds and a two-process
+race; each retry delegated once. Crash-before-delegation, post-reservation,
+post-budget-reservation, and persisted-success reconciliation tests passed.
+Controlled-write sibling, mixed A+B, traversal, unrelated-path, valid repair,
+and constraint-tampering tests passed. All 141 Python files compiled, 29 schemas
+parsed, 107 runtime imports loaded, 56/56 runtime/host loader tests passed,
+policy-version parity passed, production `shell=True` and credential-literal
+scans found zero findings, and tracked/new-file whitespace checks passed.
+
+HEAD remains `065b3e9`; CORE-06 is uncommitted and pending independent re-review.
+No Planner invocation, plan mutation, ORCH-01 runtime, budget reset/refund,
+authority expansion, or CORE-07 work was introduced. CORE-07 and ORCH-01 remain
+NOT STARTED. No live provider, network, deployment, push, PR, or external-system
+mutation was performed.
+
+## Historical CORE-06F2A Bounded R2 Repair — IMPLEMENTED / Pending Independent Re-Review
+
+CORE-06R2 returned FIX. The 2026-09-29 CORE-06F2A checkpoint repairs only its
+five remaining concrete findings; implementation validation is not independent
+acceptance, closure, or permission to begin CORE-07.
+
+- Execution identity: independent write-once attempt-admission evidence is
+  persisted before Executor delegation. Losing both reservation files after
+  admission is a recovery hold, not an unused attempt. The unchanged R2
+  reproduction and new concurrent/restart probes keep Executor call count at 1.
+- History rollback: independent bounded append-only revision witnesses precede
+  events, decision claims, head, and state. Deleting STOP/REPLAN event/claim
+  suffixes and replaying older head/state, or replaying genesis and deleting the
+  exhausted child, cannot restore retry authority. Interrupted/missing witness
+  evidence also fails closed; caches are not the sole rollback anchor.
+- Trusted failures: Worker-observed typed mode, result-contract, schema,
+  integrity, policy, and authority failures are non-retryable. Provider wrappers
+  preserve canonical exceptions instead of flattening them into transient
+  failures. Durable provenance survives crash/result reconciliation; missing
+  provenance cannot authorize retry. Provider wording and metadata are excluded.
+- Approval policy: immutable original request/admission and failure evidence
+  preserve the original requirement. Mutable `approved -> not_required` on the
+  source or child fails closed before retry decision/enqueue/delegation. Intact
+  gated work still needs fresh canonical approval, with the same logical budget.
+- Repair scope: effective paths are the hierarchical intersection of parent
+  authorized scope and failed-unit allocation, never the wider unit scope.
+  Sibling, mixed, unrelated, forbidden, traversal, and capability-expanded
+  repairs are denied; valid narrow repair still enters the Reviewer boundary.
+
+Validation passed: 26/26 new bounded adversarial tests; the five unchanged R2
+evidence-loss/denial/scope reproductions; 104/104 full CORE-06 tests; 232/232
+CORE-01–05; 268/268 focused; and 856/856 full runtime regression. The unchanged
+10-round eight-thread retry stress test also passed independently, and the
+CORE-06 suite includes two-process delivery and crash/restart cases. An initial
+oversubscribed four-suite run hit that fixture's 10-second startup timeout;
+final aggregate runs were serialized and passed without changing its timeout.
+Approval/controlled-write/runtime-host validation passed 117/117. All 142
+Python files compiled, 29 schemas parsed with 167 references resolved, 114
+production imports and canonical runtime loaders passed, version-type parity
+passed, and production `shell=True`/credential-literal scans found zero
+findings. Tracked diff and new-file whitespace checks passed.
+
+HEAD remains `065b3e9`; the index is empty and CORE-06 is uncommitted. CORE-06
+remains IMPLEMENTED / pending independent re-review. CORE-07 and ORCH-01 remain
+NOT STARTED. No Planner call, plan mutation, authority expansion, budget
+reset/refund/extension, live provider, network, deployment, push, PR, or
+external-system mutation was introduced. Missing new integrity evidence is
+not silently migrated or reconstructed; these are application-integrity
+guarantees, not protection against an OS actor erasing every independent
+canonical authority/evidence file.
+
+## Historical CORE-06F3 Bounded R3 Repair — IMPLEMENTED / Pending Independent Re-Review
+
+CORE-06R3 returned FIX. This 2026-09-29 checkpoint repairs only its four Major
+findings; implementation validation is not independent acceptance or closure.
+The unchanged R3 attacks were reproduced before repair: Executor call count 2
+without a budget after reservation/attempt-admission loss, accepted history
+revision 2 -> 1 with REPLAN_REQUIRED removed, canonical schema-load failure
+classified transient, and an actual Unicode sibling write.
+
+- Consumption: an independent write-once consumed-attempt anchor precedes
+  reservation. Missing reservation/admission evidence cannot reopen it.
+  Surviving per-execution admission, including either half, or a persisted
+  execution result also holds redelivery if all attempt indexes are lost.
+  The exact no-budget R3 attack now keeps Executor call count at 1.
+- History: a separate bounded accepted-revision ledger and its creation
+  evidence anchor genesis and every accepted revision. An independent immutable
+  terminal tombstone retains STOP/REPLAN_REQUIRED. Removing event, claim, and
+  revision witness plus older head/state replay fails closed; removing accepted
+  suffix evidence while retaining the terminal anchor also fails closed.
+- Integrity: Worker and ProviderExecutor share typed canonical integrity,
+  authority, and policy exceptions. Real ExecutionStoreError from invalid result
+  schema and result-save failures are non-retryable, with durable trusted
+  provenance and no provider-text classification.
+- Paths: parent scope, unit intersection, plan-scope comparison, and staged
+  write validation share the filesystem-aware matcher. Windows uses ordinal
+  comparison and proven identity for positive case aliases, not linguistic
+  Unicode casefolding; POSIX preserves exact case. Distinct straße/strasse
+  directories remain disjoint. Sibling, mixed, unrelated, and normalized
+  traversal writes fail before target application; valid case handling and
+  negative scope for not-yet-created files remain protected.
+
+Final validation passed: 34/34 new F3 adversarial tests within 138/138 CORE-06;
+all 14 unchanged R3 probes and the unchanged actual Unicode-write probe;
+232/232 CORE-01–05; 268/268 focused; 61/61 Approval/controlled-write; and
+890/890 full runtime regression. CORE-06 includes crash/restart, eight-thread
+stress, and two-process same-attempt delivery. The prior Phase 8C timing failure
+did not reproduce in the isolated test or full regression; Phase 8C code was
+not changed. All 144 Python files compiled, 29 schemas parsed with 167 references
+resolved, 115 production imports and the canonical runtime loaders passed,
+fresh integrity/provider/Worker-first imports passed, and production shell=True
+and credential-literal scans found zero matches. These scans are not a live
+credential audit. Tracked diff and new-file whitespace checks passed.
+
+HEAD remains 065b3e9; the index is empty and CORE-06 remains uncommitted,
+IMPLEMENTED / pending independent re-review. Approval-policy preservation,
+exact-work binding, provider-resistant detection, structured REPLAN_REQUIRED,
+retry limits, scope intersection, the same CORE-05 budget, Reviewer, and recovery
+hold remain intact. No Planner call, plan mutation, budget refund/reset/extension,
+deployment, live-provider action, or next-phase implementation was introduced.
+CORE-07 and ORCH-01 remain NOT STARTED. Missing integrity evidence is not silently
+migrated or reconstructed; these application-integrity guarantees do not cover
+an OS actor erasing or replacing every independent canonical evidence file.
+
+## Historical CORE-06F4 Bounded R4 Repair — IMPLEMENTED / Pending Independent Re-Review
+
+CORE-06R4 returned FIX with three Major findings. The exact attacks were
+reproduced before repair: a consumed attempt delegated twice despite intact
+failure/runtime evidence; replaying an old running child executed after
+STOP/REPLAN_REQUIRED; invalid UTF-8 became transient RETRY.
+
+CORE-06F4 repairs only those findings:
+
+- Missing reservation/admission/result indexes cannot hide canonical failed
+  attempts or either surviving half of Worker-observed runtime-failure evidence.
+  The exact no-budget R4 attack now preserves Executor call count 1, including
+  concurrent restart/redelivery.
+- Execution authorization verifies the current complete retry history before
+  reservation and at request admission. Persisted STOP/REPLAN_REQUIRED revokes
+  earlier RETRY execution and repair authority. Historical reads remain
+  explicitly separate and preserve structured terminal reporting.
+- Canonical store readers normalize UTF-8/JSON decoding failures into existing
+  typed trusted storage errors. Schema/integrity failures remain non-retryable
+  through Worker and ProviderExecutor. Corrupt canonical context causes STOP
+  without invoking a provider adapter.
+
+Validation passed 22/22 new F4 adversarial tests within 160/160 CORE-06,
+232/232 CORE-01–05, 268/268 focused regression, 7/7 explicit crash/concurrency,
+61/61 Approval/controlled-write, all 13 unchanged R4 and 14 unchanged R3 probes,
+and the unchanged Unicode-write attack. Python compilation passed 145/145;
+29 schemas and 167 references parsed/resolved, 115 production imports and
+runtime-loader checks passed. Production shell=True and credential-literal
+scans found zero matches; these are not live credential checks.
+Full runtime regression passed 912/912 on an unchanged-code rerun. The first
+full run recorded one failure in Phase 8C's
+`test_i4_stop_after_start_publication_targets_new_owner`; that case passed
+independently (1/1), the complete Phase 8C suite passed 31/31, and the full
+rerun passed without Phase 8C code or timeout changes.
+
+HEAD remains 065b3e9, the index is empty, and CORE-06 is uncommitted and pending
+independent re-review, not closed. This is implementation evidence, not
+independent acceptance. Unicode/path-scope matching, original Approval policy,
+exact-work binding, provider-resistant detection, history integrity, shared
+CORE-05 budget, Reviewer, and recovery hold remain preserved. Phase 8C code is
+unchanged. No Planner, plan mutation, deployment, live provider action, budget
+refund/reset/extension, or next-phase implementation was introduced. CORE-07
+and ORCH-01 remain NOT STARTED.
 
 ## Phase 8A Architecture Design Checkpoint
 

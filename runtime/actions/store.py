@@ -59,7 +59,7 @@ class FileMutationArtifactStore:
             raise MutationArtifactError(f"Mutation artifact not found: {execution_id}")
         try:
             value = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as error:
+        except (OSError, ValueError, RecursionError) as error:
             raise MutationArtifactError(
                 f"Could not read mutation artifact {execution_id}: {error}"
             ) from error
