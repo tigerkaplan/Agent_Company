@@ -1,8 +1,8 @@
 # Retry / Stop Policy
 
 CORE-06 is the provider-independent runtime policy for repeating failed work.
-It is CLOSED / READY TO COMMIT after CORE-06R6 PASS. The implementation
-remains uncommitted at HEAD `065b3e9`; CORE-07 remains NOT STARTED.
+It is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
+CORE-07 is NEXT / NOT STARTED.
 External R6 evidence and closure validation are recorded in `PROJECT_STATE.md`.
 
 `max_attempts` and `max_total_attempts` count total attempts, including the

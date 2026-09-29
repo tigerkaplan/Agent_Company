@@ -47,8 +47,8 @@ usage ledger with independently verified state/head caches, restart-safe
 accounting, and structured fail-closed exhaustion without granting
 approval, review, continuation, retry, write, Git, or deployment authority. It
 is CLOSED / COMMITTED at `63813b5` after CORE-05R3 PASS. CORE-06 Retry / Stop
-Policy is CLOSED / READY TO COMMIT after CORE-06R6 PASS; its implementation
-remains uncommitted. CORE-07 through CORE-11 are NOT STARTED. The
+Policy is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
+CORE-07 is NEXT / NOT STARTED; CORE-08 through CORE-11 are NOT STARTED. The
 aggregate serialized-result byte ceiling remains FUTURE HARDENING / NON-BLOCKING.
 
 The runtime remains local-first. Phase 8D packages the canonical Phase 8C
@@ -61,7 +61,8 @@ the canonical capability roadmap.
 
 ## Current Repository Structure
 
-This is the physical structure in the current checkout; generated contents and
+CURRENT: audited against committed checkpoint `4a6e5c4`. This is the physical
+structure in the current checkout; generated contents and
 ignored local configuration are intentionally not expanded.
 
 - `agents/` — 10 canonical roles: communications, knowledge-manager, marketing,
@@ -80,8 +81,11 @@ ignored local configuration are intentionally not expanded.
   `notifications/`, `providers/`, `queue/`, `remote/`, `review/`, `retry/`,
   `scheduler/`, `storage/`, `tests/`, `tools/`, `webhooks/`, and `workers/`.
   `runtime/budget/` is the committed CORE-05 implementation and
-  `runtime/retry/` is the uncommitted CORE-06 implementation, CLOSED / READY
-  TO COMMIT after CORE-06R6 PASS. `runtime/state/`
+  `runtime/retry/` is the CURRENT CORE-06 implementation, CLOSED / COMMITTED
+  at `4a6e5c4` after CORE-06R6 PASS. It contains `__init__.py`, `models.py`,
+  `runtime.py`, `store.py`, and `README.md`. Supporting CURRENT paths include
+  `runtime/execution/failures.py` and the five `runtime/tests/test_retry*.py`
+  modules. `runtime/state/`
   contains its tracked boundary README plus ignored operational state; it is not
   a future source-architecture namespace.
 - `infrastructure/` — `HOST_ARCHITECTURE.md`, `SECURITY_MODEL.md`, its README,
@@ -92,8 +96,9 @@ ignored local configuration are intentionally not expanded.
   `brightshore/`.
 - `shared/knowledge/` — indexed long-term knowledge, sources, raw material,
   operations, and synthesized wiki content.
-- `schemas/` — persisted runtime contracts, summarized rather than expanded
-  here.
+- `schemas/` — CURRENT persisted runtime contracts, including CORE-06
+  `retry-policy.schema.json`, `retry-state.schema.json`, and
+  `execution-artifact.schema.json`.
 - `config/` — tracked non-secret examples only: `host.example.json`,
   `remote.example.json`, and `webhooks.example.json`. Ignored local files,
   tokens, real IDs, and secret values are not documentation inputs.
@@ -150,7 +155,7 @@ No planned directory in this section was created by this documentation task.
 
 After any structural checkpoint, use this sequence:
 
-implementation -> validation -> review -> closure -> commit -> repository tree
+implementation -> validation -> review -> closure -> commit -> physical-tree
 audit -> DOC-TREE reconciliation when the filesystem changed.
 
 Planned empty directories are never created merely for documentation

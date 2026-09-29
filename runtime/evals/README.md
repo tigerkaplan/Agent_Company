@@ -4,8 +4,7 @@ CORE-03 Eval Framework is COMPLETED / CLOSED / COMMITTED at `80ead22` after
 CORE-03R5 PASS with no Critical, Major, or Minor findings. CORE-04 Tool Discovery
 is CLOSED / COMMITTED at `35f03f8` after CORE-04R5 PASS with no Critical, Major,
 or Minor findings. CORE-05 is CLOSED / COMMITTED at `63813b5` after CORE-05R3
-PASS; CORE-06 is CLOSED / READY TO COMMIT after CORE-06R6 PASS;
-its implementation remains uncommitted.
+PASS; CORE-06 is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
 
 CORE-03 adds a provider-independent deterministic measurement layer. Eval asks
 what was expected, what was observed, which checks passed or failed, and which

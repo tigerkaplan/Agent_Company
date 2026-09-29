@@ -18,9 +18,9 @@
   CORE-04R5 PASS.
 - CORE-05 Time / Execution Budget: CLOSED / COMMITTED at `63813b5` after
   CORE-05R3 PASS.
-- CORE-06 Retry / Stop Policy: CLOSED / READY TO COMMIT after CORE-06R6 PASS;
-  implementation remains uncommitted.
-- CORE-07 through CORE-11: NOT STARTED.
+- CORE-06 Retry / Stop Policy: CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
+- CORE-07 Progress Events: NEXT / NOT STARTED.
+- CORE-08 through CORE-11: NOT STARTED.
 - Phase 8E: PAUSED / BLOCKED; deployment not started because the VPS has not
   yet been created.
 - Phase 8F: NOT STARTED.
@@ -113,9 +113,8 @@ redefine or begin Phase 8.
   CORE-04R5 PASS.
 - CORE-05 Time / Execution Budget: CLOSED / COMMITTED at `63813b5` after
   CORE-05R3 PASS.
-- CORE-06 Retry / Stop Policy: CLOSED / READY TO COMMIT after CORE-06R6 PASS;
-  implementation remains uncommitted.
-- CORE-07 Progress Events: NOT STARTED.
+- CORE-06 Retry / Stop Policy: CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
+- CORE-07 Progress Events: NEXT / NOT STARTED.
 - CORE-08 Context Discovery Before Action: NOT STARTED.
 - CORE-09 Context / Prompt Cache Policy: NOT STARTED.
 - CORE-10 Compute / Effort Policy: NOT STARTED.
@@ -141,12 +140,12 @@ and reservation, complete genesis-to-head validation of one content-addressed
 append-only usage ledger, verified state/head caches, restart-safe accounting,
 conservative crash recovery, and structured fail-closed exhaustion without
 granting execution or governance authority. CORE-05 is CLOSED / COMMITTED at
-`63813b5` after CORE-05R3 PASS. CORE-06 is CLOSED / READY TO COMMIT after CORE-06R6 PASS;
-its implementation remains uncommitted. CORE-07 through CORE-11 are NOT STARTED.
+`63813b5` after CORE-05R3 PASS. CORE-06 is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
+CORE-07 is NEXT / NOT STARTED; CORE-08 through CORE-11 are NOT STARTED.
 An aggregate
 serialized-result byte ceiling is FUTURE HARDENING / NON-BLOCKING.
 
-### CORE-06 Accepted Scope — CLOSED / READY TO COMMIT
+### CORE-06 Accepted Scope — CLOSED / COMMITTED at `4a6e5c4`
 
 CORE-06 defines provider-neutral Retry Policy and Stop Policy, bounded
 no-progress and stuck detection, cycle detection, unit-scoped repair,
@@ -156,7 +155,7 @@ limits, and the Retry -> Replan boundary. It must not treat provider prose,
 authority. The implementation is under `runtime/retry/`, with policy/state
 schemas and Worker/Scheduler/job integration. `REPLAN_REQUIRED` is a boundary
 only; automatic graph replanning remains owned by future ORCH-01. CORE-06 is
-CLOSED / READY TO COMMIT after R6 PASS. Exact-work and approval requirements
+CLOSED / COMMITTED at `4a6e5c4` after R6 PASS. Exact-work and approval requirements
 are preserved, restart/concurrency safety prevents consumed-attempt replay,
 and canonical corruption fails closed. Retry remains separate from continuation
 and retains the same CORE-05 logical budget without reset or refund.

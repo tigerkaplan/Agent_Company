@@ -14,9 +14,10 @@
   PASS with no Critical, Major, or Minor findings.
 - CORE-05 Time / Execution Budget is CLOSED / COMMITTED at `63813b5` after
   CORE-05R3 PASS with no Critical, Major, or Minor findings.
-- CORE-06 Retry / Stop Policy is CLOSED / READY TO COMMIT after CORE-06R6
-  PASS. The implementation remains uncommitted at HEAD `065b3e9`.
-- CORE-07 through CORE-11 are NOT STARTED.
+- CORE-06 Retry / Stop Policy is CLOSED / COMMITTED at `4a6e5c4` after
+  CORE-06R6 PASS.
+- CORE-07 Progress Events is NEXT / NOT STARTED; CORE-08 through CORE-11
+  are NOT STARTED.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
@@ -692,7 +693,7 @@ were subsequently committed at `63813b5` (`feat: add time and execution
 budget`). At this post-commit checkpoint, CORE-05 is CLOSED / COMMITTED;
 CORE-06 is NEXT / NOT STARTED; CORE-07 through CORE-11 are NOT STARTED.
 
-## Post-CORE-05 Documentation / Roadmap / Repository Tree Checkpoint
+## Historical Post-CORE-05 Documentation / Roadmap / Repository Tree Checkpoint
 
 The post-commit repository tree contains the committed CORE-05 implementation
 at `runtime/budget/`; the repository uses that singular path. No CORE-06 through
@@ -713,7 +714,31 @@ structural implementation is followed by validation, review, closure, commit,
 repository-tree audit, and documentation reconciliation. This checkpoint
 created no future directories and changed no runtime behavior.
 
-## CORE-06 Closure Reconciliation - CLOSED / READY TO COMMIT
+## Post-CORE-06 Documentation / Roadmap / Repository Tree Checkpoint
+
+CORE-06 implementation, validation, R6 PASS evidence, and closure documentation
+are committed at `4a6e5c4` (`feat: add retry and stop policy`). The working tree
+was clean before this reconciliation. CORE-01 through CORE-06 are CLOSED /
+COMMITTED; CORE-07 Progress Events is NEXT / NOT STARTED. ORCH-01 remains
+NOT STARTED. Phase 8E remains PAUSED / BLOCKED with deployment not started;
+Phases 8F through 8H remain NOT STARTED.
+
+Physical-tree audit confirmed the CURRENT implementation at `runtime/retry/`
+with `__init__.py`, `models.py`, `runtime.py`, `store.py`, and `README.md`;
+`runtime/execution/failures.py`; the retry policy/state and execution-artifact
+schemas under `schemas/`; and the five `runtime/tests/test_retry*.py` modules.
+The canonical implementation path is `runtime/retry/`, not a planned alias.
+All 26 future paths listed in README remain absent, including CORE-07's
+`runtime/progress/`. No directories were created. The current canonical agent
+count remains 10 and the accepted V1 target remains 14.
+
+`README.md` remains the canonical DOC-TREE summary. The accepted V1 master
+roadmap/backlog and its future paths are preserved. This checkpoint follows
+implementation -> validation -> review -> closure -> commit -> physical-tree
+audit -> DOC-TREE reconciliation. Only documentation changed; historical review,
+repair, and pre-commit closure evidence below retains its original context.
+
+## Historical CORE-06 Closure Reconciliation - Before Implementation Commit
 
 CORE-06R6 final decision: PASS - READY FOR CORE-06 CLOSURE. The human supplied
 this authoritative external independent-review report during CORE-06C on

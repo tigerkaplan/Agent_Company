@@ -5,8 +5,8 @@ The runtime is the local-first execution coordination layer. It accepts already-
 CORE-04 Tool Discovery is CLOSED / COMMITTED at `35f03f8` after CORE-04R5 PASS
 with no Critical, Major, or Minor findings. CORE-05 Time / Execution Budget is
 CLOSED / COMMITTED at `63813b5` after CORE-05R3 PASS. CORE-06 Retry / Stop
-Policy under `retry/` is CLOSED / READY TO COMMIT after CORE-06R6 PASS;
-its implementation remains uncommitted. CORE-07 remains NOT STARTED.
+Policy under `retry/` is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
+CORE-07 is NEXT / NOT STARTED.
 
 Phase 6F adds deterministic verification and a Reviewer Runtime after Phase 6E provider execution. Phase 6G adds persisted scoped human approval requests. Phase 6H adds explicit execution modes and staged controlled mutation. Phase 6I adds an exact local Git change-set and commit gate after reviewed completion. Phase 6J adds separately approved exact-branch push and pull-request creation gates. Phase 6M adds the bounded autonomous Scheduler, claims, leases, retry backoff, restart recovery, and audit status. Phase 8B adds one configurable state base root while preserving the repository-local `runtime/state/` default. Phase 8C adds a supervisor-neutral lifecycle wrapper, fixed process types, atomic host-process records, local singleton locks, graceful signals, and a host heartbeat. CORE-03 adds deterministic provider-neutral evaluation under `evals/`. Jobs remain under `jobs/`, execution/provider/review/mutation/Git/eval artifacts under `executions/`, approvals under `approvals/`, schedules under `schedules/`, scheduler operational state under `scheduler-runtime/`, and lifecycle metadata under `host/processes/` beneath that root. Legal job transitions still come directly from `jobs/lifecycle.yaml`.
 

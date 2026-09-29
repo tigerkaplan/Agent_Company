@@ -29,8 +29,8 @@
     or Minor findings.
   - [x] Closure reconciliation complete.
   - [x] Implementation commit complete at `63813b5`.
-- [x] CORE-06 Retry / Stop Policy — CLOSED / READY TO COMMIT after CORE-06R6
-  PASS; implementation remains uncommitted.
+- [x] CORE-06 Retry / Stop Policy — CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6
+  PASS.
   - [x] Define retry and stop policy without treating `retryable` as authority.
   - [x] Add bounded no-progress, stuck, and cycle detection.
   - [x] Define unit-scoped repair and enforce repair scope.
@@ -44,8 +44,8 @@
   - [x] Independent re-review complete: CORE-06R6 PASS with no Critical, Major,
     or Minor findings; external evidence recorded in PROJECT_STATE.md.
   - [x] Closure reconciliation complete.
-  - [ ] Implementation commit (not authorized by CORE-06C).
-- [ ] CORE-07 Progress Events — NOT STARTED.
+  - [x] Implementation commit complete at `4a6e5c4`.
+- [ ] CORE-07 Progress Events — NEXT / NOT STARTED.
 - [ ] CORE-08 Context Discovery Before Action — NOT STARTED.
 - [ ] CORE-09 Context / Prompt Cache Policy — NOT STARTED.
 - [ ] CORE-10 Compute / Effort Policy — NOT STARTED.
