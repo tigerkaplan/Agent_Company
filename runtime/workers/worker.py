@@ -18,6 +18,8 @@ from runtime.core.references import CanonicalReferenceResolver, ReferenceResolut
 from runtime.execution.failures import AUTHORITY_FAILURES, INTEGRITY_FAILURES, POLICY_FAILURES
 from runtime.execution.models import ExecutionContractError, ExecutionRequest, ExecutionResult
 from runtime.executors.base import Executor
+from runtime.progress.models import ProgressError
+from runtime.progress.runtime import execution_observer
 from runtime.review.runtime import ReviewerRuntime, ReviewRuntimeError
 from runtime.retry.store import RetryStoreError
 from runtime.storage.execution_store import ExecutionStoreError, FileExecutionStore
@@ -119,6 +121,7 @@ class Worker:
 
     def run_once(self) -> WorkerRunOutcome:
         try:
+            self.runtime.reconcile_progress()
             self.recover_budget_state()
             self.recover_persisted_results()
             self.continuation_runtime.recover()
@@ -126,7 +129,7 @@ class Worker:
                 claimed_by=self.worker_id,
                 lease_seconds=self.lease_seconds,
             )
-        except (RuntimeError, ApprovalRuntimeError) as error:
+        except (RuntimeError, ApprovalRuntimeError, ProgressError) as error:
             return WorkerRunOutcome(
                 status="worker_error",
                 error={"code": "claim_error", "message": str(error)},
@@ -143,7 +146,7 @@ class Worker:
             if candidate.get("retry_authorization") is not None:
                 reservation = self.runtime.retry_runtime.execution_reservation(candidate)
                 if reservation is not None:
-                    return self._reserved_outcome(candidate, reservation)
+                    return self._observe_outcome(candidate, self._reserved_outcome(candidate, reservation))
             job = self.runtime.validate_claim(job_id, self.worker_id)
         except (RuntimeError, RetryStoreError, ExecutionStoreError) as error:
             # Another delivery may have completed after this delivery read the
@@ -153,14 +156,15 @@ class Worker:
                     canonical = self.runtime.show(job_id)
                     reservation = self.runtime.retry_runtime.execution_reservation(canonical)
                     if reservation is not None:
-                        return self._reserved_outcome(canonical, reservation)
+                        return self._observe_outcome(canonical, self._reserved_outcome(canonical, reservation))
                 except (RuntimeError, RetryStoreError, ExecutionStoreError):
                     pass
-            return WorkerRunOutcome(
+            outcome = WorkerRunOutcome(
                 status="worker_error",
                 job_id=job_id,
                 error={"code": "claim_error", "message": str(error)},
             )
+            return self._observe_outcome(candidate, outcome) if candidate else outcome
         return self._run_job(job)
 
     def heartbeat(self, job_id: str) -> dict[str, Any]:
@@ -170,7 +174,28 @@ class Worker:
             lease_seconds=self.lease_seconds,
         )
 
+    def _observe_outcome(self, job: dict[str, Any], outcome: WorkerRunOutcome) -> WorkerRunOutcome:
+        try:
+            if outcome.error and outcome.error.get("code") in {"authorization_error", "claim_error", "review_runtime_error", "approval_runtime_error"}:
+                self.runtime.progress.emit(job, "gate_failed", execution_id=outcome.execution_id, detail="authority")
+            self.runtime.progress.emit(job, "worker_exited", execution_id=outcome.execution_id,
+                                       detail=outcome.status if outcome.status in {"worker_error", "execution_reserved", "completed", "failed", "reviewing", "waiting_approval", "queued", "created"} else "error")
+            return outcome
+        except ProgressError:
+            return self._progress_error(job)
+
+    @staticmethod
+    def _progress_error(job: dict[str, Any]) -> WorkerRunOutcome:
+        return WorkerRunOutcome(status="worker_error", job_id=job["job_id"],
+                                error={"code": "progress_integrity_error", "message": "Progress evidence could not be persisted; recovery is required", "retryable": False})
+
     def _run_job(self, job: dict[str, Any]) -> WorkerRunOutcome:
+        try:
+            return self._observe_outcome(job, self._run_job_with_progress(job))
+        except ProgressError:
+            return self._progress_error(job)
+
+    def _run_job_with_progress(self, job: dict[str, Any]) -> WorkerRunOutcome:
         execution_id = self.id_factory()
         budget_binding: Any | None = None
         budget_decision: BudgetDecision | None = None
@@ -217,7 +242,13 @@ class Worker:
             )
 
         try:
-            result = self._execute_safely(request)
+            self.runtime.progress.execution_started(job, execution_id)
+            with execution_observer(self.runtime.progress, job, execution_id):
+                result = self._execute_safely(request)
+        except ProgressError:
+            if budget_binding is not None:
+                self.budget_runtime.finalize_execution(budget_binding, execution_id=execution_id)
+            raise
         except RetryStoreError as error:
             if budget_binding is not None:
                 budget_decision = self.budget_runtime.finalize_execution(
@@ -329,8 +360,27 @@ class Worker:
         )
 
     def recover_persisted_results(self) -> list[WorkerRunOutcome]:
+        try:
+            with self.runtime.progress.recovery_lock():
+                # Include terminal jobs: delivery is independent of work eligibility.
+                for job in self.runtime.list():
+                    self.runtime.progress.reconcile_recovery(job)
+                self.runtime.reconcile_progress()
+                return self._recover_persisted_results()
+        except ProgressError as error:
+            raise RuntimeError(str(error)) from error
+
+    def _recover_persisted_results(self) -> list[WorkerRunOutcome]:
         """Advance running jobs whose immutable result survived an interrupted update."""
         recovered: list[WorkerRunOutcome] = []
+        def record_outcome(outcome):
+            job = self.runtime.show(outcome.job_id)
+            progress = self.runtime.progress
+            if progress.store.recovery_record(progress.logical_id(job), job["job_id"]) is None:
+                progress.begin_recovery(job, outcome.execution_id)
+            progress.finish_recovery(job, outcome)
+            recovered.append(outcome)
+
         for job in self.runtime.list(status="running"):
             linked = {
                 str(reference.get("ref", "")).split(":", 1)[1]
@@ -343,7 +393,7 @@ class Worker:
                     job["job_id"], linked_execution_ids=linked
                 )
             except ExecutionStoreError as error:
-                recovered.append(
+                record_outcome(
                     WorkerRunOutcome(
                         status="worker_error",
                         job_id=job["job_id"],
@@ -354,7 +404,7 @@ class Worker:
             if record is None:
                 continue
             if record.request is None:
-                recovered.append(
+                record_outcome(
                     WorkerRunOutcome(
                         status="worker_error",
                         job_id=job["job_id"],
@@ -384,7 +434,7 @@ class Worker:
                 ReferenceResolutionError,
                 RetryStoreError,
             ) as error:
-                recovered.append(
+                record_outcome(
                     WorkerRunOutcome(
                         status="worker_error",
                         job_id=job["job_id"],
@@ -397,7 +447,7 @@ class Worker:
                 )
                 continue
             if request.to_dict() != expected_request.to_dict():
-                recovered.append(
+                record_outcome(
                     WorkerRunOutcome(
                         status="worker_error",
                         job_id=job["job_id"],
@@ -409,7 +459,8 @@ class Worker:
                     )
                 )
                 continue
-            recovered.append(
+            self.runtime.progress.begin_recovery(job, record.result.execution_id)
+            record_outcome(
                 self._record_result(
                     job, request, record.result, persist_result=False
                 )
@@ -436,6 +487,8 @@ class Worker:
                     "Executor result does not match the execution request"
                 )
             self.execution_store.result_validator.validate_model(result)
+        except ProgressError:
+            raise
         except INTEGRITY_FAILURES:
             return self._runtime_failure_result(
                 request, "malformed_state", code="executor_error",
@@ -574,6 +627,8 @@ class Worker:
                 error=failure,
                 budget=(budget_decision.to_dict() if budget_decision else None),
             )
+
+        self.runtime.progress.observe_execution(job, result)
 
         artifact_ref = {
             "ref_type": "artifact",

@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-company.local/schemas/progress-event.schema.json",
+  "title": "Non-authoritative progress event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "authoritative",
+    "event_type",
+    "logical_job_id",
+    "job_id",
+    "execution_id",
+    "step_id",
+    "evidence_id",
+    "detail"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "authoritative": {
+      "type": "boolean",
+      "const": false
+    },
+    "event_type": {
+      "enum": [
+        "job_started",
+        "job_completed",
+        "job_failed",
+        "job_cancelled",
+        "job_state_observed",
+        "transition_requested",
+        "step_started",
+        "step_completed",
+        "execution_started",
+        "execution_completed",
+        "execution_failed",
+        "execution_exited",
+        "tool_started",
+        "tool_completed",
+        "tool_failed",
+        "repair_started",
+        "retry_requested",
+        "gate_failed",
+        "gate_waiting",
+        "replan_requested",
+        "stop_requested",
+        "continuation_reserved",
+        "worker_exited",
+        "recovery_completed"
+      ]
+    },
+    "logical_job_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "job_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "execution_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "step_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "evidence_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "detail": {
+      "enum": [
+        "none",
+        "created",
+        "queued",
+        "running",
+        "reviewing",
+        "waiting_approval",
+        "completed",
+        "failed",
+        "cancelled",
+        "succeeded",
+        "needs_review",
+        "needs_human",
+        "blocked",
+        "incomplete",
+        "timed_out",
+        "partial",
+        "budget",
+        "authority",
+        "review",
+        "human",
+        "retry",
+        "stop",
+        "replan",
+        "error",
+        "provider_call",
+        "controlled_write",
+        "worker_error",
+        "execution_reserved",
+        "no_work"
+      ]
+    }
+  }
+}

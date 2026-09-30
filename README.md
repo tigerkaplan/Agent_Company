@@ -48,7 +48,8 @@ accounting, and structured fail-closed exhaustion without granting
 approval, review, continuation, retry, write, Git, or deployment authority. It
 is CLOSED / COMMITTED at `63813b5` after CORE-05R3 PASS. CORE-06 Retry / Stop
 Policy is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
-CORE-07 is NEXT / NOT STARTED; CORE-08 through CORE-11 are NOT STARTED. The
+CORE-07 is CLOSED / READY TO COMMIT after CORE-07R3 PASS (uncommitted);
+CORE-08 through CORE-11 are NOT STARTED. The
 aggregate serialized-result byte ceiling remains FUTURE HARDENING / NON-BLOCKING.
 
 The runtime remains local-first. Phase 8D packages the canonical Phase 8C
@@ -78,8 +79,11 @@ ignored local configuration are intentionally not expanded.
   represented by source.
 - `runtime/` — `actions/`, `approvals/`, `budget/`, `cli/`, `continuation/`,
   `core/`, `evals/`, `execution/`, `executors/`, `git/`, `host/`, `jobs/`,
-  `notifications/`, `providers/`, `queue/`, `remote/`, `review/`, `retry/`,
+  `notifications/`, `progress/`, `providers/`, `queue/`, `remote/`, `review/`, `retry/`,
   `scheduler/`, `storage/`, `tests/`, `tools/`, `webhooks/`, and `workers/`.
+  `runtime/progress/` is the uncommitted CORE-07 implementation, CLOSED / READY TO
+  COMMIT after CORE-07R3 PASS; it contains typed/schema-validated, bounded,
+  non-authoritative events and durable, capacity-safe recovery delivery.
   `runtime/budget/` is the committed CORE-05 implementation and
   `runtime/retry/` is the CURRENT CORE-06 implementation, CLOSED / COMMITTED
   at `4a6e5c4` after CORE-06R6 PASS. It contains `__init__.py`, `models.py`,
@@ -120,7 +124,6 @@ Every path in this section is PLANNED and absent from the current physical tree.
 It records structural ownership only; implementation checkpoints create paths
 when real content exists.
 
-- CORE-07: `runtime/progress/`.
 - CORE-08: `runtime/context/` and `runtime/code-intelligence/`.
 - CORE-09: `runtime/cache/`.
 - CORE-10: `runtime/compute-policy/`.

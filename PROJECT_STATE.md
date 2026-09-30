@@ -16,7 +16,9 @@
   CORE-05R3 PASS with no Critical, Major, or Minor findings.
 - CORE-06 Retry / Stop Policy is CLOSED / COMMITTED at `4a6e5c4` after
   CORE-06R6 PASS.
-- CORE-07 Progress Events is NEXT / NOT STARTED; CORE-08 through CORE-11
+- CORE-07 Progress Events is CLOSED / READY TO COMMIT after CORE-07R3 PASS
+  with no Critical, Major, or Minor findings. It remains uncommitted at base
+  HEAD `28ab085`. CORE-01–06 are CLOSED / COMMITTED; CORE-08 through CORE-11
   are NOT STARTED.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
@@ -714,7 +716,140 @@ structural implementation is followed by validation, review, closure, commit,
 repository-tree audit, and documentation reconciliation. This checkpoint
 created no future directories and changed no runtime behavior.
 
-## Post-CORE-06 Documentation / Roadmap / Repository Tree Checkpoint
+## CORE-07 Closure Reconciliation — CLOSED / READY TO COMMIT
+
+CORE-07R3 final decision: PASS — READY FOR CORE-07 CLOSURE. Recovery durability,
+capacity safety, and replay/idempotency passed with no Critical, Major, or Minor
+findings. A separate reviewer independently inspected the F2 repair and reproduced
+the R2 failure cases. This was same-provider separate-reviewer validation, not a
+cross-provider audit.
+
+R3 validation passed 14/14 recovery/adversarial tests, the full 75/75 CORE-07
+targeted suite, 650/650 existing regressions, and 989/989 full regression in
+472.019 seconds. All 145 Python files and 31 JSON schemas parsed successfully;
+`git diff --check` passed. This records R3 evidence, not a closure-time full-suite
+rerun.
+
+Closed scope: structured, schema-validated, non-authoritative progress events;
+bounded append-only, tamper-evident hash-chain persistence; consistent terminal
+outcomes; restart/replay idempotency; and durable, capacity-reserved terminal and
+recovery evidence. Interrupted recovery delivery remains reachable after terminal
+state and replays exactly once without inventing a worker exit. The exact 124/128
+case fails closed before completion; 123/128 completes with required evidence.
+`progress != completion`: events grant no approval, review completion, execution,
+retry, continuation, budget mutation, write, Git, or deployment authority.
+
+CORE-07C reconciles documentation only. CORE-01–06 remain CLOSED / COMMITTED;
+CORE-07 is CLOSED / READY TO COMMIT and remains uncommitted at HEAD `28ab085`.
+CORE-08 is NOT STARTED. Runtime behavior is unchanged; no commit or next-phase
+work is performed. CORE-07C fresh targeted validation passed 75/75 tests in
+52.074 seconds; `git diff --check` passed. R3's full-regression evidence above
+is retained without claiming a closure-time full-regression rerun.
+
+## Historical CORE-07F2 Bounded R2 Repair - Before CORE-07R3
+
+CORE-07R2 returned FIX for one remaining Major finding: recovery could commit
+canonical state before delivering its recovery outcome, then permanently miss
+that evidence because later recovery scanned only running jobs.
+
+CORE-07F2 adds a bounded durable recovery delivery record to the existing SQLite
+journal. It reserves one outcome slot before recovery lifecycle mutation, persists
+the actual returned outcome before append, and atomically inserts the event and
+removes its delivery record. Reconciliation includes ready evidence for terminal
+jobs. A separate recovery lock serializes attempts; an interrupted attempt without
+a durably returned outcome records worker_error rather than inferred success.
+No worker exit is invented, and recovery metadata grants no execution authority.
+
+Validation: all 14 new F2 durability tests passed as part of the full CORE-07
+suite (75/75). Coverage includes the exact R2 append-interruption/restart and
+124/128 capacity cases, exact-fit 123/128 delivery, process exit, transaction
+rollback, repeated reconciliation, concurrent recovery, review-wait neutrality,
+logical capacity, schema migration, and missing/altered protection definitions.
+CORE-01-06 regressions passed 394/394; focused integration regressions passed
+256/256; full regression passed 989/989 in 633.023 seconds. Syntax parsing passed
+for 145 Python files and all 31 JSON schemas; `git diff --check` passed. Journal
+and recovery-lock paths remain covered by the existing jobs ignore boundary.
+
+The repair remains uncommitted at base HEAD `28ab085`; independent re-review
+remains pending. CORE-08 is NOT STARTED. No commit, deployment, graph runtime,
+dashboard, or next-phase work was performed.
+
+## Historical CORE-07F1 Bounded R1 Repair - Before CORE-07R2
+
+CORE-07R1 returned FIX. CORE-07F1 repairs only its four findings, remains
+uncommitted at base HEAD `28ab085`, and does not begin CORE-08.
+
+- Lifecycle saves and reconciliation share a cross-process transition lock.
+  Validation reloads current canonical state under that lock, rejects changed
+  source status and terminal rewrites, and serializes state persistence with
+  progress observation. Journal validation rejects contradictory terminal states
+  and duplicate terminal identities; invalid historical evidence is not rewritten.
+- Complete event bundles reserve bounded capacity in a durable SQLite pending
+  row before canonical writes. Before/after job digests and exact generated events
+  bind delivery to actual canonical state. Delivery commits events/head and pending
+  removal together; a pre-write interruption cancels the reservation without
+  changing the job. Pending capacity cannot be stolen by concurrent appends.
+- Execution-result recovery records its actual returned outcome using
+  `recovery_completed`, without inventing an interrupted worker's exit.
+- Journal access verifies full SQLite table/constraint and trigger definitions.
+  Only intact R1 schema can migrate to the reservation-aware schema; altered or
+  missing protection definitions fail closed.
+
+F1 targeted validation passed 23/23 tests; the complete CORE-07 suite passed
+61/61. Coverage includes controlled completion/failure and duplicate-completion
+races, cross-process stale transitions, capacity rejection/exact fit, reservations
+across real process exits before/during event delivery, tamper, and recovery outcomes.
+CORE-01-06 regressions passed 394/394 and focused regressions passed 292/292.
+Full regression passed 975/975 in 559.364 seconds. Syntax parsing passed for
+144 Python files and all 31 JSON schemas; `git diff --check` passed. The journal
+and transition-lock paths remain covered by the existing jobs ignore boundary.
+
+Progress remains evidence only. Reservations cannot approve or perform job state
+changes, retry, continuation, budget mutation, plan changes, controlled writes,
+Git, or deployment. CORE-01-06 authority rules remain in their existing modules.
+Independent re-review has not occurred. No commit, deployment, graph runtime,
+dashboard, or CORE-08 work was performed.
+
+## Historical CORE-07 Initial Implementation Checkpoint - Before CORE-07R1
+
+CORE-07 is IMPLEMENTED / pending independent review, uncommitted at base HEAD
+`28ab085`. The new `runtime/progress/` package and
+`schemas/progress-event.schema.json` define deterministic, typed, bounded,
+non-authoritative observations. `progress != completion`.
+
+Integration covers canonical job persistence, Worker execution/result and exit
+boundaries, actual host provider calls (including controlled-write staging),
+Scheduler reconciliation, continuation steps, retry/repair, Reviewer/human gates,
+CORE-05 budget denial, and CORE-06 stop/replan decisions. Tool events describe
+host calls; hidden provider-internal tool activity is not fabricated.
+
+Each logical job has an append-only SQLite journal under the configured jobs
+root's `.progress/` directory. Standard-library SQLite FULL synchronous
+transactions atomically commit each event and its hash-chain head; initial
+creation uses atomic replacement. SQL update/delete guards, complete read-time
+schema/identity/chain validation, existing cross-process file-store locking,
+deterministic deduplication, and canonical-state reconciliation provide local
+integrity and restart behavior. Bounds are 128 events per physical job, 4,096 per
+logical job, 4,096 bytes per event, and a 32 MiB database read ceiling. Full or
+malformed history fails closed without eviction. Arbitrary owner replacement of
+the entire database is outside this local evidence store's integrity boundary.
+
+Progress grants no Approval, Reviewer completion, retry/continuation, budget,
+plan mutation, write, Git, or deployment authority. Journals are not policy inputs.
+An unavailable journal returns an error; successful evidence delivery is never
+claimed when persistence failed. Only canonical terminal continuation state with
+no remaining steps produces logical completion evidence.
+
+Validation: CORE-07 targeted tests passed 38/38; CORE-01-06 regressions passed
+394/394; focused Worker/Scheduler/Reviewer/Approval/actions/Git/provider/runtime
+regressions passed 292/292. The final full runtime regression passed 952/952
+in 541.546 seconds. `git diff --check` passed.
+Python syntax parsing passed for 143 runtime files; all 31 JSON schemas parsed;
+the journal path is covered by the existing jobs ignore rule. No live provider,
+deployment, commit, CORE-08, graph runtime, or dashboard work was performed.
+Independent review has not been performed; this is implementation evidence only.
+
+## Historical Post-CORE-06 Documentation / Roadmap / Repository Tree Checkpoint
 
 CORE-06 implementation, validation, R6 PASS evidence, and closure documentation
 are committed at `4a6e5c4` (`feat: add retry and stop policy`). The working tree

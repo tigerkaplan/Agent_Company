@@ -42,6 +42,8 @@ from runtime.retry.models import (
     policy_id_for,
     retry_work_digest,
 )
+from runtime.progress.models import ProgressError
+from runtime.progress.runtime import ProgressRuntime
 from runtime.retry.runtime import RetryRuntime
 from runtime.retry.store import FileRetryStore, RetryStoreError
 from runtime.storage.execution_store import ExecutionStoreError, FileExecutionStore
@@ -113,6 +115,7 @@ class JobRuntime:
             self.store.root / ".execution-budgets"
         )
         self.retry_store = FileRetryStore(self.store.root / ".retry-policy")
+        self.progress = ProgressRuntime(self.store.root / ".progress")
         self.clock = clock
         self.id_factory = id_factory
         self.lifecycle = lifecycle or Lifecycle()
@@ -125,6 +128,30 @@ class JobRuntime:
             budget_store=self.budget_store,
             clock=clock,
         )
+
+    def reconcile_progress(self) -> None:
+        """Recover observations after a job write committed but event delivery did not."""
+        try:
+            jobs = self.list()
+            decisions = {}
+            for snapshot in jobs:
+                with self.progress.transition_lock():
+                    job = self._load(snapshot["job_id"])
+                    self.progress.observe_job(job)
+                if job["status"] != "failed":
+                    continue
+                binding = job.get("retry_policy")
+                if binding is None:
+                    continue
+                policy_id = binding["policy_id"]
+                if policy_id not in decisions:
+                    policy = self.retry_store.load_policy(binding)
+                    decisions[policy_id] = self.retry_store.load_state(binding, history_limit=policy.history_limit)["history"]
+                for entry in decisions[policy_id]:
+                    if entry["source_job_id"] == job["job_id"]:
+                        self.progress.observe_retry(job, self.retry_runtime._from_entry(entry))
+        except (ProgressError, RetryStoreError, JobStoreError) as error:
+            raise RuntimeError(str(error)) from error
 
     def configure_authority_stores(
         self,
@@ -225,7 +252,7 @@ class JobRuntime:
                     }
                 )
                 updated.pop("claim_released_at", None)
-                return self._save(updated)
+                return self._save(updated, expected_status=job["status"])
         except JobStoreError as error:
             raise RuntimeError(str(error)) from error
 
@@ -272,7 +299,7 @@ class JobRuntime:
                     + timedelta(seconds=lease_seconds)
                 )
                 updated["last_updated_at"] = now_text
-                return self._save(updated)
+                return self._save(updated, expected_status=job["status"])
         except JobStoreError as error:
             raise RuntimeError(str(error)) from error
 
@@ -295,7 +322,7 @@ class JobRuntime:
         if updated["status"] == "created":
             if self._approval_allows_execution(updated):
                 updated = self._transition_job(updated, "queued", save=False)
-        return self._save(updated)
+        return self._save(updated, expected_status=job["status"])
 
     def reschedule(self, job_id: str, run_at: str) -> dict[str, Any]:
         return self.schedule(job_id, run_at, reason="rescheduled")
@@ -372,7 +399,7 @@ class JobRuntime:
                 deepcopy(approval_ref),
             ]
             updated["last_updated_at"] = self.clock()
-            return self._save(updated)
+            return self._save(updated, expected_status=job["status"])
         return self._transition_job(
             job, "waiting_approval", approval_ref=approval_ref
         )
@@ -666,7 +693,7 @@ class JobRuntime:
                 self.retry_runtime.record_failure(updated)
             except RetryStoreError as error:
                 raise RuntimeError(str(error)) from error
-        return self._save(updated)
+        return self._save(updated, expected_status=job["status"])
 
     def _fail_job(
         self,
@@ -734,7 +761,7 @@ class JobRuntime:
             self.retry_runtime.record_failure(updated)
         except RetryStoreError as error:
             raise RuntimeError(str(error)) from error
-        return self._save(updated)
+        return self._save(updated, expected_status=job["status"])
 
     def retry(
         self,
@@ -782,7 +809,8 @@ class JobRuntime:
             raise RuntimeError("Only a failed job can be retried")
         try:
             decision = self.retry_runtime.reserve(failed)
-        except RetryStoreError as error:
+            self.progress.observe_retry(failed, decision)
+        except (RetryStoreError, ProgressError) as error:
             raise RuntimeError(str(error)) from error
         if decision.decision != "RETRY":
             return {"decision": decision.to_dict(), "retry_job": None}
@@ -1114,13 +1142,28 @@ class JobRuntime:
                     *updated["output_refs"],
                     deepcopy(approval_ref),
                 ]
-        return self._save(updated) if save else updated
+        return self._save(updated, expected_status=job["status"]) if save else updated
 
-    def _save(self, job: dict[str, Any]) -> dict[str, Any]:
-        self._validate_against_persisted_lineage(job)
+    def _save(self, job: dict[str, Any], *, expected_status: str | None = None) -> dict[str, Any]:
         try:
-            self.store.save(job)
-        except JobStoreError as error:
+            # Separate lock avoids nesting the existing claim/retry OS lock.
+            # Every lifecycle writer and reconciliation use the same lock order.
+            with self.progress.transition_lock():
+                current = self._load(job["job_id"])
+                self.progress.observe_job(current)
+                if expected_status is not None and current["status"] != expected_status:
+                    raise RuntimeError("Stale lifecycle transition; canonical status changed")
+                if current["status"] in {"completed", "failed", "cancelled"}:
+                    if job != current:
+                        raise RuntimeError("Terminal canonical state cannot be rewritten")
+                    return deepcopy(current)
+                if current["status"] != job["status"]:
+                    self.lifecycle.require_transition(current["status"], job["status"])
+                self._validate_against_persisted_lineage(job)
+                self.progress.reserve_transition(current, job)
+                self.store.save(job)
+                self.progress.observe_job(job)
+        except (JobStoreError, ProgressError, LifecycleError) as error:
             raise RuntimeError(str(error)) from error
         if self.notification_emitter is not None and job["status"] in {
             "completed",

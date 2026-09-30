@@ -19,7 +19,7 @@
 - CORE-05 Time / Execution Budget: CLOSED / COMMITTED at `63813b5` after
   CORE-05R3 PASS.
 - CORE-06 Retry / Stop Policy: CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
-- CORE-07 Progress Events: NEXT / NOT STARTED.
+- CORE-07 Progress Events: CLOSED / READY TO COMMIT after CORE-07R3 PASS (uncommitted).
 - CORE-08 through CORE-11: NOT STARTED.
 - Phase 8E: PAUSED / BLOCKED; deployment not started because the VPS has not
   yet been created.
@@ -114,7 +114,7 @@ redefine or begin Phase 8.
 - CORE-05 Time / Execution Budget: CLOSED / COMMITTED at `63813b5` after
   CORE-05R3 PASS.
 - CORE-06 Retry / Stop Policy: CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
-- CORE-07 Progress Events: NEXT / NOT STARTED.
+- CORE-07 Progress Events: CLOSED / READY TO COMMIT after CORE-07R3 PASS (uncommitted).
 - CORE-08 Context Discovery Before Action: NOT STARTED.
 - CORE-09 Context / Prompt Cache Policy: NOT STARTED.
 - CORE-10 Compute / Effort Policy: NOT STARTED.
@@ -141,7 +141,7 @@ append-only usage ledger, verified state/head caches, restart-safe accounting,
 conservative crash recovery, and structured fail-closed exhaustion without
 granting execution or governance authority. CORE-05 is CLOSED / COMMITTED at
 `63813b5` after CORE-05R3 PASS. CORE-06 is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
-CORE-07 is NEXT / NOT STARTED; CORE-08 through CORE-11 are NOT STARTED.
+CORE-07 is CLOSED / READY TO COMMIT after CORE-07R3 PASS (uncommitted); CORE-08 through CORE-11 are NOT STARTED.
 An aggregate
 serialized-result byte ceiling is FUTURE HARDENING / NON-BLOCKING.
 

@@ -205,6 +205,7 @@ class SchedulerLoop:
             }
             errors.extend(schedule_result["errors"])
         try:
+            self.jobs.reconcile_progress()
             budget_recovery = self.worker.recover_budget_state()
         except RuntimeError as error:
             budget_recovery = []

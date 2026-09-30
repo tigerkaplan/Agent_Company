@@ -20,6 +20,19 @@ Generated job records are stored as stable, pretty-printed JSON files under `job
 
 Job records must contain references rather than credentials, provider tokens, full project state, or duplicated knowledge content.
 
+CORE-07 is CLOSED / READY TO COMMIT after CORE-07R3 PASS and remains uncommitted.
+It adds non-authoritative progress journals under `jobs/.progress/`, one
+bounded SQLite file per logical job. Events and hash-chain heads commit together
+in FULL synchronous transactions; update/delete guards enforce append-only event
+rows. Bounded pending bundles reserve complete transition evidence before job
+writes; restart delivery checks canonical state and never authorizes a transition.
+Recovery reserves its outcome slot before lifecycle mutation and persists the
+actual outcome before delivery. Ready recovery evidence replays for terminal
+jobs too; insertion and delivery-record removal commit atomically.
+Full SQLite protection definitions are validated. Canonical job and authority
+records remain in their existing stores. See
+`../progress/README.md` for restart reconciliation, limits, and integrity scope.
+
 CORE-04 discovery and deferred-loading evidence remains ephemeral because it
 does not mutate job or authority state. Immutable `ToolDiscoveryResult` and
 `ToolLoadResult` values expose selection/load evidence to the current runtime

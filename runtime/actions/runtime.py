@@ -17,6 +17,7 @@ from runtime.actions.authorization import authorization_fingerprint
 from runtime.actions.models import ExecutionScope, ScopeContractError, normalize_relative_path, scope_path_contains
 from runtime.actions.store import FileMutationArtifactStore
 from runtime.execution.models import ExecutionRequest
+from runtime.progress.runtime import tool_observation
 from runtime.providers.models import ProviderExecutionResult
 
 
@@ -179,9 +180,10 @@ class ControlledWriteRuntime:
             except ScopeContractError as error:
                 return self._rejected(request, scope, error.code, str(error), ())
 
-            provider_result = adapter.execute(
-                request, context, working_directory=workspace
-            )
+            with tool_observation("provider_call"):
+                provider_result = adapter.execute(
+                    request, context, working_directory=workspace
+                )
             after, link_violations = self._snapshot_with_violations(workspace)
             baseline_after, baseline_violations = self._snapshot_with_violations(baseline)
             created, modified, deleted = self._changes(before, after)

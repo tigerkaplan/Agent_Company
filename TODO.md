@@ -45,7 +45,10 @@
     or Minor findings; external evidence recorded in PROJECT_STATE.md.
   - [x] Closure reconciliation complete.
   - [x] Implementation commit complete at `4a6e5c4`.
-- [ ] CORE-07 Progress Events — NEXT / NOT STARTED.
+- [x] CORE-07 Progress Events — CLOSED / READY TO COMMIT after CORE-07R3 PASS.
+  - [x] Implementation, bounded repairs, and independent re-review complete.
+  - [x] Closure documentation reconciled; progress remains non-authoritative.
+  - [ ] Implementation commit - not performed; changes remain uncommitted.
 - [ ] CORE-08 Context Discovery Before Action — NOT STARTED.
 - [ ] CORE-09 Context / Prompt Cache Policy — NOT STARTED.
 - [ ] CORE-10 Compute / Effort Policy — NOT STARTED.
