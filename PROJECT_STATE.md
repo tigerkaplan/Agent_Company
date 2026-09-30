@@ -17,9 +17,9 @@
 - CORE-06 Retry / Stop Policy is CLOSED / COMMITTED at `4a6e5c4` after
   CORE-06R6 PASS.
 - CORE-07 Progress Events is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3
-  PASS with no Critical, Major, or Minor findings. CORE-01–07 are CLOSED /
-  COMMITTED. CORE-08 is CLOSED / READY TO COMMIT after CORE-08R3 PASS (uncommitted);
-  CORE-09 through CORE-11 are NOT STARTED.
+  PASS with no Critical, Major, or Minor findings. CORE-01-08 are CLOSED /
+  COMMITTED. CORE-08 is committed at `1a1b029` after CORE-08R3 PASS;
+  CORE-09 is NEXT / NOT STARTED; CORE-10-11 are NOT STARTED.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
@@ -40,10 +40,31 @@
 - Phase 8F is NOT STARTED.
 - Phase 8G and Phase 8H are NOT STARTED.
 
-## CORE-08 Context Discovery Before Action - CLOSED / READY TO COMMIT
+## Post-CORE-08 Documentation / Master Context Reconciliation
 
-Closed after CORE-08R3 PASS, uncommitted at base HEAD `b620cee`. CORE-09 is
-NOT STARTED. Provider execution assembles
+Verified implementation HEAD: `1a1b029` (`feat: add context discovery`), with
+an initially clean working tree. CORE-01-08 are CLOSED / COMMITTED;
+CORE-09 is NEXT / NOT STARTED; CORE-10-11 are NOT STARTED.
+`README.md` owns DOC-TREE; `ROADMAP.md` owns accepted capability scope;
+`TODO.md` mirrors outstanding work. The CURRENT context/index support is
+physically implemented; advanced Code Intelligence and CORE-09+ remain planned.
+
+This documentation-only reconciliation uses the approved SYNC-04 and SYNC-04A
+requirements in the current human instruction. The SYNC documents are external
+Build & Reviews architecture/roadmap context, not repository artifacts; repository
+evidence remains the implementation source of truth.
+Missing refinements and CAP-SOC-01 are recorded in ROADMAP without duplicating
+canonical agents or runtime capability registrations. CAP-SOC-01 is PLANNED /
+NOT STARTED; its Social Media HQ belongs to Phase 9B. Agent count remains
+10 current / 14 V1 target. Target paths remain absent; no future folders were
+created. Phase 8E-8H status and prerequisites are unchanged. No runtime tests
+are rerun for this documentation-only reconciliation; prior results below are
+historical evidence, not new validation.
+
+## CORE-08 Context Discovery Before Action - CLOSED / COMMITTED
+
+Committed at `1a1b029` after CORE-08R3 PASS. CORE-09 is
+NEXT / NOT STARTED. Provider execution assembles
 bounded, provenance-bearing context before calling the adapter. Canonical
 request identity and authority remain unchanged. The implementation adds
 metadata-first skill discovery and selected-only instruction loading,
@@ -61,7 +82,7 @@ selected, required, inherited, ordinary file, and repository-index selections.
 Context remains evidence only and grants no execution, write, approval, retry,
 continuation, budget, plan, Git, or deployment authority.
 
-### CORE-08R3 final independent review and CORE-08C closure
+### Historical CORE-08R3 final independent review and CORE-08C closure - before commit
 
 R3 returned PASS - READY FOR CORE-08 CLOSURE with no Critical, Major, or Minor
 findings. Independent adversarial probes rejected stale registered

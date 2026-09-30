@@ -49,7 +49,7 @@ approval, review, continuation, retry, write, Git, or deployment authority. It
 is CLOSED / COMMITTED at `63813b5` after CORE-05R3 PASS. CORE-06 Retry / Stop
 Policy is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
 CORE-07 is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS;
-CORE-08 is CLOSED / READY TO COMMIT after CORE-08R3 PASS (uncommitted); CORE-09 through CORE-11 are NOT STARTED. The
+CORE-08 is CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS; CORE-09 is NEXT / NOT STARTED; CORE-10-11 are NOT STARTED. The
 aggregate serialized-result byte ceiling remains FUTURE HARDENING / NON-BLOCKING.
 
 The runtime remains local-first. Phase 8D packages the canonical Phase 8C
@@ -62,7 +62,7 @@ the canonical capability roadmap.
 
 ## Current Repository Structure
 
-CURRENT: audited against committed checkpoint `6bcffa4`. This is the physical
+CURRENT: audited against committed checkpoint `1a1b029`. This is the physical
 structure in the current checkout; generated contents and
 ignored local configuration are intentionally not expanded.
 
@@ -126,9 +126,14 @@ state, `shared/knowledge/` is long-term synthesized knowledge, agent
 `MEMORY.md` files hold role-specific durable lessons, and `runtime/state/` is
 runtime operational state. These stores remain separate.
 
-CORE-08 now adds `runtime/context/` (including the bounded repository index),
-`skills/catalog.json`, and `runtime/tests/test_context_discovery.py`. See
-`runtime/context/README.md` for contracts, bounds, and implementation limits.
+CORE-08 CURRENT: `runtime/context/` contains `__init__.py`, `contracts.py`,
+`discovery.py`, `fallback.py`, `repository.py`, `skills.py`, and `README.md`.
+The bounded Code Intelligence / Repository Index lives in
+`runtime/context/repository.py`; no separate advanced subsystem is implemented.
+Supporting CURRENT paths: `skills/catalog.json`,
+`runtime/tests/test_context_discovery.py`, `runtime/providers/context.py`,
+`runtime/providers/executor.py`, and `runtime/providers/models.py`.
+See `runtime/context/README.md` for contracts, bounds, and implementation limits.
 
 ## Future / Target Repository Structure
 
@@ -149,6 +154,10 @@ when real content exists.
   `agents/content/`, and `agents/design/`.
 - CAP-SEARCH-GROWTH-01: `skills/search-growth/` and
   `orchestrator/workflows/search-growth/`.
+- CAP-SOC-01: `skills/social-media/lifecycle/` for lifecycle methods and
+  `orchestrator/workflows/social-media-operations/` for stateful coordination.
+  These extend existing social skills and workflow ownership without a new agent.
+- Phase 9B / CAP-SOC-01: `apps/control-room/social-media-hq/` for the HQ view.
 - Phase 9A: `observability/`.
 - Phase 9B: `apps/control-room/`.
 - DEC-01: `orchestrator/decision-engine/`.
@@ -165,7 +174,12 @@ normal execution provider, Reviewer, approval authority, or security authority.
 
 No planned directory in this section was created by this documentation task.
 
-## Repository Tree Reconciliation Policy
+## Repository Tree Reconciliation Policy - DOC-GOV-01
+
+README owns the physical CURRENT and PLANNED target-tree summary;
+PROJECT_STATE owns current status, ROADMAP owns scope and target-path ownership,
+and TODO tracks remaining work. A planned path is not implementation evidence.
+Reconcile these surfaces together without replacing dated review/closure records.
 
 After any structural checkpoint, use this sequence:
 
@@ -181,7 +195,7 @@ presented as planned structure.
 
 V1 includes CORE-01 through CORE-11; GOV-01 and GOV-02; ORCH-01 Graph Execution
 Runtime; the Knowledge / Memory / RAG foundation; 14 canonical agents;
-essential Sales, Search Growth, and Reviewer capabilities; Code Intelligence;
+essential Sales, Search Growth, Reviewer, and CAP-SOC-01 capabilities; Code Intelligence;
 Phase 9 Observability, Control Room, and Operating Layer; DEC-01 plus a bounded
 DEC-02 JEV pilot; Phase 8E through 8H deployment/security completion; and
 Brightshore as the first production Project Pack. Persistent Agent Mailbox, Git
@@ -189,6 +203,12 @@ Worktree Isolation, advanced Agent Teams, Credential / Secret Broker, Advanced
 Knowledge Graph, Multi-model Council, additional memory providers, and advanced
 context compaction, and later JEV / Beacon experiments remain later/important
 and do not block V1.
+
+CAP-SOC-01 is PLANNED / NOT STARTED, owned by the existing Social Media agent.
+V1 prioritizes lifecycle, approval/scheduling, repurposing, basic community
+triage, human handoff, performance -> memory, and basic Phase 9B Social Media HQ.
+Advanced DM autonomy, influencer automation, advanced attribution, complete
+platform coverage, and full autonomous community management are non-blocking.
 
 The accepted planned details are owned by `ROADMAP.md`, including outcome-first
 owner UX, expanded

@@ -49,16 +49,15 @@
   - [x] Implementation, bounded repairs, and independent re-review complete.
   - [x] Closure documentation reconciled; progress remains non-authoritative.
   - [x] Implementation commit complete at `6bcffa4`.
-- [ ] CORE-08 Context Discovery Before Action — NEXT / NOT STARTED.
-  - [ ] Context discovery, graceful connector/file/manual fallback through
-    explicit BLOCKED, semantic skill/context selection and reranking, selective
-    verbatim context retention, and Code Intelligence / Repository Index.
-  - [ ] Provider-neutral skill metadata/triggers: name, description, required
-    capabilities, inputs, outputs, prerequisites, references, and templates;
-    load only relevant skills. Workflows request connector capabilities, not
-    vendors; fallback preserves evidence and authority requirements.
-- [ ] CORE-09 Context / Prompt Cache Policy — NOT STARTED.
-- [ ] CORE-10 Compute / Effort Policy — NOT STARTED.
+- [x] CORE-08 Context Discovery Before Action - CLOSED / COMMITTED at `1a1b029`
+  after CORE-08R3 PASS.
+  - [x] Bounded context discovery, capability fallback, skill metadata and
+    selected-only loading, ranking interfaces, and selective verbatim retention.
+  - [x] Bounded in-memory repository index with Python syntax relationships;
+    read-only knowledge/memory interface. See `runtime/context/README.md` for
+    implemented limits; no connector execution or persistent memory is claimed.
+- [ ] CORE-09 Context / Prompt Cache Policy - NEXT / NOT STARTED.
+- [ ] CORE-10 Compute / Effort Policy - NOT STARTED; include security-aware routing.
 - [ ] CORE-11 External Content Isolation — NOT STARTED.
 - [ ] FUTURE HARDENING / NON-BLOCKING: add an aggregate serialized-result byte
   ceiling.
@@ -105,9 +104,9 @@
 - [ ] CAP-REV-01: QA, Security, Knowledge, Release, External / Client-Facing
   Output Review, Citation Verification, Extraction Verification, Semantic
   Completion Verification, and Change Impact Review.
-- [ ] Add Code Intelligence / Repository Index under CORE-08 and the Software
-  capability: symbols, dependencies, calls, affected files, context, and
-  related architectural memory.
+- [ ] Advanced Code Intelligence beyond the committed CORE-08 bounded index:
+  cross-language semantic call resolution, advanced graphs, and persistent
+  architectural memory integration remain deferred.
 - [ ] Phase 9A Observability: Unified Run Trace, Exact Replay, Trace → Eval,
   Semantic Regression, provider/model behavioural comparison, and Trace → Eval →
   Lesson Candidate (subject to MEM-02B).
@@ -131,8 +130,21 @@
   requirements, templates, and project configuration, without duplicating the
   runtime or canonical agents.
 
+- [ ] DEC-01: Decision State Contract, Live Candidate Menu, Decision escape hatch,
+  and composite scoring within policy; details owned by ROADMAP.
+- [ ] Phase 9A: decision/JEV quality, confidence, escalation, cost, and latency metrics.
+- [ ] GOV-01: preserve execution/eval/review/approval/task-completion separation.
+- [ ] Creative Media Generation: capability/workflow/tool integration, no new agent;
+  Higgsfield optional/non-blocking; verify third-party performance claims.
+- [ ] CAP-SOC-01 One-Person Social Media Team / Social Media Operating System:
+  lifecycle, approval/scheduling, repurposing, basic community triage, human
+  handoff, performance -> memory, and basic Phase 9B Social Media HQ.
+  Existing Social Media agent owns the domain; roadmap defines role boundaries.
+
 ## Later / Important — Not V1 Blockers
 
+- [ ] CAP-SOC-01 advanced DM autonomy, influencer automation, advanced attribution,
+  complete platform coverage, and full autonomous community management.
 - [ ] Persistent Agent Mailbox.
 - [ ] Git Worktree Isolation.
 - [ ] Advanced Agent Teams / parallel execution.

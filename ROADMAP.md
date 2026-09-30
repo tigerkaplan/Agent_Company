@@ -20,8 +20,9 @@
   CORE-05R3 PASS.
 - CORE-06 Retry / Stop Policy: CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
 - CORE-07 Progress Events: CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS.
-- CORE-08: CLOSED / READY TO COMMIT after CORE-08R3 PASS (uncommitted).
-- CORE-09 through CORE-11: NOT STARTED.
+- CORE-08: CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS.
+- CORE-09: NEXT / NOT STARTED.
+- CORE-10-11: NOT STARTED.
 - Phase 8E: PAUSED / BLOCKED; deployment not started because the VPS has not
   yet been created.
 - Phase 8F: NOT STARTED.
@@ -116,8 +117,8 @@ redefine or begin Phase 8.
   CORE-05R3 PASS.
 - CORE-06 Retry / Stop Policy: CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
 - CORE-07 Progress Events: CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS.
-- CORE-08 Context Discovery Before Action: CLOSED / READY TO COMMIT after CORE-08R3 PASS (uncommitted).
-- CORE-09 Context / Prompt Cache Policy: NOT STARTED.
+- CORE-08 Context Discovery Before Action: CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS.
+- CORE-09 Context / Prompt Cache Policy: NEXT / NOT STARTED.
 - CORE-10 Compute / Effort Policy: NOT STARTED.
 - CORE-11 External Content Isolation: NOT STARTED.
 
@@ -142,9 +143,17 @@ append-only usage ledger, verified state/head caches, restart-safe accounting,
 conservative crash recovery, and structured fail-closed exhaustion without
 granting execution or governance authority. CORE-05 is CLOSED / COMMITTED at
 `63813b5` after CORE-05R3 PASS. CORE-06 is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
-CORE-07 is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS; CORE-08 is CLOSED / READY TO COMMIT after CORE-08R3 PASS (uncommitted); CORE-09 through CORE-11 are NOT STARTED.
+CORE-07 is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS; CORE-08 is CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS; CORE-09 is NEXT / NOT STARTED; CORE-10-11 are NOT STARTED.
 An aggregate
 serialized-result byte ceiling is FUTURE HARDENING / NON-BLOCKING.
+
+### CORE-10 Planned Security-Aware Routing
+
+CORE-10 remains NOT STARTED. Compute/effort routing must consider task risk,
+data sensitivity, provider/tool eligibility, context exposure, and required
+review as well as quality, cost, latency, and effort. Security and authority
+constraints filter eligible choices before optimization; cheaper or higher-scoring
+routes never bypass policy, approval, isolation, or required review.
 
 ### CORE-06 Accepted Scope — CLOSED / COMMITTED at `4a6e5c4`
 
@@ -248,7 +257,7 @@ context selection/reranking, selective verbatim context retention, and Code
 Intelligence / Repository Index. Fallback order is preferred connector,
 alternative connector, file/CSV/upload, manual structured input, then explicit
 BLOCKED. Fallback preserves evidence and authority requirements. It is
-CLOSED / READY TO COMMIT after CORE-08R3 PASS, uncommitted at base HEAD `b620cee`.
+CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS.
 See `runtime/context/README.md` for integration and bounded index limitations.
 
 Skill discovery provides provider-neutral metadata and relevance contracts with
@@ -269,7 +278,10 @@ Evidence-Gated Task Completion.
 
 Executor or agent success is not task completion. `DONE` requires successful
 execution plus satisfied acceptance criteria, required evidence, and every
-required review or gate.
+required review or gate. Execution completion, eval evidence, Reviewer outcome,
+human approval, and task completion remain distinct states; none substitutes
+for another. Progress, candidate selection, or an executor success report alone
+cannot mark the task complete.
 
 #### GOV-02 — Capability Governance
 
@@ -348,6 +360,57 @@ and DataForSEO are not canonical agents.
   Knowledge/memory retrieval is an explicit read-only adapter interface. Advanced
   graphs and cross-language semantic call resolution remain deferred.
 
+#### CAP-SOC-01 - One-Person Social Media Team / Social Media Operating System
+
+PLANNED / NOT STARTED. Extend the committed Social Media skills/routing checkpoint
+into a stateful cross-agent capability, without creating another Social Media
+agent or duplicating the canonical `social_media` capability routing.
+The existing Social Media agent remains domain owner and coordinator.
+Research owns evidence and intelligence; Content owns copy and narrative;
+Design owns visual assets; Analytics owns measurement and experiment analysis;
+Reviewer independently checks quality, claims, safety, and required gates.
+Content, Design, and Analytics remain planned agents within the 14-agent V1
+target, not currently implemented roles.
+
+Planned content lifecycle:
+IDEA -> RESEARCH -> DRAFT -> REVIEW -> APPROVED -> SCHEDULED -> PUBLISHED -> MEASURED -> REPURPOSE.
+State transitions retain provenance, versions, approval scope, and publication
+and measurement evidence. A lifecycle label or schedule is never execution
+authority; changed content must satisfy the applicable review/approval gates.
+
+Scope includes research/intelligence, content studio, publishing/scheduling,
+community/engagement, growth experiments, cross-platform repurposing,
+performance evidence -> memory/learning, and human handoff. Operational content
+state stays separate from durable lessons; promotion follows MEM-02B evidence,
+validation, and review. Social integrations remain connectors/tools. JEV may
+later assist classification/triage but never grants execution authority.
+
+V1 priority: lifecycle, approval/scheduling, repurposing, basic community triage,
+human handoff, performance -> memory, and basic Social Media HQ representation
+under Phase 9B. Advanced DM autonomy, influencer automation, advanced attribution,
+complete platform coverage, and full autonomous community management remain
+non-blocking. External publication, public replies, account changes, and spend
+retain applicable explicit human approval requirements.
+
+PLANNED target ownership (paths remain absent):
+`skills/social-media/lifecycle/` owns reusable lifecycle methods;
+`orchestrator/workflows/social-media-operations/` owns coordination;
+`apps/control-room/social-media-hq/` owns the Phase 9B view over canonical state.
+Existing `agents/social-media/`, `skills/social-media/`, and
+`orchestrator/workflows/social-media.yaml` remain CURRENT checkpoint artifacts,
+not evidence that CAP-SOC-01 is implemented.
+
+#### Creative Media Generation - Planned Capability / Workflow / Tool
+
+Creative Media Generation is capability, workflow, and tool scope, not a new
+canonical agent. Content and Design responsibilities remain distinct from
+Social Media coordination and Reviewer gates. Higgsfield is an optional,
+non-blocking tool/provider integration, never a required core dependency.
+Vendor/third-party performance claims must retain source, date, conditions,
+and verification status. Marketing claims are not measured Agent Company
+performance; adoption or comparative claims require relevant reproducible
+local evidence, with uncertainty and limitations disclosed.
+
 ### F. Phase 9
 
 - Phase 9A — Observability: task success, cost per completed task, latency,
@@ -358,12 +421,23 @@ and DataForSEO are not canonical agents.
   metrics include planned/executed/skipped nodes,
   parallel branches, repairs, replans, gate failures, human interventions,
   rollbacks, critical-path time, provider/token cost, and wall-clock time.
+  Decision/JEV metrics include decision quality against declared evals,
+  confidence calibration, abstention/escalation and override rates, policy
+  rejection, candidate coverage, cost, and latency. Compare the bounded pilot
+  against deterministic baselines before expanding its scope.
+  Unified Run Trace links input/context identities, candidates, decisions,
+  policy checks, execution, eval, review, and approval evidence. Exact Replay
+  requires captured versions and inputs; replay cannot silently repeat external
+  effects or reuse stale authority. Semantic Regression measures declared
+  behavioural expectations separately from byte-for-byte replay.
 - Phase 9B — Control Room: Projects, Agents, Jobs, Approvals, Providers, Costs,
   Reviews, Evals, Graph execution, Knowledge, Memory, Decisions, Lessons,
   Planning Constraints, and Context Packs. Control Room Owner Home is the
   primary natural-language goal entry: "What do you want to do?" Manual agent,
   skill, and workflow selection is not the primary UX. It remains a view/operator
-  layer over canonical state, never a second source of truth.
+  layer over canonical state, never a second source of truth. Social Media HQ
+  represents CAP-SOC-01 lifecycle, calendar/approval queue, handoffs, publication
+  evidence, and performance/learning links; the basic representation is V1.
 - Phase 9C — Operating Layer: Morning Map, State Delta, Weekly Close / Weekly
   Compounding, Lessons Learned, Automation Opportunities, and Pre-flight Review.
 
@@ -380,6 +454,22 @@ and DataForSEO are not canonical agents.
   selection, stuck detection, and citation/extraction verification are later
   candidates only if metrics justify them. JEV is not an agent, Reviewer,
   approval/security authority, or normal generation provider.
+
+DEC-01 planned refinements:
+
+- Decision State Contract: record the decision objective, scoped evidence and
+  provenance, eligible candidate identities/versions, constraints, scores,
+  confidence, selection or abstention, rationale, and escalation outcome.
+  Decision state is evidence; policy authorization is recorded separately.
+- Live Candidate Menu: derive candidates from the current eligible registry
+  and available evidence at decision time; reject stale or unavailable choices.
+  Candidate != selected; selected != loaded; loaded != authorized.
+- Decision escape hatch: abstain, request material clarification, use a valid
+  deterministic fallback, or escalate to a human when candidates/confidence
+  are inadequate. Never invent a candidate or broaden authority to proceed.
+- Composite scoring: combine declared quality/relevance, confidence, cost,
+  latency, and task-fit signals with explicit weights and provenance after
+  hard eligibility/security filters. Scores do not override policy or gates.
 
 Canonical JEV rule: **JEV judges. Policy authorizes. Executor acts.**
 
@@ -408,12 +498,25 @@ packs are later expansion and do not block V1 unless explicitly approved.
 
 V1 consists of CORE-01 through CORE-11; GOV-01 and GOV-02; ORCH-01; the
 Knowledge / Memory / RAG foundation; 14 canonical agents; essential Sales,
-Search Growth, and Reviewer capabilities; Code Intelligence; Phase 9A through
+Search Growth, Reviewer, and the prioritized CAP-SOC-01 capability; Code Intelligence; Phase 9A through
 9C; DEC-01 and the bounded DEC-02 pilot; Phase 8E through 8H deployment and
 security completion; and Brightshore as the first production Project Pack.
 
+## Target-Tree Ownership / DOC-GOV-01
+
+`README.md` owns the CURRENT/PLANNED physical-tree summary; this roadmap owns
+capability scope and target-path ownership; `PROJECT_STATE.md` owns current
+status; `TODO.md` owns remaining work. Follow implementation -> validation ->
+review -> closure -> commit -> physical-tree audit -> DOC-TREE reconciliation.
+Only physically implemented paths become CURRENT. Keep future paths PLANNED
+and absent until approved implementation supplies real content. Do not create
+empty target folders, duplicate agents/capabilities, or rewrite historical
+review evidence to imply current implementation.
+
 ## Later / Important — Not V1 Blockers
 
+- CAP-SOC-01 advanced DM autonomy, influencer automation, advanced attribution,
+  complete platform coverage, and full autonomous community management.
 - Persistent Agent Mailbox.
 - Git Worktree Isolation.
 - Advanced Agent Teams / parallel execution.
@@ -438,5 +541,6 @@ security completion; and Brightshore as the first production Project Pack.
 - Phase 8E is PAUSED / NOT COMPLETE and requires separate human approval.
 - Phases 8F, 8G, and 8H are NOT STARTED.
 - Governance, graph orchestration, memory/RAG runtime, agents 11-14, capability
-  expansion, Code Intelligence, Phase 9, Decision Engine/JEV, and Phase 10 are
+  expansion beyond the committed checkpoints, advanced Code Intelligence,
+  Phase 9, Decision Engine/JEV, and Phase 10 are
   planned and unimplemented.
