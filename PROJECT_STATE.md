@@ -16,10 +16,9 @@
   CORE-05R3 PASS with no Critical, Major, or Minor findings.
 - CORE-06 Retry / Stop Policy is CLOSED / COMMITTED at `4a6e5c4` after
   CORE-06R6 PASS.
-- CORE-07 Progress Events is CLOSED / READY TO COMMIT after CORE-07R3 PASS
-  with no Critical, Major, or Minor findings. It remains uncommitted at base
-  HEAD `28ab085`. CORE-01–06 are CLOSED / COMMITTED; CORE-08 through CORE-11
-  are NOT STARTED.
+- CORE-07 Progress Events is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3
+  PASS with no Critical, Major, or Minor findings. CORE-01–07 are CLOSED /
+  COMMITTED. CORE-08 is NEXT / NOT STARTED; CORE-09–11 are NOT STARTED.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
@@ -716,7 +715,33 @@ structural implementation is followed by validation, review, closure, commit,
 repository-tree audit, and documentation reconciliation. This checkpoint
 created no future directories and changed no runtime behavior.
 
-## CORE-07 Closure Reconciliation — CLOSED / READY TO COMMIT
+## Post-CORE-07 Documentation / Master Context Sync
+
+Implementation HEAD is `6bcffa4` (`feat: add progress events`). This documentation
+sync extends the earlier post-commit reconciliation; only Markdown status/tree
+files are modified. CORE-01–07 are CLOSED
+/ COMMITTED; CORE-08 is NEXT / NOT STARTED; CORE-09–11 are NOT STARTED.
+
+The physical CURRENT tree includes `runtime/progress/`, its schema, three test
+modules, and existing runtime integration paths documented in `README.md`.
+Future paths remain PLANNED; no future directories are created. The canonical
+agent count remains 10, with 14 planned for V1.
+
+`ROADMAP.md` owns the accepted V1 scope. This sync adds missing CORE-08
+connector/file/manual fallback, provider-neutral skill metadata and capability-
+requesting connector architecture; GOV-02 profiles; outcome-first ORCH-01;
+expanded CAP-REV-01; retrieval, trace-derived lessons, and selective retention;
+Phase 9A replay/regression/provider comparison; Phase 9B natural-language Owner
+Home; expanded DEC-01 selectors and bounded DEC-02 pilot/later candidates; and
+Phase 10 pack references.
+JEV judges. Policy authorizes. Executor acts. Later JEV / Beacon experiments
+remain outside the bounded V1 pilot. All these future capabilities remain
+PLANNED / NOT STARTED. Existing governance, graph, memory, capability,
+Phase 9C, Decision Engine, and Brightshore-first Project Pack scope is retained.
+Phase 8E remains PAUSED / BLOCKED; Phase 8F–8H remain NOT STARTED and required.
+Historical validation below is preserved; this sync does not rerun runtime tests.
+
+## Historical CORE-07 Closure Reconciliation — Before Implementation Commit
 
 CORE-07R3 final decision: PASS — READY FOR CORE-07 CLOSURE. Recovery durability,
 capacity safety, and replay/idempotency passed with no Critical, Major, or Minor

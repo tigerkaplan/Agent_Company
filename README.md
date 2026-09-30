@@ -48,8 +48,8 @@ accounting, and structured fail-closed exhaustion without granting
 approval, review, continuation, retry, write, Git, or deployment authority. It
 is CLOSED / COMMITTED at `63813b5` after CORE-05R3 PASS. CORE-06 Retry / Stop
 Policy is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
-CORE-07 is CLOSED / READY TO COMMIT after CORE-07R3 PASS (uncommitted);
-CORE-08 through CORE-11 are NOT STARTED. The
+CORE-07 is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS;
+CORE-08 is NEXT / NOT STARTED; CORE-09 through CORE-11 are NOT STARTED. The
 aggregate serialized-result byte ceiling remains FUTURE HARDENING / NON-BLOCKING.
 
 The runtime remains local-first. Phase 8D packages the canonical Phase 8C
@@ -62,7 +62,7 @@ the canonical capability roadmap.
 
 ## Current Repository Structure
 
-CURRENT: audited against committed checkpoint `4a6e5c4`. This is the physical
+CURRENT: audited against committed checkpoint `6bcffa4`. This is the physical
 structure in the current checkout; generated contents and
 ignored local configuration are intentionally not expanded.
 
@@ -81,9 +81,17 @@ ignored local configuration are intentionally not expanded.
   `core/`, `evals/`, `execution/`, `executors/`, `git/`, `host/`, `jobs/`,
   `notifications/`, `progress/`, `providers/`, `queue/`, `remote/`, `review/`, `retry/`,
   `scheduler/`, `storage/`, `tests/`, `tools/`, `webhooks/`, and `workers/`.
-  `runtime/progress/` is the uncommitted CORE-07 implementation, CLOSED / READY TO
-  COMMIT after CORE-07R3 PASS; it contains typed/schema-validated, bounded,
-  non-authoritative events and durable, capacity-safe recovery delivery.
+  `runtime/progress/` is the CURRENT CORE-07 implementation, CLOSED / COMMITTED
+  at `6bcffa4` after CORE-07R3 PASS; it contains typed/schema-validated, bounded,
+  non-authoritative events and durable, capacity-safe recovery delivery. Its
+  files are `__init__.py`, `models.py`, `runtime.py`, `store.py`, and `README.md`.
+  Supporting CURRENT paths are `schemas/progress-event.schema.json` and
+  `runtime/tests/test_progress.py`, `runtime/tests/test_progress_f1.py`, and
+  `runtime/tests/test_progress_f2.py`. Integration lives in existing
+  `runtime/core/jobs.py`, `runtime/workers/worker.py`,
+  `runtime/providers/executor.py`, `runtime/actions/runtime.py`, and
+  `runtime/scheduler/loop.py`. Generated progress journals belong beneath the
+  configured state root at `jobs/.progress/`, not a planned source directory.
   `runtime/budget/` is the committed CORE-05 implementation and
   `runtime/retry/` is the CURRENT CORE-06 implementation, CLOSED / COMMITTED
   at `4a6e5c4` after CORE-06R6 PASS. It contains `__init__.py`, `models.py`,
@@ -102,7 +110,7 @@ ignored local configuration are intentionally not expanded.
   operations, and synthesized wiki content.
 - `schemas/` — CURRENT persisted runtime contracts, including CORE-06
   `retry-policy.schema.json`, `retry-state.schema.json`, and
-  `execution-artifact.schema.json`.
+  `execution-artifact.schema.json`, plus CORE-07 `progress-event.schema.json`.
 - `config/` — tracked non-secret examples only: `host.example.json`,
   `remote.example.json`, and `webhooks.example.json`. Ignored local files,
   tokens, real IDs, and secret values are not documentation inputs.
@@ -176,7 +184,16 @@ DEC-02 JEV pilot; Phase 8E through 8H deployment/security completion; and
 Brightshore as the first production Project Pack. Persistent Agent Mailbox, Git
 Worktree Isolation, advanced Agent Teams, Credential / Secret Broker, Advanced
 Knowledge Graph, Multi-model Council, additional memory providers, and advanced
-context compaction remain later/important and do not block V1.
+context compaction, and later JEV / Beacon experiments remain later/important
+and do not block V1.
+
+The accepted planned details are owned by `ROADMAP.md`, including outcome-first
+owner UX, CORE-08 semantic selection and selective verbatim retention, expanded
+CAP-REV-01 review, Unified Run Trace / Exact Replay / Trace → Eval, Semantic
+Regression / Eval → Lesson Candidate, and Owner Home: "What do you want to do?"
+The bounded DEC-02 pilot covers worker routing, skill selection, context
+relevance/reranking, and semantic eval. JEV judges. Policy authorizes. Executor
+acts. These are planned capabilities, not current implementation.
 
 The current runtime does not implement merge, release, deployment, public
 webhook hosting, TLS termination, remote task submission, remote scheduler or

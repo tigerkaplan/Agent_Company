@@ -20,7 +20,7 @@ Generated job records are stored as stable, pretty-printed JSON files under `job
 
 Job records must contain references rather than credentials, provider tokens, full project state, or duplicated knowledge content.
 
-CORE-07 is CLOSED / READY TO COMMIT after CORE-07R3 PASS and remains uncommitted.
+CORE-07 is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS.
 It adds non-authoritative progress journals under `jobs/.progress/`, one
 bounded SQLite file per logical job. Events and hash-chain heads commit together
 in FULL synchronous transactions; update/delete guards enforce append-only event

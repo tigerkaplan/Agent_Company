@@ -19,8 +19,9 @@
 - CORE-05 Time / Execution Budget: CLOSED / COMMITTED at `63813b5` after
   CORE-05R3 PASS.
 - CORE-06 Retry / Stop Policy: CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
-- CORE-07 Progress Events: CLOSED / READY TO COMMIT after CORE-07R3 PASS (uncommitted).
-- CORE-08 through CORE-11: NOT STARTED.
+- CORE-07 Progress Events: CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS.
+- CORE-08: NEXT / NOT STARTED.
+- CORE-09 through CORE-11: NOT STARTED.
 - Phase 8E: PAUSED / BLOCKED; deployment not started because the VPS has not
   yet been created.
 - Phase 8F: NOT STARTED.
@@ -114,8 +115,8 @@ redefine or begin Phase 8.
 - CORE-05 Time / Execution Budget: CLOSED / COMMITTED at `63813b5` after
   CORE-05R3 PASS.
 - CORE-06 Retry / Stop Policy: CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
-- CORE-07 Progress Events: CLOSED / READY TO COMMIT after CORE-07R3 PASS (uncommitted).
-- CORE-08 Context Discovery Before Action: NOT STARTED.
+- CORE-07 Progress Events: CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS.
+- CORE-08 Context Discovery Before Action: NEXT / NOT STARTED.
 - CORE-09 Context / Prompt Cache Policy: NOT STARTED.
 - CORE-10 Compute / Effort Policy: NOT STARTED.
 - CORE-11 External Content Isolation: NOT STARTED.
@@ -141,7 +142,7 @@ append-only usage ledger, verified state/head caches, restart-safe accounting,
 conservative crash recovery, and structured fail-closed exhaustion without
 granting execution or governance authority. CORE-05 is CLOSED / COMMITTED at
 `63813b5` after CORE-05R3 PASS. CORE-06 is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
-CORE-07 is CLOSED / READY TO COMMIT after CORE-07R3 PASS (uncommitted); CORE-08 through CORE-11 are NOT STARTED.
+CORE-07 is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS; CORE-08 is NEXT / NOT STARTED; CORE-09 through CORE-11 are NOT STARTED.
 An aggregate
 serialized-result byte ceiling is FUTURE HARDENING / NON-BLOCKING.
 
@@ -237,6 +238,24 @@ The following plan is accepted V1 scope, not implemented current capability.
 Its labels define ownership and sequencing only; they grant no execution,
 approval, review, write, Git, deployment, or provider authority.
 
+Owner outcome-first UX is PLANNED: the owner specifies the outcome; Agent
+Company selects the workflow, agents, skills, tools, context, and providers
+within the applicable authority contract.
+
+CORE-08 planned scope covers context discovery before action, graceful
+degradation and fallback resolution, semantic skill selection, semantic
+context selection/reranking, selective verbatim context retention, and Code
+Intelligence / Repository Index. Fallback order is preferred connector,
+alternative connector, file/CSV/upload, manual structured input, then explicit
+BLOCKED. Fallback must preserve evidence and authority requirements. It remains
+NEXT / NOT STARTED.
+
+Skill architecture is planned as provider-neutral metadata and triggers with
+name, description, required capabilities, inputs, outputs, prerequisites,
+references, and templates. Load only skills relevant to the task. Workflows
+request connector capabilities rather than hard-coded vendors.
+
+
 ### A. Governance
 
 #### GOV-01 — Task & Authority Contract
@@ -255,13 +274,19 @@ required review or gate.
 
 GOV-02 will define Capability Certification, Decision Audit Trace,
 policy/authority provenance, blast-radius gates, and reversibility gates.
+Capability profiles are READ_ONLY, LOCAL_WRITE, EXTERNAL_PREPARE,
+EXTERNAL_EXECUTE, and SENSITIVE_EXECUTE, integrated with delegation, blast
+radius, reversibility, approval, and capability certification.
 
 ### B. Graph Orchestration
 
 #### ORCH-01 — Graph Execution Runtime
 
 ORCH-01 is not CORE-12. A loop operates inside a node; a graph connects nodes.
-Planned scope includes Planner / Splitter, Worker nodes, deterministic nodes,
+The owner specifies outcomes rather than workflows; Agent Company selects
+clarification, task contract, graph, agents, skills, context, tools/providers,
+eval/review, and approval points. Planned scope includes Planner / Splitter,
+Worker nodes, deterministic nodes,
 gate nodes, human gates, dependencies, fan-out, fan-in/merge, correction,
 replan, and learning edges, edge validation, isolated fan-out contexts, and
 unit-level repair integration.
@@ -278,8 +303,9 @@ State is what is happening now. These remain separate.
 - MEM-01 — Knowledge / Memory Foundation: provider-neutral `MemoryInterface`,
   project isolation, provenance, confidence, and verification semantics.
 - MEM-02 — Knowledge Lifecycle + Retrieval / RAG: capture, normalize,
-  deduplicate, classify, connect, store, retrieve, rerank, build a context pack,
-  act, verify, and learn. Anchored evidence-backed memory may link to files,
+  deduplicate, classify, connect, store, retrieve, rerank, build context packs,
+  selectively retain relevant context, act, verify, and learn from run traces.
+  Anchored evidence-backed memory may link to files,
   symbols, tasks, workflows, decisions, runs, tests, evidence, agents, or
   capabilities and record provenance, verification, confidence, validity, and
   supersession.
@@ -310,8 +336,9 @@ and DataForSEO are not canonical agents.
   GEO, search intent, commercial keyword strategy, technical and on-page SEO,
   internal linking, content funnel, authority building, AI-search readiness,
   answer extractability, conversion, experiments, and seasonal planning.
-- CAP-REV-01: QA, Security, Knowledge, Release, and Change Impact Review. Change
-  Impact Review considers the task, acceptance criteria, diff, changed symbols,
+- CAP-REV-01: QA, Security, Knowledge, Release, External / Client-Facing
+  Output Review, Citation Verification, Extraction Verification, Semantic
+  Completion Verification, and Change Impact Review. Change Impact Review considers the task, acceptance criteria, diff, changed symbols,
   dependencies, architecture decisions, related memory, previous failures, and
   tests.
 - Code Intelligence / Repository Index: planned under CORE-08 and the Software
@@ -322,27 +349,39 @@ and DataForSEO are not canonical agents.
 
 - Phase 9A — Observability: task success, cost per completed task, latency,
   provider calls, tool errors, retries, continuation, replans, escalation, and
-  eval history. Later graph metrics include planned/executed/skipped nodes,
+  eval history; Unified Run Trace, Exact Replay, Semantic Regression,
+  Trace → Eval → Lesson Candidate, and provider/model behavioural comparison.
+  Lesson candidates still require MEM-02B validation and promotion. Later graph
+  metrics include planned/executed/skipped nodes,
   parallel branches, repairs, replans, gate failures, human interventions,
   rollbacks, critical-path time, provider/token cost, and wall-clock time.
 - Phase 9B — Control Room: Projects, Agents, Jobs, Approvals, Providers, Costs,
   Reviews, Evals, Graph execution, Knowledge, Memory, Decisions, Lessons,
-  Planning Constraints, and Context Packs. It remains a view/operator layer
-  over canonical state, never a second source of truth.
+  Planning Constraints, and Context Packs. Control Room Owner Home is the
+  primary natural-language goal entry: "What do you want to do?" Manual agent,
+  skill, and workflow selection is not the primary UX. It remains a view/operator
+  layer over canonical state, never a second source of truth.
 - Phase 9C — Operating Layer: Morning Map, State Delta, Weekly Close / Weekly
   Compounding, Lessons Learned, Automation Opportunities, and Pre-flight Review.
 
 ### G. Decision Engine / JEV
 
-- DEC-01 — Provider-neutral Decision Engine: deterministic rules, scoring,
-  classification, ranking, confidence, and escalation. Generation belongs to
+- DEC-01 — Provider-neutral Decision Engine: deterministic rules plus worker,
+  skill, context, and option selectors; classification, scoring, ranking,
+  confidence, and escalation. Generation belongs to
   an execution provider, bounded decisions to the Decision Engine or possible
   JEV adapter, and exact rules to deterministic code. Decision authority stays
   separate from execution authority.
-- DEC-02 — JEV Pilot: initially limited to low-risk next-worker routing,
-  context relevance, and ranking, and expanded only if Phase 9 metrics show
-  benefit. JEV is not an agent, Reviewer, approval/security authority, or normal
-  generation provider.
+- DEC-02 — JEV Pilot: initially limited to low-risk next-worker routing, skill
+  selection, context relevance/reranking, and semantic eval. Context compaction
+  selection, stuck detection, and citation/extraction verification are later
+  candidates only if metrics justify them. JEV is not an agent, Reviewer,
+  approval/security authority, or normal generation provider.
+
+Canonical JEV rule: **JEV judges. Policy authorizes. Executor acts.**
+
+JEV is a bounded semantic judging component: it does not authorize actions,
+serve as an agent or Reviewer, or act as a normal generation provider.
 
 ### H. Deployment
 
@@ -356,10 +395,10 @@ production-deployed or always-on.
 
 ### I. Phase 10 — Project / Domain Packs
 
-Brightshore is the first production Project Pack. A pack may contain skills,
-workflows, knowledge, policies, connector requirements, and project
-configuration, but never duplicates the Agent Company runtime or canonical
-agents. YouTube, social content, digital products, travel, Etsy, and other
+Brightshore is the first production Project Pack. A pack may reference skills,
+workflows, knowledge, policies, connector capability requirements, templates,
+and project configuration, but never duplicates the Agent Company runtime
+or canonical agents. YouTube, social content, digital products, travel, Etsy, and other
 packs are later expansion and do not block V1 unless explicitly approved.
 
 ## Canonical V1 Definition
@@ -380,6 +419,11 @@ security completion; and Brightshore as the first production Project Pack.
 - Multi-model Council / disagreement escalation.
 - Additional memory providers.
 - Advanced context compaction.
+- Browser Semantic Action Selector.
+- Typed Tool-call Semantic Compiler.
+- Jevgrep.
+- Beacon importer/adapter.
+- Later JEV / Beacon experiments beyond the bounded DEC-02 V1 pilot.
 
 ## Deferred Or Not Implemented
 

@@ -45,11 +45,18 @@
     or Minor findings; external evidence recorded in PROJECT_STATE.md.
   - [x] Closure reconciliation complete.
   - [x] Implementation commit complete at `4a6e5c4`.
-- [x] CORE-07 Progress Events — CLOSED / READY TO COMMIT after CORE-07R3 PASS.
+- [x] CORE-07 Progress Events — CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS.
   - [x] Implementation, bounded repairs, and independent re-review complete.
   - [x] Closure documentation reconciled; progress remains non-authoritative.
-  - [ ] Implementation commit - not performed; changes remain uncommitted.
-- [ ] CORE-08 Context Discovery Before Action — NOT STARTED.
+  - [x] Implementation commit complete at `6bcffa4`.
+- [ ] CORE-08 Context Discovery Before Action — NEXT / NOT STARTED.
+  - [ ] Context discovery, graceful connector/file/manual fallback through
+    explicit BLOCKED, semantic skill/context selection and reranking, selective
+    verbatim context retention, and Code Intelligence / Repository Index.
+  - [ ] Provider-neutral skill metadata/triggers: name, description, required
+    capabilities, inputs, outputs, prerequisites, references, and templates;
+    load only relevant skills. Workflows request connector capabilities, not
+    vendors; fallback preserves evidence and authority requirements.
 - [ ] CORE-09 Context / Prompt Cache Policy — NOT STARTED.
 - [ ] CORE-10 Compute / Effort Policy — NOT STARTED.
 - [ ] CORE-11 External Content Isolation — NOT STARTED.
@@ -58,21 +65,30 @@
 
 ## Accepted V1 Backlog — NOT STARTED
 
+- [ ] Owner outcome-first UX: owner specifies the outcome; Agent Company selects
+  workflow, agents, skills, tools, context, and providers within policy.
 - [ ] GOV-01 Task & Authority Contract: canonical task contract, L0-L5 risk and
   delegation levels, blast radius, reversibility, approvals, explicit stop
   conditions, and evidence-gated completion.
 - [ ] GOV-02 Capability Governance: capability certification, decision audit
-  trace, policy/authority provenance, and blast-radius/reversibility gates.
-- [ ] ORCH-01 Graph Execution Runtime: planner/splitter, worker and deterministic
-  nodes, gates, dependencies, fan-out/fan-in, correction/replan/learning edges,
-  edge validation, isolated branch contexts, and unit-level repair integration.
-  ORCH-01 is not CORE-12; loops remain inside nodes and graphs connect nodes.
+  trace, policy/authority provenance, and blast-radius/reversibility gates. Add
+  READ_ONLY, LOCAL_WRITE, EXTERNAL_PREPARE, EXTERNAL_EXECUTE, and
+  SENSITIVE_EXECUTE profiles integrated with delegation, blast radius,
+  reversibility, approval, and certification.
+- [ ] ORCH-01 Graph Execution Runtime: owner specifies outcomes, not workflows;
+  Agent Company selects clarification, task contract, graph, agents, skills,
+  context, tools/providers, eval/review, and approval points. Include
+  planner/splitter, worker and deterministic nodes, gates, dependencies,
+  fan-out/fan-in, correction/replan/learning edges, edge validation, isolated
+  branch contexts, and unit-level repair integration. ORCH-01 is not CORE-12;
+  loops remain inside nodes and graphs connect nodes.
 - [ ] MEM-01 Knowledge / Memory Foundation: provider-neutral MemoryInterface,
   project isolation, provenance, confidence, and verification semantics while
   preserving Knowledge != Memory != State.
 - [ ] MEM-02 Knowledge Lifecycle + Retrieval / RAG: normalized, deduplicated,
-  classified, connected, evidence-backed retrieval, reranking, context packs,
-  action verification, and learning.
+  classified, connected, evidence-backed retrieval/RAG, reranking, context
+  packs, anchored/evidence-backed memory, trace-derived lessons, learning
+  constraints, selective context retention, action verification, and learning.
 - [ ] MEM-02B Learning Constraint Pipeline: promote observations to planning
   constraints only after evidence, deduplication, scoping, and review; PASS is
   not automatically a permanent rule.
@@ -86,20 +102,34 @@
 - [ ] CAP-SALES: lead finding, research, qualification, outreach, and follow-up.
 - [ ] CAP-SEARCH-GROWTH-01: one cross-agent SEO/AEO/GEO and search-growth system;
   do not create SEO, AEO, or GEO agents.
-- [ ] CAP-REV-01: QA, Security, Knowledge, Release, and Change Impact Review.
+- [ ] CAP-REV-01: QA, Security, Knowledge, Release, External / Client-Facing
+  Output Review, Citation Verification, Extraction Verification, Semantic
+  Completion Verification, and Change Impact Review.
 - [ ] Add Code Intelligence / Repository Index under CORE-08 and the Software
   capability: symbols, dependencies, calls, affected files, context, and
   related architectural memory.
-- [ ] Phase 9A Observability.
-- [ ] Phase 9B Control Room over canonical state.
-- [ ] Phase 9C Operating Layer.
-- [ ] DEC-01 provider-neutral Decision Engine with deterministic rules, scoring,
-  classification, ranking, confidence, and escalation; decision authority must
-  remain separate from execution authority.
-- [ ] DEC-02 bounded JEV pilot for low-risk next-worker routing, context
-  relevance, and ranking, only if Phase 9 metrics justify it.
-- [ ] Phase 10 Project / Domain Packs, beginning with Brightshore, without
-  duplicating the runtime or canonical agents.
+- [ ] Phase 9A Observability: Unified Run Trace, Exact Replay, Trace → Eval,
+  Semantic Regression, provider/model behavioural comparison, and Trace → Eval →
+  Lesson Candidate (subject to MEM-02B).
+- [ ] Phase 9B Control Room over canonical state; Owner Home natural-language
+  goal entry: "What do you want to do?"; manual agent/skill/workflow selection
+  is not the primary UX.
+- [ ] Phase 9C Operating Layer: Morning Map, State Delta, Weekly Close, Lessons
+  Learned, Automation Opportunities, and Pre-flight Review.
+- [ ] DEC-01 provider-neutral Decision Engine with deterministic rules, worker,
+  skill, context, and option selectors; classification, scoring, ranking,
+  confidence, and escalation; decision authority remains separate from execution
+  authority.
+- [ ] DEC-02 bounded JEV pilot for next-worker routing, skill selection,
+  context relevance/reranking, and semantic eval. Context compaction selection,
+  stuck detection, and citation/extraction verification are later candidates
+  only if metrics justify them. JEV judges. Policy authorizes. Executor acts.
+  JEV is not an agent, Reviewer, approval authority, or normal generation
+  provider.
+- [ ] Phase 10 Project / Domain Packs, beginning with Brightshore; packs may
+  reference skills, workflows, knowledge, policies, connector capability
+  requirements, templates, and project configuration, without duplicating the
+  runtime or canonical agents.
 
 ## Later / Important — Not V1 Blockers
 
@@ -111,6 +141,11 @@
 - [ ] Multi-model Council / disagreement escalation.
 - [ ] Additional memory providers.
 - [ ] Advanced context compaction.
+- [ ] Browser Semantic Action Selector.
+- [ ] Typed Tool-call Semantic Compiler.
+- [ ] Jevgrep.
+- [ ] Beacon importer/adapter.
+- [ ] Later JEV / Beacon experiments beyond the bounded DEC-02 V1 pilot.
 
 ## Phase 7 Planning
 

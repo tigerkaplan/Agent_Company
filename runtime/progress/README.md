@@ -1,8 +1,8 @@
 # CORE-07 Progress Events
 
-CLOSED / READY TO COMMIT after CORE-07R3 PASS with no Critical, Major, or Minor
-findings. The implementation remains uncommitted at base HEAD `28ab085`.
-CORE-01–06 are CLOSED / COMMITTED. CORE-08 is NOT STARTED; graph execution and
+CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS with no Critical, Major,
+or Minor findings.
+CORE-01–06 are CLOSED / COMMITTED. CORE-08 is NEXT / NOT STARTED; graph execution and
 observability dashboards are not started.
 
 `ProgressEvent` is a frozen, schema-validated, provider-neutral observation.
