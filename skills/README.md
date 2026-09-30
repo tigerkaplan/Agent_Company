@@ -8,6 +8,15 @@ An agent may use multiple skills during one task. For example, a Software Agent 
 
 ## Source Of Truth
 
+CORE-08 adds `catalog.json` for metadata-first discovery. The catalog records
+capability requirements, input/output contracts, optional prerequisites,
+references/templates, and a digest for each existing skill. Only selected
+instructions are loaded. Every registered instruction path is digest-validated,
+including nonstandard paths loaded through ordinary files, required/inherited
+context, or repository discovery. Registration and Windows-safe filesystem
+identity determine instruction identity, not filename conventions. See `../runtime/context/README.md` for the provider-neutral
+selection contract and digest maintenance rules. Discovery grants no authority.
+
 Canonical skills live here first. Future Claude, Codex, ChatGPT, or other provider-specific skill adaptations must defer to:
 
 1. `../CONSTITUTION.md`

@@ -1,0 +1,686 @@
+[
+  {
+    "version": 1,
+    "name": "inbox-manager",
+    "description": "Classify, prioritize, summarize, and draft responses for inbound messages without sending or modifying external communications.",
+    "instructions": "skills/communications/inbox-manager/SKILL.md",
+    "sha256": "5d87177e68dddc86cf08c60f725387285aa6b4b6f031beaa0f35fab8d2867dad",
+    "required_capabilities": [
+      "business_communications"
+    ],
+    "inputs": [
+      "Approved message text or message summaries.",
+      "Known sender, channel, date, and context, when available.",
+      "Business priorities, routing rules, or triage categories.",
+      "Tone guidance or response constraints, when approved.",
+      "Applicable approval policy for outbound communication."
+    ],
+    "outputs": [
+      "Message classification.",
+      "Priority and recommended next action.",
+      "Concise summary.",
+      "Draft response or response options, when useful.",
+      "Open questions, missing context, and approval needs."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "meeting-notes",
+    "description": "Convert transcripts or meeting notes into concise summaries, confirmed decisions, action items, and follow-ups.",
+    "instructions": "skills/communications/meeting-notes/SKILL.md",
+    "sha256": "83476251160e932a0896b12f1743ea5b148bc8dc1876dfc858dfdd08f221abd7",
+    "required_capabilities": [
+      "business_communications"
+    ],
+    "inputs": [
+      "Transcript, rough notes, or meeting recording-derived text.",
+      "Meeting date, attendees, topic, and purpose, when available.",
+      "Known project or business context.",
+      "Preferred action-item owner and due-date format, if specified."
+    ],
+    "outputs": [
+      "Meeting summary.",
+      "Confirmed decisions.",
+      "Action items with owners and due dates when stated.",
+      "Follow-up questions or next-step drafts.",
+      "Unresolved topics and inferred items clearly labeled."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "competitor-analysis",
+    "description": "Compare competitors from evidence while distinguishing confirmed facts, inference, and uncertainty.",
+    "instructions": "skills/marketing/competitor-analysis/SKILL.md",
+    "sha256": "bf119536d5d4768e12ae9de65b6aef70e7e45b92430aa991d163c39a8f5bc132",
+    "required_capabilities": [
+      "marketing_analysis"
+    ],
+    "inputs": [
+      "Competitor names, market category, geography, and comparison goal.",
+      "Approved source materials, links, notes, or research outputs.",
+      "Comparison criteria such as offer, pricing, positioning, audience, channels, or proof.",
+      "Freshness requirements and known constraints."
+    ],
+    "outputs": [
+      "Competitor comparison.",
+      "Confirmed facts with source basis.",
+      "Inferences and uncertainty.",
+      "Opportunity, threat, and differentiation notes.",
+      "Recommended follow-up research."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "marketing-monday",
+    "description": "Produce a recurring marketing brief that summarizes performance, customer or audience signals, priorities, and recommended next steps.",
+    "instructions": "skills/marketing/marketing-monday/SKILL.md",
+    "sha256": "fa96c50025db607544e5b5095634c1cdb2e874c38f1aa648075cfa5505ce2f08",
+    "required_capabilities": [
+      "marketing_analysis"
+    ],
+    "inputs": [
+      "Approved campaign, content, audience, sales, or customer signal data.",
+      "Reporting period and business priorities.",
+      "Known experiments, launches, offers, or market events.",
+      "Performance metrics and source notes, when available.",
+      "Requested brief format or audience."
+    ],
+    "outputs": [
+      "Concise marketing brief.",
+      "Performance summary.",
+      "Audience or customer signal summary.",
+      "Priority recommendations.",
+      "Open questions, risks, and follow-up analysis needs."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "reputation-review",
+    "description": "Analyze reviews, comments, or customer feedback, group themes, and draft response options without publishing them.",
+    "instructions": "skills/marketing/reputation-review/SKILL.md",
+    "sha256": "c699aaf08588f61e29cf78ce1250b276aaeb39089644d177eda09429bd809aee",
+    "required_capabilities": [
+      "marketing_analysis"
+    ],
+    "inputs": [
+      "Approved reviews, comments, testimonials, complaints, or feedback excerpts.",
+      "Source, date, rating, product, service, or channel context, when available.",
+      "Response tone guidance and escalation rules.",
+      "Known business facts relevant to the feedback.",
+      "Applicable approval policy for public or private responses."
+    ],
+    "outputs": [
+      "Feedback theme groups.",
+      "Sentiment and urgency summary.",
+      "Reputation risks and recurring issues.",
+      "Draft response options.",
+      "Escalation and approval recommendations."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "report-builder",
+    "description": "Combine approved internal data into a concise operational report for review, coordination, or decision support.",
+    "instructions": "skills/operations/report-builder/SKILL.md",
+    "sha256": "07eec164103aef7cd05ec50fad31203fe4a924dc6f632a3f9bc0fe3a501da392",
+    "required_capabilities": [
+      "operations_coordination"
+    ],
+    "inputs": [
+      "Approved internal data, notes, metrics, or status updates.",
+      "Reporting period, audience, and decision context.",
+      "Required sections, format, or level of detail.",
+      "Known risks, blockers, approvals, and unresolved questions."
+    ],
+    "outputs": [
+      "Concise operational report.",
+      "Key metrics or status summary.",
+      "Risks, blockers, dependencies, and open questions.",
+      "Recommended next steps.",
+      "Validation notes and missing data."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "sop-builder",
+    "description": "Convert a repeated process into a clear standard operating procedure while preserving human approval points and safety boundaries.",
+    "instructions": "skills/operations/sop-builder/SKILL.md",
+    "sha256": "2f44890e77a767086a90c4e927071a847b2c5c77e69f6be198c86d3a1e9235a8",
+    "required_capabilities": [
+      "operations_coordination"
+    ],
+    "inputs": [
+      "Process description, observed steps, notes, or existing checklist.",
+      "Process owner, audience, trigger, and desired outcome.",
+      "Required tools, inputs, outputs, and constraints.",
+      "Known approval points, safety boundaries, exceptions, and escalation rules."
+    ],
+    "outputs": [
+      "Draft SOP.",
+      "Roles, triggers, steps, checks, and expected outputs.",
+      "Approval points and escalation paths.",
+      "Exceptions, safety boundaries, and unresolved questions.",
+      "Review checklist."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "follow-up",
+    "description": "Prepare follow-up context, draft sequences, and next-step recommendations while preserving tone, sales intent, and approval boundaries.",
+    "instructions": "skills/sales/follow-up/SKILL.md",
+    "sha256": "fd014b853a00f5ddda4f6eb5086940d72f2be3640ca3a8659150cd53500f10fc",
+    "required_capabilities": [
+      "sales_coordination"
+    ],
+    "inputs": [
+      "Approved sales context, prior conversation notes, or lead history.",
+      "Desired outcome, sales stage, and follow-up reason.",
+      "Tone guidance, cadence constraints, and channel preference.",
+      "Known objections, open questions, or promised next steps.",
+      "Applicable approval policy for outbound communication."
+    ],
+    "outputs": [
+      "Follow-up context summary.",
+      "Suggested sequence or single follow-up draft.",
+      "Timing and channel recommendation.",
+      "Personalization points and open questions.",
+      "Approval needs and risk flags."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "proposal-builder",
+    "description": "Combine approved business context and client requirements into a clear proposal draft without sending or making commercial commitments.",
+    "instructions": "skills/sales/proposal-builder/SKILL.md",
+    "sha256": "9edf367cdb61b7ed2585a86eaf6d9e9ccfafaaf4775da061d24b5908ca3a8202",
+    "required_capabilities": [
+      "sales_coordination"
+    ],
+    "inputs": [
+      "Approved business context, offer details, and constraints.",
+      "Client requirements, goals, pain points, and success criteria.",
+      "Pricing, scope, timeline, and terms only when approved.",
+      "Relevant prior discussions, research, or qualification notes.",
+      "Required proposal format or sections."
+    ],
+    "outputs": [
+      "Proposal draft.",
+      "Assumptions and exclusions.",
+      "Open questions and missing requirements.",
+      "Review checklist.",
+      "Approval needs before external use."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "speed-to-lead",
+    "description": "Identify, prioritize, and prepare rapid response drafts for new leads while preserving approval boundaries.",
+    "instructions": "skills/sales/speed-to-lead/SKILL.md",
+    "sha256": "cd67eb84609d51cf5656d5b5a2c45c607f83e003703472e3cd0a5ebbc19a8610",
+    "required_capabilities": [
+      "sales_coordination"
+    ],
+    "inputs": [
+      "Approved lead details or inquiry text.",
+      "Source, timestamp, requested service or product, and contact context, when available.",
+      "Qualification criteria, response tone, and routing rules.",
+      "Existing customer or opportunity context, when approved.",
+      "Applicable approval policy for outbound communication."
+    ],
+    "outputs": [
+      "Lead priority and rationale.",
+      "Qualification summary.",
+      "Missing information or qualification questions.",
+      "Rapid response draft or response options.",
+      "Recommended next action and approval needs."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "handoff",
+    "description": "Convert completed work or session context into concise durable project state that another agent or future session can use without reading raw chat history.",
+    "instructions": "skills/shared/handoff/SKILL.md",
+    "sha256": "f3b5523721057b39dbab4459e8363f378eaba3b460f84904d8b9baa03359a5ab",
+    "required_capabilities": [
+      "planning"
+    ],
+    "inputs": [
+      "Completed work summary.",
+      "Verified facts and evidence.",
+      "Changed files or affected areas.",
+      "Open tasks, blockers, and unresolved decisions.",
+      "Relevant assumptions or uncertainties.",
+      "Existing canonical project-state files, when present.",
+      "Explicit human approvals or confirmations relevant to the session."
+    ],
+    "outputs": [
+      "The smallest sufficient set of updates to affected canonical project-state files.",
+      "A concise closeout report identifying updated files, untouched files, unresolved items, and validation status.",
+      "No project-state file changes when the session produced no durable state change."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "knowledge-ingest",
+    "description": "Integrate source material into the provider-neutral LLM Wiki while preserving raw evidence, provenance, uncertainty, and the boundary from operational project state.",
+    "instructions": "skills/shared/knowledge-ingest/SKILL.md",
+    "sha256": "d23d0efaa6bd370836293a2381ece43e29e933656bce845c275bb665c403db40",
+    "required_capabilities": [
+      "knowledge_ingest"
+    ],
+    "inputs": [
+      "Source material or a stable reference to it.",
+      "Known provenance, access constraints, and source limitations.",
+      "Requested ingest scope.",
+      "Existing knowledge index, source cards, and relevant wiki pages."
+    ],
+    "outputs": [
+      "Preserved raw source location or stable source reference.",
+      "New or updated source card when needed.",
+      "Updated existing wiki pages, or a justified new page when no suitable page exists.",
+      "Updated knowledge index when page structure changes.",
+      "Concise INGEST record appended to the knowledge operation log."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "knowledge-lint",
+    "description": "Inspect the LLM Wiki for quality, consistency, provenance, navigation, duplication, and knowledge gaps without silently rewriting knowledge.",
+    "instructions": "skills/shared/knowledge-lint/SKILL.md",
+    "sha256": "b6b79676fc910b27c4f25725ffc282fcc220a5530e07fe0cfe31a7465703fa89",
+    "required_capabilities": [
+      "knowledge_lint"
+    ],
+    "inputs": [
+      "Requested lint scope.",
+      "`../../../shared/knowledge/index.md`.",
+      "Wiki pages, source cards, and raw references needed for the checks.",
+      "Canonical LINT checks and policy."
+    ],
+    "outputs": [
+      "Findings grouped by severity.",
+      "Affected files and supporting evidence.",
+      "Recommended fixes.",
+      "Explicit uncertainty and data gaps.",
+      "Concise LINT record appended to the knowledge operation log."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "knowledge-query",
+    "description": "Retrieve the minimum relevant long-term knowledge for a task while preserving provenance, uncertainty, and separation from current project state.",
+    "instructions": "skills/shared/knowledge-query/SKILL.md",
+    "sha256": "685abd0c42af39921a7cf60fef2aa35d9fa7b72cd2fcc0b0fd1a87f61e7c0388",
+    "required_capabilities": [
+      "knowledge_query"
+    ],
+    "inputs": [
+      "Question or task.",
+      "`../../../shared/knowledge/index.md`.",
+      "Relevant wiki pages selected from the index.",
+      "Source cards or raw material only when verification requires them."
+    ],
+    "outputs": [
+      "Concise answer based on the minimum relevant knowledge.",
+      "Provenance for material claims.",
+      "Confirmed knowledge, inference, uncertainty, conflicts, and gaps kept distinguishable.",
+      "Recommendation for a later INGEST operation when durable new synthesis would improve the wiki."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "project-audit",
+    "description": "Inspect a project's current state, repository health, documentation, tests, blockers, and risks without modifying the target project by default.",
+    "instructions": "skills/shared/project-audit/SKILL.md",
+    "sha256": "39dc818086fb7233df216de2f820e57fd08ac7d6fc54eedd5a74f7bcc1f4b682",
+    "required_capabilities": [
+      "repository_inspection"
+    ],
+    "inputs": [
+      "Target project path or project identifier.",
+      "Audit objective.",
+      "Known constraints, protected areas, or read-only requirements.",
+      "Relevant project instructions or governance files.",
+      "Available deterministic checks."
+    ],
+    "outputs": [
+      "Project state summary.",
+      "Repository status summary.",
+      "Documentation findings.",
+      "Tests, build, or check results.",
+      "Blockers and risks.",
+      "Recommended next steps.",
+      "Clear note of any checks not run."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "research",
+    "description": "Collect, verify, compare, and synthesize evidence so decisions can rely on traceable sources rather than unsupported assumptions.",
+    "instructions": "skills/shared/research/SKILL.md",
+    "sha256": "46a5d75ef3029987bc695df0b28ded5389b0bed1c2623b8e79b25d0d2e41cc76",
+    "required_capabilities": [
+      "research_synthesis"
+    ],
+    "inputs": [
+      "Research question.",
+      "Decision context and constraints.",
+      "Preferred or required source types.",
+      "Known sources, documents, repositories, or links.",
+      "Freshness or jurisdiction requirements, if relevant."
+    ],
+    "outputs": [
+      "Source list with enough detail for review.",
+      "Confirmed facts.",
+      "Inferences.",
+      "Uncertainty and unresolved conflicts.",
+      "Comparison of viable options, when relevant.",
+      "Concise synthesis and recommended next step, if requested."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "review",
+    "description": "Independently validate completed work for quality, safety, requirement coverage, and evidence before acceptance, escalation, or human approval.",
+    "instructions": "skills/shared/review/SKILL.md",
+    "sha256": "c3b6c504394753f692642292b4a0588f48fdf1ffc425b6afc3ac048bd46f801e",
+    "required_capabilities": [
+      "independent_review"
+    ],
+    "inputs": [
+      "User request or acceptance criteria.",
+      "Executor output.",
+      "Changed files, artifacts, or findings.",
+      "Runtime-observed mutation evidence for controlled-write executions, including scope violations and target fingerprints.",
+      "Tool results and validation evidence.",
+      "Known risks, constraints, and required approvals."
+    ],
+    "outputs": [
+      "One decision: `PASS`, `FAIL`, `RETRY`, or `NEEDS_HUMAN`.",
+      "Concise rationale.",
+      "Evidence checked.",
+      "Required fixes, escalation reason, or approval question."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "skill-creator",
+    "description": "Design a new reusable, provider-neutral skill package that can be tested, reviewed, and adapted by future providers without changing its canonical intent.",
+    "instructions": "skills/shared/skill-creator/SKILL.md",
+    "sha256": "3963d03f6b8a8c185a15d93d258e61533f0a1a80cb08305a59bedfa7b4053aec",
+    "required_capabilities": [
+      "planning"
+    ],
+    "inputs": [
+      "Requested skill name.",
+      "Problem or recurring task the skill should address.",
+      "Expected users or agents.",
+      "Known constraints and risks.",
+      "Available deterministic tools, scripts, references, or examples."
+    ],
+    "outputs": [
+      "A canonical skill definition.",
+      "Clear expected inputs and outputs for the skill.",
+      "A repeatable procedure.",
+      "Checks that can validate correct use.",
+      "Notes about provider-specific adaptation needs, if any."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "caption-writer",
+    "description": "Draft channel-appropriate caption options from supplied content, facts, tone, and objectives.",
+    "instructions": "skills/social-media/caption-writer/SKILL.md",
+    "sha256": "32656b3c6f7d46798ff0393b54a0b3105bf660767b9a866cdea31a6ef5c4387a",
+    "required_capabilities": [
+      "social_media_content"
+    ],
+    "inputs": [
+      "Content brief or source asset description.",
+      "Supplied channel context, audience, objective, tone, length, facts, and call to action.",
+      "Required terms, prohibited claims, and accessibility context."
+    ],
+    "outputs": [
+      "One or more caption drafts.",
+      "Optional short, standard, or alternate-tone variants when requested.",
+      "Claim, source, accessibility, and review notes."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "comment-analysis",
+    "description": "Analyze supplied comments or community signals for recurring themes, questions, sentiment, risks, and response opportunities without replying publicly.",
+    "instructions": "skills/social-media/comment-analysis/SKILL.md",
+    "sha256": "d08138d5d9c1a51b0847263887a54cd35911c1f5f811f5e35e7fc67fb7fa962e",
+    "required_capabilities": [
+      "social_media_content"
+    ],
+    "inputs": [
+      "Approved comments, messages, or community-signal excerpts.",
+      "Supplied channel context, period, language, objective, and sampling notes.",
+      "Escalation rules and relevant verified business facts."
+    ],
+    "outputs": [
+      "Theme groups, recurring questions, sentiment signals, and representative paraphrases.",
+      "Risk, urgency, moderation, product, or content opportunity notes.",
+      "Optional response themes or draft options when requested."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "competitor-monitor",
+    "description": "Analyze competitor social content patterns from approved evidence without turning channel observations into unsupported market-level conclusions.",
+    "instructions": "skills/social-media/competitor-monitor/SKILL.md",
+    "sha256": "0fad6e54af5883ab538347c998aae0c8df6c84ade43ef1e0daf5198d9a48fa1e",
+    "required_capabilities": [
+      "social_media_content"
+    ],
+    "inputs": [
+      "Competitor set, supplied channel context, period, comparison goal, and criteria.",
+      "Approved posts, observations, exports, links, or research outputs with source dates.",
+      "Freshness requirements and known evidence gaps."
+    ],
+    "outputs": [
+      "Channel-content pattern comparison.",
+      "Confirmed observations, interpretations, uncertainty, and evidence gaps.",
+      "Internal opportunities, watch items, and follow-up research needs."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "content-calendar",
+    "description": "Create a channel-level content calendar that turns approved goals and source material into an internal publishing plan.",
+    "instructions": "skills/social-media/content-calendar/SKILL.md",
+    "sha256": "4fd07fb5b8578fb029dceeb5dc83febf15d3c1ce9f6d617f69d9bdd66adf8ce4",
+    "required_capabilities": [
+      "social_media_content"
+    ],
+    "inputs": [
+      "Planning period, supplied channel context, goals, audiences, themes, and available assets.",
+      "Cadence, format, timing, campaign, and capacity constraints.",
+      "Approved prior performance or community signals, when available."
+    ],
+    "outputs": [
+      "Calendar entries with date or sequence, channel context, format, topic, objective, source asset, and draft status.",
+      "Coverage, dependency, uncertainty, and review notes."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "content-repurpose",
+    "description": "Transform approved source material into distinct channel-level social drafts while preserving meaning, attribution, and factual boundaries.",
+    "instructions": "skills/social-media/content-repurpose/SKILL.md",
+    "sha256": "48685792db0b8c413a3538a34b3951d4e90e53a70b110ca7408f91d6e20f280e",
+    "required_capabilities": [
+      "social_media_content"
+    ],
+    "inputs": [
+      "Approved source content and provenance.",
+      "Target channel or format contexts, audiences, objectives, tone, and length constraints.",
+      "Required calls to action, links, credits, and prohibited claims."
+    ],
+    "outputs": [
+      "Separate draft variants for each supplied target context.",
+      "Source-to-draft traceability, adaptation notes, and missing-asset or review needs."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "hook-generator",
+    "description": "Generate opening ideas for supplied social content without overstating claims or inventing evidence.",
+    "instructions": "skills/social-media/hook-generator/SKILL.md",
+    "sha256": "d6a22643af85bf0c89ae7d657047e44356222a80fe1e1a0ff9998bd2b30d0a86",
+    "required_capabilities": [
+      "social_media_content"
+    ],
+    "inputs": [
+      "Topic, content premise, audience, desired action, and supplied channel or format context.",
+      "Approved facts, proof, tone, constraints, and prohibited claims.",
+      "Requested number or range of hook styles."
+    ],
+    "outputs": [
+      "Distinct hook drafts with optional style or use notes.",
+      "Claim-risk, repetition, and review notes."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "performance-review",
+    "description": "Review supplied channel or content performance data and produce evidence-backed findings and next-test recommendations.",
+    "instructions": "skills/social-media/performance-review/SKILL.md",
+    "sha256": "9196fb80c1ee7bbbf3fa58bdc212c15ba2d7af0926f7c1fe0fe2fb645fa258ea",
+    "required_capabilities": [
+      "social_media_content"
+    ],
+    "inputs": [
+      "Content item or channel scope, reporting period, objective, and supplied metrics.",
+      "Metric definitions, comparison baseline, prior tests, and known data limitations.",
+      "Supplied channel or format context."
+    ],
+    "outputs": [
+      "Performance summary tied to the stated objective.",
+      "Metric changes, possible explanations, uncertainty, and data-quality notes.",
+      "Prioritized next-test recommendations."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "post-planner",
+    "description": "Plan one channel-level social content item before copywriting, production, review, or publication.",
+    "instructions": "skills/social-media/post-planner/SKILL.md",
+    "sha256": "aba58090d9afcced2cb8cd45ab30119cd5fa1b169862b2690f1add126ffd64f1",
+    "required_capabilities": [
+      "social_media_content"
+    ],
+    "inputs": [
+      "Supplied channel and format context.",
+      "Objective, audience, topic, source material, call to action, and constraints.",
+      "Relevant approved performance or campaign context."
+    ],
+    "outputs": [
+      "Post brief with objective, audience, core message, format, structure, asset needs, call to action, and success signal.",
+      "Assumptions, risks, dependencies, and review notes."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  },
+  {
+    "version": 1,
+    "name": "weekly-social-report",
+    "description": "Create an internal weekly report that combines supplied content activity, channel performance, community signals, learnings, and next actions.",
+    "instructions": "skills/social-media/weekly-social-report/SKILL.md",
+    "sha256": "a60a54504c4f369b0f59fa9842ee2bfebaf9f87f80fbf26bc3afd67a1ff1e900",
+    "required_capabilities": [
+      "social_media_content"
+    ],
+    "inputs": [
+      "Reporting period, supplied channel context, objectives, content log, and metrics.",
+      "Performance-review, comment-analysis, and competitor-monitor findings when available.",
+      "Prior-period baseline, experiments, constraints, and known data gaps."
+    ],
+    "outputs": [
+      "Weekly activity and performance summary.",
+      "Content, community, competitor, learning, risk, and next-action sections.",
+      "Data-quality, uncertainty, ownership, and approval notes."
+    ],
+    "prerequisites": [],
+    "references": [],
+    "templates": []
+  }
+]

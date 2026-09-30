@@ -18,7 +18,8 @@
   CORE-06R6 PASS.
 - CORE-07 Progress Events is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3
   PASS with no Critical, Major, or Minor findings. CORE-01–07 are CLOSED /
-  COMMITTED. CORE-08 is NEXT / NOT STARTED; CORE-09–11 are NOT STARTED.
+  COMMITTED. CORE-08 is CLOSED / READY TO COMMIT after CORE-08R3 PASS (uncommitted);
+  CORE-09 through CORE-11 are NOT STARTED.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
@@ -38,6 +39,124 @@
   not yet been created.
 - Phase 8F is NOT STARTED.
 - Phase 8G and Phase 8H are NOT STARTED.
+
+## CORE-08 Context Discovery Before Action - CLOSED / READY TO COMMIT
+
+Closed after CORE-08R3 PASS, uncommitted at base HEAD `b620cee`. CORE-09 is
+NOT STARTED. Provider execution assembles
+bounded, provenance-bearing context before calling the adapter. Canonical
+request identity and authority remain unchanged. The implementation adds
+metadata-first skill discovery and selected-only instruction loading,
+provider-neutral skill/context ranking contracts with deterministic defaults,
+read-only knowledge/memory interfaces, material clarification records,
+conservative capability fallback, selective verbatim retention, and an explicit-root
+repository index with Python syntax relationships. See `runtime/context/README.md`
+for contracts, defaults, integration, and limitations.
+
+No general connector execution, memory persistence, cache, new agent, Git action,
+deployment, or CORE-09 work was introduced. Windows-safe filesystem identity
+is shared by validation, exclusions, and deduplication. Every catalog-registered
+instruction path is digest-validated before entering a context pack, including
+selected, required, inherited, ordinary file, and repository-index selections.
+Context remains evidence only and grants no execution, write, approval, retry,
+continuation, budget, plan, Git, or deployment authority.
+
+### CORE-08R3 final independent review and CORE-08C closure
+
+R3 returned PASS - READY FOR CORE-08 CLOSURE with no Critical, Major, or Minor
+findings. Independent adversarial probes rejected stale registered
+`docs/playbook.md` through direct file input, required context, repository
+discovery/indexing, and `ExecutionContextBuilder`. Selected/required/inherited
+checks, Reviewer inheritance, Windows aliases and junction protection, catalog
+shape checks, ordinary file discovery, provenance, and authority neutrality
+passed. Review used a separate same-provider reviewer; no cross-provider review
+was performed.
+
+R3 validation passed 65 CORE-08 tests and 51 provider/Reviewer tests (116 combined),
+408 focused/existing regressions, and 1054 full runtime tests with zero failures,
+errors, or skips. Additional independent adversarial probes passed. All 159
+Python files compiled; 31 schemas and the skill catalog parsed;
+`git diff --check` passed.
+
+CORE-08C reconciles documentation only. CORE-01-07 remain CLOSED / COMMITTED;
+CORE-08 is CLOSED / READY TO COMMIT and remains uncommitted at `b620cee`;
+CORE-09 is NOT STARTED. Fresh CORE-08C targeted validation passed 65/65 tests;
+`git diff --check` and status/diff inspection passed. Only the six documentation
+files changed during closure; runtime and test content remained unchanged.
+Historical implementation and repair evidence follows.
+
+### Historical CORE-08 initial implementation - before R1
+
+Implementation validation on 2026-09-30:
+
+- CORE-08: 44 tests passed. The combined CORE-08, provider/reviewer, and two
+  canonical-denial regression reproductions passed 97/97.
+- Focused tool/Worker/approval/write/Git/continuation/budget/retry/progress
+  regression: 408/408 passed.
+- Full runtime regression after the final repair: 1033/1033 passed, with no
+  failures, errors, or skips.
+- Python compilation: 159 files passed. Schema/catalog JSON parsing: 32 files
+  passed. Production AST checks found no `shell=True` calls. Diff check passed.
+
+The initial full run exposed two canonical-denial regressions: intercepting
+`ContextBuildError` bypassed the existing trusted failure contract. These were
+repaired by reserving `ContextDiscoveryBlocked` for explicit material questions
+or unresolved capabilities while preserving existing canonical denials. A
+separate CORE-07 race test reported `BrokenBarrierError`; it passed unchanged
+in isolation, in the complete 75-test progress suite, and in the final full
+regression. No CORE-07 runtime or tests were modified. Earlier dated records
+remain historical evidence. CORE-08 is ready for independent review, not closed
+or committed.
+
+### Historical CORE-08 R1 findings and CORE-08F1 bounded repair - before R2
+
+R1 returned FIX with two Major findings (Windows path aliases bypassing
+deduplication/exclusions and required skill references bypassing catalog
+freshness) and one Minor finding (non-object catalog entries allowing duplicate
+fields to collapse). Its existing full regression passed 1033 tests; adversarial
+probes exposed the findings despite that result.
+
+CORE-08F1 repairs only these findings. Validated filesystem identities are shared
+by index visitation/exclusions, context deduplication, and skill instruction
+lookup. Trailing-dot/space path components fail closed. Required/inherited skill
+instructions, including the Reviewer's executor-skill evidence, use catalog
+digest validation. Catalog entries must be JSON objects and duplicate keys
+remain rejected. Ten direct adversarial tests cover the repairs and preserve
+actual Windows junction rejection. No authority contract was changed.
+
+CORE-08 remains IMPLEMENTED / pending independent re-review, uncommitted at
+`b620cee`. CORE-09 has not started. F1 executor validation is not review closure.
+
+F1 validation: 54 CORE-08 tests passed (10 new adversarial tests); the combined
+CORE-08/provider/Reviewer suite passed 105 tests; the focused protected regression
+passed 408 tests; and the full runtime regression passed 1043 tests with no
+failures, errors, or skips. All 159 runtime/integration Python files compiled,
+all 32 schema/catalog JSON files parsed, and `git diff --check` passed.
+
+### Historical CORE-08 R2 finding and CORE-08F2 bounded repair - before R3
+
+R2 returned FIX with one Major finding: catalog-registered instructions outside
+the loader's naming conventions could bypass freshness validation. Its full
+regression passed 1043 tests, but four additional adversarial tests reproduced
+the bypass through file inputs, required context, indexing, and the provider
+context builder.
+
+CORE-08F2 removes that naming dependency. Local file discovery reads the bounded
+catalog metadata once when present and checks each selected file's canonical
+identity against its registrations. Registered instructions use the existing
+digest validator regardless of pathname or source label. Unselected instruction
+bodies stay unloaded. Ordinary files work without a catalog; malformed or
+unreadable catalogs fail closed. No authority contract or CORE-09 work changed.
+
+The four R2 reproductions failed before the fix and passed afterward. CORE-08
+remains IMPLEMENTED / pending independent re-review, uncommitted at `b620cee`.
+
+F2 validation: 65 CORE-08 tests passed, including 11 new tests; the combined
+CORE-08/provider/Reviewer suite passed 116 tests; the focused protected regression
+passed 408 tests; and the full runtime regression passed 1054 tests with no
+failures, errors, or skips. All 159 runtime/integration Python files compiled,
+all 32 schema/catalog JSON files parsed, and `git diff --check` passed.
+These are executor results, not independent review closure.
 
 ## CORE-01 Canonical Execution Result — COMPLETED / CLOSED
 
@@ -715,7 +834,7 @@ structural implementation is followed by validation, review, closure, commit,
 repository-tree audit, and documentation reconciliation. This checkpoint
 created no future directories and changed no runtime behavior.
 
-## Post-CORE-07 Documentation / Master Context Sync
+## Historical Post-CORE-07 Documentation / Master Context Sync
 
 Implementation HEAD is `6bcffa4` (`feat: add progress events`). This documentation
 sync extends the earlier post-commit reconciliation; only Markdown status/tree

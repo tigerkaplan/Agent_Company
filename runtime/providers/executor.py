@@ -11,7 +11,7 @@ from runtime.execution.models import ExecutionContractError, ExecutionRequest, E
 from runtime.progress.models import ProgressError
 from runtime.progress.runtime import tool_observation
 from runtime.providers.artifacts import FileProviderArtifactStore
-from runtime.providers.context import ExecutionContextBuilder
+from runtime.providers.context import ContextDiscoveryBlocked, ExecutionContextBuilder
 from runtime.providers.models import ProviderExecutionResult, ProviderSelection
 from runtime.providers.routing import ProviderRouter
 
@@ -218,6 +218,25 @@ class ProviderExecutor:
                 fallback_reason=selection.fallback_reason,
                 execution_mode=request.execution_mode,
                 dry_run=request.dry_run,
+            )
+        except ContextDiscoveryBlocked as blocked:
+            return ExecutionResult(
+                execution_id=request.execution_id, job_id=request.job_id,
+                status="blocked", output_refs=(), summary=None, error=None,
+                blockers=({"code": "context_unavailable",
+                           "message": "Material clarification or a safe capability implementation is required before execution",
+                           "retryable": False, "requires_human": False},),
+                next_actions=tuple({"action": "supply_context", "description": question,
+                                    "requires_human": False, "automatic": False}
+                                   for question in (blocked.questions or (
+                                       "Resolve the material context gap through canonical task inputs",))),
+                provider=selection.actual_provider if selection is not None else None,
+                started_at=started_at, completed_at=self.clock(),
+                requested_provider=selection.requested_provider if selection is not None else request.provider,
+                preferred_provider=selection.preferred_provider if selection is not None else None,
+                fallback_used=selection.fallback_used if selection is not None else False,
+                fallback_reason=selection.fallback_reason if selection is not None else None,
+                execution_mode=request.execution_mode, dry_run=request.dry_run,
             )
         except ProgressError:
             raise

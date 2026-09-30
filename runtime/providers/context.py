@@ -4,12 +4,28 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from runtime.core.sanitization import contains_secret
 from runtime.execution.models import ExecutionRequest
 from runtime.providers.models import ContextEntry, ExecutionPackage
 
 
 class ContextBuildError(ValueError):
     """Raised when canonical execution context cannot be loaded safely."""
+
+
+class ContextDiscoveryBlocked(ContextBuildError):
+    """An explicit clarification or unresolved capability blocks discovery."""
+
+    def __init__(self, message: str, *, questions: tuple[str, ...] = ()):
+        super().__init__(message)
+        if (not isinstance(questions, tuple) or len(questions) > 32
+                or any(not isinstance(q, str) or not q.strip() or len(q.encode('utf-8')) > 1024
+                       for q in questions)):
+            raise ContextBuildError('Invalid context clarification')
+        self.questions = tuple(
+            'Resolve protected material context through canonical task inputs'
+            if contains_secret(q) else q for q in questions
+        )
 
 
 class ExecutionContextBuilder:
@@ -21,66 +37,51 @@ class ExecutionContextBuilder:
         *,
         max_file_bytes: int = 128 * 1024,
         max_total_bytes: int = 512 * 1024,
+        repository_roots: tuple[str, ...] = (),
+        knowledge=None,
+        ranker=None,
+        capability_requests: tuple = (),
+        missing: tuple = (),
     ) -> None:
         self.repository_root = Path(repository_root).resolve()
         self.max_file_bytes = max_file_bytes
         self.max_total_bytes = max_total_bytes
+        self.repository_roots = repository_roots
+        self.knowledge = knowledge
+        self.ranker = ranker
+        self.capability_requests = capability_requests
+        self.missing = missing
 
     def build(self, request: ExecutionRequest) -> ExecutionPackage:
-        refs = [
-            {
-                "ref_type": "file",
-                "ref": "CONSTITUTION.md",
-                "description": "Canonical company governance",
-            },
-            {
-                "ref_type": "file",
-                "ref": "AGENTS.md",
-                "description": "Canonical provider-independent operating instructions",
-            },
-            *request.context_refs,
-        ]
-        entries: list[ContextEntry] = []
-        seen: set[str] = set()
-        total_bytes = 0
-        for reference in refs:
-            if reference.get("ref_type") not in {"file", "project_state"}:
-                continue
-            relative = reference.get("ref")
-            if not isinstance(relative, str) or not relative:
-                raise ContextBuildError("Canonical context reference has no file path")
-            path = (self.repository_root / relative).resolve()
-            try:
-                path.relative_to(self.repository_root)
-            except ValueError as error:
-                raise ContextBuildError(
-                    f"Canonical context reference escapes repository root: {relative}"
-                ) from error
-            normalized = path.relative_to(self.repository_root).as_posix()
-            if normalized in seen:
-                continue
-            if not path.is_file():
-                raise ContextBuildError(f"Canonical context file is missing: {normalized}")
-            size = path.stat().st_size
-            if size > self.max_file_bytes:
-                raise ContextBuildError(f"Canonical context file exceeds size limit: {normalized}")
-            total_bytes += size
-            if total_bytes > self.max_total_bytes:
-                raise ContextBuildError("Canonical execution context exceeds total size limit")
-            try:
-                content = path.read_text(encoding="utf-8")
-            except (OSError, UnicodeDecodeError) as error:
-                raise ContextBuildError(
-                    f"Could not read canonical context file {normalized}: {error}"
-                ) from error
-            entries.append(
-                ContextEntry(
-                    ref=normalized,
-                    description=str(reference.get("description") or "Canonical context"),
-                    content=content,
-                )
+        from runtime.context.contracts import DiscoveryError, Limits
+        from runtime.context.discovery import ContextDiscovery
+
+        try:
+            limits = Limits(file_bytes=self.max_file_bytes, pack_bytes=self.max_total_bytes)
+            required = [('project/state', 'CONSTITUTION.md'), ('project/state', 'AGENTS.md'),
+                        ('project/state', 'PROJECT_STATE.md')]
+            for reference in request.context_refs:
+                if reference.get('ref_type') not in {'file', 'project_state'}:
+                    continue
+                ref = reference.get('ref')
+                if not isinstance(ref, str):
+                    raise DiscoveryError('Canonical context has no file path')
+                source = 'skills' if ref.startswith('skills/') else 'project/state'
+                required.append((source, ref))
+            files = tuple(ref['ref'] for ref in request.input_refs if ref.get('ref_type') == 'file')
+            pack = ContextDiscovery(self.repository_root, limits).discover(
+                request.task, required=tuple(required), files=files,
+                selected_skills=(request.skill,) if request.skill else (),
+                roots=self.repository_roots, knowledge=self.knowledge, ranker=self.ranker,
+                capability_requests=self.capability_requests, missing=self.missing,
             )
-            seen.add(normalized)
+            if pack.status != 'READY':
+                raise ContextDiscoveryBlocked('Material context is missing',
+                                              questions=tuple(m.question for m in pack.missing))
+        except (DiscoveryError, OSError, KeyError) as error:
+            raise ContextBuildError(str(error)) from error
+        entries = tuple(ContextEntry(ref=m.ref, description=f'{m.source}; {m.retention}; evidence only',
+                                     content=m.content) for m in pack.materials if m.source != 'user')
 
         return ExecutionPackage(
             task=request.task,
@@ -99,4 +100,5 @@ class ExecutionContextBuilder:
             execution_mode=request.execution_mode,
             execution_scope=request.execution_scope,
             dry_run=request.dry_run,
+            context_pack=pack,
         )

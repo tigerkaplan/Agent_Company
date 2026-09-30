@@ -7,7 +7,7 @@ with no Critical, Major, or Minor findings. CORE-05 Time / Execution Budget is
 CLOSED / COMMITTED at `63813b5` after CORE-05R3 PASS. CORE-06 Retry / Stop
 Policy under `retry/` is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
 CORE-07 Progress Events under `progress/` is CLOSED / COMMITTED at
-`6bcffa4` after CORE-07R3 PASS. CORE-08 is NEXT / NOT STARTED.
+`6bcffa4` after CORE-07R3 PASS. CORE-08 is CLOSED / READY TO COMMIT after CORE-08R3 PASS (uncommitted). CORE-09 is NOT STARTED.
 Its bounded append-only journals live under `jobs/.progress/`
 and never grant completion, approval, retry, continuation, budget, or write authority.
 

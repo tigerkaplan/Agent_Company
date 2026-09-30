@@ -20,7 +20,7 @@
   CORE-05R3 PASS.
 - CORE-06 Retry / Stop Policy: CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
 - CORE-07 Progress Events: CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS.
-- CORE-08: NEXT / NOT STARTED.
+- CORE-08: CLOSED / READY TO COMMIT after CORE-08R3 PASS (uncommitted).
 - CORE-09 through CORE-11: NOT STARTED.
 - Phase 8E: PAUSED / BLOCKED; deployment not started because the VPS has not
   yet been created.
@@ -116,7 +116,7 @@ redefine or begin Phase 8.
   CORE-05R3 PASS.
 - CORE-06 Retry / Stop Policy: CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
 - CORE-07 Progress Events: CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS.
-- CORE-08 Context Discovery Before Action: NEXT / NOT STARTED.
+- CORE-08 Context Discovery Before Action: CLOSED / READY TO COMMIT after CORE-08R3 PASS (uncommitted).
 - CORE-09 Context / Prompt Cache Policy: NOT STARTED.
 - CORE-10 Compute / Effort Policy: NOT STARTED.
 - CORE-11 External Content Isolation: NOT STARTED.
@@ -142,7 +142,7 @@ append-only usage ledger, verified state/head caches, restart-safe accounting,
 conservative crash recovery, and structured fail-closed exhaustion without
 granting execution or governance authority. CORE-05 is CLOSED / COMMITTED at
 `63813b5` after CORE-05R3 PASS. CORE-06 is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
-CORE-07 is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS; CORE-08 is NEXT / NOT STARTED; CORE-09 through CORE-11 are NOT STARTED.
+CORE-07 is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS; CORE-08 is CLOSED / READY TO COMMIT after CORE-08R3 PASS (uncommitted); CORE-09 through CORE-11 are NOT STARTED.
 An aggregate
 serialized-result byte ceiling is FUTURE HARDENING / NON-BLOCKING.
 
@@ -242,15 +242,16 @@ Owner outcome-first UX is PLANNED: the owner specifies the outcome; Agent
 Company selects the workflow, agents, skills, tools, context, and providers
 within the applicable authority contract.
 
-CORE-08 planned scope covers context discovery before action, graceful
+CORE-08 implements the bounded foundation for context discovery before action, graceful
 degradation and fallback resolution, semantic skill selection, semantic
 context selection/reranking, selective verbatim context retention, and Code
 Intelligence / Repository Index. Fallback order is preferred connector,
 alternative connector, file/CSV/upload, manual structured input, then explicit
-BLOCKED. Fallback must preserve evidence and authority requirements. It remains
-NEXT / NOT STARTED.
+BLOCKED. Fallback preserves evidence and authority requirements. It is
+CLOSED / READY TO COMMIT after CORE-08R3 PASS, uncommitted at base HEAD `b620cee`.
+See `runtime/context/README.md` for integration and bounded index limitations.
 
-Skill architecture is planned as provider-neutral metadata and triggers with
+Skill discovery provides provider-neutral metadata and relevance contracts with
 name, description, required capabilities, inputs, outputs, prerequisites,
 references, and templates. Load only skills relevant to the task. Workflows
 request connector capabilities rather than hard-coded vendors.
@@ -341,9 +342,11 @@ and DataForSEO are not canonical agents.
   Completion Verification, and Change Impact Review. Change Impact Review considers the task, acceptance criteria, diff, changed symbols,
   dependencies, architecture decisions, related memory, previous failures, and
   tests.
-- Code Intelligence / Repository Index: planned under CORE-08 and the Software
-  capability, covering symbols, dependencies, call relationships, affected
-  files, repository context, and related architectural memory.
+- Code Intelligence / Repository Index: CORE-08 implements a bounded in-memory
+  file index, Python symbols/imports, syntactic call names, one-hop related and
+  affected files, and relevant repository context in `runtime/context/repository.py`.
+  Knowledge/memory retrieval is an explicit read-only adapter interface. Advanced
+  graphs and cross-language semantic call resolution remain deferred.
 
 ### F. Phase 9
 

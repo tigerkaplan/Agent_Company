@@ -49,7 +49,7 @@ approval, review, continuation, retry, write, Git, or deployment authority. It
 is CLOSED / COMMITTED at `63813b5` after CORE-05R3 PASS. CORE-06 Retry / Stop
 Policy is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
 CORE-07 is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS;
-CORE-08 is NEXT / NOT STARTED; CORE-09 through CORE-11 are NOT STARTED. The
+CORE-08 is CLOSED / READY TO COMMIT after CORE-08R3 PASS (uncommitted); CORE-09 through CORE-11 are NOT STARTED. The
 aggregate serialized-result byte ceiling remains FUTURE HARDENING / NON-BLOCKING.
 
 The runtime remains local-first. Phase 8D packages the canonical Phase 8C
@@ -77,7 +77,7 @@ ignored local configuration are intentionally not expanded.
 - `integrations/` — github, gmail, google-calendar, google-drive, obsidian,
   telegram, and webhooks; runtime implementations exist only where explicitly
   represented by source.
-- `runtime/` — `actions/`, `approvals/`, `budget/`, `cli/`, `continuation/`,
+- `runtime/` — `actions/`, `approvals/`, `budget/`, `cli/`, `context/`, `continuation/`,
   `core/`, `evals/`, `execution/`, `executors/`, `git/`, `host/`, `jobs/`,
   `notifications/`, `progress/`, `providers/`, `queue/`, `remote/`, `review/`, `retry/`,
   `scheduler/`, `storage/`, `tests/`, `tools/`, `webhooks/`, and `workers/`.
@@ -126,13 +126,16 @@ state, `shared/knowledge/` is long-term synthesized knowledge, agent
 `MEMORY.md` files hold role-specific durable lessons, and `runtime/state/` is
 runtime operational state. These stores remain separate.
 
+CORE-08 now adds `runtime/context/` (including the bounded repository index),
+`skills/catalog.json`, and `runtime/tests/test_context_discovery.py`. See
+`runtime/context/README.md` for contracts, bounds, and implementation limits.
+
 ## Future / Target Repository Structure
 
 Every path in this section is PLANNED and absent from the current physical tree.
 It records structural ownership only; implementation checkpoints create paths
 when real content exists.
 
-- CORE-08: `runtime/context/` and `runtime/code-intelligence/`.
 - CORE-09: `runtime/cache/`.
 - CORE-10: `runtime/compute-policy/`.
 - CORE-11: `runtime/isolation/`.
@@ -188,7 +191,7 @@ context compaction, and later JEV / Beacon experiments remain later/important
 and do not block V1.
 
 The accepted planned details are owned by `ROADMAP.md`, including outcome-first
-owner UX, CORE-08 semantic selection and selective verbatim retention, expanded
+owner UX, expanded
 CAP-REV-01 review, Unified Run Trace / Exact Replay / Trace → Eval, Semantic
 Regression / Eval → Lesson Candidate, and Owner Home: "What do you want to do?"
 The bounded DEC-02 pilot covers worker routing, skill selection, context
