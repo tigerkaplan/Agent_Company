@@ -1,16 +1,19 @@
 # Agent Company
 
-## CORE-11 closure reconciliation - 2026-10-01
+## DOC-TREE-CORE11 Post-Commit Reconciliation - 2026-10-01
 
-CORE-01-10 are CLOSED / COMMITTED. CORE-11 is CLOSED / READY TO COMMIT
-following Independent Re-review R2 PASS, uncommitted at base `c9ce78d`.
-The CORE-01-11 foundation is implementation complete pending CORE-11 commit.
-ACTIVE: None; NEXT: none activated. GOV/ORCH/MEM and Phase 9 remain NOT STARTED.
-The V1 scope freeze remains ACTIVE and unchanged. No next roadmap block is started.
-Isolation integrates in `runtime/context/external.py`, CORE-08 contracts,
-provider packaging and reviewer evidence; see `runtime/context/EXTERNAL_CONTENT.md`.
-Closure validation: 14/14 CORE-11 targeted tests passed; `git diff --check` passed.
-No runtime behavior changed, commit made, V1 expansion or future folders created.
+Verified clean starting tree at `8bda7eb` (`feat: add external content isolation`).
+CORE-01-11 are CLOSED / COMMITTED; CORE-11 is committed at `8bda7eb` after
+Independent Re-review R2 PASS. Core Runtime Foundation = COMPLETE.
+ACTIVE: None; NEXT: GOV-01 Task & Authority Contract / NOT STARTED, from the
+frozen canonical V1 sequence. NEXT records order only, not implementation authority.
+GOV/ORCH/MEM and Phase 9 remain NOT STARTED. Phase 8E-8H are unchanged.
+The V1 scope freeze remains ACTIVE; SYNC-05 classifications are preserved.
+Isolation lives in `runtime/context/`; no separate `runtime/isolation/` is required.
+CURRENT paths and PLANNED absence were checked against the physical filesystem.
+This reconciliation changes documentation/state only; no runtime tests rerun,
+future folders created, commit made, or next implementation begun.
+Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed.
 
 Agent Company is a local-first, model-independent operating core for coordinating AI agents across multiple projects without losing context. It starts with Claude and Codex as execution providers, and is designed to support ChatGPT and other providers later.
 
@@ -62,9 +65,9 @@ is CLOSED / COMMITTED at `63813b5` after CORE-05R3 PASS. CORE-06 Retry / Stop
 Policy is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
 CORE-07 is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS;
 CORE-08 is CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS. CORE-09 is
-CLOSED / COMMITTED at `fa7e30f` after CORE-09R2 PASS. CORE-01-10 are CLOSED /
+CLOSED / COMMITTED at `fa7e30f` after CORE-09R2 PASS. CORE-01-11 are CLOSED /
 COMMITTED; CORE-10 is committed at `dd72cb2` after CORE-10R3 PASS,
-and CORE-11 is CLOSED / READY TO COMMIT. The
+and CORE-11 is CLOSED / COMMITTED at `8bda7eb`. The
 aggregate serialized-result byte ceiling remains FUTURE HARDENING / NON-BLOCKING.
 
 The runtime remains local-first. Phase 8D packages the canonical Phase 8C
@@ -77,7 +80,7 @@ the canonical capability roadmap.
 
 ## Current Repository Structure
 
-CURRENT: audited against committed checkpoint `dd72cb2`. This is the physical
+CURRENT: audited against committed checkpoint `8bda7eb`. This is the physical
 structure in the current checkout; generated contents and
 ignored local configuration are intentionally not expanded.
 
@@ -142,7 +145,8 @@ state, `shared/knowledge/` is long-term synthesized knowledge, agent
 runtime operational state. These stores remain separate.
 
 CORE-08 CURRENT: `runtime/context/` contains `__init__.py`, `contracts.py`,
-`discovery.py`, `fallback.py`, `repository.py`, `skills.py`, and `README.md`.
+`discovery.py`, `external.py`, `fallback.py`, `repository.py`, `skills.py`,
+`README.md`, and `EXTERNAL_CONTENT.md`.
 The bounded Code Intelligence / Repository Index lives in
 `runtime/context/repository.py`; no separate advanced subsystem is implemented.
 Supporting CURRENT paths: `skills/catalog.json`,
@@ -167,7 +171,14 @@ This importable path replaces the planned `runtime/compute-policy/` label.
 See `runtime/compute_policy/README.md` for policy defaults and authority limits.
 
 CORE-11 CURRENT: `runtime/context/external.py` and
-`runtime/context/EXTERNAL_CONTENT.md` implement isolation alongside CORE-08.
+`runtime/context/EXTERNAL_CONTENT.md` implement isolation alongside CORE-08,
+CLOSED / COMMITTED at `8bda7eb`. Supporting CURRENT paths are
+`runtime/context/contracts.py`, `runtime/context/discovery.py`,
+`runtime/context/skills.py`, `runtime/core/references.py`,
+`runtime/providers/context.py`, `runtime/providers/models.py`,
+`runtime/review/models.py`, and `runtime/tests/test_external_content.py`.
+The former planned `runtime/isolation/` label is superseded by this integrated
+implementation and remains physically absent; it is not an outstanding target.
 
 ## Future / Target Repository Structure
 
@@ -230,7 +241,7 @@ and SYNC-04A. The exception gate and accepted refinements live in
 LATER / REFERENCE; only critical implementation, security, data-loss, authority,
 architectural-consistency, or completion-correctness blockers may be evaluated
 for V1. They do not interrupt the checkpoint sequence or grant implementation
-authority. ACTIVE: None; NEXT: none activated.
+authority. ACTIVE: None; NEXT: GOV-01 Task & Authority Contract / NOT STARTED.
 
 Current canonical agents: 10; frozen V1 target: 14. CAP-CREATIVE-01 is accepted
 non-blocking capability/tool architecture; CAP-DOC-01, summary-indexed retrieval,

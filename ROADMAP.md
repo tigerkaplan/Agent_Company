@@ -1,16 +1,19 @@
 # Agent Company Roadmap
 
-## CORE-11 closure reconciliation - 2026-10-01
+## DOC-TREE-CORE11 Post-Commit Reconciliation - 2026-10-01
 
-CORE-01-10 are CLOSED / COMMITTED. CORE-11 is CLOSED / READY TO COMMIT
-following Independent Re-review R2 PASS, uncommitted at base `c9ce78d`.
-The CORE-01-11 foundation is implementation complete pending CORE-11 commit.
-ACTIVE: None; NEXT: none activated. GOV/ORCH/MEM and Phase 9 remain NOT STARTED.
-The V1 scope freeze remains ACTIVE and unchanged. No next roadmap block is started.
-Isolation integrates in `runtime/context/external.py`, CORE-08 contracts,
-provider packaging and reviewer evidence; see `runtime/context/EXTERNAL_CONTENT.md`.
-Closure validation: 14/14 CORE-11 targeted tests passed; `git diff --check` passed.
-No runtime behavior changed, commit made, V1 expansion or future folders created.
+Verified clean starting tree at `8bda7eb` (`feat: add external content isolation`).
+CORE-01-11 are CLOSED / COMMITTED; CORE-11 is committed at `8bda7eb` after
+Independent Re-review R2 PASS. Core Runtime Foundation = COMPLETE.
+ACTIVE: None; NEXT: GOV-01 Task & Authority Contract / NOT STARTED, from the
+frozen canonical V1 sequence. NEXT records order only, not implementation authority.
+GOV/ORCH/MEM and Phase 9 remain NOT STARTED. Phase 8E-8H are unchanged.
+The V1 scope freeze remains ACTIVE; SYNC-05 classifications are preserved.
+Isolation lives in `runtime/context/`; no separate `runtime/isolation/` is required.
+CURRENT paths and PLANNED absence were checked against the physical filesystem.
+This reconciliation changes documentation/state only; no runtime tests rerun,
+future folders created, commit made, or next implementation begun.
+Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed.
 
 `PROJECT_STATE.md` is the canonical current-status record. This roadmap is the canonical forward capability roadmap after the verified Phase 6 checkpoint. Candidate capabilities below are planning scope unless explicitly marked as completed.
 
@@ -35,7 +38,7 @@ No runtime behavior changed, commit made, V1 expansion or future folders created
 - CORE-08: CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS.
 - CORE-09: CLOSED / COMMITTED at `fa7e30f` after CORE-09R2 PASS.
 - CORE-10: CLOSED / COMMITTED at `dd72cb2` after CORE-10R3 PASS.
-- CORE-11: CLOSED / READY TO COMMIT.
+- CORE-11: CLOSED / COMMITTED at `8bda7eb`.
 - Phase 8E: PAUSED / BLOCKED; deployment not started because the VPS has not
   yet been created.
 - Phase 8F: NOT STARTED.
@@ -60,10 +63,11 @@ serious inconsistency / completion correctness issue? YES -> evaluate for V1;
 NO -> POST-V1 / LATER / REFERENCE. Later ideas must not interrupt the checkpoint
 sequence or expand the existing Canonical V1 Definition below.
 
-One ACTIVE and one NEXT checkpoint slot: ACTIVE = None; NEXT = None.
-CORE-11 is CLOSED / READY TO COMMIT after Independent Re-review R2 PASS. Lifecycle remains IMPLEMENT -> INDEPENDENT
+One ACTIVE and one NEXT checkpoint slot: ACTIVE = None; NEXT = GOV-01 Task & Authority Contract / NOT STARTED.
+CORE-11 is CLOSED / COMMITTED at `8bda7eb` after Independent Re-review R2 PASS. Lifecycle remains IMPLEMENT -> INDEPENDENT
 REVIEW -> BOUNDED FIX if required -> RE-REVIEW -> CLOSURE -> COMMIT -> NEXT.
-CORE-11 closure is documentation-only; its commit remains pending and no next block is activated.
+Core Runtime Foundation = COMPLETE. GOV-01 is next in the frozen V1 sequence;
+no next implementation is authorized or started by this reconciliation.
 
 ### Durable Instruction And Learning Ownership
 
@@ -77,7 +81,7 @@ CORRECTION -> LESSON CANDIDATE -> EVIDENCE -> DEDUPE -> SCOPE -> VALIDATION /
 REVIEW -> PROMOTION IF JUSTIFIED. Reuse MEM-02 / MEM-02B discipline: corrections
 and PASS results do not automatically become permanent global instructions.
 
-### Closed CORE Refinements And Next Trust Boundary
+### Closed CORE Refinements And External Trust Boundary
 
 These accepted architectural semantics do not reopen closed checkpoints or
 claim that every conceptual event or routing input is implemented.
@@ -101,12 +105,12 @@ claim that every conceptual event or routing input is implemented.
   capability/performance history, and verification requirements. Eligibility
   restrictions precede provider selection. Model-facing time signals may be
   advisory; runtime policy enforces hard budgets/timeouts.
-- CORE-11 is CLOSED / READY TO COMMIT: pasted text, web pages, emails, documents,
+- CORE-11 is CLOSED / COMMITTED at `8bda7eb`: pasted text, web pages, emails, documents,
   retrieval, tool output, scraped data, and connector data are external/untrusted
   content. EXTERNAL CONTENT != SYSTEM AUTHORITY != POLICY AUTHORITY != USER
   AUTHORITY. Instruction-like content gains no authority. Use source/trust
   metadata where practical; delimiters alone are insufficient injection defence.
-  Independent Re-review R2 passed; closure is complete and commit remains pending.
+  Independent Re-review R2 passed; closure and commit are complete at `8bda7eb`.
 
 ### Phase 9A And Retrieval Efficiency
 
@@ -213,7 +217,7 @@ redefine or begin Phase 8.
 - CORE-08 Context Discovery Before Action: CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS.
 - CORE-09 Context / Prompt Cache Policy: CLOSED / COMMITTED at `fa7e30f` after CORE-09R2 PASS.
 - CORE-10 Compute / Effort Policy: CLOSED / COMMITTED at `dd72cb2` after CORE-10R3 PASS.
-- CORE-11 External Content Isolation: CLOSED / READY TO COMMIT.
+- CORE-11 External Content Isolation: CLOSED / COMMITTED at `8bda7eb`.
 
 CORE-01 defines the canonical provider-agnostic Execution Result: WHAT HAPPENED.
 Its final independent closure review passed with no Critical or Major findings.
@@ -239,7 +243,7 @@ granting execution or governance authority. CORE-05 is CLOSED / COMMITTED at
 CORE-07 is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS; CORE-08 is
 CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS; CORE-09 is CLOSED /
 COMMITTED at `fa7e30f` after CORE-09R2 PASS. CORE-10 is CLOSED / COMMITTED at `dd72cb2` after CORE-10R3 PASS.
-CORE-11 is CLOSED / READY TO COMMIT.
+CORE-11 is CLOSED / COMMITTED at `8bda7eb`.
 An aggregate
 serialized-result byte ceiling is FUTURE HARDENING / NON-BLOCKING.
 
@@ -256,7 +260,7 @@ inputs and filter provider eligibility before routing. Codex/Claude native effor
 controls are enforced; unsupported adapters are rejected. Decisions bind exact
 work to repository filesystem identity and selected context, report the applicable
 fallback reason, and grant no authority. DEC-01/JEV is untouched; CORE-11 is
-CLOSED / READY TO COMMIT. See `runtime/compute_policy/README.md` for implementation limits.
+CLOSED / COMMITTED at `8bda7eb`. See `runtime/compute_policy/README.md` for implementation limits.
 R3 final decision: PASS — READY FOR CORE-10 CLOSURE, with no findings.
 
 ### CORE-06 Accepted Scope — CLOSED / COMMITTED at `4a6e5c4`

@@ -1,7 +1,7 @@
 # Context / Prompt Cache Policy
 
 CORE-09 is CLOSED / COMMITTED at `fa7e30f` after CORE-09R2 PASS. CORE-10 is
-CLOSED / COMMITTED at `dd72cb2` after CORE-10R3 PASS; CORE-11 is CLOSED / READY TO COMMIT.
+CLOSED / COMMITTED at `dd72cb2` after CORE-10R3 PASS; CORE-11 is CLOSED / COMMITTED at `8bda7eb`.
 
 ## Integration and cacheable material
 
@@ -139,6 +139,6 @@ and 1097 full runtime tests; `git diff --check` passed. At R2 closure,
 CORE-09 was CLOSED / READY TO COMMIT. It was subsequently committed at
 `fa7e30f`; CORE-10 was NEXT / NOT STARTED at that committed checkpoint.
 
-Current status: CORE-01-10 are CLOSED / COMMITTED; CORE-10 is committed
-at `dd72cb2` after CORE-10R3 PASS. CORE-11 is CLOSED / READY TO COMMIT.
+Current status: CORE-01-11 are CLOSED / COMMITTED; CORE-10 is committed
+at `dd72cb2` after CORE-10R3 PASS. CORE-11 is CLOSED / COMMITTED at `8bda7eb`.
 See `../compute_policy/README.md` for CORE-10 closure.

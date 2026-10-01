@@ -1,16 +1,19 @@
 # Agent Company Project State
 
-## CORE-11 closure reconciliation - 2026-10-01
+## DOC-TREE-CORE11 Post-Commit Reconciliation - 2026-10-01
 
-CORE-01-10 are CLOSED / COMMITTED. CORE-11 is CLOSED / READY TO COMMIT
-following Independent Re-review R2 PASS, uncommitted at base `c9ce78d`.
-The CORE-01-11 foundation is implementation complete pending CORE-11 commit.
-ACTIVE: None; NEXT: none activated. GOV/ORCH/MEM and Phase 9 remain NOT STARTED.
-The V1 scope freeze remains ACTIVE and unchanged. No next roadmap block is started.
-Isolation integrates in `runtime/context/external.py`, CORE-08 contracts,
-provider packaging and reviewer evidence; see `runtime/context/EXTERNAL_CONTENT.md`.
-Closure validation: 14/14 CORE-11 targeted tests passed; `git diff --check` passed.
-No runtime behavior changed, commit made, V1 expansion or future folders created.
+Verified clean starting tree at `8bda7eb` (`feat: add external content isolation`).
+CORE-01-11 are CLOSED / COMMITTED; CORE-11 is committed at `8bda7eb` after
+Independent Re-review R2 PASS. Core Runtime Foundation = COMPLETE.
+ACTIVE: None; NEXT: GOV-01 Task & Authority Contract / NOT STARTED, from the
+frozen canonical V1 sequence. NEXT records order only, not implementation authority.
+GOV/ORCH/MEM and Phase 9 remain NOT STARTED. Phase 8E-8H are unchanged.
+The V1 scope freeze remains ACTIVE; SYNC-05 classifications are preserved.
+Isolation lives in `runtime/context/`; no separate `runtime/isolation/` is required.
+CURRENT paths and PLANNED absence were checked against the physical filesystem.
+This reconciliation changes documentation/state only; no runtime tests rerun,
+future folders created, commit made, or next implementation begun.
+Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed.
 
 ## CORE-11 Review Evidence And Final Guarantees
 
@@ -52,8 +55,8 @@ Final CORE-11 guarantees:
 
 CORE-11C reran only the targeted suite (14/14) and git diff --check; R2 full-suite
 results above are historical review evidence. Closure changes documentation only.
-CORE-01-10 are CLOSED / COMMITTED; CORE-11 is CLOSED / READY TO COMMIT.
-The CORE-01-11 foundation is implementation complete pending CORE-11 commit.
+CORE-01-11 are CLOSED / COMMITTED; CORE-11 is committed at `8bda7eb`.
+Core Runtime Foundation = COMPLETE.
 V1 scope freeze is preserved; no GOV/ORCH/MEM/Phase 9 block is started and no
 future directory is created. Dated prior checkpoints below remain historical.
 
@@ -74,10 +77,10 @@ future directory is created. Dated prior checkpoints below remain historical.
 - CORE-06 Retry / Stop Policy is CLOSED / COMMITTED at `4a6e5c4` after
   CORE-06R6 PASS.
 - CORE-07 Progress Events is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3
-  PASS with no Critical, Major, or Minor findings. CORE-01-10 are CLOSED /
+  PASS with no Critical, Major, or Minor findings. CORE-01-11 are CLOSED /
   COMMITTED. CORE-08 is committed at `1a1b029` after CORE-08R3 PASS;
   CORE-09 is committed at `fa7e30f` after CORE-09R2 PASS. CORE-10 is
-  CLOSED / COMMITTED at `dd72cb2` after CORE-10R3 PASS; CORE-11 is CLOSED / READY TO COMMIT.
+  CLOSED / COMMITTED at `dd72cb2` after CORE-10R3 PASS; CORE-11 is CLOSED / COMMITTED at `8bda7eb`.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.

@@ -1,8 +1,7 @@
 # CORE-11 external content isolation
 
-CLOSED / READY TO COMMIT after Independent Re-review R2 PASS; uncommitted
-at base `c9ce78d`. CORE-01-10 are CLOSED / COMMITTED; the CORE-01-11
-foundation is implementation complete pending CORE-11 commit. This is a structural
+CLOSED / COMMITTED at `8bda7eb` after Independent Re-review R2 PASS.
+CORE-01-11 are CLOSED / COMMITTED; Core Runtime Foundation = COMPLETE. This is a structural
 provider-neutral boundary, not a claim that a model cannot be persuaded.
 Existing sandbox, approval, scope, retry/continuation, budget, write, Git and
 deployment gates remain runtime controls. No evidence record feeds those gates.

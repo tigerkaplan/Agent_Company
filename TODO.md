@@ -1,16 +1,19 @@
 # Agent Company TODO
 
-## CORE-11 closure reconciliation - 2026-10-01
+## DOC-TREE-CORE11 Post-Commit Reconciliation - 2026-10-01
 
-CORE-01-10 are CLOSED / COMMITTED. CORE-11 is CLOSED / READY TO COMMIT
-following Independent Re-review R2 PASS, uncommitted at base `c9ce78d`.
-The CORE-01-11 foundation is implementation complete pending CORE-11 commit.
-ACTIVE: None; NEXT: none activated. GOV/ORCH/MEM and Phase 9 remain NOT STARTED.
-The V1 scope freeze remains ACTIVE and unchanged. No next roadmap block is started.
-Isolation integrates in `runtime/context/external.py`, CORE-08 contracts,
-provider packaging and reviewer evidence; see `runtime/context/EXTERNAL_CONTENT.md`.
-Closure validation: 14/14 CORE-11 targeted tests passed; `git diff --check` passed.
-No runtime behavior changed, commit made, V1 expansion or future folders created.
+Verified clean starting tree at `8bda7eb` (`feat: add external content isolation`).
+CORE-01-11 are CLOSED / COMMITTED; CORE-11 is committed at `8bda7eb` after
+Independent Re-review R2 PASS. Core Runtime Foundation = COMPLETE.
+ACTIVE: None; NEXT: GOV-01 Task & Authority Contract / NOT STARTED, from the
+frozen canonical V1 sequence. NEXT records order only, not implementation authority.
+GOV/ORCH/MEM and Phase 9 remain NOT STARTED. Phase 8E-8H are unchanged.
+The V1 scope freeze remains ACTIVE; SYNC-05 classifications are preserved.
+Isolation lives in `runtime/context/`; no separate `runtime/isolation/` is required.
+CURRENT paths and PLANNED absence were checked against the physical filesystem.
+This reconciliation changes documentation/state only; no runtime tests rerun,
+future folders created, commit made, or next implementation begun.
+Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed.
 
 ## Core Runtime Enhancements
 
@@ -71,9 +74,9 @@ No runtime behavior changed, commit made, V1 expansion or future folders created
 - [x] CORE-09 Context / Prompt Cache Policy - CLOSED / COMMITTED at `fa7e30f`
   after CORE-09R2 PASS.
 - [x] CORE-10 Compute / Effort Policy - CLOSED / COMMITTED at `dd72cb2` after CORE-10R3
-  PASS. CORE-01-10 are CLOSED / COMMITTED. Security-aware routing lives in `runtime/compute_policy/`.
-- [x] CORE-11 External Content Isolation - CLOSED / READY TO COMMIT after R2 PASS.
-  - [ ] CORE-11 implementation commit pending; no later block activated.
+  PASS. CORE-01-11 are CLOSED / COMMITTED. Security-aware routing lives in `runtime/compute_policy/`.
+- [x] CORE-11 External Content Isolation - CLOSED / COMMITTED at `8bda7eb` after R2 PASS.
+  - [x] CORE-11 implementation commit complete at `8bda7eb`; no later block started.
 - [ ] FUTURE HARDENING / NON-BLOCKING: add an aggregate serialized-result byte
   ceiling.
 
@@ -155,7 +158,7 @@ No runtime behavior changed, commit made, V1 expansion or future folders created
   Existing Social Media agent owns the domain; roadmap defines role boundaries.
 
 - [x] SYNC-05 documentation reconciliation: V1 scope freeze ACTIVE; CORE-10
-  CLOSED / COMMITTED; ACTIVE None; CORE-11 CLOSED / READY TO COMMIT. Preserve
+  CLOSED / COMMITTED; ACTIVE None; CORE-11 CLOSED / COMMITTED at `8bda7eb`. Preserve
   SYNC-04/04A scope and use ROADMAP's DOC-GOV-01 freeze health checks.
 
 ## Later / Important — Not V1 Blockers

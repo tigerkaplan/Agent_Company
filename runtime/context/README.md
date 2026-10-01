@@ -1,9 +1,9 @@
 # Context Discovery Before Action
 
 CORE-08 is CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS.
-CORE-01-10 are CLOSED / COMMITTED. CORE-09 is committed at `fa7e30f` after
+CORE-01-11 are CLOSED / COMMITTED. CORE-09 is committed at `fa7e30f` after
 CORE-09R2 PASS; CORE-10 is committed at `dd72cb2` after CORE-10R3 PASS.
-CORE-11 is CLOSED / READY TO COMMIT.
+CORE-11 is CLOSED / COMMITTED at `8bda7eb`.
 
 `ExecutionContextBuilder` runs discovery before a provider adapter executes.
 It reads canonical governance, the current project checkpoint, Worker-resolved

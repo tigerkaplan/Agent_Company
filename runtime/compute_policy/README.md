@@ -1,7 +1,7 @@
 # Compute / Effort Policy (CORE-10)
 
 CLOSED / COMMITTED at `dd72cb2` after CORE-10R3 PASS. Implemented against
-`3e71adc`; CORE-01-10 are CLOSED / COMMITTED; CORE-11 is NEXT / NOT STARTED.
+`3e71adc`; CORE-01-11 are CLOSED / COMMITTED; CORE-11 is CLOSED / COMMITTED at `8bda7eb`.
 
 `ComputePolicy.decide(ExecutionRequest, ComputeInputs | None)` deterministically
 returns an immutable `ComputeDecision`. Invalid or unsupported contracts raise
