@@ -19,7 +19,8 @@
 - CORE-07 Progress Events is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3
   PASS with no Critical, Major, or Minor findings. CORE-01-08 are CLOSED /
   COMMITTED. CORE-08 is committed at `1a1b029` after CORE-08R3 PASS;
-  CORE-09 is NEXT / NOT STARTED; CORE-10-11 are NOT STARTED.
+  CORE-09 is CLOSED / READY TO COMMIT after CORE-09R2 PASS; CORE-10-11 are NOT
+  STARTED.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
@@ -40,7 +41,73 @@
 - Phase 8F is NOT STARTED.
 - Phase 8G and Phase 8H are NOT STARTED.
 
-## Post-CORE-08 Documentation / Master Context Reconciliation
+## CORE-09 Context / Prompt Cache Policy - CLOSED / READY TO COMMIT
+
+Implemented uncommitted at base HEAD `ecd975c`. `runtime/cache/` provides
+bounded process-local, provider-neutral context-only reuse integrated into
+`ExecutionContextBuilder`. Fresh discovery precedes every hit. Exact work,
+project/root/user scope, selected skill metadata, options, policy, content, and
+source provenance bind reuse. Cached and fresh packs satisfy the same canonical
+contract and must have exactly equivalent serialized bytes. Source, skill, and
+policy changes invalidate reuse; TTL, LRU, entry-count, and byte bounds apply.
+Missing/invalid sources fail closed. Authority metadata is reconstructed from
+the current request. No persisted cache,
+Phase 9C Operating Layer, commit, or CORE-10 work is introduced. See
+`runtime/cache/README.md` for identity, outcomes, bounds, and limitations.
+
+Historical initial executor validation passed: 31/31 CORE-09
+tests; 147/147 combined CORE-09/context/provider/Reviewer tests; 534/534 existing
+CORE regressions; 287/287 focused Worker/Scheduler/Reviewer/approval/action/Git/
+provider/job-runtime regressions; and 1085/1085 final full runtime tests in
+733.596 seconds, with no failures, errors, or skips. All 162 runtime/integration
+Python files and 32 schema/catalog JSON files parsed successfully. New-file
+whitespace and `git diff --check` passed. These are implementation checks, not
+independent-review closure.
+
+### CORE-09R1 finding and CORE-09F1 bounded repair
+
+R1 returned FIX with one required Minor finding: cached material with boolean
+or float `start_line` compared equal to fresh integer material and could enter
+a provider package as HIT / validated. No Critical or Major findings were
+identified. The two nonblocking timestamp/accounting robustness observations
+remain outside this single-finding repair.
+
+CORE-09F1 applies one canonical validation/serialization helper to both fresh
+and cached packs. It requires exact pack/material fields and primitive types,
+reconstructs materials through the canonical model, enforces assembly bounds,
+rejects duplicate/noncanonical representations, and compares exact serialized
+bytes before HIT. Malformed stored material is discarded as STALE / malformed;
+only fresh validated context reaches the builder. Identity, TTL/LRU, isolation,
+authority boundaries, and fresh discovery remain unchanged.
+
+At the F1 checkpoint, CORE-09 remained uncommitted at `ecd975c` and awaited
+independent re-review. CORE-10 was NOT STARTED.
+
+2026-10-01 F1 executor validation passed: 43/43 CORE-09 tests; 159/159 combined
+CORE-09/context/provider/Reviewer tests; 469/469 existing CORE regressions;
+and 1097/1097 full runtime tests, with no failures, errors, or skips. The
+boolean/float corruption reproductions failed before repair and passed after
+repair, including the provider-package path. All 162 runtime/integration Python
+files and 32 schema/catalog JSON files parsed; repair-file whitespace and
+`git diff --check` passed. These were implementation checks before R2.
+
+### CORE-09R2 independent re-review and closure
+
+2026-10-01 CORE-09R2 returned PASS with no Critical, Major, or Minor findings.
+Independent adversarial probes rejected malformed cached fields and nested
+values, noncanonical pack shapes, and serialization mismatches as STALE; valid
+unchanged material still HIT. Provider-builder probes confirmed that corrupted
+context does not reach provider packages and current request authority is
+preserved. Cache identity, project/task/scope isolation, source/skill/policy
+invalidation, TTL/LRU/bounds, and fresh discovery on hits remained intact.
+Cache content grants no approval, review, retry, continuation, budget, write,
+tool, Git, or deployment authority. R2 validation passed 43/43 CORE-09 tests,
+159/159 affected context/provider/Reviewer tests, 469/469 existing CORE
+regressions, and 1097/1097 full runtime tests; `git diff --check` passed.
+CORE-09 is CLOSED / READY TO COMMIT and remains uncommitted at `ecd975c`.
+CORE-01-08 are CLOSED / COMMITTED; CORE-10 is NOT STARTED.
+
+## Historical Post-CORE-08 Documentation / Master Context Reconciliation
 
 Verified implementation HEAD: `1a1b029` (`feat: add context discovery`), with
 an initially clean working tree. CORE-01-08 are CLOSED / COMMITTED;

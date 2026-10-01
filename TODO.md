@@ -56,7 +56,8 @@
   - [x] Bounded in-memory repository index with Python syntax relationships;
     read-only knowledge/memory interface. See `runtime/context/README.md` for
     implemented limits; no connector execution or persistent memory is claimed.
-- [ ] CORE-09 Context / Prompt Cache Policy - NEXT / NOT STARTED.
+- [x] CORE-09 Context / Prompt Cache Policy - CLOSED / READY TO COMMIT after
+  CORE-09R2 PASS; implementation remains uncommitted.
 - [ ] CORE-10 Compute / Effort Policy - NOT STARTED; include security-aware routing.
 - [ ] CORE-11 External Content Isolation — NOT STARTED.
 - [ ] FUTURE HARDENING / NON-BLOCKING: add an aggregate serialized-result byte

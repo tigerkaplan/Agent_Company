@@ -49,7 +49,8 @@ approval, review, continuation, retry, write, Git, or deployment authority. It
 is CLOSED / COMMITTED at `63813b5` after CORE-05R3 PASS. CORE-06 Retry / Stop
 Policy is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
 CORE-07 is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS;
-CORE-08 is CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS; CORE-09 is NEXT / NOT STARTED; CORE-10-11 are NOT STARTED. The
+CORE-08 is CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS. CORE-09 is
+CLOSED / READY TO COMMIT after CORE-09R2 PASS; CORE-10-11 are NOT STARTED. The
 aggregate serialized-result byte ceiling remains FUTURE HARDENING / NON-BLOCKING.
 
 The runtime remains local-first. Phase 8D packages the canonical Phase 8C
@@ -77,7 +78,7 @@ ignored local configuration are intentionally not expanded.
 - `integrations/` — github, gmail, google-calendar, google-drive, obsidian,
   telegram, and webhooks; runtime implementations exist only where explicitly
   represented by source.
-- `runtime/` — `actions/`, `approvals/`, `budget/`, `cli/`, `context/`, `continuation/`,
+- `runtime/` — `actions/`, `approvals/`, `budget/`, `cache/`, `cli/`, `context/`, `continuation/`,
   `core/`, `evals/`, `execution/`, `executors/`, `git/`, `host/`, `jobs/`,
   `notifications/`, `progress/`, `providers/`, `queue/`, `remote/`, `review/`, `retry/`,
   `scheduler/`, `storage/`, `tests/`, `tools/`, `webhooks/`, and `workers/`.
@@ -135,13 +136,21 @@ Supporting CURRENT paths: `skills/catalog.json`,
 `runtime/providers/executor.py`, and `runtime/providers/models.py`.
 See `runtime/context/README.md` for contracts, bounds, and implementation limits.
 
+CORE-09 CURRENT: `runtime/cache/` contains `__init__.py`, `policy.py`, and
+`README.md`; `runtime/tests/test_context_cache.py` covers cache boundaries.
+The provider context builder integrates bounded, provider-neutral, process-local
+context reuse. Canonical identity and exact cached-contract/serialized-byte
+validation keep source, skill, policy, project, task, and scope changes from
+reusing stale material. TTL, LRU, and storage bounds apply; fresh discovery
+still runs on hits, and cached context grants no authority.
+See `runtime/cache/README.md` for validation, isolation, and performance limits.
+
 ## Future / Target Repository Structure
 
 Every path in this section is PLANNED and absent from the current physical tree.
 It records structural ownership only; implementation checkpoints create paths
 when real content exists.
 
-- CORE-09: `runtime/cache/`.
 - CORE-10: `runtime/compute-policy/`.
 - CORE-11: `runtime/isolation/`.
 - GOV-01: `governance/task-contract/`, `governance/delegation/`,

@@ -3,6 +3,11 @@
 from __future__ import annotations
 
 from pathlib import Path
+from dataclasses import asdict
+import os
+from uuid import uuid4
+
+from runtime.cache import ContextCache
 
 from runtime.core.sanitization import contains_secret
 from runtime.execution.models import ExecutionRequest
@@ -42,6 +47,8 @@ class ExecutionContextBuilder:
         ranker=None,
         capability_requests: tuple = (),
         missing: tuple = (),
+        cache: ContextCache | None = None,
+        cache_scope: str | None = None,
     ) -> None:
         self.repository_root = Path(repository_root).resolve()
         self.max_file_bytes = max_file_bytes
@@ -51,11 +58,18 @@ class ExecutionContextBuilder:
         self.ranker = ranker
         self.capability_requests = capability_requests
         self.missing = missing
+        if cache is not None and not cache_scope:
+            raise ContextBuildError('Shared cache requires an explicit user/scope namespace')
+        self.cache = cache if cache is not None else ContextCache()
+        self.cache_scope = cache_scope if cache_scope is not None else uuid4().hex
+        self.last_cache_result = None
 
     def build(self, request: ExecutionRequest) -> ExecutionPackage:
-        from runtime.context.contracts import DiscoveryError, Limits
+        from runtime.context.contracts import DiscoveryError, Limits, RepositoryReader
         from runtime.context.discovery import ContextDiscovery
+        from runtime.context.skills import SkillCatalog
 
+        self.last_cache_result = None
         try:
             limits = Limits(file_bytes=self.max_file_bytes, pack_bytes=self.max_total_bytes)
             required = [('project/state', 'CONSTITUTION.md'), ('project/state', 'AGENTS.md'),
@@ -78,6 +92,31 @@ class ExecutionContextBuilder:
             if pack.status != 'READY':
                 raise ContextDiscoveryBlocked('Material context is missing',
                                               questions=tuple(m.question for m in pack.missing))
+            binding = request.to_dict()
+            # Provider choice does not affect this provider-neutral pack. All
+            # exact-work and scope fields remain bound, including logical job.
+            binding.pop('provider')
+            skill_metadata = []
+            if any(m.source == 'skills' for m in pack.materials):
+                reader = RepositoryReader(self.repository_root, limits)
+                catalog = SkillCatalog.from_file(reader)
+                identities = {reader.identity(m.ref): m for m in pack.materials if m.source == 'skills'}
+                for metadata in catalog.metadata:
+                    if reader.identity(metadata.instructions) in identities:
+                        # Recheck the catalog/instruction pair together; changed
+                        # selected metadata is material even with identical text.
+                        loaded = catalog.load((metadata.name,))[0]
+                        if loaded != identities[reader.identity(metadata.instructions)]:
+                            raise DiscoveryError('Skill changed during cache validation')
+                        skill_metadata.append(asdict(metadata))
+                if len(skill_metadata) != len(identities):
+                    raise DiscoveryError('Selected skill metadata disappeared during cache validation')
+            binding = {'request': binding, 'root': os.path.normcase(str(self.repository_root)),
+                       'limits': asdict(limits), 'roots': self.repository_roots,
+                       'skills': skill_metadata}
+            self.last_cache_result = self.cache.reuse(
+                namespace=self.cache_scope, binding=binding, fresh=pack)
+            pack = self.last_cache_result.pack
         except (DiscoveryError, OSError, KeyError) as error:
             raise ContextBuildError(str(error)) from error
         entries = tuple(ContextEntry(ref=m.ref, description=f'{m.source}; {m.retention}; evidence only',

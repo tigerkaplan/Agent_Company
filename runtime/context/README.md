@@ -1,8 +1,8 @@
 # Context Discovery Before Action
 
 CORE-08 is CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS.
-CORE-01-08 are CLOSED / COMMITTED. CORE-09 is NEXT / NOT STARTED;
-CORE-10-11 are NOT STARTED.
+CORE-01-08 are CLOSED / COMMITTED. CORE-09 is CLOSED / READY TO COMMIT after
+CORE-09R2 PASS; CORE-10-11 are NOT STARTED.
 
 `ExecutionContextBuilder` runs discovery before a provider adapter executes.
 It reads canonical governance, the current project checkpoint, Worker-resolved
@@ -118,9 +118,10 @@ content and provenance. Hard ceilings also constrain overrides. Ranking accepts
 at most 256 candidates, skill loads at most 8, knowledge candidates at most 32
 and selected knowledge at most 4. Duplicate source/range entries collapse;
 conflicting provenance fails. No index/pack/selection state is persisted, so
-fresh processes rebuild from current sources and deterministic inputs. There
-is no cache or CORE-09 implementation. Broader external-content isolation is
-reserved for CORE-11.
+fresh processes rebuild from current sources and deterministic inputs. CORE-09
+adds bounded process-local pack reuse after fresh discovery through the provider
+context builder; see `runtime/cache/README.md`. Broader external-content
+isolation is reserved for CORE-11.
 
 ## Validation
 
