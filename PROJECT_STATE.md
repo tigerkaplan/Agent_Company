@@ -17,10 +17,10 @@
 - CORE-06 Retry / Stop Policy is CLOSED / COMMITTED at `4a6e5c4` after
   CORE-06R6 PASS.
 - CORE-07 Progress Events is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3
-  PASS with no Critical, Major, or Minor findings. CORE-01-08 are CLOSED /
+  PASS with no Critical, Major, or Minor findings. CORE-01-09 are CLOSED /
   COMMITTED. CORE-08 is committed at `1a1b029` after CORE-08R3 PASS;
-  CORE-09 is CLOSED / READY TO COMMIT after CORE-09R2 PASS; CORE-10-11 are NOT
-  STARTED.
+  CORE-09 is committed at `fa7e30f` after CORE-09R2 PASS. CORE-10 is NEXT /
+  NOT STARTED; CORE-11 is NOT STARTED.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
@@ -41,9 +41,9 @@
 - Phase 8F is NOT STARTED.
 - Phase 8G and Phase 8H are NOT STARTED.
 
-## CORE-09 Context / Prompt Cache Policy - CLOSED / READY TO COMMIT
+## CORE-09 Context / Prompt Cache Policy - CLOSED / COMMITTED at `fa7e30f`
 
-Implemented uncommitted at base HEAD `ecd975c`. `runtime/cache/` provides
+Committed at `fa7e30f`. `runtime/cache/` provides
 bounded process-local, provider-neutral context-only reuse integrated into
 `ExecutionContextBuilder`. Fresh discovery precedes every hit. Exact work,
 project/root/user scope, selected skill metadata, options, policy, content, and
@@ -51,8 +51,8 @@ source provenance bind reuse. Cached and fresh packs satisfy the same canonical
 contract and must have exactly equivalent serialized bytes. Source, skill, and
 policy changes invalidate reuse; TTL, LRU, entry-count, and byte bounds apply.
 Missing/invalid sources fail closed. Authority metadata is reconstructed from
-the current request. No persisted cache,
-Phase 9C Operating Layer, commit, or CORE-10 work is introduced. See
+the current request. No persisted cache, Phase 9C Operating Layer, or CORE-10
+work is introduced. See
 `runtime/cache/README.md` for identity, outcomes, bounds, and limitations.
 
 Historical initial executor validation passed: 31/31 CORE-09
@@ -104,8 +104,10 @@ Cache content grants no approval, review, retry, continuation, budget, write,
 tool, Git, or deployment authority. R2 validation passed 43/43 CORE-09 tests,
 159/159 affected context/provider/Reviewer tests, 469/469 existing CORE
 regressions, and 1097/1097 full runtime tests; `git diff --check` passed.
-CORE-09 is CLOSED / READY TO COMMIT and remains uncommitted at `ecd975c`.
-CORE-01-08 are CLOSED / COMMITTED; CORE-10 is NOT STARTED.
+At the R2 closure checkpoint, CORE-09 was CLOSED / READY TO COMMIT and
+uncommitted at `ecd975c`. It is now CLOSED / COMMITTED at `fa7e30f`.
+CORE-01-09 are CLOSED / COMMITTED; CORE-10 is NEXT / NOT STARTED and CORE-11
+is NOT STARTED.
 
 ## Historical Post-CORE-08 Documentation / Master Context Reconciliation
 

@@ -7,8 +7,12 @@ with no Critical, Major, or Minor findings. CORE-05 Time / Execution Budget is
 CLOSED / COMMITTED at `63813b5` after CORE-05R3 PASS. CORE-06 Retry / Stop
 Policy under `retry/` is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
 CORE-07 Progress Events under `progress/` is CLOSED / COMMITTED at
-`6bcffa4` after CORE-07R3 PASS. CORE-08 is CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS. CORE-09 is NEXT / NOT STARTED.
-Its bounded append-only journals live under `jobs/.progress/`
+`6bcffa4` after CORE-07R3 PASS. CORE-08 is CLOSED / COMMITTED at `1a1b029`
+after CORE-08R3 PASS. CORE-09 is CLOSED / COMMITTED at `fa7e30f` after
+CORE-09R2 PASS. CORE-01-09 are CLOSED / COMMITTED; CORE-10 is NEXT / NOT
+STARTED and CORE-11 is NOT STARTED. CORE-09 lives in `cache/`, with
+`tests/test_context_cache.py` and integration in `providers/context.py`.
+CORE-07's bounded append-only journals live under `jobs/.progress/`
 and never grant completion, approval, retry, continuation, budget, or write authority.
 
 Phase 6F adds deterministic verification and a Reviewer Runtime after Phase 6E provider execution. Phase 6G adds persisted scoped human approval requests. Phase 6H adds explicit execution modes and staged controlled mutation. Phase 6I adds an exact local Git change-set and commit gate after reviewed completion. Phase 6J adds separately approved exact-branch push and pull-request creation gates. Phase 6M adds the bounded autonomous Scheduler, claims, leases, retry backoff, restart recovery, and audit status. Phase 8B adds one configurable state base root while preserving the repository-local `runtime/state/` default. Phase 8C adds a supervisor-neutral lifecycle wrapper, fixed process types, atomic host-process records, local singleton locks, graceful signals, and a host heartbeat. CORE-03 adds deterministic provider-neutral evaluation under `evals/`. Jobs remain under `jobs/`, execution/provider/review/mutation/Git/eval artifacts under `executions/`, approvals under `approvals/`, schedules under `schedules/`, scheduler operational state under `scheduler-runtime/`, and lifecycle metadata under `host/processes/` beneath that root. Legal job transitions still come directly from `jobs/lifecycle.yaml`.

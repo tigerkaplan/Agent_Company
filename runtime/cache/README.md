@@ -1,7 +1,7 @@
 # Context / Prompt Cache Policy
 
-CORE-09 is CLOSED / READY TO COMMIT after CORE-09R2 PASS. It remains uncommitted;
-CORE-10 is NOT STARTED.
+CORE-09 is CLOSED / COMMITTED at `fa7e30f` after CORE-09R2 PASS. CORE-10 is
+NEXT / NOT STARTED; CORE-11 is NOT STARTED.
 
 ## Integration and cacheable material
 
@@ -99,7 +99,7 @@ existing snapshot boundary; caching adds no permission to act on changed work.
 
 Run `python -m unittest runtime.tests.test_context_cache -q` for CORE-09.
 Run `python -m unittest discover -s runtime/tests -q` for full regression.
-CORE-09R2 independently passed; closure is documentation-only and uncommitted.
+CORE-09R2 independently passed before the implementation commit `fa7e30f`.
 
 2026-09-30 executor validation: 31 CORE-09 tests; 147 combined CORE-09/context/
 provider/Reviewer tests; 534 existing CORE regressions; 287 focused integration
@@ -135,5 +135,6 @@ context becomes STALE and cannot enter provider packages or change current
 authority. Identity, isolation, invalidation, TTL/LRU/bounds, and fresh
 discovery on hits remained intact. R2 validation passed 43 CORE-09 tests,
 159 affected context/provider/Reviewer tests, 469 existing CORE regressions,
-and 1097 full runtime tests; `git diff --check` passed. CORE-09 is CLOSED /
-READY TO COMMIT; CORE-10 is NOT STARTED.
+and 1097 full runtime tests; `git diff --check` passed. At R2 closure,
+CORE-09 was CLOSED / READY TO COMMIT. It was subsequently committed at
+`fa7e30f`; CORE-10 is NEXT / NOT STARTED.
