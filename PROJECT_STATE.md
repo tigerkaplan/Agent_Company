@@ -41,6 +41,32 @@
 - Phase 8F is NOT STARTED.
 - Phase 8G and Phase 8H are NOT STARTED.
 
+## SYNC-05 Consolidated Architecture / Scope Freeze - 2026-10-01
+
+Verified baseline HEAD `c31d392b30d57ccbbc4900a12a4eae1ee97721f9`, branch
+`master`, clean starting tree. ACTIVE: None. NEXT: CORE-11 External Content
+Isolation / NOT STARTED. CORE-01-10 remain CLOSED / COMMITTED; CORE-10 was
+committed at `dd72cb2a8f5ff12b87e2238ee9b2925fa7596b8e` after CORE-10R3 PASS.
+Recorded R3 results (46/46 targeted, 161/161 focused, 1153/1153 full runtime)
+and closure rerun (56/56) below are historical evidence, not tests rerun here.
+`runtime/isolation/` remains absent. Canonical agent directories with role and
+guardrail definitions confirm 10 implemented agents; the frozen V1 target is 14,
+with Finance & Pricing, Analytics, Content, and Design still planned.
+
+V1 architecture discovery and scope freeze are ACTIVE. ROADMAP owns the additive
+SYNC-04/04A/05 accepted refinements, exception criteria, unchanged V1 completion
+definition, and DOC-GOV-01 health checks. CAP-CREATIVE-01 is accepted architecture
+and non-blocking; CAP-SOC-01 retains its bounded V1 subset; CAP-DOC-01,
+summary-indexed/long-document refinements, local inference, and fine-tuning
+remain POST-V1 / LATER / REFERENCE as classified there.
+
+This sync changes existing documentation only. Runtime/context/cache READMEs
+now reflect CORE-10 CLOSED / COMMITTED and CORE-11 NEXT / NOT STARTED; dated
+review and closure evidence is preserved. No runtime implementation, agent,
+phase, checkpoint, installation, planned directory, root HANDOFF, commit, or
+push is authorized or started by this reconciliation. CORE-11 must enter the
+normal Build lifecycle through a separate task. STOP after documentation checks.
+
 ## DOC-TREE-CORE10 Post-Commit Reconciliation
 
 Verified clean starting tree at `dd72cb2` on 2026-10-01. CORE-01-10 are

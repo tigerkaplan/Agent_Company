@@ -33,7 +33,7 @@ These are the 10 canonical agent directories that physically exist now:
 
 Future planning may add four durable canonical roles: Finance & Pricing,
 Analytics, Content, and Design. They are not implemented and no directories
-exist for them. The intended target remains approximately 14 canonical agents,
+exist for them. The frozen V1 target is 14 canonical agents,
 not 20-30 micro-agents.
 
 ## File Roles

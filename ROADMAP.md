@@ -32,6 +32,86 @@
 - Phase 9: PLANNED.
 - Phase 10: PLANNED.
 
+## V1 Scope Freeze - ACTIVE
+
+Accepted on 2026-10-01 under V1-MASTER-CONTEXT-SYNC-05-CONSOLIDATED-FREEZE,
+additive to SYNC-04 and SYNC-04A. Architecture discovery is frozen until V1
+completion. Do not add V1 features, capabilities, canonical agents, phases,
+checkpoints, mandatory workflows, or implementation requirements unless a
+genuine implementation blocker, security vulnerability, data-loss risk,
+authority/governance flaw, serious architectural inconsistency, or correctness
+issue prevents V1 completion. Evaluate those exceptions through the normal
+scope/authority and review gates; an exception is not execution approval.
+
+NEW IDEA -> critical blocker / security / data loss / authority flaw /
+serious inconsistency / completion correctness issue? YES -> evaluate for V1;
+NO -> POST-V1 / LATER / REFERENCE. Later ideas must not interrupt the checkpoint
+sequence or expand the existing Canonical V1 Definition below.
+
+One ACTIVE and one NEXT checkpoint slot: ACTIVE = None; NEXT = CORE-11 External
+Content Isolation / NOT STARTED. Lifecycle remains IMPLEMENT -> INDEPENDENT
+REVIEW -> BOUNDED FIX if required -> RE-REVIEW -> CLOSURE -> COMMIT -> NEXT.
+This documentation sync authorizes no implementation and does not activate CORE-11.
+
+### Durable Instruction And Learning Ownership
+
+AGENTS.md owns concise, durable action-changing runtime instructions, not a
+historical lesson log. CONSTITUTION owns durable governance principles;
+ROADMAP owns intended direction; PROJECT_STATE owns current operational truth;
+SKILLS own methods; KNOWLEDGE / MEMORY own facts and learning; the TASK CONTRACT
+owns current scope, authority, acceptance, and limits.
+
+CORRECTION -> LESSON CANDIDATE -> EVIDENCE -> DEDUPE -> SCOPE -> VALIDATION /
+REVIEW -> PROMOTION IF JUSTIFIED. Reuse MEM-02 / MEM-02B discipline: corrections
+and PASS results do not automatically become permanent global instructions.
+
+### Closed CORE Refinements And Next Trust Boundary
+
+These accepted architectural semantics do not reopen closed checkpoints or
+claim that every conceptual event or routing input is implemented.
+
+- CORE-07 remains CLOSED: progress is observable structured state, including
+  user-facing semantics, long-running visibility, excessive silent-period
+  detection, and useful update hooks. Conceptual events include job_started,
+  step_started, tool_started, tool_completed, repair_started, gate_failed,
+  replan_requested, progress_update, step_completed, job_completed, job_failed,
+  and blocked. Progress evidence grants no authority or completion.
+- CORE-09 remains CLOSED: context size, repeated prefix/prompt reuse, cache
+  reuse/validity/invalidation, provider cache capability, repeated-context cost,
+  and large-context latency inform the architecture. Provider-specific cache
+  mechanisms stay inside adapters; the committed cache remains bounded,
+  process-local context reuse, not proof of provider-side token savings.
+- CORE-10 remains CLOSED: FAST / STANDARD / DEEP / CRITICAL are provider-neutral
+  effort profiles; provider-native settings stay inside adapters. Conceptual
+  routing inputs include complexity, risk, data sensitivity, credential proximity,
+  financial impact, external visibility, context size, expected input volume,
+  expected output length, latency requirement, time/cost budgets, provider
+  capability/performance history, and verification requirements. Eligibility
+  restrictions precede provider selection. Model-facing time signals may be
+  advisory; runtime policy enforces hard budgets/timeouts.
+- CORE-11 remains NEXT / NOT STARTED: pasted text, web pages, emails, documents,
+  retrieval, tool output, scraped data, and connector data are external/untrusted
+  content. EXTERNAL CONTENT != SYSTEM AUTHORITY != POLICY AUTHORITY != USER
+  AUTHORITY. Instruction-like content gains no authority. Use source/trust
+  metadata where practical; delimiters alone are insufficient injection defence.
+  Start only through the normal Build checkpoint lifecycle, not this sync.
+
+### Phase 9A And Retrieval Efficiency
+
+Where telemetry permits, distinguish request_latency, TTFT/time_to_first_token,
+ITL/inter_token_latency, generation_duration, input_tokens, output_tokens,
+context_tokens, provider_calls, retries, replans, tool failures, total cost,
+cost per run, and cost per completed task. COST PER COMPLETED TASK remains the
+primary economic metric. Diagnose start/prefill, streaming/decode, and total
+generation latency separately; "model is slow" is insufficient. Low-level
+inference-server optimization is not a V1 requirement.
+
+Selective retrieval serves answer quality and runtime efficiency:
+large corpus -> deterministic narrowing -> retrieval -> semantic relevance ->
+rerank -> task-specific context pack -> preserve important evidence verbatim
+when required. Consider relevance, evidence quality, token burden, latency,
+and cost. Reuse existing memory/RAG ownership; do not create a RAG Agent.
+
 ## Completed / Committed
 
 ### Phase 1-5: Core Architecture
@@ -350,8 +430,16 @@ The current canonical agent count is 10. V1 targets 14 by later adding:
 13. Content
 14. Design
 
-SEO, AEO, GEO, JEV, Memory, SAGE, Sentinel, Chimera, Lead Finder, Firecrawl,
-and DataForSEO are not canonical agents.
+The complete V1 target is Project Manager, Software, Research, Knowledge
+Manager, Reviewer, Sales, Marketing, Operations, Communications, Social Media,
+Finance & Pricing, Analytics, Content, and Design. Agents 11-14 remain PLANNED
+until repository evidence proves implementation.
+
+Legal, SEO, AEO, GEO, QA, Security, Lead Finder, Trend Research, Community
+Management, Repurposing, Video Generation, Remotion, Higgsfield, RAG, Document
+Intelligence, JEV, Memory, SAGE, Sentinel, Chimera, Firecrawl, and DataForSEO
+are not separate canonical agents. They belong to skills, workflows, tools,
+shared/runtime capabilities, domain profiles, or Project Packs.
 
 ### E. Capability Expansion
 
@@ -385,7 +473,7 @@ Content, Design, and Analytics remain planned agents within the 14-agent V1
 target, not currently implemented roles.
 
 Planned content lifecycle:
-IDEA -> RESEARCH -> DRAFT -> REVIEW -> APPROVED -> SCHEDULED -> PUBLISHED -> MEASURED -> REPURPOSE.
+IDEA -> RESEARCH -> DRAFT -> PREVIEW -> REVIEW -> REVISION -> APPROVED -> FINAL RENDER -> SCHEDULED -> PUBLISHED -> MEASURED -> REPURPOSE.
 State transitions retain provenance, versions, approval scope, and publication
 and measurement evidence. A lifecycle label or schedule is never execution
 authority; changed content must satisfy the applicable review/approval gates.
@@ -412,16 +500,95 @@ Existing `agents/social-media/`, `skills/social-media/`, and
 `orchestrator/workflows/social-media.yaml` remain CURRENT checkpoint artifacts,
 not evidence that CAP-SOC-01 is implemented.
 
-#### Creative Media Generation - Planned Capability / Workflow / Tool
+#### CAP-CREATIVE-01 - Creative Media Production
 
-Creative Media Generation is capability, workflow, and tool scope, not a new
-canonical agent. Content and Design responsibilities remain distinct from
-Social Media coordination and Reviewer gates. Higgsfield is an optional,
-non-blocking tool/provider integration, never a required core dependency.
+ACCEPTED ARCHITECTURE / PLANNED / NON-BLOCKING FOR V1. Broadens the earlier
+CREATIVE_MEDIA_GENERATION concept; no new agent, phase, or V1 completion blocker.
+Content and Design responsibilities remain distinct from Social Media
+coordination and Reviewer gates. Creative Media remains vendor neutral.
+
+Two lanes: deterministic media (Remotion, real screen capture, Playwright/browser
+capture, charts, tables, cards, subtitles, coded motion graphics, timeline
+assembly, render/export) and generative media (Higgsfield, image/video models,
+synthetic scenes, cinematic assets, future generative adapters).
+Text/data/UI-heavy visuals prefer real capture or deterministic rendering;
+synthetic/cinematic visuals may use generation. GitHub pages use browser capture,
+terminals use real capture, charts/tables/subtitles use deterministic rendering.
+Remotion is an optional deterministic tool/runtime capability; Playwright capture
+is an optional browser/media tool; Higgsfield is an optional generative
+connector/tool/adapter. None is an agent, Reviewer, policy authority, or core
+provider architecture.
+
+Accepted target workflow: owner goal -> research/reference if needed ->
+script/hook -> creative brief -> storyboard/shot plan -> deterministic vs
+generative asset selection -> capture/generation -> assembly -> preview ->
+review -> revision -> final render -> subtitles/platform adaptation -> approval
+-> publish -> analytics -> learn. Production gate: storyboard/composition ->
+still preview -> review -> PASS -> full render. Applicable approval gates still
+apply; review PASS never grants publication authority.
+
+Shared skill pattern: transcript -> glossary normalization -> subtitle
+segmentation -> review. Reference analysis may examine hook, pacing, timing,
+editing grammar, visual structure, transcript, and transitions.
+REFERENCE -> LEARN PATTERN; REFERENCE != COPY.
+These target patterns are not new mandatory V1 workflows.
+
+CAP-SOC-01 remains bounded to lifecycle, approval/scheduling, cross-platform
+repurposing, basic community triage, Human Handoff, and performance -> memory,
+with basic Phase 9B HQ representation. Complete creative automation, advanced
+Remotion automation, autonomous DM management, advanced influencer discovery,
+advanced attribution, every publishing connector, advanced experiment engine,
+and a full generative-media pipeline are not V1 blockers.
+
 Vendor/third-party performance claims must retain source, date, conditions,
 and verification status. Marketing claims are not measured Agent Company
 performance; adoption or comparative claims require relevant reproducible
 local evidence, with uncertainty and limitations disclosed.
+
+#### CAP-DOC-01 - Document Intelligence & Structured Summarization
+
+ACCEPTED ARCHITECTURE / POST-V1 / LATER IMPLEMENTATION / NOT A V1 BLOCKER.
+Legal summarization is Document Intelligence + Legal Domain Profile, not a
+Legal Agent. Potential scope: ingestion, normalization, metadata/structured
+extraction, structured summarization, citation grounding, document comparison,
+long-document processing, summary-indexed retrieval, evaluation, review/escalation.
+
+General principles may reuse existing V1 systems: define extraction fields
+before generation, use structured output where appropriate, preserve provenance
+and evidence/citation links, and strengthen review for high-stakes work.
+Missing/evidence states include not_found, not_specified, unknown, conflicting.
+MISSING EVIDENCE != PERMISSION TO INVENT.
+
+Optional future MEM-02/RAG pattern: source -> raw document + metadata + document
+summary + section summaries + retrieval index; query -> summary-level shortlist
+-> document/section retrieval -> semantic rerank -> context pack.
+Future long-document pattern: document -> structure/sections -> chunk ->
+structured extraction -> preserve citations -> merge -> conflict check -> synthesis.
+Both are POST-V1 refinements, not new V1 deliverables.
+
+Consequential legal/financial/compliance work follows AI extraction ->
+evidence/citation verification -> Reviewer -> human expert where consequential.
+AI summaries do not become legal authority. Reuse GOV-01 / GOV-02 / Reviewer.
+
+### Optional Future Target Paths - PLANNED ONLY
+
+No paths below are implementation evidence; do not create empty future folders.
+Creative tool targets: `tools/creative-media/remotion/`,
+`tools/creative-media/playwright-capture/`, `tools/creative-media/higgsfield/`.
+Skill targets: `skills/content/transcription-normalization/`,
+`skills/content/subtitle-segmentation/`, `skills/design/motion-graphics/`,
+`skills/design/storyboard/`, `skills/social-media/reference-analysis/`,
+`skills/social-media/reel-production/`; `skills/document-intelligence/` with
+`structured-extraction/`, `summarization/`, `citation-grounding/`,
+`metadata-extraction/`, `document-comparison/`.
+Workflow targets: `workflows/creative/` with `video-production/`,
+`reference-analysis/`, `preview-review/`, `render-revision/`;
+`workflows/document-intelligence/` with `single-document-summary/`,
+`long-document-summary/`, `batch-document-review/`, `summary-indexed-retrieval/`.
+These are conceptual path labels only; approved implementation must reconcile
+workflow placement with the existing `orchestrator/workflows/` convention.
+Future document runtime ownership: `runtime/documents/` with `ingestion/`,
+`normalization/`, `chunking/`, `indexing/`.
 
 ### F. Phase 9
 
@@ -525,10 +692,28 @@ and absent until approved implementation supplies real content. Do not create
 empty target folders, duplicate agents/capabilities, or rewrite historical
 review evidence to imply current implementation.
 
+### DOC-GOV-01 Freeze Health Checks
+
+Verify freeze integrity; no unplanned agents; 10 current vs 14 target remains
+explicit; later ideas do not interrupt checkpoints; AGENTS stays concise and
+action-changing; lessons follow MEM promotion; CORE-10 stays provider neutral;
+CORE-11 preserves external-content trust boundaries; Creative Media remains
+capability/tool architecture and Remotion/Playwright/Higgsfield stay tools;
+CAP-CREATIVE-01 stays non-blocking; CAP-SOC-01 stays bounded; CAP-DOC-01,
+local inference, and fine-tuning stay POST-V1; planned folders stay absent.
+
 ## Later / Important — Not V1 Blockers
 
 - CAP-SOC-01 advanced DM autonomy, influencer automation, advanced attribution,
   complete platform coverage, and full autonomous community management.
+- CAP-CREATIVE-01 implementation and complete creative automation: non-blocking.
+- CAP-DOC-01, summary-indexed retrieval, and long-document refinements: POST-V1.
+- Local inference: quantization, KV-cache optimization, PagedAttention,
+  vLLM optimization, continuous batching, speculative decoding, GPU tuning,
+  and self-hosted inference optimization are POST-V1 / REFERENCE, not blockers.
+- Fine-tuning is POST-V1 / LATER; prioritize structured prompting, schemas,
+  retrieval, context selection, evals, memory, and provider routing first.
+
 - Persistent Agent Mailbox.
 - Git Worktree Isolation.
 - Advanced Agent Teams / parallel execution.

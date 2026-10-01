@@ -136,17 +136,29 @@
   and composite scoring within policy; details owned by ROADMAP.
 - [ ] Phase 9A: decision/JEV quality, confidence, escalation, cost, and latency metrics.
 - [ ] GOV-01: preserve execution/eval/review/approval/task-completion separation.
-- [ ] Creative Media Generation: capability/workflow/tool integration, no new agent;
-  Higgsfield optional/non-blocking; verify third-party performance claims.
 - [ ] CAP-SOC-01 One-Person Social Media Team / Social Media Operating System:
   lifecycle, approval/scheduling, repurposing, basic community triage, human
   handoff, performance -> memory, and basic Phase 9B Social Media HQ.
   Existing Social Media agent owns the domain; roadmap defines role boundaries.
 
+- [x] SYNC-05 documentation reconciliation: V1 scope freeze ACTIVE; CORE-10
+  CLOSED / COMMITTED; ACTIVE None; CORE-11 NEXT / NOT STARTED. Preserve
+  SYNC-04/04A scope and use ROADMAP's DOC-GOV-01 freeze health checks.
+
 ## Later / Important — Not V1 Blockers
 
 - [ ] CAP-SOC-01 advanced DM autonomy, influencer automation, advanced attribution,
   complete platform coverage, and full autonomous community management.
+- [ ] CAP-CREATIVE-01 Creative Media Production: accepted deterministic/generative
+  capability/tool architecture, non-blocking; no new agent/phase. Optional
+  Remotion, Playwright capture, Higgsfield; preview/review before full render.
+- [ ] CAP-DOC-01 Document Intelligence: accepted POST-V1 architecture, no Legal
+  Agent; summary-indexed retrieval and long-document processing remain POST-V1.
+- [ ] Local inference optimization (quantization, KV cache, PagedAttention, vLLM,
+  batching, speculative decoding, GPU/self-hosted tuning): POST-V1 / REFERENCE.
+- [ ] Fine-tuning: POST-V1 / LATER, after prompting/schema/retrieval/context/eval/
+  memory/routing foundations. No new V1 blocker or planned empty folders.
+
 - [ ] Persistent Agent Mailbox.
 - [ ] Git Worktree Isolation.
 - [ ] Advanced Agent Teams / parallel execution.

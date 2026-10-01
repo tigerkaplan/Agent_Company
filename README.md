@@ -208,6 +208,22 @@ completeness. The Current Repository Structure above describes only physical
 paths; this Future / Target section is the only place where absent paths are
 presented as planned structure.
 
+## V1 Scope Freeze - ACTIVE
+
+Architecture discovery is frozen under SYNC-05 (2026-10-01), additive to SYNC-04
+and SYNC-04A. The exception gate and accepted refinements live in
+[ROADMAP.md](ROADMAP.md#v1-scope-freeze---active). New ideas default to POST-V1 /
+LATER / REFERENCE; only critical implementation, security, data-loss, authority,
+architectural-consistency, or completion-correctness blockers may be evaluated
+for V1. They do not interrupt the checkpoint sequence or grant implementation
+authority. ACTIVE: None; NEXT: CORE-11 / NOT STARTED.
+
+Current canonical agents: 10; frozen V1 target: 14. CAP-CREATIVE-01 is accepted
+non-blocking capability/tool architecture; CAP-DOC-01, summary-indexed retrieval,
+long-document refinements, local inference, and fine-tuning remain POST-V1.
+Optional future creative/document paths are PLANNED ONLY, listed in ROADMAP's
+Optional Future Target Paths section; none is a CURRENT physical-tree entry.
+
 ## Canonical V1 Target
 
 V1 includes CORE-01 through CORE-11; GOV-01 and GOV-02; ORCH-01 Graph Execution
