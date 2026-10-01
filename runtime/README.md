@@ -9,8 +9,11 @@ Policy under `retry/` is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
 CORE-07 Progress Events under `progress/` is CLOSED / COMMITTED at
 `6bcffa4` after CORE-07R3 PASS. CORE-08 is CLOSED / COMMITTED at `1a1b029`
 after CORE-08R3 PASS. CORE-09 is CLOSED / COMMITTED at `fa7e30f` after
-CORE-09R2 PASS. CORE-01-09 are CLOSED / COMMITTED; CORE-10 is NEXT / NOT
-STARTED and CORE-11 is NOT STARTED. CORE-09 lives in `cache/`, with
+CORE-09R2 PASS. CORE-01-09 are CLOSED / COMMITTED; CORE-10 is CLOSED /
+READY TO COMMIT after CORE-10R3 PASS; uncommitted and CORE-11 is NOT STARTED.
+CORE-10 lives in `compute_policy/`, with `tests/test_compute_policy.py` and
+provider executor/router/package integration. See `compute_policy/README.md`.
+CORE-09 lives in `cache/`, with
 `tests/test_context_cache.py` and integration in `providers/context.py`.
 CORE-07's bounded append-only journals live under `jobs/.progress/`
 and never grant completion, approval, retry, continuation, budget, or write authority.

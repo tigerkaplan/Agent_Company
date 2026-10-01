@@ -3,6 +3,10 @@
 from __future__ import annotations
 
 from typing import Callable
+from dataclasses import replace
+
+from runtime.compute_policy import ComputeError, ComputeInputs, ComputePolicy, ProviderLimits, binding
+from runtime.compute_policy.canonical import bind_project_context
 
 from runtime.actions.runtime import ControlledWriteRuntime
 from runtime.core.jobs import utc_now
@@ -27,19 +31,54 @@ class ProviderExecutor:
         *,
         controlled_write_runtime: ControlledWriteRuntime | None = None,
         clock: Callable[[], str] = utc_now,
+        compute_policy: ComputePolicy | None = None,
+        compute_inputs: ComputeInputs | None = None,
     ) -> None:
         self.router = router
         self.context_builder = context_builder
         self.artifact_store = artifact_store
         self.clock = clock
         self.controlled_write_runtime = controlled_write_runtime
+        # Only local runtime composition supplies these contracts. No provider
+        # output or task metadata is promoted into routing policy.
+        self.compute_policy = compute_policy if compute_policy is not None else ComputePolicy(
+            tuple(ProviderLimits(p) for p in router.configuration.provider_ids))
+        self.compute_inputs = compute_inputs
 
-    def execute(self, request: ExecutionRequest) -> ExecutionResult:
+    def execute(self, request: ExecutionRequest, *, compute_inputs: ComputeInputs | None = None) -> ExecutionResult:
         started_at = self.clock()
         selection: ProviderSelection | None = None
+        compute_evidence = ()
         try:
+            if type(self.compute_policy) is not ComputePolicy:
+                raise ComputeError('Unsupported compute policy')
+            inputs = compute_inputs if compute_inputs is not None else self.compute_inputs
+            original_binding = binding(request)
+            preliminary = self.compute_policy.decide(request, inputs)
+            if any(p.provider_id not in self.router.configuration.provider_ids
+                   for p in self.compute_policy.providers):
+                raise ComputeError('Compute policy references an unconfigured provider')
+            if preliminary.status != 'READY':
+                raise ComputeError('No provider satisfies compute restrictions or budget')
+            package = self.context_builder.build(request)
+            if binding(request) != original_binding:
+                raise ComputeError('Compute request changed during context discovery')
+            if inputs is None:
+                inputs = ComputeInputs(binding(request))
+            inputs = bind_project_context(inputs, self.context_builder.repository_root,
+                                          package.render())
+            decision = self.compute_policy.decide(request, inputs)
+            compute_evidence = ({
+                'kind': 'observation', 'status': 'observed',
+                'summary': f'Compute {decision.version}: {decision.status}/{decision.profile}; '
+                           f'binding={decision.request_binding}; evidence={decision.evidence_digest}; '
+                           + '; '.join(decision.reasons) + '; grants no authority',
+            },)
+            if decision.status != 'READY':
+                raise ComputeError('No provider satisfies compute restrictions or budget')
             selection = self.router.resolve(
-                request.capability, request.provider, request.execution_mode
+                request.capability, request.provider, request.execution_mode,
+                eligible_providers=decision.eligible_providers,
             )
             if selection.actual_provider is None:
                 return ExecutionResult(
@@ -75,7 +114,7 @@ class ProviderExecutor:
                     execution_mode=request.execution_mode,
                     dry_run=request.dry_run,
                 )
-            package = self.context_builder.build(request)
+            package = replace(package, compute_decision=decision)
             mutation_ref = None
             adapter = self.router.adapters[selection.actual_provider]
             if request.execution_mode == "CONTROLLED_WRITE":
@@ -150,7 +189,7 @@ class ProviderExecutor:
                             "summary": "Bounded provider process output was persisted",
                             "ref": artifact_ref,
                         },
-                    ),
+                    ) + compute_evidence,
                     artifacts=output_refs,
                     provider=selection.actual_provider,
                     started_at=started_at,
@@ -194,7 +233,7 @@ class ProviderExecutor:
                         "summary": "Bounded failed provider process output was persisted",
                         "ref": artifact_ref,
                     },
-                ),
+                ) + compute_evidence,
                 artifacts=output_refs,
                 next_actions=(
                     {
@@ -218,6 +257,17 @@ class ProviderExecutor:
                 fallback_reason=selection.fallback_reason,
                 execution_mode=request.execution_mode,
                 dry_run=request.dry_run,
+            )
+        except ComputeError:
+            return ExecutionResult(
+                execution_id=request.execution_id, job_id=request.job_id,
+                status='blocked', output_refs=(), summary=None, error=None,
+                evidence=compute_evidence,
+                blockers=({'code': 'compute_policy_blocked',
+                           'message': 'Canonical compute inputs, eligibility, or budgets require resolution',
+                           'retryable': False, 'requires_human': False},),
+                provider=None, started_at=started_at, completed_at=self.clock(),
+                execution_mode=request.execution_mode, dry_run=request.dry_run,
             )
         except ContextDiscoveryBlocked as blocked:
             return ExecutionResult(

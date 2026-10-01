@@ -854,6 +854,7 @@ class JobRuntime:
             "continuation",
             "continuation_parent_job_id",
             "execution_budget",
+            "compute_requirements",
             "retry_policy",
         )
         payload = {
@@ -1037,6 +1038,7 @@ class JobRuntime:
                     "execution_scope",
                     "dry_run",
                     "execution_budget",
+                    "compute_requirements",
                     "retry_policy",
                 )
                 payload = {
@@ -1764,6 +1766,7 @@ class JobRuntime:
                     "continuation_plan",
                     "continuation_parent_job_id",
                     "execution_budget",
+                    "compute_requirements",
                     "retry_policy",
                 )
                 if any(
@@ -1867,6 +1870,7 @@ class JobRuntime:
                 "dry_run",
                 "continuation_plan",
                 "execution_budget",
+                "compute_requirements",
                 "retry_policy",
             )
             if any(

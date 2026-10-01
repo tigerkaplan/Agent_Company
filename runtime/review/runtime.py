@@ -7,6 +7,9 @@ from typing import Any, Callable
 from uuid import uuid4
 
 from runtime.core.jobs import utc_now
+from runtime.compute_policy import ComputePolicy
+from runtime.compute_policy.canonical import bind_project_context, canonical_inputs
+from runtime.compute_policy.policy import ComputeError
 from runtime.execution.models import ExecutionRequest, ExecutionResult
 from runtime.providers.adapters import bound_text, sanitize_provider_text
 from runtime.review.context import ReviewContextBuilder
@@ -39,6 +42,8 @@ class ReviewerRuntime:
         *,
         clock: Callable[[], str] = utc_now,
         id_factory: Callable[[], str] = new_review_id,
+        compute_policy: ComputePolicy | None = None,
+        repository_root=None,
     ) -> None:
         self.verifier = verifier
         self.context_builder = context_builder
@@ -46,12 +51,15 @@ class ReviewerRuntime:
         self.store = store
         self.clock = clock
         self.id_factory = id_factory
+        self.compute_policy = compute_policy
+        self.repository_root = repository_root
 
     def run(
         self,
         job: dict[str, Any],
         request: ExecutionRequest,
         execution_result: ExecutionResult,
+        *, compute_budget_decision=None,
     ) -> ReviewRun:
         review_id = self.id_factory()
         verification = self.verifier.verify(job, request, execution_result)
@@ -59,6 +67,14 @@ class ReviewerRuntime:
             package = self.context_builder.build(
                 review_id, job, request, execution_result, verification
             )
+            if self.compute_policy is not None:
+                if job.get('execution_budget') is not None and compute_budget_decision is None:
+                    raise ComputeError('Reviewer compute budget snapshot unavailable')
+                inputs = canonical_inputs(request, job, compute_budget_decision)
+                inputs = bind_project_context(inputs, self.repository_root, package.render())
+                decision = self.compute_policy.decide(request, inputs)
+                package = replace(package, eligible_providers=decision.eligible_providers,
+                                  compute_decision=decision)
         except Exception as error:
             raise ReviewRuntimeError(
                 "Review context could not be built from persisted execution evidence"

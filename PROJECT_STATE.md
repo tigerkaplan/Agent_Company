@@ -19,8 +19,8 @@
 - CORE-07 Progress Events is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3
   PASS with no Critical, Major, or Minor findings. CORE-01-09 are CLOSED /
   COMMITTED. CORE-08 is committed at `1a1b029` after CORE-08R3 PASS;
-  CORE-09 is committed at `fa7e30f` after CORE-09R2 PASS. CORE-10 is NEXT /
-  NOT STARTED; CORE-11 is NOT STARTED.
+  CORE-09 is committed at `fa7e30f` after CORE-09R2 PASS. CORE-10 is
+  CLOSED / READY TO COMMIT after CORE-10R3 PASS; uncommitted; CORE-11 is NOT STARTED.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
@@ -40,6 +40,54 @@
   not yet been created.
 - Phase 8F is NOT STARTED.
 - Phase 8G and Phase 8H are NOT STARTED.
+
+## CORE-10 Compute / Effort Policy - CLOSED / READY TO COMMIT
+
+Implemented against `3e71adc`, without committing. `runtime/compute_policy/`
+provides deterministic FAST / STANDARD / DEEP / CRITICAL effort selection,
+repository/context-bound exact request identity, bounded trusted routing inputs,
+security-first provider eligibility, explicit budget blocking, and replayable
+reason/evidence output.
+ProviderExecutor evaluates before context/provider execution and passes the
+eligible set through existing capability, mode, weight and fallback routing.
+The decision is guidance and observation evidence, never execution authority.
+Codex and Claude enforce native effort controls; unsupported adapters are
+rejected. No DEC-01/JEV or CORE-11 work is included.
+See `runtime/compute_policy/README.md` for defaults, trust boundaries and limits.
+CORE-10R3 final decision on 2026-10-01: PASS — READY FOR CORE-10 CLOSURE.
+The independent reviewer reported no Critical, Major, or Minor findings;
+repository identity, documentation, and other CORE-10 guarantees all passed.
+R3 recorded 46/46 CORE-10 tests, independent filesystem probes, 161/161 focused
+regressions, and 1153/1153 full runtime tests; `git diff --check` passed.
+The separate reviewer role used the same provider and made no modifications
+or commits. Source: R3 final review in session
+`01a0f785-5cef-7f21-93db-7c2ff85b24fc` at 2026-10-01 16:48:42 UTC.
+
+CORE-10C closure reconciliation: CLOSED / READY TO COMMIT; implementation and
+closure documentation remain uncommitted against HEAD `3e71adc`.
+Closure-time validation passed `python -m unittest runtime.tests.test_compute_policy -q`:
+56/56 tests (46 CORE-10 tests plus 10 imported adapter tests), and
+`git diff --check`. Status/diff inspection confirmed documentation-only closure
+edits, unchanged runtime/schema source hashes, and no `runtime/isolation/`.
+CORE-01-09 remain CLOSED / COMMITTED; CORE-11 remains NOT STARTED.
+DEC-01/JEV and runtime behavior are untouched by this reconciliation.
+
+Historical initial executor validation on 2026-10-01 passed: 37/37 CORE-10 targeted tests;
+245/245 focused compute/result-contract/provider/Worker/Reviewer/cache/budget
+tests; and 1134/1134 full discovered runtime tests, including all 1097 existing
+tests. The final full suite was partitioned by complete modules into groups of
+368, 368 and 367 tests, followed by the 31 host-process tests in isolation.
+The runner asserted complete, non-overlapping module coverage. `git diff
+--check` passed; HEAD remains `3e71adc` and no commit was made.
+
+An earlier sequential full run found one evidence-order regression: existing
+provider-output evidence must remain first. Compute observations now append to
+that evidence, and the affected result-contract tests and final full suite pass.
+An earlier interrupted attempt also emitted Windows `WinError 5` in an existing
+host-process concurrency test; both isolated host-suite reruns passed. No host
+implementation was changed. These historical executor checks were not independent review or closure;
+the R3 PASS and CORE-10C closure above supersede that checkpoint.
+CORE-11 remains NOT STARTED.
 
 ## CORE-09 Context / Prompt Cache Policy - CLOSED / COMMITTED at `fa7e30f`
 
@@ -106,8 +154,8 @@ tool, Git, or deployment authority. R2 validation passed 43/43 CORE-09 tests,
 regressions, and 1097/1097 full runtime tests; `git diff --check` passed.
 At the R2 closure checkpoint, CORE-09 was CLOSED / READY TO COMMIT and
 uncommitted at `ecd975c`. It is now CLOSED / COMMITTED at `fa7e30f`.
-CORE-01-09 are CLOSED / COMMITTED; CORE-10 is NEXT / NOT STARTED and CORE-11
-is NOT STARTED.
+At that committed checkpoint, CORE-01-09 were CLOSED / COMMITTED; CORE-10
+was NEXT / NOT STARTED and CORE-11 was NOT STARTED.
 
 ## Historical Post-CORE-08 Documentation / Master Context Reconciliation
 

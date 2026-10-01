@@ -51,7 +51,8 @@ Policy is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
 CORE-07 is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS;
 CORE-08 is CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS. CORE-09 is
 CLOSED / COMMITTED at `fa7e30f` after CORE-09R2 PASS. CORE-01-09 are CLOSED /
-COMMITTED; CORE-10 is NEXT / NOT STARTED and CORE-11 is NOT STARTED. The
+COMMITTED; CORE-10 is CLOSED / READY TO COMMIT after CORE-10R3 PASS; uncommitted,
+and CORE-11 is NOT STARTED. The
 aggregate serialized-result byte ceiling remains FUTURE HARDENING / NON-BLOCKING.
 
 The runtime remains local-first. Phase 8D packages the canonical Phase 8C
@@ -147,13 +148,18 @@ reusing stale material. TTL, LRU, and storage bounds apply; fresh discovery
 still runs on hits, and cached context grants no authority.
 See `runtime/cache/README.md` for validation, isolation, and performance limits.
 
+CORE-10 CURRENT: `runtime/compute_policy/` contains `__init__.py`, `policy.py`,
+`canonical.py`, and `README.md`, with `runtime/tests/test_compute_policy.py`. Provider executor,
+router, and package integration apply effort and eligibility before execution.
+This importable path replaces the planned `runtime/compute-policy/` label.
+See `runtime/compute_policy/README.md` for policy defaults and authority limits.
+
 ## Future / Target Repository Structure
 
 The proposed paths in the list below are PLANNED and absent from the current
 physical tree. This list records structural ownership only; implementation
 checkpoints create paths when real content exists.
 
-- CORE-10: `runtime/compute-policy/`.
 - CORE-11: `runtime/isolation/`.
 - GOV-01: `governance/task-contract/`, `governance/delegation/`,
   `governance/stop-conditions/`, and `governance/completion/`.

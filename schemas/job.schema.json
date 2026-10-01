@@ -346,6 +346,22 @@
     "execution_budget": {
       "$ref": "#/$defs/execution_budget_binding"
     },
+    "compute_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "complexity": {"enum": ["unknown", "simple", "moderate", "complex"]},
+        "data_sensitivity": {"enum": ["unknown", "public", "internal", "confidential", "restricted"]},
+        "file_classification": {"enum": ["unknown", "public", "internal", "confidential", "restricted"]},
+        "credential_proximity": {"enum": ["unknown", "none", "near", "direct"]},
+        "external_visibility": {"enum": ["unknown", "internal", "external", "public"]},
+        "financial_impact": {"enum": ["unknown", "none", "low", "high"]},
+        "verification": {"enum": ["basic", "standard", "strong", "independent"]},
+        "reliability": {"enum": ["unknown", "reliable", "degraded", "poor"]},
+        "time_budget_seconds": {"type": "integer", "minimum": 0, "maximum": 1000000000},
+        "cost_budget_units": {"type": "integer", "minimum": 0, "maximum": 1000000000}
+      }
+    },
     "retry_policy": {
       "$ref": "#/$defs/retry_policy_binding"
     },

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from runtime.compute_policy import ComputePolicy
 
 from runtime.actions.store import FileMutationArtifactStore
 from runtime.git.remote_store import FileRemoteGitArtifactStore
@@ -20,6 +21,7 @@ def build_reviewer_runtime(
     repository_root: Path,
     execution_root: Path,
     router: ProviderRouter,
+    compute_policy: ComputePolicy | None = None,
 ) -> ReviewerRuntime:
     execution_store = FileExecutionStore(execution_root)
     provider_store = FileProviderArtifactStore(execution_root / "provider-output")
@@ -35,4 +37,6 @@ def build_reviewer_runtime(
         ),
         reviewer=ProviderBackedReviewer(router),
         store=FileReviewStore(execution_root / "reviews"),
+        compute_policy=compute_policy,
+        repository_root=repository_root,
     )

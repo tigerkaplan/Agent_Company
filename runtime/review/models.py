@@ -76,6 +76,8 @@ class ReviewPackage:
     verification: VerificationResult
     context: tuple[ContextEntry, ...]
     evidence: tuple[ReviewEvidence, ...]
+    eligible_providers: tuple[str, ...] | None = None
+    compute_decision: object | None = None
 
     @property
     def available_evidence_refs(self) -> tuple[dict[str, Any], ...]:

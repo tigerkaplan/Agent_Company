@@ -14,12 +14,15 @@ from runtime.budget.runtime import ExecutionBudgetRuntime
 from runtime.continuation.models import ContinuationContractError, ContinuationPolicy
 from runtime.continuation.runtime import ContinuationRuntime
 from runtime.core.jobs import JobRuntime, RuntimeError, utc_now
+from runtime.compute_policy.canonical import canonical_inputs
+from runtime.compute_policy.policy import ComputeError
 from runtime.core.references import CanonicalReferenceResolver, ReferenceResolutionError
 from runtime.execution.failures import AUTHORITY_FAILURES, INTEGRITY_FAILURES, POLICY_FAILURES
 from runtime.execution.models import ExecutionContractError, ExecutionRequest, ExecutionResult
 from runtime.executors.base import Executor
 from runtime.progress.models import ProgressError
 from runtime.progress.runtime import execution_observer
+from runtime.providers.executor import ProviderExecutor
 from runtime.review.runtime import ReviewerRuntime, ReviewRuntimeError
 from runtime.retry.store import RetryStoreError
 from runtime.storage.execution_store import ExecutionStoreError, FileExecutionStore
@@ -199,6 +202,7 @@ class Worker:
         execution_id = self.id_factory()
         budget_binding: Any | None = None
         budget_decision: BudgetDecision | None = None
+        admission_budget_decision: BudgetDecision | None = None
         try:
             job = self.runtime.validate_execution_authority(
                 job["job_id"], self.worker_id
@@ -215,6 +219,7 @@ class Worker:
                 )
                 if budget_decision.status != "ALLOW":
                     return self._record_budget_denial(job, budget_decision)
+                admission_budget_decision = budget_decision
             context_refs = self.resolver.resolve(job)
             request = self._build_request(job, execution_id, context_refs)
             self.runtime.retry_runtime.admit_execution(job, request)
@@ -244,7 +249,7 @@ class Worker:
         try:
             self.runtime.progress.execution_started(job, execution_id)
             with execution_observer(self.runtime.progress, job, execution_id):
-                result = self._execute_safely(request)
+                result = self._execute_safely(request, job=job, budget_decision=budget_decision)
         except ProgressError:
             if budget_binding is not None:
                 self.budget_runtime.finalize_execution(budget_binding, execution_id=execution_id)
@@ -264,7 +269,8 @@ class Worker:
                 budget_binding, execution_id=execution_id
             )
         return self._record_result(
-            job, request, result, budget_decision=budget_decision
+            job, request, result, budget_decision=budget_decision,
+            compute_budget_decision=admission_budget_decision,
         )
 
     def _reserved_outcome(self, job: dict[str, Any], reservation: dict[str, Any]) -> WorkerRunOutcome:
@@ -467,7 +473,7 @@ class Worker:
             )
         return recovered
 
-    def _execute_safely(self, request: ExecutionRequest) -> ExecutionResult:
+    def _execute_safely(self, request: ExecutionRequest, *, job=None, budget_decision=None) -> ExecutionResult:
         supported = getattr(self.executor, "supported_execution_modes", {"READ_ONLY"})
         if request.execution_mode not in supported:
             return self._runtime_failure_result(
@@ -476,7 +482,11 @@ class Worker:
                 message="Selected executor does not support the requested execution mode",
             )
         try:
-            result = self.executor.execute(request)
+            if isinstance(self.executor, ProviderExecutor):
+                inputs = canonical_inputs(request, job, budget_decision)
+                result = self.executor.execute(request, compute_inputs=inputs)
+            else:
+                result = self.executor.execute(request)
             if not isinstance(result, ExecutionResult):
                 raise ExecutionContractError(
                     "Executor did not return the canonical ExecutionResult contract"
@@ -597,6 +607,7 @@ class Worker:
         *,
         persist_result: bool = True,
         budget_decision: BudgetDecision | None = None,
+        compute_budget_decision: BudgetDecision | None = None,
     ) -> WorkerRunOutcome:
         serialized_result = result.to_dict()
         try:
@@ -664,7 +675,11 @@ class Worker:
                     if request is None:
                         raise RuntimeError("Review-required execution has no request")
                     try:
-                        review_run = self.reviewer_runtime.run(updated, request, result)
+                        if isinstance(self.executor, ProviderExecutor):
+                            review_run = self.reviewer_runtime.run(
+                                updated, request, result, compute_budget_decision=compute_budget_decision)
+                        else:
+                            review_run = self.reviewer_runtime.run(updated, request, result)
                     except ReviewRuntimeError as error:
                         return WorkerRunOutcome(
                             status="worker_error",

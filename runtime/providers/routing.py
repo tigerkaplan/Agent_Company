@@ -26,12 +26,23 @@ class ProviderRouter:
         capability: str,
         requested_provider: str | None,
         execution_mode: str = "READ_ONLY",
+        *,
+        eligible_providers: tuple[str, ...] | None = None,
     ) -> ProviderSelection:
+        if eligible_providers is not None and (
+            type(eligible_providers) is not tuple
+            or len(eligible_providers) > 32
+            or any(type(p) is not str or p not in self.configuration.provider_ids
+                   for p in eligible_providers)
+            or len(set(eligible_providers)) != len(eligible_providers)
+        ):
+            raise ProviderConfigError('Invalid compute eligibility filter')
         eligible = [
             provider_id
             for provider_id in self.configuration.provider_ids
             if self.configuration.eligible(provider_id, capability)
             and self.configuration.supports_execution_mode(provider_id, execution_mode)
+            and (eligible_providers is None or provider_id in eligible_providers)
         ]
         if not eligible:
             raise ProviderConfigError(
@@ -65,7 +76,9 @@ class ProviderRouter:
                     actual_provider=actual,
                     fallback_used=actual is not None,
                     fallback_reason=(
-                        "requested_provider_ineligible_for_execution_mode"
+                        ("requested_provider_ineligible_for_compute_policy"
+                         if eligible_providers is not None and requested_provider not in eligible_providers
+                         else "requested_provider_ineligible_for_execution_mode")
                         if actual is not None
                         else "no_provider_available"
                     ),
@@ -114,13 +127,22 @@ class ProviderRouter:
         self,
         executor_provider: str | None,
         risk_level: str,
+        *, eligible_providers: tuple[str, ...] | None = None,
     ) -> ProviderSelection:
         """Prefer an eligible available provider distinct from the executor."""
+        if eligible_providers is not None and (
+            type(eligible_providers) is not tuple or len(eligible_providers) > 32
+            or any(type(p) is not str or p not in self.configuration.provider_ids
+                   for p in eligible_providers)
+            or len(set(eligible_providers)) != len(eligible_providers)
+        ):
+            raise ProviderConfigError('Invalid reviewer compute eligibility filter')
         capability = "independent_review"
         eligible = [
             provider_id
             for provider_id in self.configuration.provider_ids
             if self.configuration.eligible(provider_id, capability)
+            and (eligible_providers is None or provider_id in eligible_providers)
         ]
         if not eligible:
             raise ProviderConfigError(

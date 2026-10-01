@@ -675,7 +675,7 @@ def build_worker(
             ),
         )
         reviewer_runtime = build_reviewer_runtime(
-            repository_root(), execution_root, router
+            repository_root(), execution_root, router, executor.compute_policy
         )
     else:
         executor_mode = "success" if executor_name == "local-success" else "failure"

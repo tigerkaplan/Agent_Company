@@ -27,7 +27,8 @@ class ProviderBackedReviewer:
     def review(self, package: ReviewPackage) -> ReviewerResponse:
         executor_provider = package.execution.get("provider")
         risk_level = str(package.job.get("risk_level") or "high")
-        selection = self.router.resolve_review(executor_provider, risk_level)
+        selection = self.router.resolve_review(executor_provider, risk_level,
+                                               eligible_providers=package.eligible_providers)
         if selection.actual_provider is None:
             category = (
                 "reviewer_unavailable"

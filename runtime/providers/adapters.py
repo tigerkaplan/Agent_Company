@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any, Callable, Mapping, Protocol
 
 from runtime.execution.models import ExecutionRequest
+from runtime.compute_policy.policy import ComputeDecision, ComputeError
 from runtime.providers.config import CliProviderConfig, ProviderConfigError
 from runtime.providers.models import (
     ProviderAvailability,
@@ -335,6 +336,15 @@ class CliProviderAdapter:
                     error_message="Controlled-write workspace is not runtime-owned",
                 )
         arguments = [availability.executable_path, *configured_arguments]
+        decision = getattr(context, 'compute_decision', None)
+        effort_level = None
+        if decision is not None:
+            if type(decision) is not ComputeDecision or decision.status != 'READY' or self.provider_id not in decision.eligible_providers:
+                raise ComputeError('Provider cannot override canonical compute effort or eligibility')
+            effort_level = {'FAST': 'low', 'STANDARD': 'medium',
+                            'DEEP': 'high', 'CRITICAL': 'high'}[decision.profile]
+            if self.provider_id == 'codex':
+                arguments[1:1] = ['-c', f'model_reasoning_effort={effort_level}']
         try:
             environment = build_provider_environment(
                 self.provider_id,
@@ -355,11 +365,15 @@ class CliProviderAdapter:
                     configured_arguments
                 ),
             )
+        if effort_level is not None and self.provider_id == 'claude':
+            environment['CLAUDE_CODE_EFFORT_LEVEL'] = effort_level
         run_options: dict[str, Any] = {
             "input": context.render(),
             "text": True,
             "capture_output": True,
-            "timeout": self.config.timeout_seconds,
+            "timeout": (min(self.config.timeout_seconds, {'FAST': 30, 'STANDARD': 90,
+                        'DEEP': 180, 'CRITICAL': self.config.timeout_seconds}[decision.profile])
+                        if decision is not None else self.config.timeout_seconds),
             "cwd": str(cwd),
             "shell": False,
             "check": False,

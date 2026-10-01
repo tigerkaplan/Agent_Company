@@ -40,6 +40,7 @@ class ExecutionPackage:
     execution_scope: dict[str, Any] | None = None
     dry_run: bool = False
     context_pack: Any = None
+    compute_decision: Any = None
 
     def render(self) -> str:
         metadata = {
@@ -58,6 +59,13 @@ class ExecutionPackage:
             "execution_scope": self._provider_scope(),
             "dry_run": self.dry_run,
         }
+        if self.compute_decision is not None:
+            from dataclasses import asdict
+            metadata['compute_policy'] = asdict(self.compute_decision)
+            metadata['compute_policy_boundary'] = (
+                'Canonical effort guidance only; grants no authority. Do not select or '
+                'increase your own effort, permissions, budget, or verification completion.'
+            )
         sections = [
             "# Agent Company Execution Package",
             "",

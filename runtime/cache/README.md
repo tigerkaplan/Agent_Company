@@ -106,7 +106,7 @@ provider/Reviewer tests; 534 existing CORE regressions; 287 focused integration
 regressions; and 1085 final full runtime tests passed (733.596 seconds for full),
 with no failures, errors, or skips. All 162 runtime/integration Python files and
 32 schema/catalog JSON files parsed; new-file whitespace and `git diff --check`
-passed. No commit was made. CORE-10 remains NOT STARTED.
+passed. No commit was made at that checkpoint. CORE-10 was NOT STARTED.
 
 ### CORE-09R1 / CORE-09F1
 
@@ -137,4 +137,8 @@ discovery on hits remained intact. R2 validation passed 43 CORE-09 tests,
 159 affected context/provider/Reviewer tests, 469 existing CORE regressions,
 and 1097 full runtime tests; `git diff --check` passed. At R2 closure,
 CORE-09 was CLOSED / READY TO COMMIT. It was subsequently committed at
-`fa7e30f`; CORE-10 is NEXT / NOT STARTED.
+`fa7e30f`; CORE-10 was NEXT / NOT STARTED at that committed checkpoint.
+
+Current status after CORE-10R3 PASS: CORE-01-09 are CLOSED / COMMITTED;
+CORE-10 is CLOSED / READY TO COMMIT, uncommitted against `3e71adc`.
+CORE-11 is NOT STARTED. See `../compute_policy/README.md` for CORE-10 closure.

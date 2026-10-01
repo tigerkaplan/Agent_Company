@@ -58,7 +58,8 @@
     implemented limits; no connector execution or persistent memory is claimed.
 - [x] CORE-09 Context / Prompt Cache Policy - CLOSED / COMMITTED at `fa7e30f`
   after CORE-09R2 PASS. CORE-01-09 are CLOSED / COMMITTED.
-- [ ] CORE-10 Compute / Effort Policy - NEXT / NOT STARTED; include security-aware routing.
+- [x] CORE-10 Compute / Effort Policy - CLOSED / READY TO COMMIT after CORE-10R3
+  PASS; uncommitted. Security-aware routing lives in `runtime/compute_policy/`.
 - [ ] CORE-11 External Content Isolation — NOT STARTED.
 - [ ] FUTURE HARDENING / NON-BLOCKING: add an aggregate serialized-result byte
   ceiling.
