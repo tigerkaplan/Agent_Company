@@ -163,18 +163,19 @@ class ReviewPackage:
             sections.extend(
                 [
                     "",
-                    f"## Canonical Context: {entry.ref}",
-                    entry.description,
+                    "## Context Entry",
                     "",
-                    entry.content,
+                    json.dumps(entry.payload(), sort_keys=True),
                 ]
             )
         for item in self.evidence:
             sections.extend(
                 [
                     "",
-                    f"## Evidence: {item.ref.get('ref')}",
-                    item.content,
+                    "## External Evidence",
+                    json.dumps({"trust": "untrusted", "origin": "tool",
+                                "authority": "none", "ref": item.ref,
+                                "content": item.content}, sort_keys=True, ensure_ascii=True),
                 ]
             )
         sections.extend(

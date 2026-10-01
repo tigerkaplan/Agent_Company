@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from dataclasses import asdict
+from dataclasses import asdict, replace
 import os
 from uuid import uuid4
 
@@ -49,11 +49,21 @@ class ExecutionContextBuilder:
         missing: tuple = (),
         cache: ContextCache | None = None,
         cache_scope: str | None = None,
+        external_content: tuple[dict, ...] = (),
     ) -> None:
         self.repository_root = Path(repository_root).resolve()
         self.max_file_bytes = max_file_bytes
         self.max_total_bytes = max_total_bytes
         self.repository_roots = repository_roots
+        from runtime.context.external import external_materials
+        from runtime.context.contracts import DiscoveryError, Limits
+        try:
+            external_materials(external_content, Limits(file_bytes=max_file_bytes,
+                                                       pack_bytes=max_total_bytes))
+        except DiscoveryError as error:
+            raise ContextBuildError(str(error)) from error
+        # Validate bounds/primitive shapes before copying external input.
+        self.external_content = tuple(dict(record) for record in external_content)
         self.knowledge = knowledge
         self.ranker = ranker
         self.capability_requests = capability_requests
@@ -83,11 +93,22 @@ class ExecutionContextBuilder:
                 source = 'skills' if ref.startswith('skills/') else 'project/state'
                 required.append((source, ref))
             files = tuple(ref['ref'] for ref in request.input_refs if ref.get('ref_type') == 'file')
+            canonical_refs = ['CONSTITUTION.md', 'AGENTS.md', 'INTENT.md']
+            # Membership comes from the local canonical resolver, never source labels
+            # or descriptions supplied with arbitrary context references.
+            if (self.repository_root / 'orchestrator/routing/agents.yaml').is_file():
+                from runtime.core.references import CanonicalReferenceResolver, ReferenceResolutionError
+                try:
+                    resolved = CanonicalReferenceResolver(self.repository_root, limits=limits).resolve(request.to_dict())
+                except ReferenceResolutionError as error:
+                    raise DiscoveryError('Canonical instruction selection failed') from error
+                canonical_refs.extend(r['ref'] for r in resolved if r['ref_type'] == 'file')
             pack = ContextDiscovery(self.repository_root, limits).discover(
                 request.task, required=tuple(required), files=files,
                 selected_skills=(request.skill,) if request.skill else (),
                 roots=self.repository_roots, knowledge=self.knowledge, ranker=self.ranker,
                 capability_requests=self.capability_requests, missing=self.missing,
+                external=self.external_content, canonical_refs=tuple(canonical_refs),
             )
             if pack.status != 'READY':
                 raise ContextDiscoveryBlocked('Material context is missing',
@@ -106,7 +127,7 @@ class ExecutionContextBuilder:
                         # Recheck the catalog/instruction pair together; changed
                         # selected metadata is material even with identical text.
                         loaded = catalog.load((metadata.name,))[0]
-                        if loaded != identities[reader.identity(metadata.instructions)]:
+                        if replace(loaded, trust=identities[reader.identity(metadata.instructions)].trust) != identities[reader.identity(metadata.instructions)]:
                             raise DiscoveryError('Skill changed during cache validation')
                         skill_metadata.append(asdict(metadata))
                 if len(skill_metadata) != len(identities):
@@ -120,7 +141,8 @@ class ExecutionContextBuilder:
         except (DiscoveryError, OSError, KeyError) as error:
             raise ContextBuildError(str(error)) from error
         entries = tuple(ContextEntry(ref=m.ref, description=f'{m.source}; {m.retention}; evidence only',
-                                     content=m.content) for m in pack.materials if m.source != 'user')
+                                     content=m.content, origin=m.origin, trust=m.trust,
+                                     source_digest=m.source_digest, material=m) for m in pack.materials if m.source != 'user')
 
         return ExecutionPackage(
             task=request.task,

@@ -1,5 +1,62 @@
 # Agent Company Project State
 
+## CORE-11 closure reconciliation - 2026-10-01
+
+CORE-01-10 are CLOSED / COMMITTED. CORE-11 is CLOSED / READY TO COMMIT
+following Independent Re-review R2 PASS, uncommitted at base `c9ce78d`.
+The CORE-01-11 foundation is implementation complete pending CORE-11 commit.
+ACTIVE: None; NEXT: none activated. GOV/ORCH/MEM and Phase 9 remain NOT STARTED.
+The V1 scope freeze remains ACTIVE and unchanged. No next roadmap block is started.
+Isolation integrates in `runtime/context/external.py`, CORE-08 contracts,
+provider packaging and reviewer evidence; see `runtime/context/EXTERNAL_CONTENT.md`.
+Closure validation: 14/14 CORE-11 targeted tests passed; `git diff --check` passed.
+No runtime behavior changed, commit made, V1 expansion or future folders created.
+
+## CORE-11 Review Evidence And Final Guarantees
+
+Historical R1 (2026-10-01): FIX, Critical 0 / Major 2 / Minor 1.
+Flattened context allowed trust promotion and content/digest mismatch; resolver
+metadata reads bypassed CORE-08 bounds; retrieval overwrote explicit origins.
+R1 recorded 202 affected tests and 1163 full regression tests passed. The initial
+implementation broad run had one progress-race BrokenBarrierError (1162/1163);
+R1 reruns supported an unrelated intermittent race, with precise trigger unknown.
+Source: session `01a0f87b-2338-77d3-9743-99c4f2c7b167`, R1 final
+2026-10-01 17:59:07 UTC. R1 used the same agent/provider as implementation.
+
+Historical F1 (2026-10-01): bounded repairs preserved original provenance in
+flattened entries, validated content identity, bounded resolver/metadata reads
+before parsing, and retained explicit retrieval origins. Validation: 14 CORE-11,
+173 focused and 1167 full regression tests passed (unittest OK; PowerShell capture
+reported a stderr-related wrapper error). Parsing and diff checks passed.
+Source: session `01a0f8c1-aeb6-7773-97db-346b2b29e239`, F1 final
+2026-10-01 19:36:16 UTC; re-review was still pending at that checkpoint.
+
+Independent Re-review R2 on 2026-10-01: PASS, Critical 0 / Major 0 / Minor 0.
+Flattened context, resolver bounds, provenance and other guarantees all passed.
+Recorded validation: 14 CORE-11 tests, 173 focused tests, 1167 full tests with
+zero failures/errors/skips; adversarial probes, parsing and git diff --check
+passed. Separate reviewer, same provider; no provider-diverse sign-off claimed.
+HEAD remained `c9ce78d`; all 16 changed-file fingerprints remained unchanged.
+Source: session `01a0f8c1-aeb6-7773-97db-346b2b29e239`, R2 final
+2026-10-01 21:04:10 UTC: PASS - READY FOR CORE-11 CLOSURE.
+
+Final CORE-11 guarantees:
+- External content remains non-authoritative (`untrusted`, `authority: none`).
+- Provenance/trust constraints survive context, provider and reviewer flow.
+- Flattened trust cannot promote content; content/digest mismatch fails closed.
+- Resolver/metadata reads are bounded before parsing.
+- Explicit origins such as connector are preserved.
+- Prompt injection cannot grant runtime authority.
+- CORE-08 context integration and existing approval, scope, sandbox, tool,
+  continuation/retry, budget, write, Git and deployment authority gates remain intact.
+
+CORE-11C reran only the targeted suite (14/14) and git diff --check; R2 full-suite
+results above are historical review evidence. Closure changes documentation only.
+CORE-01-10 are CLOSED / COMMITTED; CORE-11 is CLOSED / READY TO COMMIT.
+The CORE-01-11 foundation is implementation complete pending CORE-11 commit.
+V1 scope freeze is preserved; no GOV/ORCH/MEM/Phase 9 block is started and no
+future directory is created. Dated prior checkpoints below remain historical.
+
 ## Current Checkpoint
 
 - CORE-04 implementation commit `35f03f8` contains the Tool Discovery /
@@ -20,7 +77,7 @@
   PASS with no Critical, Major, or Minor findings. CORE-01-10 are CLOSED /
   COMMITTED. CORE-08 is committed at `1a1b029` after CORE-08R3 PASS;
   CORE-09 is committed at `fa7e30f` after CORE-09R2 PASS. CORE-10 is
-  CLOSED / COMMITTED at `dd72cb2` after CORE-10R3 PASS; CORE-11 is NEXT / NOT STARTED.
+  CLOSED / COMMITTED at `dd72cb2` after CORE-10R3 PASS; CORE-11 is CLOSED / READY TO COMMIT.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.

@@ -142,14 +142,35 @@ class Material:
     source_digest: str
     start_line: int = 1
     retention: str = 'verbatim'
+    origin: str = 'repository'
+    trust: str = 'untrusted'
+    authority: str = 'none'
 
     def __post_init__(self):
+        expected = {'source', 'ref', 'content', 'source_digest', 'start_line', 'retention',
+                    'origin', 'trust', 'authority'}
+        if (type(self) is not Material or set(vars(self)) != expected
+                or any(type(v) is not str for k, v in vars(self).items() if k != 'start_line')):
+            raise DiscoveryError('Noncanonical material metadata')
+        if self.origin not in {'repository', 'pasted', 'web', 'email', 'upload',
+                               'retrieved', 'scraped', 'connector', 'tool', 'user'}:
+            raise DiscoveryError('Unknown content provenance')
+        if self.authority != 'none' or self.trust not in {'untrusted', 'canonical'}:
+            raise DiscoveryError('Invalid content trust/authority')
+        if self.trust == 'canonical' and (self.origin != 'repository' or
+                self.source not in {'project/state', 'skills'}):
+            raise DiscoveryError('External content cannot be canonical instructions')
+        if self.source == 'external' and (self.origin in {'repository', 'user'} or self.trust != 'untrusted'):
+            raise DiscoveryError('Invalid external provenance')
         if self.source not in {'project/state', 'files/code', 'skills', 'knowledge', 'memory',
-                               'user', 'capability/tool'}:
+                               'user', 'capability/tool', 'external'}:
             raise DiscoveryError('Unknown context source')
         bounded_text(self.ref, 512)
-        if not isinstance(self.content, str) or len(self.content.encode('utf-8')) > 1024 * 1024:
+        if (len(self.content) > 1024 * 1024
+                or len(self.content.encode('utf-8')) > 1024 * 1024):
             raise DiscoveryError('Invalid or oversized context content')
+        if self.source == 'external' and self.source_digest != digest(self.content):
+            raise DiscoveryError('External evidence digest mismatch')
         if not re.fullmatch('[0-9a-f]{64}', self.source_digest):
             raise DiscoveryError('Missing source digest')
         if type(self.start_line) is not int or self.start_line < 1:
@@ -205,7 +226,7 @@ def assemble(materials: tuple[Material, ...], missing: tuple[MissingInformation,
     unique: dict[tuple, Material] = {}
     for m in materials:
         m.__post_init__()
-        key = (m.source, m.ref, m.start_line)
+        key = (m.source, m.ref, m.start_line, m.origin)
         if key in unique and unique[key] != m:
             raise DiscoveryError('Conflicting context provenance')
         unique[key] = m

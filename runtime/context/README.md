@@ -3,7 +3,7 @@
 CORE-08 is CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS.
 CORE-01-10 are CLOSED / COMMITTED. CORE-09 is committed at `fa7e30f` after
 CORE-09R2 PASS; CORE-10 is committed at `dd72cb2` after CORE-10R3 PASS.
-CORE-11 is NEXT / NOT STARTED.
+CORE-11 is CLOSED / READY TO COMMIT.
 
 `ExecutionContextBuilder` runs discovery before a provider adapter executes.
 It reads canonical governance, the current project checkpoint, Worker-resolved
@@ -122,7 +122,7 @@ conflicting provenance fails. No index/pack/selection state is persisted, so
 fresh processes rebuild from current sources and deterministic inputs. CORE-09
 adds bounded process-local pack reuse after fresh discovery through the provider
 context builder; see `runtime/cache/README.md`. Broader external-content
-isolation is reserved for CORE-11.
+isolation is implemented by CORE-11; see `EXTERNAL_CONTENT.md`.
 
 ## Validation
 

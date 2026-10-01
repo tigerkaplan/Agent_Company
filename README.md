@@ -1,5 +1,17 @@
 # Agent Company
 
+## CORE-11 closure reconciliation - 2026-10-01
+
+CORE-01-10 are CLOSED / COMMITTED. CORE-11 is CLOSED / READY TO COMMIT
+following Independent Re-review R2 PASS, uncommitted at base `c9ce78d`.
+The CORE-01-11 foundation is implementation complete pending CORE-11 commit.
+ACTIVE: None; NEXT: none activated. GOV/ORCH/MEM and Phase 9 remain NOT STARTED.
+The V1 scope freeze remains ACTIVE and unchanged. No next roadmap block is started.
+Isolation integrates in `runtime/context/external.py`, CORE-08 contracts,
+provider packaging and reviewer evidence; see `runtime/context/EXTERNAL_CONTENT.md`.
+Closure validation: 14/14 CORE-11 targeted tests passed; `git diff --check` passed.
+No runtime behavior changed, commit made, V1 expansion or future folders created.
+
 Agent Company is a local-first, model-independent operating core for coordinating AI agents across multiple projects without losing context. It starts with Claude and Codex as execution providers, and is designed to support ChatGPT and other providers later.
 
 The company is not any one model. Providers execute work. The company core defines the durable rules, roles, state boundaries, review expectations, and routing principles that let different engines work consistently.
@@ -52,7 +64,7 @@ CORE-07 is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS;
 CORE-08 is CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS. CORE-09 is
 CLOSED / COMMITTED at `fa7e30f` after CORE-09R2 PASS. CORE-01-10 are CLOSED /
 COMMITTED; CORE-10 is committed at `dd72cb2` after CORE-10R3 PASS,
-and CORE-11 is NEXT / NOT STARTED. The
+and CORE-11 is CLOSED / READY TO COMMIT. The
 aggregate serialized-result byte ceiling remains FUTURE HARDENING / NON-BLOCKING.
 
 The runtime remains local-first. Phase 8D packages the canonical Phase 8C
@@ -154,13 +166,15 @@ router, and package integration apply effort and eligibility before execution.
 This importable path replaces the planned `runtime/compute-policy/` label.
 See `runtime/compute_policy/README.md` for policy defaults and authority limits.
 
+CORE-11 CURRENT: `runtime/context/external.py` and
+`runtime/context/EXTERNAL_CONTENT.md` implement isolation alongside CORE-08.
+
 ## Future / Target Repository Structure
 
 The proposed paths in the list below are PLANNED and absent from the current
 physical tree. This list records structural ownership only; implementation
 checkpoints create paths when real content exists.
 
-- CORE-11: `runtime/isolation/`.
 - GOV-01: `governance/task-contract/`, `governance/delegation/`,
   `governance/stop-conditions/`, and `governance/completion/`.
 - GOV-02: `governance/capability-certification/` and
@@ -216,7 +230,7 @@ and SYNC-04A. The exception gate and accepted refinements live in
 LATER / REFERENCE; only critical implementation, security, data-loss, authority,
 architectural-consistency, or completion-correctness blockers may be evaluated
 for V1. They do not interrupt the checkpoint sequence or grant implementation
-authority. ACTIVE: None; NEXT: CORE-11 / NOT STARTED.
+authority. ACTIVE: None; NEXT: none activated.
 
 Current canonical agents: 10; frozen V1 target: 14. CAP-CREATIVE-01 is accepted
 non-blocking capability/tool architecture; CAP-DOC-01, summary-indexed retrieval,

@@ -1,5 +1,6 @@
 """Assemble minimum selected evidence before provider execution."""
 from pathlib import Path
+from dataclasses import replace
 
 from runtime.context.contracts import (
     DiscoveryError, KnowledgeDiscovery, Limits, Material, MissingInformation,
@@ -19,14 +20,21 @@ class ContextDiscovery:
                  files: tuple[str, ...] = (), roots: tuple[str, ...] = (),
                  selected_skills: tuple[str, ...] = (), knowledge: KnowledgeDiscovery | None = None,
                  ranker=None, missing: tuple[MissingInformation, ...] = (),
-                 availability: tuple[Material, ...] = (), capability_requests: tuple = ()):
+                 availability: tuple[Material, ...] = (), capability_requests: tuple = (),
+                 external: tuple[dict, ...] = (),
+                 canonical_refs: tuple[str, ...] = ('CONSTITUTION.md', 'AGENTS.md', 'INTENT.md')):
         """Required refs are locally resolved; providers cannot configure discovery."""
         bounded_text(query, 16000)
         if len(missing) > 32:
             raise DiscoveryError('Clarification count exceeds limit')
+        from runtime.context.external import external_materials
+        external_evidence = external_materials(external, self.limits)
         reader = RepositoryReader(self.root, self.limits)
-        if len(required) + len(files) + len(availability) > self.limits.entries:
+        if len(required) + len(files) + len(availability) + len(external_evidence) > self.limits.entries:
             raise DiscoveryError('Discovery input count exceeds limit')
+        if type(canonical_refs) is not tuple or len(canonical_refs) > self.limits.entries:
+            raise DiscoveryError('Canonical instruction selection exceeds bound')
+        canonical_identities = {reader.identity(ref) for ref in canonical_refs}
         materials = []
         missing = list(missing)
         if len(capability_requests) > 16:
@@ -79,6 +87,9 @@ class ContextDiscovery:
                     if len(headings) > 1:
                         material = Material(source, material.ref, ''.join(lines[:headings[1]]),
                                             material.source_digest, 1, 'excerpt')
+                if material.source == 'skills' or (material.source == 'project/state'
+                        and reader.identity(material.ref) in canonical_identities):
+                    material = replace(material, trust='canonical')
                 materials.append(material)
                 seen.add(identity)
         if len(selected_skills) > 8 or len(set(selected_skills)) != len(selected_skills):
@@ -99,7 +110,7 @@ class ContextDiscovery:
         for ref in chosen_files:
             identity = reader.identity(ref)
             if identity not in seen:
-                material = load_material(ref)
+                material = replace(load_material(ref), trust='untrusted')
                 indexed = next((r for r in index.records if reader.identity(r.ref) == identity), None)
                 if indexed and indexed.sha256 != material.source_digest:
                     raise DiscoveryError('Repository source changed during discovery')
@@ -117,9 +128,17 @@ class ContextDiscovery:
                 if (material.source != kinds[identity] or material.ref != identity
                         or len(material.content.encode('utf-8')) > self.limits.file_bytes):
                     raise DiscoveryError('Knowledge adapter returned mismatched evidence')
-                materials.append(material)
+                # Retrieval adapters cannot promote their own content.
+                material.__post_init__()
+                if material.trust != 'untrusted':
+                    raise DiscoveryError('Retrieved content must remain untrusted')
+                materials.append(replace(material, origin='retrieved')
+                                 if material.origin == 'repository' else material)
         if any(m.source != 'capability/tool' for m in availability):
             raise DiscoveryError('Availability must be capability evidence')
+        if any(m.trust != 'untrusted' for m in availability):
+            raise DiscoveryError('Tool evidence cannot be instructions')
         materials.extend(availability)
-        materials.append(Material('user', 'task', query, digest(query)))
+        materials.extend(external_evidence)
+        materials.append(Material('user', 'task', query, digest(query), origin='user'))
         return assemble(tuple(materials), tuple(missing), self.limits)

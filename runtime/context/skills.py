@@ -104,6 +104,8 @@ class SkillCatalog:
                 raise DiscoveryError('Unknown selected skill')
             metadata = known[name]
             material = file_material(self.reader, metadata.instructions, 'skills')
+            from dataclasses import replace
+            material = replace(material, trust='canonical')
             if digest(material.content.replace('\r\n', '\n')) != metadata.sha256:
                 raise DiscoveryError('Selected skill metadata is stale: ' + name)
             result.append(material)

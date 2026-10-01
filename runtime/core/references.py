@@ -6,6 +6,8 @@ import re
 from pathlib import Path
 from typing import Any
 
+from runtime.context.contracts import DiscoveryError, Limits, RepositoryReader
+
 
 class ReferenceResolutionError(ValueError):
     """Raised when canonical execution configuration is absent or invalid."""
@@ -16,12 +18,16 @@ class CanonicalReferenceResolver:
 
     _SAFE_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 
-    def __init__(self, repository_root: Path | None = None) -> None:
+    def __init__(self, repository_root: Path | None = None, *, limits: Limits = Limits()) -> None:
         self.repository_root = (
             Path(repository_root) if repository_root is not None else Path(__file__).resolve().parents[2]
         ).resolve()
 
+        self.limits = limits
+
     def resolve(self, job: dict[str, Any]) -> tuple[dict[str, str], ...]:
+        self._reader = RepositoryReader(self.repository_root, self.limits)
+        self._files_read = 0
         references: list[dict[str, str]] = []
         references.extend(self._resolve_agent(job["agent"]))
         if job.get("skill") is not None:
@@ -200,9 +206,12 @@ class CanonicalReferenceResolver:
             raise ReferenceResolutionError(
                 f"Canonical configuration file is missing: {self._relative(path)}"
             )
+        self._files_read += 1
+        if self._files_read > self.limits.files:
+            raise ReferenceResolutionError('Canonical metadata file count exceeds bound')
         try:
-            return path.read_text(encoding="utf-8").splitlines()
-        except OSError as error:
+            return self._reader.read(self._relative(path)).splitlines()
+        except (OSError, DiscoveryError) as error:
             raise ReferenceResolutionError(
                 f"Could not read canonical configuration {self._relative(path)}: {error}"
             ) from error
