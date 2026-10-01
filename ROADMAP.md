@@ -22,8 +22,8 @@
 - CORE-07 Progress Events: CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS.
 - CORE-08: CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS.
 - CORE-09: CLOSED / COMMITTED at `fa7e30f` after CORE-09R2 PASS.
-- CORE-10: CLOSED / READY TO COMMIT after CORE-10R3 PASS; uncommitted.
-- CORE-11: NOT STARTED.
+- CORE-10: CLOSED / COMMITTED at `dd72cb2` after CORE-10R3 PASS.
+- CORE-11: NEXT / NOT STARTED.
 - Phase 8E: PAUSED / BLOCKED; deployment not started because the VPS has not
   yet been created.
 - Phase 8F: NOT STARTED.
@@ -120,8 +120,8 @@ redefine or begin Phase 8.
 - CORE-07 Progress Events: CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS.
 - CORE-08 Context Discovery Before Action: CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS.
 - CORE-09 Context / Prompt Cache Policy: CLOSED / COMMITTED at `fa7e30f` after CORE-09R2 PASS.
-- CORE-10 Compute / Effort Policy: CLOSED / READY TO COMMIT after CORE-10R3 PASS; uncommitted.
-- CORE-11 External Content Isolation: NOT STARTED.
+- CORE-10 Compute / Effort Policy: CLOSED / COMMITTED at `dd72cb2` after CORE-10R3 PASS.
+- CORE-11 External Content Isolation: NEXT / NOT STARTED.
 
 CORE-01 defines the canonical provider-agnostic Execution Result: WHAT HAPPENED.
 Its final independent closure review passed with no Critical or Major findings.
@@ -146,14 +146,14 @@ granting execution or governance authority. CORE-05 is CLOSED / COMMITTED at
 `63813b5` after CORE-05R3 PASS. CORE-06 is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
 CORE-07 is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS; CORE-08 is
 CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS; CORE-09 is CLOSED /
-COMMITTED at `fa7e30f` after CORE-09R2 PASS. CORE-10 is CLOSED / READY TO COMMIT after CORE-10R3 PASS; uncommitted.
-CORE-11 is NOT STARTED.
+COMMITTED at `fa7e30f` after CORE-09R2 PASS. CORE-10 is CLOSED / COMMITTED at `dd72cb2` after CORE-10R3 PASS.
+CORE-11 is NEXT / NOT STARTED.
 An aggregate
 serialized-result byte ceiling is FUTURE HARDENING / NON-BLOCKING.
 
-### CORE-10 Compute / Effort Policy - CLOSED / READY TO COMMIT
+### CORE-10 Compute / Effort Policy - CLOSED / COMMITTED at `dd72cb2`
 
-CORE-10 is CLOSED / READY TO COMMIT after CORE-10R3 PASS; uncommitted under
+CORE-10 is CLOSED / COMMITTED at `dd72cb2` after CORE-10R3 PASS under
 `runtime/compute_policy/`. Compute/effort routing considers task risk,
 data sensitivity, provider eligibility, context exposure, and required
 review as well as quality, cost, latency, and effort. Security and authority
@@ -164,7 +164,7 @@ inputs and filter provider eligibility before routing. Codex/Claude native effor
 controls are enforced; unsupported adapters are rejected. Decisions bind exact
 work to repository filesystem identity and selected context, report the applicable
 fallback reason, and grant no authority. DEC-01/JEV is untouched; CORE-11 is
-NOT STARTED. See `runtime/compute_policy/README.md` for implementation limits.
+NEXT / NOT STARTED. See `runtime/compute_policy/README.md` for implementation limits.
 R3 final decision: PASS — READY FOR CORE-10 CLOSURE, with no findings.
 
 ### CORE-06 Accepted Scope — CLOSED / COMMITTED at `4a6e5c4`

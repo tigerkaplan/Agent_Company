@@ -17,10 +17,10 @@
 - CORE-06 Retry / Stop Policy is CLOSED / COMMITTED at `4a6e5c4` after
   CORE-06R6 PASS.
 - CORE-07 Progress Events is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3
-  PASS with no Critical, Major, or Minor findings. CORE-01-09 are CLOSED /
+  PASS with no Critical, Major, or Minor findings. CORE-01-10 are CLOSED /
   COMMITTED. CORE-08 is committed at `1a1b029` after CORE-08R3 PASS;
   CORE-09 is committed at `fa7e30f` after CORE-09R2 PASS. CORE-10 is
-  CLOSED / READY TO COMMIT after CORE-10R3 PASS; uncommitted; CORE-11 is NOT STARTED.
+  CLOSED / COMMITTED at `dd72cb2` after CORE-10R3 PASS; CORE-11 is NEXT / NOT STARTED.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
 - The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
@@ -41,9 +41,23 @@
 - Phase 8F is NOT STARTED.
 - Phase 8G and Phase 8H are NOT STARTED.
 
-## CORE-10 Compute / Effort Policy - CLOSED / READY TO COMMIT
+## DOC-TREE-CORE10 Post-Commit Reconciliation
 
-Implemented against `3e71adc`, without committing. `runtime/compute_policy/`
+Verified clean starting tree at `dd72cb2` on 2026-10-01. CORE-01-10 are
+CLOSED / COMMITTED; CORE-10 commit is `dd72cb2`; CORE-11 is NEXT / NOT STARTED.
+The CURRENT implementation is `runtime/compute_policy/` (`__init__.py`,
+`policy.py`, `canonical.py`, and `README.md`), supported by
+`runtime/tests/test_compute_policy.py`. The former planned
+`runtime/compute-policy/` label is superseded and physically absent.
+README CURRENT paths were checked against the filesystem; all target paths
+remain PLANNED and physically absent, including `runtime/isolation/`.
+Phase 8E-8H and the approved V1 scope remain unchanged. This reconciliation
+changes documentation/state only; no runtime tests were rerun, future folders
+created, commit made, or CORE-11 work begun.
+
+## CORE-10 Compute / Effort Policy - CLOSED / COMMITTED at `dd72cb2`
+
+Implemented against `3e71adc` and committed at `dd72cb2`. `runtime/compute_policy/`
 provides deterministic FAST / STANDARD / DEEP / CRITICAL effort selection,
 repository/context-bound exact request identity, bounded trusted routing inputs,
 security-first provider eligibility, explicit budget blocking, and replayable
@@ -63,8 +77,8 @@ The separate reviewer role used the same provider and made no modifications
 or commits. Source: R3 final review in session
 `01a0f785-5cef-7f21-93db-7c2ff85b24fc` at 2026-10-01 16:48:42 UTC.
 
-CORE-10C closure reconciliation: CLOSED / READY TO COMMIT; implementation and
-closure documentation remain uncommitted against HEAD `3e71adc`.
+Historical CORE-10C closure reconciliation: CLOSED / READY TO COMMIT; implementation and
+closure documentation were uncommitted against HEAD `3e71adc`.
 Closure-time validation passed `python -m unittest runtime.tests.test_compute_policy -q`:
 56/56 tests (46 CORE-10 tests plus 10 imported adapter tests), and
 `git diff --check`. Status/diff inspection confirmed documentation-only closure

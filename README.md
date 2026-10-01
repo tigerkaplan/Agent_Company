@@ -50,9 +50,9 @@ is CLOSED / COMMITTED at `63813b5` after CORE-05R3 PASS. CORE-06 Retry / Stop
 Policy is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
 CORE-07 is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS;
 CORE-08 is CLOSED / COMMITTED at `1a1b029` after CORE-08R3 PASS. CORE-09 is
-CLOSED / COMMITTED at `fa7e30f` after CORE-09R2 PASS. CORE-01-09 are CLOSED /
-COMMITTED; CORE-10 is CLOSED / READY TO COMMIT after CORE-10R3 PASS; uncommitted,
-and CORE-11 is NOT STARTED. The
+CLOSED / COMMITTED at `fa7e30f` after CORE-09R2 PASS. CORE-01-10 are CLOSED /
+COMMITTED; CORE-10 is committed at `dd72cb2` after CORE-10R3 PASS,
+and CORE-11 is NEXT / NOT STARTED. The
 aggregate serialized-result byte ceiling remains FUTURE HARDENING / NON-BLOCKING.
 
 The runtime remains local-first. Phase 8D packages the canonical Phase 8C
@@ -65,7 +65,7 @@ the canonical capability roadmap.
 
 ## Current Repository Structure
 
-CURRENT: audited against committed checkpoint `fa7e30f`. This is the physical
+CURRENT: audited against committed checkpoint `dd72cb2`. This is the physical
 structure in the current checkout; generated contents and
 ignored local configuration are intentionally not expanded.
 
@@ -80,7 +80,7 @@ ignored local configuration are intentionally not expanded.
 - `integrations/` — github, gmail, google-calendar, google-drive, obsidian,
   telegram, and webhooks; runtime implementations exist only where explicitly
   represented by source.
-- `runtime/` — `actions/`, `approvals/`, `budget/`, `cache/`, `cli/`, `context/`, `continuation/`,
+- `runtime/` — `actions/`, `approvals/`, `budget/`, `cache/`, `cli/`, `compute_policy/`, `context/`, `continuation/`,
   `core/`, `evals/`, `execution/`, `executors/`, `git/`, `host/`, `jobs/`,
   `notifications/`, `progress/`, `providers/`, `queue/`, `remote/`, `review/`, `retry/`,
   `scheduler/`, `storage/`, `tests/`, `tools/`, `webhooks/`, and `workers/`.
