@@ -2,11 +2,19 @@
 
 ## GOV-01 Current State - 2026-10-02
 
-ACTIVE: None; GOV-01 Task & Authority Contract / CLOSED / READY TO COMMIT (uncommitted).
+ACTIVE: None; GOV-01 Task & Authority Contract / CLOSED / COMMITTED at `852ec01`.
 NEXT: GOV-02 / NOT STARTED; sequence only, no authorization to begin.
-Expected and verified starting HEAD: `92d8020`. V1 scope freeze remains ACTIVE.
+Verified clean starting tree at `852ec01` (`feat: add task and authority contract`).
+V1 scope freeze remains ACTIVE.
 CORE-01-11 foundations are reused; no separate approval, budget, review, or scope authority.
 See [GOV-01 implementation and classification](governance/task-contract/README.md).
+DOC-TREE-GOV01: post-commit filesystem reconciliation; documentation/state only.
+GOV-01 source, schema, tests, and governance documentation are CURRENT.
+GOV-02, ORCH, MEM, and later target paths remain PLANNED and physically absent.
+V1 audit-gap dependency order and filesystem trust boundaries are unchanged.
+No runtime tests rerun, future folders created, commit made, or GOV-02 work begun.
+The dated closure/review records below preserve their pre-commit status and evidence.
+
 ### GOV-01C2 verified closure - 2026-10-02
 
 GOV-01: CLOSED / READY TO COMMIT; implementation remains uncommitted.
@@ -109,10 +117,10 @@ serious inconsistency / completion correctness issue? YES -> evaluate for V1;
 NO -> POST-V1 / LATER / REFERENCE. Later ideas must not interrupt the checkpoint
 sequence or expand the existing Canonical V1 Definition below.
 
-One ACTIVE and one NEXT checkpoint slot: ACTIVE = None; GOV-01 CLOSED / READY TO COMMIT (uncommitted); NEXT = GOV-02 / NOT STARTED.
+One ACTIVE and one NEXT checkpoint slot: ACTIVE = None; GOV-01 CLOSED / COMMITTED at `852ec01`; NEXT = GOV-02 / NOT STARTED.
 CORE-11 is CLOSED / COMMITTED at `8bda7eb` after Independent Re-review R2 PASS. Lifecycle remains IMPLEMENT -> INDEPENDENT
 REVIEW -> BOUNDED FIX if required -> RE-REVIEW -> CLOSURE -> COMMIT -> NEXT.
-Core Runtime Foundation = COMPLETE. GOV-01 is CLOSED / READY TO COMMIT;
+Core Runtime Foundation = COMPLETE. GOV-01 is CLOSED / COMMITTED at `852ec01`;
 no next implementation is authorized or started by this reconciliation.
 
 ### Durable Instruction And Learning Ownership
@@ -442,7 +450,7 @@ boundaries, existing approval fingerprints, retry/continuation inheritance, and
 terminal persistence. The contract and completion receipts use write-once anchors
 inside the existing job state. Missing acceptance/evidence cannot become DONE.
 Opaque native-tool CLI providers fail closed; no native CLI confinement is claimed.
-GOV-01 is CLOSED / READY TO COMMIT, uncommitted after verified independent PASS and GOV-01C2 closure.
+GOV-01 is CLOSED / COMMITTED at `852ec01` after verified independent PASS and GOV-01C2 closure.
 GOV-02 is not started. Details: [Task Contract](governance/task-contract/README.md).
 
 #### GOV-02 — Capability Governance

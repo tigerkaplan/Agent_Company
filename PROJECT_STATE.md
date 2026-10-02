@@ -2,9 +2,10 @@
 
 ## GOV-01 Current State - 2026-10-02
 
-ACTIVE: None; GOV-01 Task & Authority Contract / CLOSED / READY TO COMMIT (uncommitted).
+ACTIVE: None; GOV-01 Task & Authority Contract / CLOSED / COMMITTED at `852ec01`.
 NEXT: GOV-02 / NOT STARTED; sequence only, no authorization to begin.
-Expected and verified starting HEAD: `92d8020`. V1 scope freeze remains ACTIVE.
+Verified clean starting tree at `852ec01` (`feat: add task and authority contract`).
+V1 scope freeze remains ACTIVE.
 CORE-01-11 foundations are reused; no separate approval, budget, review, or scope authority.
 See [GOV-01 implementation and classification](governance/task-contract/README.md).
 GOV-01 R2 returned FIX with one remaining Major: coherent gate rollback could
@@ -17,6 +18,13 @@ remain in use. Native CLI providers remain blocked until confinement is enforcea
 Pre-F1 and pre-F2 task records without the required authority history fail closed
 and require explicit recovery; no historical authority is migrated or backfilled.
 See [validation evidence](governance/task-contract/VALIDATION.md).
+
+DOC-TREE-GOV01: post-commit filesystem reconciliation; documentation/state only.
+GOV-01 source, schema, tests, and governance documentation are CURRENT.
+GOV-02, ORCH, MEM, and later target paths remain PLANNED and physically absent.
+V1 audit-gap dependency order and filesystem trust boundaries are unchanged.
+No runtime tests rerun, future folders created, commit made, or GOV-02 work begun.
+The dated closure/review records below preserve their pre-commit status and evidence.
 
 ### GOV-01C2 verified closure - 2026-10-02
 

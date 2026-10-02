@@ -2,11 +2,19 @@
 
 ## GOV-01 Current State - 2026-10-02
 
-ACTIVE: None; GOV-01 Task & Authority Contract / CLOSED / READY TO COMMIT (uncommitted).
+ACTIVE: None; GOV-01 Task & Authority Contract / CLOSED / COMMITTED at `852ec01`.
 NEXT: GOV-02 / NOT STARTED; sequence only, no authorization to begin.
-Expected and verified starting HEAD: `92d8020`. V1 scope freeze remains ACTIVE.
+Verified clean starting tree at `852ec01` (`feat: add task and authority contract`).
+V1 scope freeze remains ACTIVE.
 CORE-01-11 foundations are reused; no separate approval, budget, review, or scope authority.
 See [GOV-01 implementation and classification](governance/task-contract/README.md).
+DOC-TREE-GOV01: post-commit filesystem reconciliation; documentation/state only.
+GOV-01 source, schema, tests, and governance documentation are CURRENT.
+GOV-02, ORCH, MEM, and later target paths remain PLANNED and physically absent.
+V1 audit-gap dependency order and filesystem trust boundaries are unchanged.
+No runtime tests rerun, future folders created, commit made, or GOV-02 work begun.
+The dated closure/review records below preserve their pre-commit status and evidence.
+
 ### GOV-01C2 verified closure - 2026-10-02
 
 GOV-01: CLOSED / READY TO COMMIT; implementation remains uncommitted.
@@ -130,7 +138,7 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
 
 - [ ] Owner outcome-first UX: owner specifies the outcome; Agent Company selects
   workflow, agents, skills, tools, context, and providers within policy.
-- [x] GOV-01 runtime implementation (CLOSED / READY TO COMMIT, uncommitted): canonical task contract, L0-L5 risk and
+- [x] GOV-01 runtime implementation (CLOSED / COMMITTED at `852ec01`): canonical task contract, L0-L5 risk and
   delegation levels, blast radius, reversibility, approvals, explicit stop
   conditions, and evidence-gated completion.
 - [ ] GOV-02 Capability Governance: capability certification, decision audit
@@ -198,7 +206,7 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
   and composite scoring within policy; details owned by ROADMAP.
 - [ ] Phase 9A: decision/JEV quality, confidence, escalation, cost, and latency metrics.
 - [x] GOV-01: preserve execution/eval/review/approval/task-completion separation.
-- [x] GOV-01: final independent review PASS and GOV-01C2 owner closure verified; no commit authorized.
+- [x] GOV-01: final independent review PASS and GOV-01C2 owner closure verified; committed at `852ec01`.
 - [ ] CAP-SOC-01 One-Person Social Media Team / Social Media Operating System:
   lifecycle, approval/scheduling, repurposing, basic community triage, human
   handoff, performance -> memory, and basic Phase 9B Social Media HQ.
