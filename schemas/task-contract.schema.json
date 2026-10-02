@@ -1,0 +1,307 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "objective",
+    "inputs",
+    "expected_outputs",
+    "allowed_tools",
+    "allowed_capabilities",
+    "write_scope",
+    "budget_references",
+    "acceptance_criteria",
+    "required_checks",
+    "required_evidence",
+    "stop_conditions",
+    "risk",
+    "blast_radius",
+    "reversibility",
+    "delegation_level",
+    "approval_requirements"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "minItems": 0,
+      "maxItems": 100,
+      "uniqueItems": true
+    },
+    "expected_outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ref_type",
+          "ref"
+        ],
+        "properties": {
+          "ref_type": {
+            "type": "string",
+            "enum": [
+              "artifact",
+              "file",
+              "log",
+              "provider_result",
+              "other"
+            ]
+          },
+          "ref": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        }
+      },
+      "minItems": 0,
+      "maxItems": 50,
+      "uniqueItems": true
+    },
+    "allowed_tools": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "[A-Za-z0-9][A-Za-z0-9._:-]{0,199}"
+      },
+      "minItems": 0,
+      "maxItems": 20,
+      "uniqueItems": true
+    },
+    "allowed_capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "[A-Za-z0-9][A-Za-z0-9._:-]{0,199}"
+      },
+      "minItems": 1,
+      "maxItems": 20,
+      "uniqueItems": true
+    },
+    "write_scope": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "job.schema.json#/$defs/execution_scope"
+        }
+      ]
+    },
+    "budget_references": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "criterion_id",
+          "description",
+          "check_ids"
+        ],
+        "properties": {
+          "criterion_id": {
+            "type": "string",
+            "pattern": "[A-Za-z0-9][A-Za-z0-9._:-]{0,199}"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "check_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "[A-Za-z0-9][A-Za-z0-9._:-]{0,199}"
+            },
+            "minItems": 1,
+            "maxItems": 50,
+            "uniqueItems": true
+          }
+        }
+      },
+      "minItems": 0,
+      "maxItems": 50,
+      "uniqueItems": true
+    },
+    "required_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "check_id",
+          "evaluator_type",
+          "severity",
+          "config"
+        ],
+        "properties": {
+          "check_id": {
+            "type": "string",
+            "pattern": "[A-Za-z0-9][A-Za-z0-9._:-]{0,199}"
+          },
+          "evaluator_type": {
+            "type": "string",
+            "pattern": "[A-Za-z0-9][A-Za-z0-9._:-]{0,199}"
+          },
+          "severity": {
+            "enum": [
+              "critical",
+              "major",
+              "minor"
+            ]
+          },
+          "config": {
+            "type": "object"
+          }
+        }
+      },
+      "minItems": 1,
+      "maxItems": 98,
+      "uniqueItems": true
+    },
+    "required_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "sha256"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "[0-9a-f]{64}"
+          }
+        }
+      },
+      "minItems": 0,
+      "maxItems": 50,
+      "uniqueItems": true
+    },
+    "stop_conditions": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "no_execution",
+                  "on_blocker"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "at"
+            ],
+            "properties": {
+              "kind": {
+                "const": "deadline"
+              },
+              "at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 50,
+      "uniqueItems": true
+    },
+    "risk": {
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "approval_required"
+      ]
+    },
+    "blast_radius": {
+      "enum": [
+        "none",
+        "local",
+        "external"
+      ]
+    },
+    "reversibility": {
+      "enum": [
+        "no_side_effect",
+        "reversible",
+        "irreversible"
+      ]
+    },
+    "delegation_level": {
+      "enum": [
+        "L0",
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5"
+      ]
+    },
+    "approval_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution",
+        "completion",
+        "review"
+      ],
+      "properties": {
+        "execution": {
+          "type": "boolean"
+        },
+        "completion": {
+          "type": "boolean"
+        },
+        "review": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Canonical GOV-01 Task Contract"
+}

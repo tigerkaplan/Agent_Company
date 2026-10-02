@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from runtime.tests.contract_fixtures import declare_fixture_contract
+
 import json
 import subprocess
 import tempfile
@@ -159,7 +161,7 @@ class RemoteRuntimeTests(unittest.TestCase):
             "created_by": "remote-test",
         }
         value.update(overrides)
-        return value
+        return declare_fixture_contract(value)
 
     def identity(self, user: str = "test-human"):
         return self.config.identify(channel="local_test", platform_user_id=user)
@@ -383,7 +385,7 @@ class RemoteRuntimeTests(unittest.TestCase):
             ),
             self.identity(),
         )
-        self.assertEqual(result.error_code, "approval_stale")
+        self.assertEqual(result.error_code, "approval_not_available")
         self.assertEqual(self.approval_store.load(approval.approval_id).status, "PENDING")
 
     def test_o_expired_callback_rejected(self) -> None:

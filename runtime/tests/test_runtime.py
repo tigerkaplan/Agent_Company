@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from runtime.tests.contract_fixtures import declare_fixture_contract, execute_fixture
+
 import json
 import subprocess
 import sys
@@ -69,7 +71,7 @@ class JobRuntimeTests(unittest.TestCase):
             "created_by": "dispatcher",
         }
         value.update(overrides)
-        return value
+        return declare_fixture_contract(value)
 
     def create_running(self) -> dict[str, object]:
         created = self.runtime.create(self.payload())
@@ -103,12 +105,14 @@ class JobRuntimeTests(unittest.TestCase):
 
     def test_d_running_to_completed(self) -> None:
         running = self.create_running()
-        completed = self.runtime.complete(str(running["job_id"]))
+        with self.assertRaisesRegex(JobRuntimeError, "execution evidence"):
+            self.runtime.complete(str(running["job_id"]))
+        completed = execute_fixture(self.runtime, running)
         self.assertEqual(completed["status"], "completed")
 
     def test_e_completed_to_running_is_rejected(self) -> None:
         running = self.create_running()
-        completed = self.runtime.complete(str(running["job_id"]))
+        completed = execute_fixture(self.runtime, running)
         with self.assertRaisesRegex(
             JobRuntimeError, "Invalid lifecycle transition: completed -> running"
         ):
@@ -225,8 +229,8 @@ class JobRuntimeTests(unittest.TestCase):
             self.runtime.complete(str(running["job_id"]))
 
         reviewing = self.runtime.transition(str(running["job_id"]), "reviewing")
-        completed = self.runtime.complete(str(reviewing["job_id"]))
-        self.assertEqual(completed["status"], "completed")
+        with self.assertRaisesRegex(JobRuntimeError, "execution evidence"):
+            self.runtime.complete(str(reviewing["job_id"]))
 
 
 class GitIgnoreTests(unittest.TestCase):

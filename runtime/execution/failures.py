@@ -12,6 +12,7 @@ from runtime.continuation.store import AuthorizedPlanStoreError
 from runtime.core.jobs import RuntimeError as JobRuntimeError
 from runtime.core.references import ReferenceResolutionError
 from runtime.core.validation import JobValidationError
+from runtime.core.task_contract import TaskContractError
 from runtime.execution.models import ExecutionContractError
 from runtime.execution.validation import ExecutionResultValidationError
 from runtime.providers.artifacts import ProviderArtifactError
@@ -39,5 +40,6 @@ AUTHORITY_FAILURES = (
 POLICY_FAILURES = (
     ProviderConfigError, ContextBuildError, RetryContractError,
     ContinuationContractError, BudgetContractError, ReferenceResolutionError,
+    TaskContractError,
 )
 TRUSTED_EXECUTION_FAILURES = INTEGRITY_FAILURES + AUTHORITY_FAILURES + POLICY_FAILURES

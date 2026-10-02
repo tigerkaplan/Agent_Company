@@ -7,6 +7,7 @@ from typing import Any, Callable
 from uuid import uuid4
 
 from runtime.core.jobs import utc_now
+from runtime.core.task_contract import TaskContractError
 from runtime.compute_policy import ComputePolicy
 from runtime.compute_policy.canonical import bind_project_context, canonical_inputs
 from runtime.compute_policy.policy import ComputeError
@@ -95,6 +96,12 @@ class ReviewerRuntime:
         else:
             try:
                 response = self.reviewer.review(package)
+            except TaskContractError:
+                response = ReviewerResponse(
+                    decision="NEEDS_HUMAN", reason="Reviewer provider authority or tool confinement is unavailable",
+                    evidence_refs=verification.evidence_refs, reviewer="reviewer", review_provider=None,
+                    same_provider_review=False, model_review_performed=False, raw_output="",
+                    error_category="task_authority_blocked")
             except Exception:
                 response = ReviewerResponse(
                     decision="NEEDS_HUMAN",
@@ -222,7 +229,8 @@ class ReviewerRuntime:
             error_category=response.error_category,
         )
         try:
-            artifact_ref = self.store.create(package, result, response.raw_output)
+            artifact_ref = self.store.create(package, result, response.raw_output,
+                                             execution_request=request.to_dict())
         except Exception as error:
             raise ReviewRuntimeError("Review artifact could not be persisted") from error
         return ReviewRun(result=result, artifact_ref=artifact_ref)

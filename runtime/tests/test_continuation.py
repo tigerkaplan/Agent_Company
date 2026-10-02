@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from runtime.tests.contract_fixtures import declare_fixture_contract, persist_fixture_review, persist_execution_fixture
+
 import json
 import tempfile
 import unittest
@@ -115,6 +117,10 @@ class CountingExecutor(ResultExecutor):
 class Reviewer:
     def __init__(self, decision: str = "PASS") -> None:
         self.decision = decision
+        from runtime.review.store import FileReviewStore
+        self.review_temporary = tempfile.TemporaryDirectory()
+        self.store = FileReviewStore(Path(self.review_temporary.name))
+        self.store.temporary_owner = self.review_temporary
 
     def run(
         self,
@@ -123,7 +129,7 @@ class Reviewer:
         result: ExecutionResult,
     ) -> ReviewRun:
         review_id = f"review-{result.execution_id}"
-        return ReviewRun(
+        return persist_fixture_review(self.store, job, request, result, ReviewRun(
             ReviewResult(
                 review_id=review_id,
                 job_id=result.job_id,
@@ -148,7 +154,7 @@ class Reviewer:
                 "ref": f"runtime-review:{review_id}",
                 "description": "Deterministic review result",
             },
-        )
+        ))
 
 
 class ContinuationTests(unittest.TestCase):
@@ -197,7 +203,7 @@ class ContinuationTests(unittest.TestCase):
             "created_by": "core02-test",
         }
         value.update(overrides)
-        return value
+        return declare_fixture_contract(value)
 
     def worker(
         self,
@@ -374,7 +380,7 @@ class ContinuationTests(unittest.TestCase):
             execution_ref="runtime-execution:crash-window",
         )
         self.jobs.record_execution_success(
-            root["job_id"], [], continuation=decision.checkpoint
+            root["job_id"], [persist_execution_fixture(self.jobs, running, decision.checkpoint["latest_execution_ref"].split(":", 1)[1])], continuation=decision.checkpoint
         )
         reloaded = JobRuntime(self.root / "state" / "jobs", clock=self.clock)
         checkpoint = reloaded.show(root["job_id"])["continuation"]
@@ -392,7 +398,7 @@ class ContinuationTests(unittest.TestCase):
             result_status="succeeded",
             execution_ref="runtime-execution:restart",
         )
-        self.jobs.record_execution_success(root["job_id"], [], continuation=decision.checkpoint)
+        self.jobs.record_execution_success(root["job_id"], [persist_execution_fixture(self.jobs, running, decision.checkpoint["latest_execution_ref"].split(":", 1)[1])], continuation=decision.checkpoint)
         recovered = ContinuationRuntime(self.jobs, self.approvals).recover()
         self.assertEqual(len(recovered), 1)
         self.assertEqual(recovered[0]["status"], "queued")
@@ -992,7 +998,7 @@ class ContinuationTests(unittest.TestCase):
             execution_ref="runtime-execution:fault-window",
         )
         self.jobs.record_execution_success(
-            str(root["job_id"]), [], continuation=decision.checkpoint
+            str(root["job_id"]), [persist_execution_fixture(self.jobs, running, decision.checkpoint["latest_execution_ref"].split(":", 1)[1])], continuation=decision.checkpoint
         )
         child = self.jobs.reserve_continuation(str(root["job_id"]))
         self.assertEqual(child["status"], "created")
@@ -1012,6 +1018,7 @@ class ContinuationTests(unittest.TestCase):
         running = self.jobs.claim(claimed_by="review-worker", lease_seconds=30)
         self.assertIsNotNone(running)
         execution_ref = "runtime-execution:review-window"
+        persist_execution_fixture(self.jobs, running, "review-window")
         execution_decision = ContinuationPolicy.decide_execution(
             running, result_status="succeeded", execution_ref=execution_ref
         )
@@ -1021,6 +1028,11 @@ class ContinuationTests(unittest.TestCase):
             continuation=execution_decision.checkpoint,
         )
         review_ref = {"ref_type": "review", "ref": "runtime-review:review-window"}
+        reviewer = Reviewer()
+        self.jobs.review_store = reviewer.store
+        record = self.executions.load("review-window")
+        request = ExecutionRequest.from_persisted_dict(record.request)
+        review_ref = reviewer.run(reviewing, request, record.result).artifact_ref
         review_decision = ContinuationPolicy.decide_review(
             reviewing, decision="PASS", review_ref=str(review_ref["ref"])
         )
@@ -1232,12 +1244,12 @@ class ContinuationTests(unittest.TestCase):
         fork["job_id"] = "job-competing-continuation"
         self.jobs.store.create(fork)
         with self.assertRaisesRegex(
-            JobRuntimeError, "child ID|competing canonical children"
+            JobRuntimeError, "child ID|competing canonical children|task contract"
         ):
             self.jobs.logical_statuses()
         restarted = JobRuntime(self.jobs.store.root, clock=self.clock)
         with self.assertRaisesRegex(
-            JobRuntimeError, "child ID|competing canonical children"
+            JobRuntimeError, "child ID|competing canonical children|task contract"
         ):
             restarted.show(str(child["job_id"]))
 

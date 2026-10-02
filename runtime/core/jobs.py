@@ -48,6 +48,8 @@ from runtime.retry.runtime import RetryRuntime
 from runtime.retry.store import FileRetryStore, RetryStoreError
 from runtime.storage.execution_store import ExecutionStoreError, FileExecutionStore
 from runtime.storage.file_store import FileJobStore, JobStoreError
+from runtime.core.task_contract import (TaskContractError, TaskContractStore,
+                                       default_contract, validate_binding, completion, verify_completion)
 
 
 class RuntimeError(ValueError):
@@ -76,6 +78,7 @@ class JobRuntime:
 
     _MANAGED_CREATE_FIELDS = {
         "schema_version",
+        "task_completion",
         "job_id",
         "created_at",
         "last_updated_at",
@@ -108,6 +111,7 @@ class JobRuntime:
         notification_emitter: Any | None = None,
     ) -> None:
         self.store = FileJobStore(state_root)
+        self.review_store = None
         self.authorized_plan_store = FileAuthorizedPlanStore(
             self.store.root / ".continuation-authority"
         )
@@ -116,6 +120,8 @@ class JobRuntime:
         )
         self.retry_store = FileRetryStore(self.store.root / ".retry-policy")
         self.progress = ProgressRuntime(self.store.root / ".progress")
+        self.task_contract_store = TaskContractStore(
+            self.store.root / ".task-contracts", progress=self.progress)
         self.clock = clock
         self.id_factory = id_factory
         self.lifecycle = lifecycle or Lifecycle()
@@ -273,6 +279,10 @@ class JobRuntime:
     ) -> dict[str, Any]:
         """Reload and revalidate exact work immediately before executor delegation."""
         job = self.validate_claim(job_id, claimed_by)
+        try:
+            validate_binding(job, now=self.clock(), executing=True)
+        except TaskContractError as error:
+            raise RuntimeError(str(error)) from error
         try:
             self.retry_runtime.validate_authorization(job, for_execution=True)
         except RetryStoreError as error:
@@ -639,17 +649,8 @@ class JobRuntime:
         updated["approval_status"] = (
             "approved" if decision == "APPROVED" else "denied"
         )
-        updated["approval"] = {
-            "approval_id": approval["approval_id"],
-            "requested_action": action,
-            "execution_id": approval.get("execution_id"),
-            "review_id": approval.get("review_id"),
-            "status": decision,
-            "recorded_at": approval["resolved_at"],
-            "recorded_by": approval["decided_by"],
-            "actor_type": approval["decision_actor_type"],
-            "authorization_fingerprint": approval["authorization_fingerprint"],
-        }
+        from runtime.approvals.models import ApprovalRequest
+        updated["approval"] = ApprovalRequest.from_dict(approval).compact()
         updated["status"] = target
         if (
             decision == "APPROVED"
@@ -855,6 +856,7 @@ class JobRuntime:
             "continuation_parent_job_id",
             "execution_budget",
             "compute_requirements",
+            "task_contract",
             "retry_policy",
         )
         payload = {
@@ -903,6 +905,7 @@ class JobRuntime:
     ) -> dict[str, Any]:
         timestamp = self.clock()
         job = deepcopy(payload)
+        supplied_budget = deepcopy(job.get("execution_budget"))
         job_id = job_id_override or self._unused_job_id()
         if job_id_override is not None and self.store.exists(job_id_override):
             raise RuntimeError("Reserved retry identity already exists")
@@ -965,6 +968,13 @@ class JobRuntime:
                 raise RuntimeError(str(error)) from error
         if parent_job_id is not None:
             job["parent_job_id"] = parent_job_id
+        if job.get("task_contract") is not None and supplied_budget != job.get("execution_budget"):
+            if type(job["task_contract"]) is not dict:
+                raise RuntimeError("Task contract must be a canonical object")
+            if job["task_contract"].get("budget_references") != supplied_budget:
+                raise RuntimeError("Task contract budget reference does not match requested budget")
+            job["task_contract"]["budget_references"] = deepcopy(job.get("execution_budget"))
+        job.setdefault("task_contract", default_contract(job))
         self._validate_against_persisted_lineage(
             job, authorized_plan=authorized_plan
         )
@@ -975,8 +985,9 @@ class JobRuntime:
                     job["continuation_plan"],
                     authorized_at=timestamp,
                 )
+            self.task_contract_store.create(job)
             self.store.create(job)
-        except (AuthorizedPlanStoreError, JobStoreError) as error:
+        except (AuthorizedPlanStoreError, JobStoreError, TaskContractError) as error:
             raise RuntimeError(str(error)) from error
         return deepcopy(job)
 
@@ -1069,6 +1080,11 @@ class JobRuntime:
                 )
                 if payload.get("execution_mode") == "CONTROLLED_WRITE":
                     payload["review_required"] = True
+                payload["task_contract"] = deepcopy(parent["task_contract"])
+                payload["task_contract"]["objective"] = payload["task"]
+                payload["task_contract"]["inputs"] = deepcopy(payload["input_refs"])
+                if parent["task_contract"]["approval_requirements"]["review"]:
+                    payload["review_required"] = True
                 timestamp = self.clock()
                 child = deepcopy(payload)
                 child.update(
@@ -1082,9 +1098,10 @@ class JobRuntime:
                     }
                 )
                 self._validate_against_persisted_lineage(child)
+                self.task_contract_store.create(child)
                 self.store.create(child)
                 return deepcopy(child)
-        except JobStoreError as error:
+        except (JobStoreError, TaskContractError) as error:
             raise RuntimeError(str(error)) from error
 
     def _transition_job(
@@ -1161,11 +1178,21 @@ class JobRuntime:
                     return deepcopy(current)
                 if current["status"] != job["status"]:
                     self.lifecycle.require_transition(current["status"], job["status"])
+                if current["review_required"] and not job["review_required"]:
+                    raise RuntimeError("Canonical review requirement cannot be weakened")
+                validate_binding(job)
+                self.task_contract_store.strengthen(current, job)
+                self.task_contract_store.verify(job)
+                if job["status"] == "completed":
+                    evidence, job["task_completion"] = completion(self, job)
+                    job["task_completion"] = self.task_contract_store.bind_completion(job["job_id"], job["task_completion"])
+                    if evidence not in job["output_refs"]:
+                        job["output_refs"].append(evidence)
                 self._validate_against_persisted_lineage(job)
                 self.progress.reserve_transition(current, job)
                 self.store.save(job)
                 self.progress.observe_job(job)
-        except (JobStoreError, ProgressError, LifecycleError) as error:
+        except (JobStoreError, ProgressError, LifecycleError, TaskContractError, ValueError) as error:
             raise RuntimeError(str(error)) from error
         if self.notification_emitter is not None and job["status"] in {
             "completed",
@@ -1439,6 +1466,15 @@ class JobRuntime:
                 raise RuntimeError(
                     "CONTROLLED_WRITE approval does not match the current action scope"
                 )
+
+        try:
+            validate_binding(job)
+            if self.store.exists(job["job_id"]):
+                self.task_contract_store.verify(job)
+            if job["status"] == "completed":
+                verify_completion(self, job)
+        except (TaskContractError, ValueError, OSError, KeyError, TypeError) as error:
+            raise RuntimeError(f"Invalid canonical task contract: {error}") from error
 
     @staticmethod
     def _parse_timestamp(value: str, label: str) -> datetime:

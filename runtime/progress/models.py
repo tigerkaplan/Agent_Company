@@ -41,6 +41,11 @@ class ProgressEvent:
             raise ProgressError("Step events require a canonical step")
         if self.event_type.startswith(("execution_", "tool_")) and self.execution_id is None:
             raise ProgressError("Execution/tool events require an execution identity")
+        if self.event_type == "task_gate_observed" and (
+                self.detail not in {"created", "review"} or self.execution_id is not None
+                or self.evidence_id is None or len(self.evidence_id) != 64
+                or any(character not in "0123456789abcdef" for character in self.evidence_id)):
+            raise ProgressError("Task gate observations require bounded canonical evidence")
 
     def to_dict(self):
         return asdict(self)

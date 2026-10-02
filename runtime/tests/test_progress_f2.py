@@ -167,7 +167,10 @@ raise Exception("crash boundary was not reached")
         self.alter_sql(job, "DROP TABLE recovery;")
         with self.assertRaises(JobRuntimeError):
             worker.recover_persisted_results()
-        self.assertEqual(self.runtime.show(job["job_id"])["status"], "running")
+        # GOV-01F2 canonical reads now require intact independent gate history.
+        # Raw lifecycle state still proves recovery did not mutate the job.
+        with self.assertRaises(JobRuntimeError): self.runtime.show(job["job_id"])
+        self.assertEqual(self.runtime.store.load(job["job_id"])["status"], "running")
 
     def test_full_journal_rejects_before_recovery_mutates_state(self):
         job, worker = self.interrupted_execution()
@@ -190,7 +193,8 @@ raise Exception("crash boundary was not reached")
         self.alter_sql(job, "DROP TABLE recovery; CREATE TABLE recovery (job_id TEXT PRIMARY KEY NOT NULL, ready INTEGER NOT NULL, payload TEXT NOT NULL);")
         with self.assertRaises(JobRuntimeError):
             worker.recover_persisted_results()
-        self.assertEqual(self.runtime.show(job["job_id"])["status"], "running")
+        with self.assertRaises(JobRuntimeError): self.runtime.show(job["job_id"])
+        self.assertEqual(self.runtime.store.load(job["job_id"])["status"], "running")
 
 
 if __name__ == "__main__":

@@ -102,6 +102,32 @@ def _result(
     )
 
 
+class FileDigestEvaluator:
+    """Read one selected bounded file; produce observations, never authority."""
+    def evaluate(self, check: EvalCheckSpec, context: EvalContext) -> EvalCheckResult:
+        import hashlib
+        from pathlib import Path
+        import re
+        config = _config(check, required={"path", "sha256"})
+        if (type(config["path"]) is not str or type(config["sha256"]) is not str
+                or re.fullmatch("[0-9a-f]{64}", config["sha256"]) is None):
+            raise EvalEvaluatorError("FILE_DIGEST requires a canonical pinned file")
+        path = Path(config["path"])
+        observed = "missing_or_unsafe"
+        try:
+            if path.is_absolute() and path.is_file() and not path.is_symlink() and path.stat().st_size <= 2 * 1024 * 1024:
+                with path.open("rb") as handle:
+                    raw = handle.read(2 * 1024 * 1024 + 1)
+                if len(raw) <= 2 * 1024 * 1024:
+                    observed = hashlib.sha256(raw).hexdigest()
+        except OSError:
+            pass
+        passed = observed == config["sha256"]
+        return _result(check, "pass" if passed else "fail", config["sha256"], observed,
+                       "Selected file digest matches" if passed else "Selected file evidence is missing or changed",
+                       context, evidence=({"ref_type": "file", "ref": config["path"]},) if passed else ())
+
+
 class ExecutionResultContractEvaluator:
     def evaluate(self, check: EvalCheckSpec, context: EvalContext) -> EvalCheckResult:
         _config(check, required=set())
@@ -324,6 +350,7 @@ class FieldMatchEvaluator:
 
 
 EVALUATOR_REGISTRY: dict[str, Evaluator] = {
+    "FILE_DIGEST": FileDigestEvaluator(),
     "EXECUTION_RESULT_CONTRACT": ExecutionResultContractEvaluator(),
     "EXPECTED_STATUS": ExpectedStatusEvaluator(),
     "REQUIRED_EVIDENCE": RequiredEvidenceEvaluator(),

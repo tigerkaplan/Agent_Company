@@ -461,6 +461,7 @@ def retry_work_digest(job: Mapping[str, Any]) -> str:
         "continuation_plan",
         "execution_budget",
         "retry_policy",
+        "task_contract",
     )
     material = {name: deepcopy(job.get(name)) for name in fields}
     checkpoint = job.get("continuation")

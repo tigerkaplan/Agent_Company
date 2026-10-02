@@ -8,7 +8,7 @@ import hashlib
 import json
 import re
 
-from runtime.execution.models import ExecutionRequest
+from runtime.execution.models import ExecutionRequest, FrozenMapping
 
 PROFILES = ('FAST', 'STANDARD', 'DEEP', 'CRITICAL')
 CLASSIFICATIONS = ('public', 'internal', 'confidential', 'restricted')
@@ -54,10 +54,10 @@ def _bounded(value, depth=0, budget=None):
     elif type(value) is int:
         if not -(2**63) <= value < 2**63:
             raise ComputeError('Compute binding integer out of range')
-    elif type(value) in (dict, list, tuple):
+    elif type(value) in (dict, list, tuple, FrozenMapping):
         if len(value) > 4096:
             raise ComputeError('Compute binding collection too large')
-        if type(value) is dict:
+        if type(value) in (dict, FrozenMapping):
             for key, item in value.items():
                 if type(key) is not str:
                     raise ComputeError('Noncanonical binding key')

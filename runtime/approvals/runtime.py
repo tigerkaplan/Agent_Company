@@ -50,6 +50,8 @@ class ApprovalRuntime:
         self.clock = clock
         self.notification_emitter = notification_emitter
         self.job_runtime.configure_authority_stores(store, execution_store)
+        if review_store is not None:
+            self.job_runtime.review_store = review_store
 
     def request_execution(
         self,
@@ -93,7 +95,8 @@ class ApprovalRuntime:
                 "Reviewed completion approval requires a reviewing job"
             )
         if (
-            review.decision != "NEEDS_HUMAN"
+            review.decision not in ({"NEEDS_HUMAN", "PASS"}
+                if job["task_contract"]["approval_requirements"]["completion"] else {"NEEDS_HUMAN"})
             or review.job_id != job_id
             or review.execution_id != execution_id
             or review_ref.get("ref") != f"runtime-review:{review.review_id}"
@@ -473,7 +476,8 @@ class ApprovalRuntime:
                     "result", {}
                 )
                 if (
-                    review_record.get("decision") != "NEEDS_HUMAN"
+                    review_record.get("decision") not in ({"NEEDS_HUMAN", "PASS"}
+                        if job["task_contract"]["approval_requirements"]["completion"] else {"NEEDS_HUMAN"})
                     or review_record.get("job_id") != request.job_id
                     or review_record.get("execution_id") != request.execution_id
                 ):

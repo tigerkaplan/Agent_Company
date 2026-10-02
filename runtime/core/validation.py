@@ -209,6 +209,8 @@ class JobValidator:
 
     @staticmethod
     def _has_type(value: Any, expected: str) -> bool:
+        if isinstance(expected, list):
+            return any(JobValidator._has_type(value, item) for item in expected)
         checks = {
             "object": lambda item: isinstance(item, Mapping),
             "array": lambda item: isinstance(item, list),

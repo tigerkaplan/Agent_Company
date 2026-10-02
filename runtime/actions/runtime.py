@@ -64,6 +64,10 @@ class ControlledWriteRuntime:
         context: Any,
         adapter: Any,
     ) -> ControlledWriteOutcome:
+        from runtime.core.task_contract import require_tool
+        require_tool(request, "controlled_write")
+        from runtime.core.task_contract import require_provider_tool_confinement
+        require_provider_tool_confinement(request, adapter)
         try:
             scope = ExecutionScope.from_dict(request.execution_scope or {})
         except ScopeContractError as error:

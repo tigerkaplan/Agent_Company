@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+from runtime.tests.contract_fixtures import ToolFreeCliFixture
+
+from runtime.tests.contract_fixtures import declare_fixture_contract
+
 import io
 import json
 import subprocess
@@ -38,6 +42,7 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
 
 class FakeAdapter:
+    native_tools = frozenset()
     def __init__(
         self,
         provider_id: str,
@@ -103,6 +108,7 @@ def request(**overrides: object) -> ExecutionRequest:
         "approval_status": "not_required",
     }
     values.update(overrides)
+    values = declare_fixture_contract(values)
     return ExecutionRequest(**values)  # type: ignore[arg-type]
 
 
@@ -234,7 +240,7 @@ class CliAdapterTests(unittest.TestCase):
         def timeout_runner(*args: object, **kwargs: object) -> object:
             raise subprocess.TimeoutExpired(args[0], 30, output="partial")
 
-        adapter = CliProviderAdapter(
+        adapter = ToolFreeCliFixture(
             self.config(),
             REPOSITORY_ROOT,
             runner=timeout_runner,
@@ -254,7 +260,7 @@ class CliAdapterTests(unittest.TestCase):
                 stderr="OPENAI_API_KEY=TEST_SENTINEL_VALUE",
             )
 
-        adapter = CliProviderAdapter(
+        adapter = ToolFreeCliFixture(
             self.config(),
             REPOSITORY_ROOT,
             runner=failed_runner,
@@ -282,7 +288,7 @@ class CliAdapterTests(unittest.TestCase):
 
         malicious = "--dangerously-bypass-approvals-and-sandbox; Remove-Item -Recurse"
         execution_request = request(task=malicious)
-        adapter = CliProviderAdapter(
+        adapter = ToolFreeCliFixture(
             self.config(),
             REPOSITORY_ROOT,
             runner=runner,
@@ -341,7 +347,7 @@ class CliAdapterTests(unittest.TestCase):
                 "ANTHROPIC_API_KEY": "claude-private",
                 "CLAUDE_CONFIG_DIR": "C:/wrong/claude-home",
             }
-            adapter = CliProviderAdapter(
+            adapter = ToolFreeCliFixture(
                 self.config(),
                 REPOSITORY_ROOT,
                 runner=runner,
@@ -408,7 +414,7 @@ class CliAdapterTests(unittest.TestCase):
     def test_h2_read_only_rejects_more_permissive_effective_modes(self) -> None:
         for effective in ("workspace-write", "danger-full-access"):
             with self.subTest(effective=effective):
-                adapter = CliProviderAdapter(
+                adapter = ToolFreeCliFixture(
                     self.config(),
                     REPOSITORY_ROOT,
                     runner=lambda *args, **kwargs: SimpleNamespace(
@@ -426,7 +432,7 @@ class CliAdapterTests(unittest.TestCase):
                 self.assertEqual(result.effective_sandbox_mode, effective)
 
     def test_h3_read_only_without_parseable_metadata_fails_closed(self) -> None:
-        adapter = CliProviderAdapter(
+        adapter = ToolFreeCliFixture(
             self.config(),
             REPOSITORY_ROOT,
             runner=lambda *args, **kwargs: SimpleNamespace(
@@ -450,7 +456,7 @@ class CliAdapterTests(unittest.TestCase):
                 return "C:/native/codex.exe"
             return "C:/shim/codex.cmd"
 
-        adapter = CliProviderAdapter(
+        adapter = ToolFreeCliFixture(
             self.config(), REPOSITORY_ROOT, runner=lambda *a, **k: None, which=which
         )
         availability = adapter.is_available()
@@ -460,7 +466,7 @@ class CliAdapterTests(unittest.TestCase):
 
     def test_i2_arbitrary_executable_is_rejected(self) -> None:
         with self.assertRaisesRegex(ProviderConfigError, "unsupported executable"):
-            CliProviderAdapter(
+            ToolFreeCliFixture(
                 self.config(executable="C:/arbitrary/provider.exe"),
                 REPOSITORY_ROOT,
                 runner=lambda *args, **kwargs: None,
@@ -480,7 +486,7 @@ class CliAdapterTests(unittest.TestCase):
         with self.assertRaisesRegex(
             ProviderConfigError, "unsupported controlled-write configuration"
         ):
-            CliProviderAdapter(
+            ToolFreeCliFixture(
                 self.config(controlled_write_arguments=insecure),
                 REPOSITORY_ROOT,
                 runner=lambda *args, **kwargs: None,

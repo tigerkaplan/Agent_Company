@@ -31,6 +31,7 @@
         "job_failed",
         "job_cancelled",
         "job_state_observed",
+        "task_gate_observed",
         "transition_requested",
         "step_started",
         "step_completed",

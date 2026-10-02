@@ -162,4 +162,5 @@ class ExecutionContextBuilder:
             execution_scope=request.execution_scope,
             dry_run=request.dry_run,
             context_pack=pack,
+            task_contract=request.to_dict().get("task_contract"),
         )

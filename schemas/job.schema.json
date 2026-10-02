@@ -25,7 +25,8 @@
     "input_refs",
     "output_refs",
     "created_by",
-    "last_updated_at"
+    "last_updated_at",
+    "task_contract"
   ],
   "allOf": [
     {
@@ -89,6 +90,143 @@
     }
   ],
   "properties": {
+    "task_contract": {"$ref": "task-contract.schema.json"},
+    "task_completion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "contract_digest",
+        "execution_id",
+        "execution_digest",
+        "eval_id",
+        "eval_digest",
+        "review_ref",
+        "review_digest",
+        "artifact_digests",
+        "approval_digests",
+        "approval_store_root",
+        "accepted_at",
+        "execution_store_root",
+        "review_store_root",
+        "provider_store_root",
+        "mutation_store_root"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "integer",
+          "const": 2
+        },
+        "contract_digest": {
+          "type": "string",
+          "pattern": "[0-9a-f]{64}"
+        },
+        "execution_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "execution_digest": {
+          "type": "string",
+          "pattern": "[0-9a-f]{64}"
+        },
+        "eval_id": {
+          "type": "string",
+          "pattern": "eval-[0-9a-f]{32}"
+        },
+        "eval_digest": {
+          "type": "string",
+          "pattern": "[0-9a-f]{64}"
+        },
+        "review_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "review_digest": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "[0-9a-f]{64}"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "artifact_digests": {
+          "type": "object",
+          "maxProperties": 50,
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "[0-9a-f]{64}"
+          }
+        },
+        "approval_digests": {
+          "type": "object",
+          "maxProperties": 64,
+          "additionalProperties": {"type": "string", "pattern": "[0-9a-f]{64}"}
+        },
+        "approval_store_root": {
+          "oneOf": [
+            {"type": "string", "minLength": 1, "maxLength": 4096},
+            {"type": "null"}
+          ]
+        },
+        "accepted_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "execution_store_root": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "review_store_root": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "provider_store_root": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mutation_store_root": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
     "schema_version": {
       "type": "integer",
       "const": 1

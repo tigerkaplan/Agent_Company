@@ -26,6 +26,8 @@ class LocalExecutor:
         self.last_request: ExecutionRequest | None = None
 
     def execute(self, request: ExecutionRequest) -> ExecutionResult:
+        from runtime.core.task_contract import require_tool
+        require_tool(request, "local_executor")
         self.last_request = request
         started_at = self.clock()
         completed_at = self.clock()

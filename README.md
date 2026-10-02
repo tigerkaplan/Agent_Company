@@ -1,5 +1,51 @@
 # Agent Company
 
+## GOV-01 Current State - 2026-10-02
+
+ACTIVE: None; GOV-01 Task & Authority Contract / CLOSED / READY TO COMMIT (uncommitted).
+NEXT: GOV-02 / NOT STARTED; sequence only, no authorization to begin.
+Expected and verified starting HEAD: `92d8020`. V1 scope freeze remains ACTIVE.
+CORE-01-11 foundations are reused; no separate approval, budget, review, or scope authority.
+See [GOV-01 implementation and classification](governance/task-contract/README.md).
+### GOV-01C2 verified closure - 2026-10-02
+
+GOV-01: CLOSED / READY TO COMMIT; implementation remains uncommitted.
+GOV-02: NEXT / NOT STARTED; sequence only, no authorization to begin.
+Repository evidence directly verified: final independent review PASS, fresh
+separate reviewer role CONFIRMED (same provider), Critical/Major/Minor 0/0/0,
+and 1227/1227 PASS in one complete uninterrupted full run (702.709 seconds).
+See [review evidence](governance/task-contract/REVIEW_EVIDENCE.json),
+[review history](governance/task-contract/REVIEW_HISTORY.md), and
+[validation](governance/task-contract/VALIDATION.md).
+All 52 reviewed implementation-source hashes and diagnostic log hashes match.
+R1/F1/R2/F2 findings and validation remain preserved; actual R3 FIX and historical
+R4 PASS retain provenance. R3's failed full run and independence limitation are
+not rewritten as PASS. Fresh GOV-01C2 targeted tests: 60/60 PASS, exit 0,
+94.824 seconds. The complete full run is verified review evidence, not a new
+closure-time full-regression run.
+Coherent replacement of every relevant trusted store with a historical snapshot
+remains outside local rollback detection; hashes are not signatures or an
+external monotonic counter. V1 freeze, remaining audit gaps, CORE-01-11 closure,
+and accurate prior documentation-drift corrections remain intact.
+Complete diff/status/tree inspected; GOV-02 and planned future paths absent
+(excluding the explicitly CURRENT shared/projects/brightshore/). git diff --check PASS.
+No runtime behavior change, commit, push, deployment or GOV-02 work performed.
+
+### Historical GOV-01C incomplete closure verification - 2026-10-02
+
+GOV-01: OPEN / CLOSURE INCOMPLETE; implementation remains uncommitted.
+GOV-02: NEXT / NOT STARTED; no authorization to begin.
+The owner reports Independent Re-review R4 PASS, but no R3/R4 review report
+was located in repository documentation or local review evidence. R4 PASS has
+not been independently verified by this closure task; no review history is
+inferred or fabricated. Existing R1/F1/R2/F2 evidence is preserved. Closure to
+CLOSED / READY TO COMMIT awaits the actual R4 report and its R3 provenance.
+Fresh GOV-01C targeted validation: 60/60 PASS (30.708 seconds, exit 0).
+V1 freeze and remaining audit gaps are unchanged. No runtime changes, commit,
+or GOV-02 implementation were performed by GOV-01C.
+
+The dated reconciliation below is historical evidence, not current GOV-01 status.
+
 ## DOC-TREE-CORE11 Post-Commit Reconciliation - 2026-10-01
 
 Verified clean starting tree at `8bda7eb` (`feat: add external content isolation`).
@@ -180,14 +226,21 @@ CLOSED / COMMITTED at `8bda7eb`. Supporting CURRENT paths are
 The former planned `runtime/isolation/` label is superseded by this integrated
 implementation and remains physically absent; it is not an outstanding target.
 
+## GOV-01 Current Physical Paths
+
+`runtime/core/task_contract.py`, `schemas/task-contract.schema.json`,
+`runtime/tests/test_task_contract.py`, `runtime/tests/test_task_contract_f1.py`,
+`runtime/tests/test_task_contract_f2.py`, and `runtime/tests/contract_fixtures.py` are
+CURRENT. Documentation exists in `governance/task-contract/`,
+`governance/delegation/`, `governance/stop-conditions/`, and `governance/completion/`.
+These describe the integrated runtime; they do not establish duplicate authority stores.
+
 ## Future / Target Repository Structure
 
 The proposed paths in the list below are PLANNED and absent from the current
 physical tree. This list records structural ownership only; implementation
 checkpoints create paths when real content exists.
 
-- GOV-01: `governance/task-contract/`, `governance/delegation/`,
-  `governance/stop-conditions/`, and `governance/completion/`.
 - GOV-02: `governance/capability-certification/` and
   `governance/audit/decision-trace/`.
 - ORCH-01: `orchestrator/graph/`.
@@ -241,7 +294,7 @@ and SYNC-04A. The exception gate and accepted refinements live in
 LATER / REFERENCE; only critical implementation, security, data-loss, authority,
 architectural-consistency, or completion-correctness blockers may be evaluated
 for V1. They do not interrupt the checkpoint sequence or grant implementation
-authority. ACTIVE: None; NEXT: GOV-01 Task & Authority Contract / NOT STARTED.
+authority. ACTIVE: None; GOV-01 CLOSED / READY TO COMMIT (uncommitted); NEXT: GOV-02 / NOT STARTED.
 
 Current canonical agents: 10; frozen V1 target: 14. CAP-CREATIVE-01 is accepted
 non-blocking capability/tool architecture; CAP-DOC-01, summary-indexed retrieval,

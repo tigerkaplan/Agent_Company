@@ -28,6 +28,7 @@ class FileReviewStore:
         package: ReviewPackage,
         result: ReviewResult,
         raw_output: str,
+        *, execution_request: dict | None = None,
     ) -> dict[str, Any]:
         path = self._path(result.review_id)
         if path.exists():
@@ -40,6 +41,9 @@ class FileReviewStore:
             "raw_output": bound_text(sanitize_provider_text(raw_output), 256 * 1024),
             "result": result.to_dict(),
         }
+        from runtime.core.task_contract import digest
+        record["task_contract_digest"] = digest(package.job.get("task_contract"))
+        record["execution_request_digest"] = digest(execution_request)
         self._write(path, record)
         return {
             "ref_type": "review",

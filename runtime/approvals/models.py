@@ -262,6 +262,14 @@ class ApprovalRequest:
             "decision_actor_type": self.decision_actor_type,
         }
 
+    def compact(self) -> dict[str, Any]:
+        """Canonical projection embedded in a job; never standalone authority."""
+        return {"approval_id": self.approval_id, "requested_action": self.requested_action,
+                "execution_id": self.execution_id, "review_id": self.review_id,
+                "status": self.status, "recorded_at": self.resolved_at,
+                "recorded_by": self.decided_by, "actor_type": self.decision_actor_type,
+                "authorization_fingerprint": self.authorization_fingerprint}
+
     @classmethod
     def from_dict(cls, value: dict[str, Any]) -> ApprovalRequest:
         expected = {
@@ -288,7 +296,7 @@ class ApprovalRequest:
         if (
             not set(value).issubset(expected | optional)
             or not expected.issubset(value)
-            or value.get("schema_version") != 1
+            or type(value.get("schema_version")) is not int or value.get("schema_version") != 1
         ):
             raise ApprovalContractError("Approval record has invalid fields or version")
         string_fields = (

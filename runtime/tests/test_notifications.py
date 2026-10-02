@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from runtime.tests.contract_fixtures import declare_fixture_contract, execute_fixture
+
 import json
 import io
 import subprocess
@@ -123,7 +125,7 @@ class NotificationRuntimeTests(unittest.TestCase):
             "created_by": "notification-test",
         }
         value.update(overrides)
-        return value
+        return declare_fixture_contract(value)
 
     def event(
         self,
@@ -260,7 +262,7 @@ class NotificationRuntimeTests(unittest.TestCase):
         self.assertEqual(len(self.client.sent), 2)
 
     def test_b_job_completed_notification_is_created(self) -> None:
-        completed = self.jobs.complete(str(self.running_job()["job_id"]))
+        completed = execute_fixture(self.jobs, self.running_job())
 
         event = self.store.list()[0]["notification"]
         self.assertEqual(completed["status"], "completed")
@@ -344,9 +346,9 @@ class NotificationRuntimeTests(unittest.TestCase):
         )
         job = jobs.create(self.payload())
         jobs.enqueue(str(job["job_id"]))
-        jobs.claim()
+        running = jobs.claim()
 
-        completed = jobs.complete(str(job["job_id"]))
+        completed = execute_fixture(jobs, running)
 
         self.assertEqual(completed["status"], "completed")
         self.assertEqual(jobs.show(str(job["job_id"]))["status"], "completed")

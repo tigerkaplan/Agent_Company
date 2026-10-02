@@ -115,6 +115,11 @@ class Worker:
         # A supplied ApprovalRuntime may have been built before the execution
         # store. Retry request authentication still uses this worker's store.
         self.runtime.execution_store = execution_store
+        if getattr(reviewer_runtime, "store", None) is not None:
+            self.runtime.review_store = reviewer_runtime.store
+            self.approval_runtime.review_store = reviewer_runtime.store
+        self.runtime.provider_artifact_store = getattr(executor, "artifact_store", None)
+        self.runtime.mutation_artifact_store = getattr(getattr(executor, "controlled_write_runtime", None), "store", None)
         self.runtime.retry_runtime.execution_store = execution_store
         self.budget_runtime = ExecutionBudgetRuntime(
             runtime.budget_store,
@@ -363,6 +368,7 @@ class Worker:
             ),
             retry_repair_scope=(job.get("retry_authorization", {}).get("repair_scope")
                                 if isinstance(job.get("retry_authorization"), dict) else None),
+            task_contract=job.get("task_contract"),
         )
 
     def recover_persisted_results(self) -> list[WorkerRunOutcome]:
@@ -482,6 +488,9 @@ class Worker:
                 message="Selected executor does not support the requested execution mode",
             )
         try:
+            from runtime.core.task_contract import require_tool
+            require_tool(request, "provider_call" if isinstance(self.executor, ProviderExecutor) else "local_executor",
+                         now=self.runtime.clock())
             if isinstance(self.executor, ProviderExecutor):
                 inputs = canonical_inputs(request, job, budget_decision)
                 result = self.executor.execute(request, compute_inputs=inputs)
@@ -693,7 +702,10 @@ class Worker:
                         )
                     review_result = review_run.result.to_dict()
                     approval_ref = None
-                    if review_run.result.decision == "NEEDS_HUMAN":
+                    gate_decision = review_run.result.decision
+                    if gate_decision == "PASS" and updated["task_contract"]["approval_requirements"]["completion"]:
+                        gate_decision = "NEEDS_HUMAN"
+                    if gate_decision == "NEEDS_HUMAN":
                         try:
                             approval_run = (
                                 self.approval_runtime.request_review_completion(
@@ -719,13 +731,13 @@ class Worker:
                         approval_result = approval_run.request.to_dict()
                     review_transition = self.runtime.apply_review_decision(
                         job["job_id"],
-                        decision=review_run.result.decision,
+                        decision=gate_decision,
                         reason=review_run.result.reason,
                         review_ref=review_run.artifact_ref,
                         approval_ref=approval_ref,
                         continuation=ContinuationPolicy.decide_review(
                             updated,
-                            decision=review_run.result.decision,
+                            decision=gate_decision,
                             review_ref=str(review_run.artifact_ref["ref"]),
                         ).checkpoint,
                     )
@@ -795,6 +807,16 @@ class Worker:
                     continuation=continuation_decision.checkpoint,
                 )
         except (RuntimeError, ApprovalRuntimeError, ContinuationContractError) as error:
+            from runtime.core.task_contract import TaskContractError
+            if isinstance(error.__cause__, TaskContractError):
+                try:
+                    failed = self.runtime.fail(job["job_id"], code="task_completion_blocked",
+                        message=str(error), retryable=False, failure_class="policy_failure")
+                    return WorkerRunOutcome(status=failed["status"], job_id=job["job_id"],
+                        execution_id=result.execution_id, result=serialized_result,
+                        error=failed["error"])
+                except RuntimeError:
+                    pass
             return WorkerRunOutcome(
                 status="worker_error",
                 job_id=job["job_id"],

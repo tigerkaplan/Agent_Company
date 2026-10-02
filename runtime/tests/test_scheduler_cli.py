@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from runtime.tests.contract_fixtures import declare_fixture_contract
+
 import json
 import tempfile
 import unittest
@@ -42,7 +44,7 @@ class SchedulerCliTests(unittest.TestCase):
 
     @staticmethod
     def payload() -> dict[str, object]:
-        return {
+        return declare_fixture_contract({
             "task": "Run local CLI fixture",
             "task_class": "operations",
             "agent": "operations",
@@ -55,7 +57,7 @@ class SchedulerCliTests(unittest.TestCase):
             "input_refs": [],
             "output_refs": [],
             "created_by": "phase-6m-cli-test",
-        }
+        })
 
     def invoke(self, *arguments: str) -> tuple[int, object, str]:
         stdout = StringIO()
@@ -94,7 +96,10 @@ class SchedulerCliTests(unittest.TestCase):
 
     def test_scheduler_run_once_executes_one_local_job(self) -> None:
         first = self.runtime.create(self.payload())
-        second = self.runtime.create({**self.payload(), "task": "second"})
+        second_payload = self.payload()
+        second_payload["task"] = "second"
+        second_payload["task_contract"]["objective"] = "second"
+        second = self.runtime.create(second_payload)
         self.runtime.enqueue(first["job_id"])
         self.runtime.enqueue(second["job_id"])
         code, result, error = self.invoke("scheduler", "run-once")

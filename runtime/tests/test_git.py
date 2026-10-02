@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from runtime.tests.contract_fixtures import declare_fixture_contract
+
 import hashlib
 import io
 import json
@@ -128,7 +130,7 @@ class GitRuntimeTests(unittest.TestCase):
             "dry_run": False,
         }
         created_job = self.jobs.create(
-            {
+            declare_fixture_contract({
                 "task": "Apply one verified controlled write",
                 "task_class": "software",
                 "project_id": self.repository.name,
@@ -143,7 +145,7 @@ class GitRuntimeTests(unittest.TestCase):
                 "created_by": "git-test",
                 "execution_mode": "CONTROLLED_WRITE",
                 "execution_scope": scope_dict,
-            }
+            })
         )
         pending = self.approvals.request_execution(
             created_job["job_id"], reason="Authorize test controlled write"
@@ -207,6 +209,7 @@ class GitRuntimeTests(unittest.TestCase):
             execution_id, mutation, "fixture diff\n", max_diff_bytes=1024 * 1024
         )
         request = ExecutionRequest(
+                      task_contract=approved["task_contract"],
             execution_id=execution_id,
             job_id=created_job["job_id"],
             task=created_job["task"],
@@ -279,7 +282,7 @@ class GitRuntimeTests(unittest.TestCase):
             context=(ContextEntry(ref="test", description="test", content="test"),),
             evidence=(),
         )
-        review_ref = self.reviews.create(package, review, "review output")
+        review_ref = self.reviews.create(package, review, "review output", execution_request=request.to_dict())
         if review_decision == "PASS":
             self.jobs.apply_review_decision(
                 created_job["job_id"],
@@ -546,7 +549,7 @@ class GitRuntimeTests(unittest.TestCase):
             ref for ref in job["output_refs"] if not ref["ref"].startswith("runtime-review:")
         ]
         job_path.write_text(json.dumps(job), encoding="utf-8")
-        with self.assertRaisesRegex(GitRuntimeError, "review_evidence_missing"):
+        with self.assertRaisesRegex(GitRuntimeError, "mutation_evidence_missing.*persisted independent review"):
             self.prepare()
 
     def test_aa_human_review_completion_is_commit_eligible(self) -> None:

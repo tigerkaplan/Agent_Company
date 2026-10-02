@@ -1380,6 +1380,10 @@ def run(arguments: list[str] | None = None) -> int:
                             "CONTROLLED_WRITE dry-run requires an execution scope"
                         )
                     payload["execution_scope"] = {**scope, "dry_run": True}
+                    if payload.get("task_contract") is not None:
+                        if payload["task_contract"].get("write_scope") != scope:
+                            raise RuntimeError("Task contract scope does not match dry-run input")
+                        payload["task_contract"]["write_scope"] = dict(payload["execution_scope"])
             result = runtime.create(payload)
         elif args.command == "enqueue":
             result = runtime.enqueue(args.job_id)

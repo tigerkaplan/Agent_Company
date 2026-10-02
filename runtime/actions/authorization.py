@@ -26,6 +26,8 @@ def authorization_fingerprint(value: Mapping[str, Any]) -> str:
         "task": value.get("task"),
         "input_refs": value.get("input_refs", []),
     }
+    if value.get("task_contract") is not None:
+        boundary["task_contract"] = value["task_contract"]
     continuation = value.get("continuation")
     if isinstance(continuation, Mapping):
         boundary["continuation"] = {

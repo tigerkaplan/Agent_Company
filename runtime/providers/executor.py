@@ -10,6 +10,7 @@ from runtime.compute_policy.canonical import bind_project_context
 
 from runtime.actions.runtime import ControlledWriteRuntime
 from runtime.core.jobs import utc_now
+from runtime.core.task_contract import TaskContractError
 from runtime.execution.failures import TRUSTED_EXECUTION_FAILURES
 from runtime.execution.models import ExecutionContractError, ExecutionRequest, ExecutionResult
 from runtime.progress.models import ProgressError
@@ -46,6 +47,8 @@ class ProviderExecutor:
         self.compute_inputs = compute_inputs
 
     def execute(self, request: ExecutionRequest, *, compute_inputs: ComputeInputs | None = None) -> ExecutionResult:
+        from runtime.core.task_contract import require_tool
+        require_tool(request, "provider_call")
         started_at = self.clock()
         selection: ProviderSelection | None = None
         compute_evidence = ()
@@ -117,6 +120,18 @@ class ProviderExecutor:
             package = replace(package, compute_decision=decision)
             mutation_ref = None
             adapter = self.router.adapters[selection.actual_provider]
+            from runtime.core.task_contract import require_provider_tool_confinement
+            try:
+                require_provider_tool_confinement(request, adapter)
+            except TaskContractError:
+                return ExecutionResult(
+                    execution_id=request.execution_id, job_id=request.job_id,
+                    status="blocked", summary=None, error=None,
+                    blockers=({"code": "task_tools_unavailable", "message":
+                        "The provider cannot enforce canonical task tool restrictions",
+                        "retryable": False, "requires_human": False},),
+                    provider=None, started_at=started_at, completed_at=self.clock(),
+                    execution_mode=request.execution_mode, dry_run=request.dry_run)
             if request.execution_mode == "CONTROLLED_WRITE":
                 if self.controlled_write_runtime is None:
                     return ExecutionResult(

@@ -72,6 +72,7 @@ class ExecutionPackage:
     dry_run: bool = False
     context_pack: Any = None
     compute_decision: Any = None
+    task_contract: Any = None
 
     def render(self) -> str:
         for entry in self.context:
@@ -80,6 +81,7 @@ class ExecutionPackage:
             from runtime.cache.policy import _canonical_pack_bytes
             _canonical_pack_bytes(self.context_pack)
         metadata = {
+            "task_contract": self.task_contract,
             "task_class": self.task_class,
             "project_id": self.project_id,
             "agent": self.agent,

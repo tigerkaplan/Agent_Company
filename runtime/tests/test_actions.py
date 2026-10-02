@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+from runtime.tests.contract_fixtures import ToolFreeCliFixture
+
+from runtime.tests.contract_fixtures import declare_fixture_contract
+
 import json
 import tempfile
 import unittest
@@ -30,6 +34,7 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
 
 class MutatingAdapter:
+    native_tools = frozenset()
     provider_id = "codex"
 
     def __init__(self, mutate=None, result: ProviderExecutionResult | None = None) -> None:
@@ -109,6 +114,7 @@ class ControlledWriteTests(unittest.TestCase):
             "execution_scope": scope,
         }
         values.update(overrides)
+        values = declare_fixture_contract(values)
         values["authorization_fingerprint"] = authorization_fingerprint(values)
         return ExecutionRequest(**values)
 
@@ -226,7 +232,7 @@ class ControlledWriteTests(unittest.TestCase):
         tampered = json.loads(path.read_text(encoding="utf-8"))
         tampered["execution_scope"]["allowed_paths"] = ["src/other.txt"]
         path.write_text(json.dumps(tampered), encoding="utf-8")
-        with self.assertRaisesRegex(ApprovalRuntimeError, "scope has changed"):
+        with self.assertRaisesRegex(ApprovalRuntimeError, "scope has changed|task contract"):
             approvals.resolve(
                 pending.request.approval_id,
                 decision="APPROVED",
@@ -389,7 +395,7 @@ class ControlledWriteTests(unittest.TestCase):
             )
 
         config = ProviderConfiguration(REPOSITORY_ROOT).cli_config("codex")
-        adapter = CliProviderAdapter(
+        adapter = ToolFreeCliFixture(
             config, REPOSITORY_ROOT, runner=runner, which=lambda _: "C:/fake/codex.exe"
         )
         with tempfile.TemporaryDirectory(prefix="agent-company-write-") as temporary:
@@ -439,7 +445,7 @@ class ControlledWriteTests(unittest.TestCase):
                 stderr="OpenAI Codex test\n--------\nsandbox: read-only\n--------\n",
             )
 
-        adapter = CliProviderAdapter(
+        adapter = ToolFreeCliFixture(
             ProviderConfiguration(REPOSITORY_ROOT).cli_config("codex"),
             REPOSITORY_ROOT,
             runner=runner,
@@ -469,7 +475,7 @@ class ControlledWriteTests(unittest.TestCase):
         self.assertEqual(evidence["applied_changed_files"], [])
 
     def test_n2b_danger_full_access_is_a_controlled_write_mismatch(self) -> None:
-        adapter = CliProviderAdapter(
+        adapter = ToolFreeCliFixture(
             ProviderConfiguration(REPOSITORY_ROOT).cli_config("codex"),
             REPOSITORY_ROOT,
             runner=lambda *args, **kwargs: SimpleNamespace(
@@ -498,7 +504,7 @@ class ControlledWriteTests(unittest.TestCase):
         )
 
     def test_n3_unreported_controlled_write_sandbox_fails_closed(self) -> None:
-        adapter = CliProviderAdapter(
+        adapter = ToolFreeCliFixture(
             ProviderConfiguration(REPOSITORY_ROOT).cli_config("codex"),
             REPOSITORY_ROOT,
             runner=lambda *args, **kwargs: SimpleNamespace(
@@ -518,7 +524,7 @@ class ControlledWriteTests(unittest.TestCase):
         )
 
     def test_n4_executor_preserves_non_retryable_sandbox_mismatch(self) -> None:
-        adapter = CliProviderAdapter(
+        adapter = ToolFreeCliFixture(
             ProviderConfiguration(REPOSITORY_ROOT).cli_config("codex"),
             REPOSITORY_ROOT,
             runner=lambda *args, **kwargs: SimpleNamespace(
@@ -564,7 +570,7 @@ class ControlledWriteTests(unittest.TestCase):
                 ),
             )
 
-        adapter = CliProviderAdapter(
+        adapter = ToolFreeCliFixture(
             ProviderConfiguration(REPOSITORY_ROOT).cli_config("codex"),
             REPOSITORY_ROOT,
             runner=runner,
@@ -815,7 +821,7 @@ class ControlledWriteTests(unittest.TestCase):
         tampered["execution_scope"]["dry_run"] = False
         path.write_text(json.dumps(tampered), encoding="utf-8")
 
-        with self.assertRaisesRegex(ApprovalRuntimeError, "scope has changed"):
+        with self.assertRaisesRegex(ApprovalRuntimeError, "scope has changed|task contract"):
             approvals.resolve(
                 pending.request.approval_id,
                 decision="APPROVED",

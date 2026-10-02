@@ -10,6 +10,7 @@ from runtime.compute_policy import ComputeError, ComputeInputs, ComputePolicy, P
 from runtime.compute_policy.canonical import bind_project_context, canonical_inputs
 from runtime.budget.models import BudgetDecision
 from runtime.providers.adapters import CliProviderAdapter
+from runtime.tests.contract_fixtures import ToolFreeCliFixture, declare_fixture_contract
 from runtime.providers.config import CliProviderConfig
 from runtime.tests.test_providers import CliAdapterTests
 from types import SimpleNamespace
@@ -354,7 +355,7 @@ class ComputeIntegrationTests(unittest.TestCase):
         def runner(arguments, **kwargs):
             captured.append((arguments, kwargs))
             return SimpleNamespace(returncode=0, stdout='ok', stderr='sandbox: read-only')
-        adapter = CliProviderAdapter(CliAdapterTests.config(timeout_seconds=300), REPOSITORY_ROOT,
+        adapter = ToolFreeCliFixture(CliAdapterTests.config(timeout_seconds=300), REPOSITORY_ROOT,
                                      runner=runner, which=lambda _: 'codex')
         package = self.builder.build.return_value
         for profile in ('FAST', 'STANDARD', 'DEEP', 'CRITICAL'):
@@ -372,7 +373,7 @@ class ComputeIntegrationTests(unittest.TestCase):
         claude_config = CliProviderConfig('claude', 'local_cli', 'claude',
             ('--bare', '--print', '--permission-mode', 'plan', '--no-session-persistence',
              'Execute the Agent Company package provided on stdin.'), 300, 128, 128)
-        claude = CliProviderAdapter(claude_config, REPOSITORY_ROOT, runner=runner,
+        claude = ToolFreeCliFixture(claude_config, REPOSITORY_ROOT, runner=runner,
                                     which=lambda _: 'claude')
         claude_decision = ComputePolicy((ProviderLimits('claude'),)).decide(self.req, inputs)
         claude.execute(self.req, replace(package, compute_decision=claude_decision))
@@ -391,7 +392,7 @@ class ComputeIntegrationTests(unittest.TestCase):
                    'risk_level': 'low', 'approval_status': 'not_required',
                    'review_required': False, 'input_refs': [], 'output_refs': [],
                    'max_attempts': 1, 'created_by': 'local-cli-test'}
-        ordinary = runtime.create(payload)
+        ordinary = runtime.create(declare_fixture_contract(payload))
         runtime.enqueue(ordinary['job_id'])
         self.assertEqual(worker.run_once().status, 'completed')
         called = sum(len(adapter.calls) for adapter in self.adapters.values())

@@ -12,6 +12,7 @@ import unittest
 from unittest.mock import patch
 
 from runtime.core.jobs import JobRuntime, RuntimeError as JobRuntimeError
+from runtime.tests.contract_fixtures import persist_execution_fixture
 from runtime.progress.models import ProgressError, ProgressEvent, canonical, digest
 from runtime.progress.store import MAX_JOB_EVENTS, ProgressStore
 from runtime.storage.file_store import JobStoreError
@@ -29,7 +30,10 @@ class ProgressRepairTests(unittest.TestCase):
     def running(self):
         job = self.enqueue()
         self.runtime.claim(claimed_by="repair-worker", lease_seconds=300)
-        return self.runtime.show(job["job_id"])
+        running = self.runtime.show(job["job_id"])
+        ref = persist_execution_fixture(self.runtime, running, "fixture-" + job["job_id"])
+        running["output_refs"].append(ref)
+        return self.runtime._save(running)
 
     def events(self, job):
         return self.runtime.progress.store.read(self.runtime.progress.logical_id(job))
@@ -157,7 +161,8 @@ except RuntimeError:
             self.events(job)
         with self.assertRaises(JobRuntimeError):
             self.runtime.reconcile_progress()
-        self.assertEqual(self.runtime.show(job["job_id"])["status"], "completed")
+        with self.assertRaises(JobRuntimeError): self.runtime.show(job["job_id"])
+        self.assertEqual(self.runtime.store.load(job["job_id"])["status"], "completed")
 
     def test_near_capacity_completion_rejects_before_state_write(self):
         job = self.running()

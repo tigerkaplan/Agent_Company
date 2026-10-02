@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from runtime.tests.contract_fixtures import declare_fixture_contract
+
 import json
 import tempfile
 import unittest
@@ -88,7 +90,7 @@ class RetryHarness:
             "retry_policy": cls.retry_config(),
         }
         value.update(overrides)
-        return value
+        return declare_fixture_contract(value)
 
     def running(self, **overrides: object) -> dict[str, object]:
         job = self.jobs.create(self.payload(**overrides))

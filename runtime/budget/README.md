@@ -20,8 +20,9 @@ account, or financial budget.
 
 Tool discovery and deferred definition/schema loading are not tool invocation
 and consume no unit. CORE-05 defines no separate tool-call counter because the
-current runtime has no canonical tool-invocation boundary. Adding one requires
-an explicit later contract; provider prose cannot create it.
+budget policy counts Worker-to-Executor delegations rather than individual tool
+invocations. CORE-07 observes host tool boundaries without introducing a separate
+CORE-05 tool-call budget; provider prose cannot create one.
 
 ## Active Time
 

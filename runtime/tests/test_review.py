@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from runtime.tests.contract_fixtures import declare_fixture_contract
+
 import io
 import json
 import subprocess
@@ -65,6 +67,7 @@ class FakeReviewer:
 
 
 class FakeAdapter:
+    native_tools = frozenset()
     def __init__(
         self,
         provider_id: str,
@@ -108,6 +111,8 @@ class ReviewTestHarness:
         )
         self.review_store = FileReviewStore(self.execution_root / "reviews")
         self.runtime = JobRuntime(self.job_root)
+        self.runtime.execution_store = self.execution_store
+        self.runtime.review_store = self.review_store
 
     def tearDown(self) -> None:
         self.temporary.cleanup()
@@ -129,7 +134,7 @@ class ReviewTestHarness:
             "created_by": "review-test",
         }
         value.update(overrides)
-        return value
+        return declare_fixture_contract(value)
 
     def prepare_execution(
         self,
@@ -147,6 +152,7 @@ class ReviewTestHarness:
         execution_id = f"execution-{created['job_id']}"
         refs = CanonicalReferenceResolver(REPOSITORY_ROOT).resolve(running)
         request = ExecutionRequest(
+                      task_contract=running["task_contract"],
             execution_id=execution_id,
             job_id=str(created["job_id"]),
             task=str(running["task"]),
@@ -516,7 +522,7 @@ class WorkerReviewTests(ReviewTestHarness, unittest.TestCase):
         worker = Worker(
             self.runtime,
             CanonicalReferenceResolver(REPOSITORY_ROOT),
-            LocalExecutor("success"),
+            LocalExecutor("success", clock=lambda: "2026-09-22T12:00:01Z"),
             self.execution_store,
             reviewer_runtime=self.reviewer_runtime(reviewer),
             id_factory=lambda: "execution-worker-review-001",

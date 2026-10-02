@@ -34,6 +34,7 @@ EVALUATOR_TYPES = frozenset(
         "REQUIRED_ARTIFACTS",
         "FORBIDDEN_CONDITIONS",
         "FIELD_MATCH",
+        "FILE_DIGEST",
     }
 )
 REFERENCE_TYPES = frozenset(

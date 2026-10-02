@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from typing import Any, Protocol
 
 from runtime.execution.models import ExecutionRequest
 from runtime.providers.adapters import sanitize_provider_text
 from runtime.providers.routing import ProviderRouter
+from runtime.core.task_contract import (TaskContractError, validate_binding,
+    require_provider_tool_confinement)
 from runtime.review.models import (
     REVIEW_DECISIONS,
     ReviewPackage,
@@ -50,7 +53,23 @@ class ProviderBackedReviewer:
                 error_category=category,
             )
 
-        synthetic_request = ExecutionRequest(
+        parent = package.job
+        contract = validate_binding(parent)
+        if ("provider_call" not in contract["allowed_tools"]
+                or "independent_review" not in contract["allowed_capabilities"]
+                or contract["delegation_level"] == "L0"):
+            raise TaskContractError("Reviewer provider execution exceeds task tools/capabilities/delegation")
+        if (not self.router.configuration.eligible(selection.actual_provider, "independent_review")
+                or package.eligible_providers is not None and selection.actual_provider not in package.eligible_providers):
+            raise TaskContractError("Reviewer provider is outside canonical eligibility")
+        # Explicit canonical review delegation narrows the parent ceiling. It
+        # never creates a job, resolves approval, or completes the parent task.
+        contract = deepcopy(contract)
+        contract.update(objective=f"Review execution {package.execution['execution_id']}",
+            inputs=deepcopy(list(package.available_evidence_refs)), expected_outputs=[],
+            allowed_tools=["provider_call"], allowed_capabilities=["independent_review"],
+            write_scope=None, blast_radius="none", reversibility="no_side_effect", delegation_level="L1")
+        review_request = ExecutionRequest(
             execution_id=f"review-execution-{package.review_id}",
             job_id=str(package.job["job_id"]),
             task=f"Review execution {package.execution['execution_id']}",
@@ -64,13 +83,14 @@ class ProviderBackedReviewer:
             risk_level=risk_level,
             input_refs=package.available_evidence_refs,
             context_refs=(),
-            review_required=False,
+            review_required=parent["review_required"],
             attempt=int(package.job["attempt"]),
             approval_status=str(package.job["approval_status"]),
+            task_contract=contract,
         )
-        provider_result = self.router.adapters[selection.actual_provider].execute(
-            synthetic_request, package
-        )
+        adapter = self.router.adapters[selection.actual_provider]
+        require_provider_tool_confinement(review_request, adapter)
+        provider_result = adapter.execute(review_request, package)
         same_provider = selection.actual_provider == executor_provider
         if provider_result.status == "failed":
             category_map = {

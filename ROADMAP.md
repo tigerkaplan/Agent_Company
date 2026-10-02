@@ -1,5 +1,51 @@
 # Agent Company Roadmap
 
+## GOV-01 Current State - 2026-10-02
+
+ACTIVE: None; GOV-01 Task & Authority Contract / CLOSED / READY TO COMMIT (uncommitted).
+NEXT: GOV-02 / NOT STARTED; sequence only, no authorization to begin.
+Expected and verified starting HEAD: `92d8020`. V1 scope freeze remains ACTIVE.
+CORE-01-11 foundations are reused; no separate approval, budget, review, or scope authority.
+See [GOV-01 implementation and classification](governance/task-contract/README.md).
+### GOV-01C2 verified closure - 2026-10-02
+
+GOV-01: CLOSED / READY TO COMMIT; implementation remains uncommitted.
+GOV-02: NEXT / NOT STARTED; sequence only, no authorization to begin.
+Repository evidence directly verified: final independent review PASS, fresh
+separate reviewer role CONFIRMED (same provider), Critical/Major/Minor 0/0/0,
+and 1227/1227 PASS in one complete uninterrupted full run (702.709 seconds).
+See [review evidence](governance/task-contract/REVIEW_EVIDENCE.json),
+[review history](governance/task-contract/REVIEW_HISTORY.md), and
+[validation](governance/task-contract/VALIDATION.md).
+All 52 reviewed implementation-source hashes and diagnostic log hashes match.
+R1/F1/R2/F2 findings and validation remain preserved; actual R3 FIX and historical
+R4 PASS retain provenance. R3's failed full run and independence limitation are
+not rewritten as PASS. Fresh GOV-01C2 targeted tests: 60/60 PASS, exit 0,
+94.824 seconds. The complete full run is verified review evidence, not a new
+closure-time full-regression run.
+Coherent replacement of every relevant trusted store with a historical snapshot
+remains outside local rollback detection; hashes are not signatures or an
+external monotonic counter. V1 freeze, remaining audit gaps, CORE-01-11 closure,
+and accurate prior documentation-drift corrections remain intact.
+Complete diff/status/tree inspected; GOV-02 and planned future paths absent
+(excluding the explicitly CURRENT shared/projects/brightshore/). git diff --check PASS.
+No runtime behavior change, commit, push, deployment or GOV-02 work performed.
+
+### Historical GOV-01C incomplete closure verification - 2026-10-02
+
+GOV-01: OPEN / CLOSURE INCOMPLETE; implementation remains uncommitted.
+GOV-02: NEXT / NOT STARTED; no authorization to begin.
+The owner reports Independent Re-review R4 PASS, but no R3/R4 review report
+was located in repository documentation or local review evidence. R4 PASS has
+not been independently verified by this closure task; no review history is
+inferred or fabricated. Existing R1/F1/R2/F2 evidence is preserved. Closure to
+CLOSED / READY TO COMMIT awaits the actual R4 report and its R3 provenance.
+Fresh GOV-01C targeted validation: 60/60 PASS (30.708 seconds, exit 0).
+V1 freeze and remaining audit gaps are unchanged. No runtime changes, commit,
+or GOV-02 implementation were performed by GOV-01C.
+
+The dated reconciliation below is historical evidence, not current GOV-01 status.
+
 ## DOC-TREE-CORE11 Post-Commit Reconciliation - 2026-10-01
 
 Verified clean starting tree at `8bda7eb` (`feat: add external content isolation`).
@@ -63,10 +109,10 @@ serious inconsistency / completion correctness issue? YES -> evaluate for V1;
 NO -> POST-V1 / LATER / REFERENCE. Later ideas must not interrupt the checkpoint
 sequence or expand the existing Canonical V1 Definition below.
 
-One ACTIVE and one NEXT checkpoint slot: ACTIVE = None; NEXT = GOV-01 Task & Authority Contract / NOT STARTED.
+One ACTIVE and one NEXT checkpoint slot: ACTIVE = None; GOV-01 CLOSED / READY TO COMMIT (uncommitted); NEXT = GOV-02 / NOT STARTED.
 CORE-11 is CLOSED / COMMITTED at `8bda7eb` after Independent Re-review R2 PASS. Lifecycle remains IMPLEMENT -> INDEPENDENT
 REVIEW -> BOUNDED FIX if required -> RE-REVIEW -> CLOSURE -> COMMIT -> NEXT.
-Core Runtime Foundation = COMPLETE. GOV-01 is next in the frozen V1 sequence;
+Core Runtime Foundation = COMPLETE. GOV-01 is CLOSED / READY TO COMMIT;
 no next implementation is authorized or started by this reconciliation.
 
 ### Durable Instruction And Learning Ownership
@@ -378,7 +424,7 @@ request connector capabilities rather than hard-coded vendors.
 
 #### GOV-01 — Task & Authority Contract
 
-GOV-01 will define the canonical Task Contract: objective, inputs, expected
+GOV-01 implements the canonical Task Contract: objective, inputs, expected
 outputs, allowed tools, write scope, acceptance criteria, required checks,
 required evidence, and explicit stop conditions. It also owns Risk / Delegation
 Levels L0-L5, blast radius, reversibility, approval requirements, and
@@ -390,6 +436,14 @@ required review or gate. Execution completion, eval evidence, Reviewer outcome,
 human approval, and task completion remain distinct states; none substitutes
 for another. Progress, candidate selection, or an executor success report alone
 cannot mark the task complete.
+
+Implementation is integrated into canonical JobRuntime admission, Worker and executor
+boundaries, existing approval fingerprints, retry/continuation inheritance, and
+terminal persistence. The contract and completion receipts use write-once anchors
+inside the existing job state. Missing acceptance/evidence cannot become DONE.
+Opaque native-tool CLI providers fail closed; no native CLI confinement is claimed.
+GOV-01 is CLOSED / READY TO COMMIT, uncommitted after verified independent PASS and GOV-01C2 closure.
+GOV-02 is not started. Details: [Task Contract](governance/task-contract/README.md).
 
 #### GOV-02 — Capability Governance
 

@@ -276,6 +276,8 @@ class CliProviderAdapter:
         *,
         working_directory: Path | None = None,
     ) -> ProviderExecutionResult:
+        from runtime.core.task_contract import require_provider_tool_confinement
+        require_provider_tool_confinement(request, self)
         availability = self.is_available()
         if not availability.available or availability.executable_path is None:
             return ProviderExecutionResult(

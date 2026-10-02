@@ -334,6 +334,7 @@ class ExecutionRequest:
             "continuation_step_id",
             "continuation_execution_ref",
             "retry_repair_scope",
+            "task_contract",
         }
     )
 
@@ -363,8 +364,15 @@ class ExecutionRequest:
     continuation_step_id: str | None = None
     continuation_execution_ref: str | None = None
     retry_repair_scope: dict[str, Any] | None = None
+    task_contract: dict[str, Any] | None = None
 
     def __post_init__(self) -> None:
+        if self.task_contract is not None:
+            from runtime.core.task_contract import validate, TaskContractError
+            try:
+                object.__setattr__(self, "task_contract", _freeze_value(validate(_thaw_value(self.task_contract))))
+            except TaskContractError as error:
+                raise ExecutionContractError(str(error)) from error
         for name in ("execution_id", "job_id", "task", "task_class", "agent", "workflow", "capability", "risk_level"):
             if not isinstance(getattr(self, name), str) or not getattr(self, name):
                 raise ExecutionContractError(f"ExecutionRequest.{name} must be non-empty")
@@ -457,6 +465,7 @@ class ExecutionRequest:
             "continuation_step_id": self.continuation_step_id,
             "continuation_execution_ref": self.continuation_execution_ref,
             "retry_repair_scope": deepcopy(self.retry_repair_scope),
+            "task_contract": _thaw_value(self.task_contract) if self.task_contract is not None else None,
         }
 
     @classmethod

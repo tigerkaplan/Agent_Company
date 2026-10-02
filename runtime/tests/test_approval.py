@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from runtime.tests.contract_fixtures import declare_fixture_contract
+
 import io
 import json
 import subprocess
@@ -92,7 +94,7 @@ class ApprovalRuntimeTests(unittest.TestCase):
             "created_by": "approval-test",
         }
         value.update(overrides)
-        return value
+        return declare_fixture_contract(value)
 
     def pre_execution_boundary(
         self,
@@ -116,14 +118,19 @@ class ApprovalRuntimeTests(unittest.TestCase):
         created = self.jobs.create(
             self.payload(
                 risk_level=risk_level,
-                approval_status="not_required",
+                approval_status="required" if risk_level == "high" else "not_required",
             )
         )
-        self.jobs.enqueue(str(created["job_id"]))
+        if risk_level == "high":
+            pending = self.approvals.request_execution(str(created["job_id"]), reason="Authorize high-risk fixture")
+            created = self.approvals.resolve(pending.request.approval_id, decision="APPROVED", decided_by="owner")["job"]
+        if created["status"] != "queued":
+            self.jobs.enqueue(str(created["job_id"]))
         running = self.jobs.claim()
         assert running is not None
         execution_id = f"execution-{created['job_id']}"
         request = ExecutionRequest(
+                      task_contract=created["task_contract"],
             execution_id=execution_id,
             job_id=str(created["job_id"]),
             task=str(created["task"]),
@@ -139,7 +146,7 @@ class ApprovalRuntimeTests(unittest.TestCase):
             context_refs=(),
             review_required=True,
             attempt=1,
-            approval_status="not_required",
+            approval_status=str(created["approval_status"]),
         )
         execution = ExecutionResult(
             execution_id=execution_id,
@@ -194,7 +201,7 @@ class ApprovalRuntimeTests(unittest.TestCase):
             context=(),
             evidence=(),
         )
-        review_ref = self.review_store.create(package, review, reason)
+        review_ref = self.review_store.create(package, review, reason, execution_request=request.to_dict())
         approval_run = self.approvals.request_review_completion(
             str(created["job_id"]), execution_id, review, review_ref
         )
@@ -495,6 +502,7 @@ class ApprovalRuntimeTests(unittest.TestCase):
         assert running is not None
         execution_id = f"execution-{created['job_id']}"
         request = ExecutionRequest(
+                      task_contract=created["task_contract"],
             execution_id=execution_id,
             job_id=str(created["job_id"]),
             task=str(created["task"]),
@@ -555,7 +563,7 @@ class ApprovalRuntimeTests(unittest.TestCase):
             (),
             (),
         )
-        review_ref = self.review_store.create(package, review, "")
+        review_ref = self.review_store.create(package, review, "", execution_request=request.to_dict())
         pending = self.approvals.request_review_completion(
             str(created["job_id"]), execution_id, review, review_ref
         )

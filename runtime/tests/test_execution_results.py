@@ -77,6 +77,7 @@ NEXT_ACTION = {
 
 
 class FakeProviderAdapter:
+    native_tools = frozenset()
     def __init__(self, provider_id: str, *, available: bool) -> None:
         self.provider_id = provider_id
         self.available = available

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from runtime.tests.contract_fixtures import declare_fixture_contract
+
 import json
 import tempfile
 import unittest
@@ -145,7 +147,7 @@ class ExecutionBudgetTests(unittest.TestCase):
             "created_by": "core05-test",
         }
         value.update(overrides)
-        return value
+        return declare_fixture_contract(value)
 
     def create(self, **budget: int) -> dict[str, object]:
         return self.jobs.create(

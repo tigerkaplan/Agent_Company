@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from runtime.tests.contract_fixtures import declare_fixture_contract
+
 import io
 import json
 import os
@@ -154,7 +156,7 @@ class TelegramTransportTests(unittest.TestCase):
             "created_by": "telegram-test",
         }
         value.update(overrides)
-        return value
+        return declare_fixture_contract(value)
 
     @staticmethod
     def update(

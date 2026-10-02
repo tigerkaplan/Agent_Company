@@ -2,14 +2,16 @@
 
 CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS with no Critical, Major,
 or Minor findings.
-CORE-01–06 are CLOSED / COMMITTED. CORE-08 is NEXT / NOT STARTED; graph execution and
-observability dashboards are not started.
+CORE-01 through CORE-11 are CLOSED / COMMITTED. GOV-02 is NEXT / NOT STARTED;
+graph execution and observability dashboards are not started.
 
 `ProgressEvent` is a frozen, schema-validated, provider-neutral observation.
 `progress != completion`. Event consumers must resolve canonical job, execution,
 Reviewer, Approval, retry, continuation, and budget records for actual authority.
-The progress module never mutates those records and is not read by their policy
-decisions. No provider-facing progress ingestion endpoint exists.
+The progress module never mutates those records or grants their authority.
+GOV-01F2 reads independent gate observations to veto inconsistent persisted task
+authority; matching observations alone cannot authorize execution or DONE.
+No provider-facing progress ingestion endpoint exists.
 
 ## Model and semantics
 
@@ -20,6 +22,11 @@ decisions. No provider-facing progress ingestion endpoint exists.
   exception messages are copied into events.
 - Event identity is SHA-256 of canonical content. Sequence is the serialized
   append order, not a wall clock. Replaying an identical boundary is a no-op.
+- `task_gate_observed` binds a canonical gate boundary digest at task creation
+  or review strengthening. Only the canonical TaskContractStore emits these
+  observations, before its gate/job writes. Missing or conflicting history holds
+  the task; reconciliation cannot recreate it from job snapshots. These events
+  remain non-authoritative and consume the existing bounded journal capacity.
 - A durable pending bundle reserves `transition_requested` and all resulting
   observations before a job write. Delivery occurs only after checking canonical
   state. A request event alone does not assert success. Heartbeats and unchanged

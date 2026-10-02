@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from runtime.tests.contract_fixtures import declare_fixture_contract, persist_execution_fixture
+
 import json
 import tempfile
 import unittest
@@ -143,7 +145,7 @@ class SchedulerLoopTests(unittest.TestCase):
             "created_by": "phase-6m-test",
         }
         value.update(overrides)
-        return value
+        return declare_fixture_contract(value)
 
     def enqueue(self, **overrides: object) -> dict[str, object]:
         job = self.jobs.create(self.payload(**overrides))
@@ -338,7 +340,8 @@ class SchedulerLoopTests(unittest.TestCase):
             execution_ref="runtime-execution:before-restart",
         )
         self.jobs.record_execution_success(
-            running["job_id"], [], continuation=decision.checkpoint
+            running["job_id"], [persist_execution_fixture(self.jobs, running, "before-restart")],
+            continuation=decision.checkpoint
         )
 
         snapshot = self.loop.run_once()

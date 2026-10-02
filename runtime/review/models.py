@@ -98,6 +98,7 @@ class ReviewPackage:
             key: self.job.get(key)
             for key in (
                 "job_id",
+                "task_contract",
                 "task",
                 "task_class",
                 "project_id",

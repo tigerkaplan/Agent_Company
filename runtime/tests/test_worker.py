@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from runtime.tests.contract_fixtures import declare_fixture_contract, persist_fixture_review
+
 import json
 import subprocess
 import tempfile
@@ -63,6 +65,10 @@ class StaticResultExecutor:
 class RecordingReviewerRuntime:
     def __init__(self) -> None:
         self.calls = 0
+        from runtime.review.store import FileReviewStore
+        self.review_temporary = tempfile.TemporaryDirectory()
+        self.store = FileReviewStore(Path(self.review_temporary.name))
+        self.store.temporary_owner = self.review_temporary
 
     def run(
         self,
@@ -76,7 +82,7 @@ class RecordingReviewerRuntime:
             "ref": f"runtime-execution:{result.execution_id}",
             "description": "Canonical execution record",
         }
-        return ReviewRun(
+        return persist_fixture_review(self.store, job, request, result, ReviewRun(
             ReviewResult(
                 review_id="review-needs-review-001",
                 job_id=result.job_id,
@@ -96,7 +102,7 @@ class RecordingReviewerRuntime:
                 "ref": "runtime-review:review-needs-review-001",
                 "description": "Independent review result",
             },
-        )
+        ))
 
 
 class DeterministicClock:
@@ -160,7 +166,7 @@ class WorkerTests(unittest.TestCase):
             "created_by": "dispatcher",
         }
         value.update(overrides)
-        return value
+        return declare_fixture_contract(value)
 
     def make_worker(self, mode: str = "success") -> tuple[Worker, LocalExecutor]:
         executor = LocalExecutor(mode, clock=DeterministicClock())
