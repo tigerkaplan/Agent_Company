@@ -1,6 +1,21 @@
 # Agent Company Project State
 
-## GOV-02 Owner Closure - 2026-10-03
+## POST-GOV-02 DOC-TREE - 2026-10-03
+
+ACTIVE: None. CORE-01-11 and GOV-01 are CLOSED / COMMITTED.
+GOV-02 Capability Governance: CLOSED / COMMITTED at `e6dbe3f`
+(`feat: add capability governance`). NEXT: ORCH-01 / NOT STARTED;
+sequence only, no authorization to begin.
+Verified clean starting HEAD: `e6dbe3fa8df5aabd5923163b05f2fa59dc997997`.
+V1 scope freeze, ordering and accepted scope remain unchanged.
+CURRENT GOV-02 source, policy, schema, tests and governance/evidence paths are
+listed in README; future target paths remain PLANNED and physically absent.
+This reconciliation changes documentation only; no runtime tests rerun,
+future directories created, commit made or ORCH-01 work begun.
+The dated owner-closure and prior checkpoint sections below are historical
+records; their pre-commit HEAD, status and validation evidence are preserved.
+
+## Historical GOV-02 Owner Closure - 2026-10-03
 
 ACTIVE: GOV-02 Capability Governance / CLOSED / READY TO COMMIT; implementation remains uncommitted.
 NEXT CHECKPOINT: GOV-02 COMMIT. ORCH-01: NOT STARTED; no authorization to begin.
@@ -150,6 +165,11 @@ future directory is created. Dated prior checkpoints below remain historical.
 
 ## Current Checkpoint
 
+- ACTIVE: None; NEXT: ORCH-01 / NOT STARTED; sequence only.
+- GOV-01 Task & Authority Contract: CLOSED / COMMITTED at `852ec01`.
+- GOV-02 Capability Governance: CLOSED / COMMITTED at `e6dbe3f`; implementation,
+  policy/schema, tests and retained governance evidence are CURRENT. See
+  README for physical paths and the dated owner-closure record above for acceptance.
 - CORE-04 implementation commit `35f03f8` contains the Tool Discovery /
   Deferred Loading implementation and closure state. It is not deployed.
 - CORE-01 Canonical Result Contract is COMPLETED / CLOSED and committed at
@@ -1731,6 +1751,8 @@ The following are explicit Phase 8E prerequisites, not open Phase 8D blockers:
 
 ## Committed
 
+- CORE-01-11 runtime foundations; GOV-01 Task & Authority Contract at `852ec01`;
+  GOV-02 Capability Governance at `e6dbe3f`.
 - Provider-neutral governance, canonical agents and skills, project onboarding, knowledge structure, hybrid provider routing configuration, and Phase 5 business agents, skills, workflows, and connector contracts.
 - Canonical jobs, lifecycle, queue, attempts, retries, Worker, and Executor contracts.
 - Phase 6B queue semantics and Phase 6D deterministic schedules.

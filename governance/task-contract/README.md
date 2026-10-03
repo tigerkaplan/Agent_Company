@@ -1,7 +1,8 @@
 # GOV-01 Task & Authority Contract
 
 Status: GOV-01 CLOSED / COMMITTED at `852ec01` after verified independent PASS and GOV-01C2 closure.
-Post-commit HEAD verified: `852ec01`. V1 freeze active. GOV-02 NEXT / NOT STARTED.
+GOV-01 post-commit checkpoint verified: `852ec01`. V1 freeze active.
+GOV-02 is CLOSED / COMMITTED at `e6dbe3f`; ORCH-01 is NEXT / NOT STARTED.
 
 ## GOV-01C2 verified implementation guarantees
 
@@ -23,7 +24,8 @@ trusted store. Final independent PASS, confirmed separate reviewer role, zero
 findings and one complete 1227/1227 full run are verified in
 [review evidence](REVIEW_EVIDENCE.json) and [validation](VALIDATION.md).
 [Review history](REVIEW_HISTORY.md) preserves actual R3 FIX and historical R4 PASS.
-GOV-01 is CLOSED / COMMITTED at `852ec01`; GOV-02 remains NEXT / NOT STARTED.
+GOV-01 is CLOSED / COMMITTED at `852ec01`; GOV-02 is CLOSED / COMMITTED at
+`e6dbe3f`. ORCH-01 remains NEXT / NOT STARTED.
 
 ## Initial reality classification
 

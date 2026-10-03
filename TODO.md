@@ -1,6 +1,21 @@
 # Agent Company TODO
 
-## GOV-02 Owner Closure - 2026-10-03
+## POST-GOV-02 DOC-TREE - 2026-10-03
+
+ACTIVE: None. CORE-01-11 and GOV-01 are CLOSED / COMMITTED.
+GOV-02 Capability Governance: CLOSED / COMMITTED at `e6dbe3f`
+(`feat: add capability governance`). NEXT: ORCH-01 / NOT STARTED;
+sequence only, no authorization to begin.
+Verified clean starting HEAD: `e6dbe3fa8df5aabd5923163b05f2fa59dc997997`.
+V1 scope freeze, ordering and accepted scope remain unchanged.
+CURRENT GOV-02 source, policy, schema, tests and governance/evidence paths are
+listed in README; future target paths remain PLANNED and physically absent.
+This reconciliation changes documentation only; no runtime tests rerun,
+future directories created, commit made or ORCH-01 work begun.
+The dated owner-closure and prior checkpoint sections below are historical
+records; their pre-commit HEAD, status and validation evidence are preserved.
+
+## Historical GOV-02 Owner Closure - 2026-10-03
 
 ACTIVE: GOV-02 Capability Governance / CLOSED / READY TO COMMIT; implementation remains uncommitted.
 NEXT CHECKPOINT: GOV-02 COMMIT. ORCH-01: NOT STARTED; no authorization to begin.
@@ -166,10 +181,11 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
   conditions, and evidence-gated completion.
 - [x] GOV-02 independent R5 review and owner closure: runtime certification,
   exact-work decision traces, provenance, profile and blast/reversibility gates
-  are CLOSED / READY TO COMMIT and uncommitted. All prior findings are CLOSED;
+  are CLOSED / COMMITTED at `e6dbe3f`. All prior findings are CLOSED;
   0 critical / 0 major / 0 minor. See `governance/capability-governance/CLOSURE.md`.
-- [ ] GOV-02 commit: next checkpoint; no commit performed by owner closure.
-- [ ] ORCH-01 Graph Execution Runtime: owner specifies outcomes, not workflows;
+- [x] GOV-02 implementation and closure committed at `e6dbe3f`.
+- [ ] ORCH-01 Graph Execution Runtime — NEXT / NOT STARTED: owner specifies
+  outcomes, not workflows;
   Agent Company selects clarification, task contract, graph, agents, skills,
   context, tools/providers, eval/review, and approval points. Include
   planner/splitter, worker and deterministic nodes, gates, dependencies,

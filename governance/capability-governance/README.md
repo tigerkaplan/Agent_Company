@@ -1,14 +1,17 @@
 # GOV-02 Capability Governance
 
-GOV-02 is CLOSED / READY TO COMMIT after GOV-02-CLOSURE on 2026-10-03.
-Implementation remains uncommitted at HEAD `c5de474`. Independent R5 acceptance
+GOV-02 is CLOSED / COMMITTED at `e6dbe3f` (`feat: add capability governance`).
+Owner closure completed on 2026-10-03 at pre-commit HEAD `c5de474`; its dated
+record and integrity evidence are preserved. Independent R5 acceptance
 and canonical policy reconciliation PASS; all eight prior majors are CLOSED,
 with 0 critical / 0 major / 0 minor. Same-provider reviewer role separation is
 disclosed; no provider-diverse review is claimed.
 See [owner closure](CLOSURE.md), [closure integrity evidence](CLOSURE_EVIDENCE.json),
 [independent R5 review](reviews/GOV-02-R5/REVIEW.md) and [validation](VALIDATION.md).
-V1 freeze remains active. NEXT CHECKPOINT: GOV-02 COMMIT.
-No commit was performed; ORCH-01 remains NOT STARTED.
+V1 freeze remains active. NEXT: ORCH-01 / NOT STARTED; no authorization to begin.
+Physical implementation, policy/schema, tests and governance/review paths are
+CURRENT; see the root README for the reconciled physical tree. Planned future
+paths remain absent. This documentation reconciliation makes no commit.
 
 ## Historical pre-implementation reality classification
 
@@ -128,7 +131,7 @@ validation. Run `git diff --check` separately.
 Independent R5 review accepted the exact implementation and evidence; its
 canonical policy reconciliation establishes independence PASS without requiring
 a distinct provider or model. Owner closure is recorded in [CLOSURE.md](CLOSURE.md).
-GOV-02 remains uncommitted; ORCH-01 has not begun. Dated F1/F2 sections below
+GOV-02 is committed at `e6dbe3f`; ORCH-01 has not begun. Dated F1/F2 sections below
 retain their historical pre-acceptance state.
 
 ## Acceptance test mapping

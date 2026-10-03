@@ -1,6 +1,21 @@
 # Agent Company Roadmap
 
-## GOV-02 Owner Closure - 2026-10-03
+## POST-GOV-02 DOC-TREE - 2026-10-03
+
+ACTIVE: None. CORE-01-11 and GOV-01 are CLOSED / COMMITTED.
+GOV-02 Capability Governance: CLOSED / COMMITTED at `e6dbe3f`
+(`feat: add capability governance`). NEXT: ORCH-01 / NOT STARTED;
+sequence only, no authorization to begin.
+Verified clean starting HEAD: `e6dbe3fa8df5aabd5923163b05f2fa59dc997997`.
+V1 scope freeze, ordering and accepted scope remain unchanged.
+CURRENT GOV-02 source, policy, schema, tests and governance/evidence paths are
+listed in README; future target paths remain PLANNED and physically absent.
+This reconciliation changes documentation only; no runtime tests rerun,
+future directories created, commit made or ORCH-01 work begun.
+The dated owner-closure and prior checkpoint sections below are historical
+records; their pre-commit HEAD, status and validation evidence are preserved.
+
+## Historical GOV-02 Owner Closure - 2026-10-03
 
 ACTIVE: GOV-02 Capability Governance / CLOSED / READY TO COMMIT; implementation remains uncommitted.
 NEXT CHECKPOINT: GOV-02 COMMIT. ORCH-01: NOT STARTED; no authorization to begin.
@@ -116,6 +131,9 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
 - CORE-09: CLOSED / COMMITTED at `fa7e30f` after CORE-09R2 PASS.
 - CORE-10: CLOSED / COMMITTED at `dd72cb2` after CORE-10R3 PASS.
 - CORE-11: CLOSED / COMMITTED at `8bda7eb`.
+- GOV-01 Task & Authority Contract: CLOSED / COMMITTED at `852ec01`.
+- GOV-02 Capability Governance: CLOSED / COMMITTED at `e6dbe3f`.
+- ORCH-01 Graph Execution Runtime: NEXT / NOT STARTED.
 - Phase 8E: PAUSED / BLOCKED; deployment not started because the VPS has not
   yet been created.
 - Phase 8F: NOT STARTED.
@@ -140,9 +158,9 @@ serious inconsistency / completion correctness issue? YES -> evaluate for V1;
 NO -> POST-V1 / LATER / REFERENCE. Later ideas must not interrupt the checkpoint
 sequence or expand the existing Canonical V1 Definition below.
 
-One ACTIVE and one NEXT checkpoint slot: ACTIVE = GOV-02 CLOSED / READY TO COMMIT;
-NEXT = GOV-02 COMMIT. GOV-01 remains CLOSED / COMMITTED at `852ec01`;
-ORCH-01 is NOT STARTED and requires separate authorization after the commit checkpoint.
+One ACTIVE and one NEXT checkpoint slot: ACTIVE = None; NEXT = ORCH-01 / NOT STARTED.
+GOV-01 remains CLOSED / COMMITTED at `852ec01`; GOV-02 is CLOSED / COMMITTED
+at `e6dbe3f`. ORCH-01 requires separate implementation authorization.
 CORE-11 is CLOSED / COMMITTED at `8bda7eb` after Independent Re-review R2 PASS. Lifecycle remains IMPLEMENT -> INDEPENDENT
 REVIEW -> BOUNDED FIX if required -> RE-REVIEW -> CLOSURE -> COMMIT -> NEXT.
 Core Runtime Foundation = COMPLETE. GOV-01 is CLOSED / COMMITTED at `852ec01`;
@@ -428,9 +446,10 @@ audit, real subprocess singleton-race validation, native Windows signal/ACL
 validation, and more race-resistant status-lock probing. Phase 8B's
 race-resistant directory-handle containment item also remains non-blocking.
 
-## Accepted V1 Roadmap — Planned / Not Started
+## Accepted V1 Roadmap — Implementation Status And Planned Scope
 
-The following plan is accepted V1 scope, not implemented current capability.
+GOV-01 and GOV-02 below are CLOSED / COMMITTED. Remaining entries are planned
+V1 scope unless explicitly identified as implemented.
 Its labels define ownership and sequencing only; they grant no execution,
 approval, review, write, Git, deployment, or provider authority.
 
@@ -476,8 +495,7 @@ terminal persistence. The contract and completion receipts use write-once anchor
 inside the existing job state. Missing acceptance/evidence cannot become DONE.
 Opaque native-tool CLI providers fail closed; no native CLI confinement is claimed.
 GOV-01 is CLOSED / COMMITTED at `852ec01` after verified independent PASS and GOV-01C2 closure.
-GOV-02 is CLOSED / READY TO COMMIT after independent R5 PASS and verified owner closure;
-implementation remains uncommitted.
+GOV-02 is CLOSED / COMMITTED at `e6dbe3f` after independent R5 PASS and verified owner closure.
 Details: [Task Contract](governance/task-contract/README.md).
 
 #### GOV-02 — Capability Governance
@@ -486,19 +504,26 @@ GOV-02 now implements Capability Certification, Decision Audit Trace,
 policy/authority provenance, blast-radius gates, and reversibility gates.
 Capability profiles are READ_ONLY, LOCAL_WRITE, EXTERNAL_PREPARE,
 EXTERNAL_EXECUTE, and SENSITIVE_EXECUTE, integrated with delegation, blast
-radius, reversibility, approval, and capability certification.
+radius, reversibility, approval, and capability certification. These are
+execution profiles, not canonical agents.
 
-The current implementation is in `runtime/core/capability_governance.py` and
-`governance/capability-governance/`, integrated with canonical task, execution,
-review, approval and progress stores. Unsupported external effects fail closed.
-GOV-02 is CLOSED / READY TO COMMIT after independent R5 PASS and owner closure.
+The current implementation is in `runtime/core/capability_governance.py`,
+`runtime/core/capability_actions.py` and `governance/capability-governance/`,
+with `schemas/capability-certification.schema.json` and five capability test
+modules. Certification and decision traces extend canonical task, execution,
+review, approval, Git and progress stores; separate capability-certification
+and decision-trace directory labels are superseded, not outstanding targets.
+Unsupported external effects fail closed.
+GOV-02 is CLOSED / COMMITTED at `e6dbe3f` after independent R5 PASS and owner closure.
 All prior findings are CLOSED, with 0 critical / 0 major / 0 minor.
 See [closure evidence](governance/capability-governance/CLOSURE.md).
-NEXT CHECKPOINT: GOV-02 COMMIT; ORCH-01 is NOT STARTED.
+NEXT: ORCH-01 / NOT STARTED; `orchestrator/graph/` remains PLANNED and absent.
 
 ### B. Graph Orchestration
 
 #### ORCH-01 — Graph Execution Runtime
+
+NEXT / NOT STARTED. This roadmap position does not authorize implementation.
 
 ORCH-01 is not CORE-12. A loop operates inside a node; a graph connects nodes.
 The owner specifies outcomes rather than workflows; Agent Company selects

@@ -3,7 +3,8 @@
 CORE-06 is the provider-independent runtime policy for repeating failed work.
 It is CLOSED / COMMITTED at `4a6e5c4` after CORE-06R6 PASS.
 CORE-07 is CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS.
-CORE-01 through CORE-11 are CLOSED / COMMITTED. GOV-02 is NEXT / NOT STARTED.
+CORE-01 through CORE-11 and GOV-01 are CLOSED / COMMITTED. GOV-02 is
+CLOSED / COMMITTED at `e6dbe3f`; ORCH-01 is NEXT / NOT STARTED.
 External R6 evidence and closure validation are recorded in `PROJECT_STATE.md`.
 
 `max_attempts` and `max_total_attempts` count total attempts, including the

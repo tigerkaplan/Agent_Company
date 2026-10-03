@@ -1,6 +1,21 @@
 # Agent Company
 
-## GOV-02 Owner Closure - 2026-10-03
+## POST-GOV-02 DOC-TREE - 2026-10-03
+
+ACTIVE: None. CORE-01-11 and GOV-01 are CLOSED / COMMITTED.
+GOV-02 Capability Governance: CLOSED / COMMITTED at `e6dbe3f`
+(`feat: add capability governance`). NEXT: ORCH-01 / NOT STARTED;
+sequence only, no authorization to begin.
+Verified clean starting HEAD: `e6dbe3fa8df5aabd5923163b05f2fa59dc997997`.
+V1 scope freeze, ordering and accepted scope remain unchanged.
+CURRENT GOV-02 source, policy, schema, tests and governance/evidence paths are
+listed in README; future target paths remain PLANNED and physically absent.
+This reconciliation changes documentation only; no runtime tests rerun,
+future directories created, commit made or ORCH-01 work begun.
+The dated owner-closure and prior checkpoint sections below are historical
+records; their pre-commit HEAD, status and validation evidence are preserved.
+
+## Historical GOV-02 Owner Closure - 2026-10-03
 
 ACTIVE: GOV-02 Capability Governance / CLOSED / READY TO COMMIT; implementation remains uncommitted.
 NEXT CHECKPOINT: GOV-02 COMMIT. ORCH-01: NOT STARTED; no authorization to begin.
@@ -155,9 +170,12 @@ termination, merge authority, or deployment authority.
 `PROJECT_STATE.md` is the canonical current-status record and `ROADMAP.md` is
 the canonical capability roadmap.
 
+GOV-01 is CLOSED / COMMITTED at `852ec01`; GOV-02 Capability Governance is
+CLOSED / COMMITTED at `e6dbe3f`. ORCH-01 is NEXT / NOT STARTED.
+
 ## Current Repository Structure
 
-CURRENT: audited against committed checkpoint `852ec01`. This is the physical
+CURRENT: audited against committed checkpoint `e6dbe3f`. This is the physical
 structure in the current checkout; generated contents and
 ignored local configuration are intentionally not expanded.
 
@@ -195,6 +213,9 @@ ignored local configuration are intentionally not expanded.
   modules. `runtime/state/`
   contains its tracked boundary README plus ignored operational state; it is not
   a future source-architecture namespace.
+- `governance/` — CURRENT GOV-01 task-contract, delegation, stop-conditions
+  and completion documentation, plus GOV-02 `capability-governance/` policy,
+  validation, closure and retained review/repair evidence.
 - `infrastructure/` — `HOST_ARCHITECTURE.md`, `SECURITY_MODEL.md`, its README,
   and `docker/` with non-secret per-service configuration and operating notes.
 - `Dockerfile`, `.dockerignore`, and `compose.yaml` — Phase 8D packaging for the
@@ -205,7 +226,9 @@ ignored local configuration are intentionally not expanded.
   operations, and synthesized wiki content.
 - `schemas/` — CURRENT persisted runtime contracts, including CORE-06
   `retry-policy.schema.json`, `retry-state.schema.json`, and
-  `execution-artifact.schema.json`, plus CORE-07 `progress-event.schema.json`.
+  `execution-artifact.schema.json`, CORE-07 `progress-event.schema.json`,
+  GOV-01 `task-contract.schema.json` and GOV-02
+  `capability-certification.schema.json`.
 - `config/` — tracked non-secret examples only: `host.example.json`,
   `remote.example.json`, and `webhooks.example.json`. Ignored local files,
   tokens, real IDs, and secret values are not documentation inputs.
@@ -275,11 +298,24 @@ These describe the integrated runtime; they do not establish duplicate authority
 `schemas/capability-certification.schema.json`, `runtime/tests/test_capability_governance.py`,
 `runtime/tests/test_capability_governance_f1.py`, `runtime/tests/test_capability_governance_f2.py`,
 `runtime/tests/test_capability_governance_f3.py` and `runtime/tests/test_capability_actions.py`
-are CURRENT. Closure records and R1-R5/F1-F3 evidence are CURRENT in
-`governance/capability-governance/`. Certification/provenance extend
+are CURRENT and committed at `e6dbe3f`.
+`governance/capability-governance/` contains `README.md`, `certifications.json`,
+`VALIDATION.md`, `CLOSURE.md`, `CLOSURE_EVIDENCE.json`, `validate.py`,
+`run_validation.py`, regression reports, source fingerprints and validation
+history. Its `reviews/` contains `GOV-02-R1/` through `GOV-02-R5/` and
+`GOV-02-F1/` through `GOV-02-F3/`, including the retained
+`GOV-02-R5/superseded-policy-verdict/` snapshot. Tracked evidence is committed;
+ignored local validation logs remain operational artifacts.
+Integration extends existing `runtime/core/task_contract.py`,
+`runtime/core/jobs.py`, `runtime/workers/worker.py`, `runtime/actions/runtime.py`,
+`runtime/approvals/`, `runtime/git/`, `runtime/review/`, `runtime/progress/` and
+`runtime/storage/execution_store.py`, plus existing task/progress schemas.
+Certification/provenance extend
 the existing TaskContractStore; execution and review decision traces extend their
 existing stores and CORE-07 observations. The proposed capability-certification
-and decision-trace directory labels are superseded by these integrated paths.
+and decision-trace directory labels are superseded by these integrated paths;
+no separate governance authority store is introduced. Capability profiles are
+execution constraints, not canonical agents.
 
 ## Future / Target Repository Structure
 
@@ -338,8 +374,8 @@ and SYNC-04A. The exception gate and accepted refinements live in
 LATER / REFERENCE; only critical implementation, security, data-loss, authority,
 architectural-consistency, or completion-correctness blockers may be evaluated
 for V1. They do not interrupt the checkpoint sequence or grant implementation
-authority. ACTIVE: GOV-02 CLOSED / READY TO COMMIT; NEXT CHECKPOINT: GOV-02 COMMIT.
-GOV-01 remains CLOSED / COMMITTED at `852ec01`; ORCH-01 remains NOT STARTED.
+authority. ACTIVE: None; GOV-02 is CLOSED / COMMITTED at `e6dbe3f`.
+GOV-01 remains CLOSED / COMMITTED at `852ec01`; ORCH-01 is NEXT / NOT STARTED.
 
 Current canonical agents: 10; frozen V1 target: 14. CAP-CREATIVE-01 is accepted
 non-blocking capability/tool architecture; CAP-DOC-01, summary-indexed retrieval,

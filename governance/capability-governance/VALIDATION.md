@@ -1,6 +1,13 @@
 # GOV-02 validation and closure evidence
 
-Current state on 2026-10-03: GOV-02 CLOSED / READY TO COMMIT; uncommitted.
+Current state: GOV-02 CLOSED / COMMITTED at `e6dbe3f`;
+NEXT: ORCH-01 / NOT STARTED. Post-commit DOC-TREE reconciliation changes
+documentation only; the validation results below are retained historical
+evidence, not runtime checks rerun during this reconciliation.
+
+## Historical GOV-02-CLOSURE validation - 2026-10-03
+
+At owner closure: GOV-02 CLOSED / READY TO COMMIT; uncommitted at `c5de474`.
 Independent R5 review and policy reconciliation PASS; all prior findings CLOSED;
 0 critical / 0 major / 0 minor. See [R5 review](reviews/GOV-02-R5/REVIEW.md),
 [owner closure](CLOSURE.md) and [closure integrity checks](CLOSURE_EVIDENCE.json).

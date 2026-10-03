@@ -2,7 +2,8 @@
 
 CLOSED / COMMITTED at `6bcffa4` after CORE-07R3 PASS with no Critical, Major,
 or Minor findings.
-CORE-01 through CORE-11 are CLOSED / COMMITTED. GOV-02 is NEXT / NOT STARTED;
+CORE-01 through CORE-11 and GOV-01 are CLOSED / COMMITTED. GOV-02 is
+CLOSED / COMMITTED at `e6dbe3f`; ORCH-01 is NEXT / NOT STARTED;
 graph execution and observability dashboards are not started.
 
 `ProgressEvent` is a frozen, schema-validated, provider-neutral observation.
