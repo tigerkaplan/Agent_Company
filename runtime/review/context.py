@@ -76,7 +76,7 @@ class ReviewContextBuilder:
 
         evidence: list[ReviewEvidence] = []
         try:
-            execution_record = self.execution_store.load(result.execution_id)
+            execution_record = self.execution_store.load(result.execution_id, require_authority=True)
         except ExecutionStoreError:
             execution_record = None
         if execution_record is not None:

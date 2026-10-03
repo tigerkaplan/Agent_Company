@@ -454,7 +454,9 @@ class SchedulerLoopTests(unittest.TestCase):
             "execution-invalid-recovery",
             self.worker.resolver.resolve(claimed),
         )
-        result = self.executor.execute(request)
+        from runtime.tests.contract_fixtures import certified_fixture_dispatch
+        with certified_fixture_dispatch(request, runtime=self.jobs, store=self.executions):
+            result = self.executor.execute(request)
         path = self.executions.create(request, result)
         record = json.loads(path.read_text(encoding="utf-8"))
         record["request"]["workflow"] = "different-workflow"

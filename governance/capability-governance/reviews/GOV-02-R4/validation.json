@@ -1,0 +1,15 @@
+{
+  "command": [
+    "C:\\Python314\\python.exe",
+    "-B",
+    "E:\\Software\\Agent_Company\\governance\\capability-governance\\validate.py"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 0.816,
+  "test_count": null,
+  "complete": true,
+  "passed": true,
+  "log": "validation.log",
+  "log_sha256": "8a88e133cbc4083df3d1d1e5a2823fdcd689c94662d16193742b0aa030c3e0d6",
+  "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467"
+}

@@ -50,7 +50,11 @@
         "stop_requested",
         "continuation_reserved",
         "worker_exited",
-        "recovery_completed"
+        "recovery_completed",
+        "decision_intent_observed",
+        "decision_result_observed",
+        "decision_review_observed",
+        "decision_consumption_observed"
       ]
     },
     "logical_job_id": {

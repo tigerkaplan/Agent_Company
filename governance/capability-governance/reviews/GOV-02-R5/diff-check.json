@@ -1,0 +1,15 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--check"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 0.123,
+  "test_count": null,
+  "complete": true,
+  "passed": true,
+  "log": "diff-check.log",
+  "log_sha256": "254b635731c6074e3302e4bf9f602d92a33aaa01510c6f1f644fff18bcb0808f",
+  "source_sha256": "db84c2bc9dc114377ffe5002167b2c3a8e2211c32e7974ebec9eb37296c9fbb2"
+}

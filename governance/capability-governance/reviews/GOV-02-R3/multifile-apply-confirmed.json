@@ -1,0 +1,13 @@
+{
+  "command": [
+    "C:\\Python314\\python.exe",
+    "-B",
+    "E:\\Software\\Agent_Company\\governance\\capability-governance\\reviews\\GOV-02-R3\\multifile_apply.py"
+  ],
+  "exit_code": 1,
+  "elapsed_seconds": 6.339,
+  "test_count": null,
+  "passed": false,
+  "log": "multifile-apply-confirmed.log",
+  "log_sha256": "177bd33233fe867e2abb68fd1e16029ade2576b5e00dd85c18004f68b6d324cf"
+}

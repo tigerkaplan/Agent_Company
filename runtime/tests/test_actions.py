@@ -7,6 +7,7 @@ from runtime.tests.contract_fixtures import declare_fixture_contract
 import json
 import tempfile
 import unittest
+from contextlib import ExitStack
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -72,8 +73,10 @@ class ControlledWriteTests(unittest.TestCase):
         (self.target / "src" / "existing.txt").write_text("before\n", encoding="utf-8")
         self.mutations = FileMutationArtifactStore(self.root / "mutations")
         self.runtime = ControlledWriteRuntime(REPOSITORY_ROOT, self.mutations)
+        self.dispatch_contexts = ExitStack()
 
     def tearDown(self) -> None:
+        self.dispatch_contexts.close()
         self.temporary.cleanup()
 
     def scope(self, **overrides):
@@ -116,7 +119,28 @@ class ControlledWriteTests(unittest.TestCase):
         values.update(overrides)
         values = declare_fixture_contract(values)
         values["authorization_fingerprint"] = authorization_fingerprint(values)
-        return ExecutionRequest(**values)
+        request = ExecutionRequest(**values)
+        # These lower-level mutation tests now use real canonical task authority
+        # and a persisted local-operator approval rather than an approved string.
+        from runtime.core.capability_governance import certified_dispatch
+        from uuid import uuid4
+        state = self.root / ("authority-" + uuid4().hex)
+        jobs = JobRuntime(state / "jobs", id_factory=lambda: request.job_id)
+        payload = {k: request.to_dict()[k] for k in (
+            "task", "task_class", "project_id", "agent", "skill", "workflow", "capability", "provider",
+            "risk_level", "review_required", "input_refs", "execution_mode", "execution_scope", "dry_run", "task_contract")}
+        payload.update(created_by="human-fixture", approval_status="required")
+        payload = {k: v for k, v in payload.items() if v is not None}
+        job = jobs.create(payload)
+        approvals = ApprovalRuntime(jobs, FileApprovalStore(state / "approvals"))
+        pending = approvals.request_execution(job["job_id"], reason="Explicit unit-test fixture authority")
+        approved = approvals.resolve(pending.request.approval_id, decision="APPROVED", decided_by="fixture-owner")
+        job = approved["job"]
+        job = jobs.claim(claimed_by="controlled-write-test-worker")
+        executions = FileExecutionStore(state / "executions")
+        executions.begin_decision(request, executor="controlled-write-fixture", runtime=jobs, job=job)
+        self.dispatch_contexts.enter_context(certified_dispatch(executions, request))
+        return request
 
     def execute_controlled(self, adapter, request=None):
         return self.runtime.execute(
@@ -160,8 +184,8 @@ class ControlledWriteTests(unittest.TestCase):
         adapter = MutatingAdapter(lambda root: (root / "src" / "new.txt").write_text("x"))
         request = self.request(authorization_fingerprint="0" * 64)
         object.__setattr__(request, "authorization_fingerprint", "0" * 64)
-        outcome = self.execute_controlled(adapter, request)
-        self.assertEqual(outcome.provider_result.error_category, "write_not_authorized")
+        from runtime.core.task_contract import TaskContractError
+        with self.assertRaises(TaskContractError): self.execute_controlled(adapter, request)
         self.assertEqual(adapter.workspaces, [])
 
     def test_d1_project_scope_must_match_canonical_project_root(self) -> None:
@@ -620,7 +644,8 @@ class ControlledWriteTests(unittest.TestCase):
         self.assertTrue(
             any(ref["ref"].startswith("runtime-mutation:") for ref in result.output_refs)
         )
-        executions = FileExecutionStore(self.root / "executions")
+        from runtime.core.capability_governance import _DISPATCH
+        executions = _DISPATCH.get()[0]
         executions.create(request, result)
         execution_ref = {
             "ref_type": "artifact",
@@ -704,7 +729,8 @@ class ControlledWriteTests(unittest.TestCase):
             controlled_write_runtime=self.runtime,
         )
         result = executor.execute(request)
-        executions = FileExecutionStore(self.root / "executions")
+        from runtime.core.capability_governance import _DISPATCH
+        executions = _DISPATCH.get()[0]
         executions.create(request, result)
         execution_ref = {
             "ref_type": "artifact",

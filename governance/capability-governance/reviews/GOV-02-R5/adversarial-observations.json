@@ -1,0 +1,124 @@
+[
+  {
+    "case": "review-parent-substitution-project_id",
+    "denied": true
+  },
+  {
+    "case": "review-parent-substitution-attempt",
+    "denied": true
+  },
+  {
+    "case": "review-parent-substitution-execution_id",
+    "denied": true
+  },
+  {
+    "case": "review-parent-substitution-input_refs",
+    "denied": true
+  },
+  {
+    "case": "apply-journal-rollback-effect-controlled_write",
+    "denied": true
+  },
+  {
+    "case": "apply-journal-rollback-dispatch-execute",
+    "denied": true
+  },
+  {
+    "case": "apply-journal-rollback-intent",
+    "denied": true
+  },
+  {
+    "case": "apply-journal-rollback-authority",
+    "denied": true
+  },
+  {
+    "case": "apply-journal-rollback-approval",
+    "denied": true
+  },
+  {
+    "case": "git-execution-import",
+    "denied": true
+  },
+  {
+    "case": "git-review-import",
+    "denied": true
+  },
+  {
+    "case": "git-both-import",
+    "denied": true
+  },
+  {
+    "case": "git-review-dispatch-delete",
+    "denied": true
+  },
+  {
+    "case": "git-effect-delete",
+    "denied": true
+  },
+  {
+    "case": "git-action-policy-loss-at-consume",
+    "denied": true,
+    "error": "capability_audit_incomplete: Failure trace is unavailable; explicit recovery required",
+    "commit_created": false
+  },
+  {
+    "case": "observation-import",
+    "denied": true
+  },
+  {
+    "case": "rollback-journal-only",
+    "alternate": false,
+    "returncode": 0,
+    "stdout": "{\"denied\": true, \"error\": \"Retained intent malformed; explicit recovery required\"}\n",
+    "stderr": ""
+  },
+  {
+    "case": "rollback-journal-only",
+    "alternate": true,
+    "returncode": 0,
+    "stdout": "{\"denied\": true, \"error\": \"Retained intent malformed; explicit recovery required\"}\n",
+    "stderr": ""
+  },
+  {
+    "case": "rollback-intent-delete",
+    "alternate": false,
+    "returncode": 0,
+    "stdout": "{\"denied\": true, \"error\": \"Decision trace unavailable; explicit recovery required\"}\n",
+    "stderr": ""
+  },
+  {
+    "case": "rollback-intent-delete",
+    "alternate": true,
+    "returncode": 0,
+    "stdout": "{\"denied\": true, \"error\": \"Decision trace unavailable; explicit recovery required\"}\n",
+    "stderr": ""
+  },
+  {
+    "case": "rollback-intent-foreign",
+    "alternate": false,
+    "returncode": 0,
+    "stdout": "{\"denied\": true, \"error\": \"Retained intent malformed; explicit recovery required\"}\n",
+    "stderr": ""
+  },
+  {
+    "case": "rollback-intent-foreign",
+    "alternate": true,
+    "returncode": 0,
+    "stdout": "{\"denied\": true, \"error\": \"Retained intent malformed; explicit recovery required\"}\n",
+    "stderr": ""
+  },
+  {
+    "case": "rollback-intent-foreign-and-dispatch-rebind",
+    "alternate": false,
+    "returncode": 0,
+    "stdout": "{\"denied\": true, \"error\": \"Retained intent malformed; explicit recovery required\"}\n",
+    "stderr": ""
+  },
+  {
+    "case": "rollback-intent-foreign-and-dispatch-rebind",
+    "alternate": true,
+    "returncode": 0,
+    "stdout": "{\"denied\": true, \"error\": \"Retained intent malformed; explicit recovery required\"}\n",
+    "stderr": ""
+  }
+]

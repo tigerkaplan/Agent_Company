@@ -1032,7 +1032,9 @@ class ContinuationTests(unittest.TestCase):
         self.jobs.review_store = reviewer.store
         record = self.executions.load("review-window")
         request = ExecutionRequest.from_persisted_dict(record.request)
-        review_ref = reviewer.run(reviewing, request, record.result).artifact_ref
+        from runtime.core.capability_governance import certified_dispatch
+        with certified_dispatch(self.executions, request, purpose="review"):
+            review_ref = reviewer.run(reviewing, request, record.result).artifact_ref
         review_decision = ContinuationPolicy.decide_review(
             reviewing, decision="PASS", review_ref=str(review_ref["ref"])
         )

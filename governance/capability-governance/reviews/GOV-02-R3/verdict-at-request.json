@@ -1,0 +1,139 @@
+{
+  "review": "FIX",
+  "canonical_decision": "FAIL",
+  "independence": "PASS",
+  "provider_diversity": false,
+  "r1_findings": {
+    "1": "CLOSED",
+    "2": "OPEN",
+    "3": "OPEN"
+  },
+  "findings": {
+    "critical": 0,
+    "major": 3,
+    "minor": 0
+  },
+  "authority": "FAIL",
+  "certification": "PASS",
+  "provenance": "FAIL",
+  "trace": "FAIL",
+  "replay": "FAIL",
+  "compatibility": "PASS on focused and affected checks",
+  "completed_runs": {
+    "targeted": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "runtime.tests.test_capability_governance_f1",
+        "runtime.tests.test_capability_governance",
+        "runtime.tests.test_capability_actions",
+        "runtime.tests.test_actions",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 374.196,
+      "test_count": 99,
+      "passed": true,
+      "log": "targeted.log",
+      "log_sha256": "cd7818ccf4a7038ff24a188c0fb84c5416ecdb2d819e772cfb9e5436aef816be"
+    },
+    "adversarial-corrected": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "E:\\Software\\Agent_Company\\governance\\capability-governance\\reviews\\GOV-02-R3\\adversarial.py",
+        "-v"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 130.422,
+      "test_count": 6,
+      "passed": false,
+      "log": "adversarial-corrected.log",
+      "log_sha256": "d147772f7d665aea0b06293210f740bab7ad858184ce07d2e0163b8b206d5c6d"
+    },
+    "multifile-apply-confirmed": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "E:\\Software\\Agent_Company\\governance\\capability-governance\\reviews\\GOV-02-R3\\multifile_apply.py"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 6.339,
+      "test_count": null,
+      "passed": false,
+      "log": "multifile-apply-confirmed.log",
+      "log_sha256": "177bd33233fe867e2abb68fd1e16029ade2576b5e00dd85c18004f68b6d324cf"
+    },
+    "affected": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "runtime.tests.test_git",
+        "runtime.tests.test_remote_git",
+        "runtime.tests.test_review",
+        "runtime.tests.test_approval",
+        "runtime.tests.test_worker",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1163.078,
+      "test_count": 156,
+      "passed": true,
+      "log": "affected.log",
+      "log_sha256": "18184ce188e8851a39505ee47a6d968552735f27442d6d7d289dbab0cf6f494b"
+    },
+    "focused": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "runtime.tests.test_capability_governance_f1",
+        "runtime.tests.test_capability_governance",
+        "runtime.tests.test_capability_actions",
+        "runtime.tests.test_task_contract",
+        "runtime.tests.test_task_contract_f1",
+        "runtime.tests.test_task_contract_f2",
+        "runtime.tests.test_review",
+        "runtime.tests.test_approval",
+        "runtime.tests.test_worker",
+        "runtime.tests.test_tool_discovery",
+        "runtime.tests.test_providers",
+        "runtime.tests.test_runtime",
+        "runtime.tests.test_actions",
+        "runtime.tests.test_progress",
+        "runtime.tests.test_progress_f1",
+        "runtime.tests.test_progress_f2",
+        "runtime.tests.test_execution_budget",
+        "runtime.tests.test_retry_policy",
+        "runtime.tests.test_continuation",
+        "runtime.tests.test_compute_policy",
+        "runtime.tests.test_git",
+        "runtime.tests.test_remote_git",
+        "runtime.tests.test_context_discovery",
+        "runtime.tests.test_external_content",
+        "runtime.tests.test_scheduler_loop",
+        "runtime.tests.test_retry_repairs",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3711.544,
+      "test_count": 832,
+      "passed": true,
+      "log": "focused.log",
+      "log_sha256": "4e255195bb8fb4cde17f251e85e09dc98037e34ea070ad994fc91ac1baf72209"
+    }
+  },
+  "full": "INCOMPLETE; existing runner still active",
+  "validation": "NOT RUN; queued after full by existing runner",
+  "validation_complete": false,
+  "ready_for_owner_closure": false,
+  "head": "c5de47440973c87023bbd6652aca984262ab17f7",
+  "log_hashes_verified": true,
+  "changed_non_r3_files": [],
+  "runner_session": 69749
+}

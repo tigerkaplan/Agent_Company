@@ -1,0 +1,10 @@
+{
+  "status": "INTERRUPTED_AFTER_REPRODUCED_FAILURES",
+  "complete": false,
+  "passed": false,
+  "test_count": null,
+  "managed_session_exit_code": 1,
+  "log": "focused-interrupted.log",
+  "log_sha256": "b6f82bbd51a19f6666c09ca86fd21a9a05fb03040450ba60ff0a3865d96b2351",
+  "reason": "Four GOV-01 subtest failures: unrelated removed jobs must not veto another job admission"
+}

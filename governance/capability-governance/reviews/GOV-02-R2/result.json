@@ -1,0 +1,22 @@
+{
+  "prompt_id": "GOV-02-R2",
+  "decision": "NEEDS_HUMAN",
+  "requested_review_result": "FIX",
+  "head": "c5de47440973c87023bbd6652aca984262ab17f7",
+  "independence": "FAIL",
+  "reason": "Current agent executed F1; no eligible independent-provider execution route observed",
+  "independent_security_review_performed": false,
+  "findings": {"critical": null, "major": null, "minor": null},
+  "r1_findings": {"1": "OPEN", "2": "OPEN", "3": "OPEN"},
+  "authority": "UNVERIFIED",
+  "certification": "UNVERIFIED",
+  "provenance": "UNVERIFIED",
+  "trace": "UNVERIFIED",
+  "replay": "UNVERIFIED",
+  "compatibility": "UNVERIFIED",
+  "tests": {"targeted": "NOT_RUN", "adversarial": "NOT_RUN", "affected": "NOT_RUN", "focused": "NOT_RUN", "full": "NOT_RUN", "static_schema": "NOT_RUN", "diff_check": "PASS"},
+  "ready_for_owner_closure": false,
+  "gov02_state": "OPEN",
+  "committed": false,
+  "orch01_started": false
+}

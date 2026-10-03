@@ -1,0 +1,8 @@
+{
+  "complete": false,
+  "passed": false,
+  "test_count": null,
+  "status": "INTERRUPTED_AFTER_REVIEW_CONTEXT_FIXTURE_ERROR",
+  "log": "focused-review-fixture-interrupted.log",
+  "log_sha256": "2bc8c6dd33014025865acd6ffcf80faa49c55c5da1496e4166813a0ebdf2ffdd"
+}

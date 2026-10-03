@@ -1,0 +1,31 @@
+[
+  {
+    "probe": "imported_execution_without_intent",
+    "intent_digest": null,
+    "actual_job_status": "completed",
+    "worker_executor_called": false
+  },
+  {
+    "probe": "delete_effect_trace_before_apply",
+    "provider_status": "succeeded",
+    "target_contents": "r1-staged-change",
+    "effect_pair_missing": true
+  },
+  {
+    "probe": "unobserved_review_to_completed_job_to_git_action",
+    "job_status": "completed",
+    "execution_has_intent": false,
+    "review_intent_digest": null,
+    "actual_reviewer_dispatch": false,
+    "commit_created": true
+  },
+  {
+    "probe": "single_journal_rollback_new_execution_id",
+    "second_dispatch_accepted": true,
+    "fresh_python_process": true,
+    "same_job": true,
+    "same_attempt": true,
+    "original_intent_pair_unchanged": true,
+    "authority_or_approval_replacement": false
+  }
+]

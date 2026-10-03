@@ -1,0 +1,13 @@
+{
+  "denied": true,
+  "error": "Decision trace unavailable; explicit recovery required",
+  "provider_status": null,
+  "target_write_order": [
+    "src\\new.txt"
+  ],
+  "existing_target_contents": "before\n",
+  "effect_pair_missing": true,
+  "new_target_exists": true,
+  "canonical_result_acceptance_denied": null,
+  "acceptance_error": null
+}

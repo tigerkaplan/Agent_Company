@@ -159,6 +159,11 @@ class ApprovalRuntimeTests(unittest.TestCase):
             started_at=self.clock(),
             completed_at=self.clock(),
         )
+        from runtime.core.capability_governance import certified_dispatch
+        request = Worker._build_request(running, execution_id, ())
+        self.execution_store.begin_decision(request, executor="declared-approval-fixture", runtime=self.jobs, job=running)
+        with certified_dispatch(self.execution_store, request):
+            LocalExecutor().execute(request)
         self.execution_store.create(request, execution)
         execution_ref = {
             "ref_type": "artifact",
@@ -201,7 +206,9 @@ class ApprovalRuntimeTests(unittest.TestCase):
             context=(),
             evidence=(),
         )
-        review_ref = self.review_store.create(package, review, reason, execution_request=request.to_dict())
+        with certified_dispatch(self.execution_store, request, purpose="review"):
+            self.review_store.begin_decision(review_id, reviewing, request, execution, "reviewer")
+            review_ref = self.review_store.create(package, review, reason, execution_request=request.to_dict())
         approval_run = self.approvals.request_review_completion(
             str(created["job_id"]), execution_id, review, review_ref
         )
@@ -531,6 +538,11 @@ class ApprovalRuntimeTests(unittest.TestCase):
             started_at=self.clock(),
             completed_at=self.clock(),
         )
+        from runtime.core.capability_governance import certified_dispatch
+        request = Worker._build_request(running, execution_id, ())
+        self.execution_store.begin_decision(request, executor="declared-approval-fixture", runtime=self.jobs, job=running)
+        with certified_dispatch(self.execution_store, request):
+            LocalExecutor().execute(request)
         self.execution_store.create(request, execution)
         execution_ref = {
             "ref_type": "artifact",
@@ -563,7 +575,9 @@ class ApprovalRuntimeTests(unittest.TestCase):
             (),
             (),
         )
-        review_ref = self.review_store.create(package, review, "", execution_request=request.to_dict())
+        with certified_dispatch(self.execution_store, request, purpose="review"):
+            self.review_store.begin_decision(review.review_id, reviewing, request, execution, "reviewer")
+            review_ref = self.review_store.create(package, review, "", execution_request=request.to_dict())
         pending = self.approvals.request_review_completion(
             str(created["job_id"]), execution_id, review, review_ref
         )

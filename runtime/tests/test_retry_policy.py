@@ -480,6 +480,11 @@ class RetryPolicyTests(RetryHarness, unittest.TestCase):
         # consumed-attempt/admission evidence is missing.
         self.jobs.retry_runtime.reserve_execution(claimed, execution_id)
         self.jobs.retry_runtime.admit_execution(claimed, request)
+        from runtime.core.capability_governance import certified_dispatch
+        from runtime.executors.local import LocalExecutor
+        self.executions.begin_decision(request, executor="declared-retry-recovery-fixture", runtime=self.jobs, job=claimed)
+        with certified_dispatch(self.executions, request):
+            LocalExecutor(clock=lambda: self.clock_value).execute(request)
         self.executions.create(request, result)
         recovered = worker.recover_persisted_results()
         self.assertEqual(recovered[0].status, "completed")

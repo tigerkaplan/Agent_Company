@@ -1,0 +1,38 @@
+{
+  "prompt_id": "GOV-02-R1",
+  "review": "FIX",
+  "canonical_skill_outcome": "FAIL",
+  "independence": "FAIL",
+  "findings": {
+    "critical": 0,
+    "major": 3,
+    "minor": 0
+  },
+  "authority": "FAIL",
+  "certification": "PASS",
+  "provenance": "FAIL",
+  "trace": "FAIL",
+  "replay": "FAIL",
+  "compatibility": "PASS",
+  "targeted_existing": {
+    "tests": 92,
+    "status": "PASS"
+  },
+  "new_adversarial_acceptance": {
+    "tests": 4,
+    "status": "FAIL"
+  },
+  "focused": {
+    "tests": 825,
+    "status": "PASS"
+  },
+  "full": {
+    "tests": 1286,
+    "status": "PASS"
+  },
+  "validation": "PASS",
+  "ready_for_owner_closure": false,
+  "implementation_changed": false,
+  "head": "c5de47440973c87023bbd6652aca984262ab17f7",
+  "review_report_sha256": "e91c62e10a485dc9d02d27805af7b08c56fd43193df453a138cf1ba986dcc42a"
+}

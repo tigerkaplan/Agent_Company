@@ -47,6 +47,21 @@ class ControlledWriteRuntime:
         "orchestrator/approvals",
         "orchestrator/routing",
         "providers",
+        "governance/capability-governance",
+        "schemas/capability-certification.schema.json",
+        "runtime/core/capability_governance.py",
+        "runtime/core/capability_actions.py",
+        "runtime/core/task_contract.py",
+        "runtime/core/jobs.py",
+        "runtime/approvals/store.py",
+        "runtime/storage/execution_store.py",
+        "runtime/review",
+        "runtime/workers/worker.py",
+        "runtime/actions/runtime.py",
+        "runtime/git/runtime.py",
+        "runtime/git/remote_runtime.py",
+        "schemas/task-contract.schema.json",
+        "schemas/progress-event.schema.json",
         "runtime/state",
     )
 
@@ -66,6 +81,8 @@ class ControlledWriteRuntime:
     ) -> ControlledWriteOutcome:
         from runtime.core.task_contract import require_tool
         require_tool(request, "controlled_write")
+        from runtime.core.capability_governance import consume_effect
+        consume_effect(request, "controlled_write")
         from runtime.core.task_contract import require_provider_tool_confinement
         require_provider_tool_confinement(request, adapter)
         try:
@@ -267,6 +284,9 @@ class ControlledWriteRuntime:
             elif request.dry_run:
                 apply_status = "preview"
             else:
+                # Certification/approval may become stale while the provider
+                # works in staging. Revalidate before touching the target.
+                require_tool(request, "controlled_write")
                 try:
                     target_post = self._apply(
                         scope,
@@ -276,6 +296,7 @@ class ControlledWriteRuntime:
                         created,
                         modified,
                         deleted,
+                        request=request,
                     )
                     apply_status = "applied"
                 except ScopeContractError as error:
@@ -601,6 +622,7 @@ class ControlledWriteRuntime:
         created: tuple[str, ...],
         modified: tuple[str, ...],
         deleted: tuple[str, ...],
+        *, request: ExecutionRequest,
     ) -> dict[str, str | None]:
         changed = (*created, *modified, *deleted)
         backups: dict[str, bytes | None] = {}
@@ -630,27 +652,44 @@ class ControlledWriteRuntime:
                     )
                 backups[relative] = target.read_bytes()
 
+        # Every target mutation (including rollback) needs current exact evidence.
+        # Evidence loss after a partial effect stops here for explicit recovery;
+        # it cannot authorize compensating writes or refund consumed work.
+        from runtime.core.task_contract import require_tool
+        from runtime.core.capability_governance import require_effect
+
+        def validate_effect():
+            require_tool(request, "controlled_write")
+            require_effect(request, "controlled_write")
+
+        validate_effect()
         applied: list[str] = []
         try:
             for relative in (*created, *modified):
                 target = self._target_path(target_root, relative)
                 source = workspace / Path(relative)
+                data = source.read_bytes()
+                validate_effect()
                 target.parent.mkdir(parents=True, exist_ok=True)
-                self._atomic_write(target, source.read_bytes())
+                validate_effect()
+                self._atomic_write(target, data)
                 applied.append(relative)
             for relative in deleted:
                 target = self._target_path(target_root, relative)
+                validate_effect()
                 target.unlink()
                 applied.append(relative)
         except OSError:
             for relative in reversed(applied):
                 target = self._target_path(target_root, relative)
                 original = backups[relative]
+                validate_effect()
                 if original is None:
                     if target.exists() and target.is_file():
                         target.unlink()
                 else:
                     target.parent.mkdir(parents=True, exist_ok=True)
+                    validate_effect()
                     self._atomic_write(target, original)
             raise
 
@@ -658,6 +697,7 @@ class ControlledWriteRuntime:
         for relative in changed:
             target = self._target_path(target_root, relative)
             result[relative] = self._fingerprint(target)[0] if target.is_file() else None
+        validate_effect()
         return result
 
     def _diff(

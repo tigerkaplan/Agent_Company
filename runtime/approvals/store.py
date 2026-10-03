@@ -64,12 +64,13 @@ class FileApprovalStore:
             raise ApprovalStoreError("Approval resolution must be terminal")
         self._write(self._path(request.approval_id), request)
 
-    def load(self, approval_id: str) -> ApprovalRequest:
+    def load(self, approval_id: str, *, require_canonical: bool = False) -> ApprovalRequest:
         path = self._path(approval_id)
         if not path.is_file():
             raise ApprovalStoreError(f"Approval request not found: {approval_id}")
         try:
-            value = json.loads(path.read_text(encoding="utf-8"))
+            raw = path.read_bytes()
+            value = json.loads(raw.decode("utf-8"))
         except (OSError, ValueError, RecursionError) as error:
             raise ApprovalStoreError(
                 f"Could not read approval request {approval_id}: {error}"
@@ -82,13 +83,15 @@ class FileApprovalStore:
             request = ApprovalRequest.from_dict(value)
             if request.approval_id != approval_id:
                 raise ApprovalContractError("Approval artifact identity differs from its path")
+            if require_canonical and raw != self._encoded(request).encode("utf-8"):
+                raise ApprovalContractError("Approval artifact is not canonical")
             return request
         except ApprovalContractError as error:
             raise ApprovalStoreError(
                 f"Approval request is invalid: {approval_id}: {error}"
             ) from error
 
-    def completion_evidence(self, job, execution_id, review_id, *, pinned_refs=None):
+    def completion_evidence(self, job, execution_id, review_id, *, pinned_refs=None, execution_only=False):
         """Verify completed-task approvals using this canonical approval owner.
 
         GOV-01 pins returned artifacts; it does not parse approvals or decide
@@ -148,7 +151,7 @@ class FileApprovalStore:
         gates = job["task_contract"]["approval_requirements"]
         if gates["execution"] and not actions & {"EXECUTE_JOB", "RESOLVE_HUMAN_CONDITION"}:
             raise ApprovalStoreError("Required execution approval artifact is missing")
-        if gates["completion"] and "COMPLETE_REVIEWED_JOB" not in actions:
+        if not execution_only and gates["completion"] and "COMPLETE_REVIEWED_JOB" not in actions:
             raise ApprovalStoreError("Required completion approval artifact is missing")
         if compact is not None:
             ref = f"runtime-approval:{compact.get('approval_id')}"
@@ -198,14 +201,7 @@ class FileApprovalStore:
                 newline="\n",
             ) as handle:
                 temporary_path = Path(handle.name)
-                json.dump(
-                    request.to_dict(),
-                    handle,
-                    indent=2,
-                    sort_keys=True,
-                    ensure_ascii=True,
-                )
-                handle.write("\n")
+                handle.write(self._encoded(request))
                 handle.flush()
                 os.fsync(handle.fileno())
             os.replace(temporary_path, path)
@@ -216,3 +212,7 @@ class FileApprovalStore:
         finally:
             if temporary_path is not None and temporary_path.exists():
                 temporary_path.unlink()
+
+    @staticmethod
+    def _encoded(request: ApprovalRequest) -> str:
+        return json.dumps(request.to_dict(), indent=2, sort_keys=True, ensure_ascii=True) + "\n"

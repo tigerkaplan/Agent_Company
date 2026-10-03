@@ -1,0 +1,682 @@
+{
+  "prompt_id": "GOV-02-CLOSURE",
+  "verified_at_utc": "2026-10-03T17:54:34.384647+00:00",
+  "head": "c5de47440973c87023bbd6652aca984262ab17f7",
+  "status": "PASS",
+  "R5_non_review_source_files_verified": 706,
+  "F3_accepted_source_files_verified": 213,
+  "R5_artifact_manifest_files_verified": 72,
+  "report_log_bindings_verified": 83,
+  "report_log_bindings": [
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F1/adversarial.json",
+      "log": "gov02-adversarial-complete.log",
+      "log_sha256": "b7e0e929bf04c907e5c09bf931aadc794c01e69beb67f25ade9b0524427bf46e"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F1/affected-before-fixture-repair.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F1/affected-before-fixture-repair.log",
+      "log_sha256": "f53c0b0621bbbd0656e8546ae73a66f60092dca52c25805dd26febd352de054d"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F1/affected.json",
+      "log": "gov02-affected-complete.log",
+      "log_sha256": "36a39252f913f7e1b03af1b86f84a4864e8f5bc2c93971aed689ddc76879b64a"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F1/focused-interrupted.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F1/focused-interrupted.log",
+      "log_sha256": "b6f82bbd51a19f6666c09ca86fd21a9a05fb03040450ba60ff0a3865d96b2351"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F1/focused-retry-fixture-interrupted.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F1/focused-retry-fixture-interrupted.log",
+      "log_sha256": "4705770d86977d161b6618acf25fdf14907278dbcef7216b8c41de7ed334ff28"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F1/focused-review-fixture-interrupted.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F1/focused-review-fixture-interrupted.log",
+      "log_sha256": "2bc8c6dd33014025865acd6ffcf80faa49c55c5da1496e4166813a0ebdf2ffdd"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F1/focused.json",
+      "log": "gov02-focused-complete.log",
+      "log_sha256": "02158638215a64049ede65a7f23468d86f3a06061dfe4af96520aec29a0972fa"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F1/full.json",
+      "log": "gov02-full-complete.log",
+      "log_sha256": "440fae51df19e65a46d8768eda772d6d65e02f661ba9789bda9ec3ab0eae1595"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F1/targeted-interrupted.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F1/targeted-interrupted.log",
+      "log_sha256": "09ea7b6abf5e2be27b8dc78bdce4a9b6f0b8d637d670f1f0ed87209ae66f5a1c"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F1/targeted.json",
+      "log": "gov02-targeted-complete.log",
+      "log_sha256": "0b59ff4045bdd965199eec3c36b5c3251c6dd89105d26276c851a6690188abe2"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F2/adversarial.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F2/adversarial.log",
+      "log_sha256": "5726feababb83e362d0bf3df45d0231b7756195995f52cb1c0e5c5fbd0d0a7b2"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F2/affected.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F2/affected.log",
+      "log_sha256": "d92b390f94392e51d1cf8787733ae9e670993a084b401b9cfcef4c60ab570246"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F2/diff-check.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R3/diff-check.log",
+      "log_sha256": "254b635731c6074e3302e4bf9f602d92a33aaa01510c6f1f644fff18bcb0808f"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F2/focused.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F2/focused.log",
+      "log_sha256": "03e1c95ff52e83217d05749e38cd1ca06f1ddabc1efafc7510fe92ae0ebfe6e4"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F2/full.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F2/full.log",
+      "log_sha256": "c8f490172401629691a05246c5e592e4d731890bfb39b9c35f3d38b44040217b"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F2/pre-f2-adversarial-regression.json",
+      "log": "gov02-adversarial-complete.log",
+      "log_sha256": "b7e0e929bf04c907e5c09bf931aadc794c01e69beb67f25ade9b0524427bf46e"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F2/pre-f2-affected-regression.json",
+      "log": "gov02-affected-complete.log",
+      "log_sha256": "36a39252f913f7e1b03af1b86f84a4864e8f5bc2c93971aed689ddc76879b64a"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F2/pre-f2-focused-regression.json",
+      "log": "gov02-focused-complete.log",
+      "log_sha256": "02158638215a64049ede65a7f23468d86f3a06061dfe4af96520aec29a0972fa"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F2/pre-f2-full-regression.json",
+      "log": "gov02-full-complete.log",
+      "log_sha256": "440fae51df19e65a46d8768eda772d6d65e02f661ba9789bda9ec3ab0eae1595"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F2/pre-f2-targeted-regression.json",
+      "log": "gov02-targeted-complete.log",
+      "log_sha256": "0b59ff4045bdd965199eec3c36b5c3251c6dd89105d26276c851a6690188abe2"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F2/r3-adversarial.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F2/r3-adversarial.log",
+      "log_sha256": "c3d88873e40ab10e112da1be79ca59473c1fc43ca036b274139f37309e41fb80"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F2/r3-multifile.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F2/r3-multifile.log",
+      "log_sha256": "75fb91bebd05980b8e6ab0d064261451010c124f464d34a890c0925f87dcfa84"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F2/targeted.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F2/targeted.log",
+      "log_sha256": "2c9642780712e32919d692324f23d74a940bca6a6f0b273fe789aab50faca4c3"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F2/validation.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F2/validation.log",
+      "log_sha256": "8a88e133cbc4083df3d1d1e5a2823fdcd689c94662d16193742b0aa030c3e0d6"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F3/adversarial.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F3/adversarial.log",
+      "log_sha256": "31919ab8aabf9573aea2039a26aa06e2d36252c3aca7d90176be7007d6bd4682"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F3/affected.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F3/affected.log",
+      "log_sha256": "dbbf6634ab9a3c5951ca1d9f4b5670e6beb6006551f412adb013ee68fd1c54cb"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F3/diff-check-final.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R3/diff-check.log",
+      "log_sha256": "254b635731c6074e3302e4bf9f602d92a33aaa01510c6f1f644fff18bcb0808f"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F3/diff-check.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R3/diff-check.log",
+      "log_sha256": "254b635731c6074e3302e4bf9f602d92a33aaa01510c6f1f644fff18bcb0808f"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F3/focused.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F3/focused.log",
+      "log_sha256": "85cd3a88f3ae05c9c185b62e6ff02a6e69686622006041758d98b17b1d3ba0af"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F3/full.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F3/full.log",
+      "log_sha256": "b761fe41eb42998d712440cda5002d9b365b4565c70ca475b7ed003859c0fa79"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F3/r3-adversarial.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F3/r3-adversarial.log",
+      "log_sha256": "3d821e8e873a4995dfaa36a7a4e37d29253bc6e412cecc579a3ec756e8be5910"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F3/r3-multifile.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F2/r3-multifile.log",
+      "log_sha256": "75fb91bebd05980b8e6ab0d064261451010c124f464d34a890c0925f87dcfa84"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F3/r4-combined.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F3/r4-combined.log",
+      "log_sha256": "2db9f60b26539b2e35dc68b399fb927fc44892427f160c901b7c6f1f6bdfb7da"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F3/r4-replay.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F3/r4-replay.log",
+      "log_sha256": "1244aa801a04dd8ea580a40957f25e6ecb7182140251e94ca169321956ff98a1"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F3/static.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F3/static.log",
+      "log_sha256": "5f11729d27b6135df3f8ce23490405b74aafee42cd1cea3975b8ff449fd62375"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F3/targeted.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F3/targeted.log",
+      "log_sha256": "9cac381bdad779dba70a5acbace5af0516da6cba0ea0185170c67c76dbfd2a5f"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F3/validation.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F3/validation.log",
+      "log_sha256": "26539145d47c3b3e25e69fd6d52bc70d3ace8c84ebd208cf140b94a2aff08298"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R1/adversarial-checks.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R1/adversarial-checks.log",
+      "log_sha256": "20418bd725abc6da3fc792dca68915ddeeec9073bfeeed79db4f0134e0858382"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R1/focused.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R1/focused.log",
+      "log_sha256": "148156bd460e6e6f8686f462d726a4e225352ad4cf3fc3f5140dc5630259be70"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R1/full.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R1/full.log",
+      "log_sha256": "d6022a519b955a7b067791c8cf655aed2925e75baac00442d891ec16dbb61af8"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R1/targeted.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R1/targeted.log",
+      "log_sha256": "7eaea64457731ba6a775a55dd0117293f07606516700bd6d85cd50266c7e0aa8"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R3/adversarial-corrected.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R3/adversarial-corrected.log",
+      "log_sha256": "d147772f7d665aea0b06293210f740bab7ad858184ce07d2e0163b8b206d5c6d"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R3/adversarial.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R3/adversarial.log",
+      "log_sha256": "6834648ed8e9204e7608b3af071d2af287e852f77ab6a39916a871bb4b5f7bf2"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R3/affected.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R3/affected.log",
+      "log_sha256": "18184ce188e8851a39505ee47a6d968552735f27442d6d7d289dbab0cf6f494b"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R3/diff-check.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R3/diff-check.log",
+      "log_sha256": "254b635731c6074e3302e4bf9f602d92a33aaa01510c6f1f644fff18bcb0808f"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R3/focused.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R3/focused.log",
+      "log_sha256": "4e255195bb8fb4cde17f251e85e09dc98037e34ea070ad994fc91ac1baf72209"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R3/full.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R3/full.log",
+      "log_sha256": "18718d3420641333ca2fd78b37f59733e3b932c8448d21fb16e3f66e2642549f"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R3/multifile-apply-confirmed.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R3/multifile-apply-confirmed.log",
+      "log_sha256": "177bd33233fe867e2abb68fd1e16029ade2576b5e00dd85c18004f68b6d324cf"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R3/multifile-apply.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R3/multifile-apply.log",
+      "log_sha256": "1f5d2b0a4c97fa5185cde34542d559a9cdf782447692375dbae57acfe814e15f"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R3/rollback-confirmation.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R3/rollback-confirmation.log",
+      "log_sha256": "52f14191be625cb9dd78be2352fa97552f3dafffdb63cb929b53a08b6a2f6487"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R3/targeted.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R3/targeted.log",
+      "log_sha256": "cd7818ccf4a7038ff24a188c0fb84c5416ecdb2d819e772cfb9e5436aef816be"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R3/validation.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R3/validation.log",
+      "log_sha256": "fedb5be7da086f0d51f93241f4440d4850e3b519db2bcbc6a133fbf8f34bf392"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R4/action-confirmation.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R4/action-confirmation.log",
+      "log_sha256": "a3096224b91ef82db45fdedf547b2d7261bfb98e0616375149e57029b1fc1732"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R4/adversarial.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R4/adversarial.log",
+      "log_sha256": "09f5addb6148b542b8d10f581920478cceb5745927cade43d3d87da4aea26bf7"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R4/affected.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R4/affected.log",
+      "log_sha256": "d3faa3caafab20b569133b8f66294d264b8c078b1507fac6fe13e27949bbf2ab"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R4/combined.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R4/combined.log",
+      "log_sha256": "1400241a01d8a384cbd23e35277e4da10aea50758801eca6ab3a75c96c461e16"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R4/diff-check.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R3/diff-check.log",
+      "log_sha256": "254b635731c6074e3302e4bf9f602d92a33aaa01510c6f1f644fff18bcb0808f"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R4/focused.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R4/focused.log",
+      "log_sha256": "a363ccbb03c8d295fa0d464a58daa989517f3d6bf037211f61b0b48d6c654036"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R4/full.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R4/full.log",
+      "log_sha256": "bd59e9317d9817dbe79956cc4336333150c97fd22458c3c5f8898c57d60e40c4"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R4/import-boundaries-corrected.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R4/import-boundaries-corrected.log",
+      "log_sha256": "a552da63c88998d26a35c508c41f239501a6172bd531d9aca029255ceb3edc0d"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R4/import-boundaries.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R4/import-boundaries.log",
+      "log_sha256": "7e02b7d44218acc0e99a2bc8c8da05c14435997bd43f7dd0ae3f96f4d007072f"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R4/r3-adversarial.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R4/r3-adversarial.log",
+      "log_sha256": "a96e27c73359fd7bcc8bb3a7a21d249b0387ac4ac0fb80e9cce9bf075b7ac081"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R4/r3-multifile.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F2/r3-multifile.log",
+      "log_sha256": "75fb91bebd05980b8e6ab0d064261451010c124f464d34a890c0925f87dcfa84"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R4/replay-confirmation.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R4/replay-confirmation.log",
+      "log_sha256": "2e3fe6d66751cd659b5dc6f9ef9358f4ec809536cbab0d57b34c0d394bec8d6a"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R4/rollback-confirmation.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R4/rollback-confirmation.log",
+      "log_sha256": "0d6aed82ec2d5d7d533ab1c156d2f981e2e9c8a74b4ca75f7e45bd4e0741a1d4"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R4/static-review.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R4/static-review.log",
+      "log_sha256": "a9512ebff3d30e930813908b7251ceb620b534b5d182b26823cc20bc83586b3f"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R4/targeted.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R4/targeted.log",
+      "log_sha256": "2bbc42485d9405f26048dccc56ee3d1d2482f9bdc28dc9f5052d6cddcdd2086d"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R4/validation.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F2/validation.log",
+      "log_sha256": "8a88e133cbc4083df3d1d1e5a2823fdcd689c94662d16193742b0aa030c3e0d6"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R5/adversarial.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R5/adversarial.log",
+      "log_sha256": "9e0bf70012d7304e2696cdb0c2215670e423b9482f879aea80e7d8d03f51e3c2"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R5/affected.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R5/affected.log",
+      "log_sha256": "044fef1839bd8e8ec0092f6cccc850ef1486b7849ce8ab7e0ef492d90b2900f4"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R5/combined.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R5/combined.log",
+      "log_sha256": "89dfee8eed5c12d9c591634cd40446b9f36588d2570980063d216ee1705530c9"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R5/diff-check.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R3/diff-check.log",
+      "log_sha256": "254b635731c6074e3302e4bf9f602d92a33aaa01510c6f1f644fff18bcb0808f"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R5/focused.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R5/focused.log",
+      "log_sha256": "1c6305752b2da2e0d2b85576aedcdd9135e04d2561dc4ac2edde16ef63a5d47a"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R5/full.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R5/full.log",
+      "log_sha256": "981291361c6eba8396fa0e0368edecebefb9dded941ab5cf4a5cda991f5fc7db"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R5/import-boundaries.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R5/import-boundaries.log",
+      "log_sha256": "e796dcbc45d7f25269513813ac347ddf3a92d54a74f210e4ad80d2eb761b5c87"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R5/r3-adversarial.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R5/r3-adversarial.log",
+      "log_sha256": "fa0a905a68964c8d28a2ffff8f0f23d420d6d0f36401c231a8e87bc74fb23047"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R5/r3-multifile.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F2/r3-multifile.log",
+      "log_sha256": "75fb91bebd05980b8e6ab0d064261451010c124f464d34a890c0925f87dcfa84"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R5/r5-combined.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R5/r5-combined.log",
+      "log_sha256": "c4e5ded204c5dcbe284a1dbaf5f448c22bc29924ee5081ae54ba16ffca53f3e0"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R5/replay-confirmation.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R5/replay-confirmation.log",
+      "log_sha256": "566623653fd72b3649e8a14e3ea0fd5038f1e5a8b5e0c37e24d99f615d9fafd8"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R5/rollback-confirmation.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R5/rollback-confirmation.log",
+      "log_sha256": "58985acff5f3f725e4f4f945ef8a966b40b661a4442e052f53b19acbbfbf16dd"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R5/static.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F3/static.log",
+      "log_sha256": "5f11729d27b6135df3f8ce23490405b74aafee42cd1cea3975b8ff449fd62375"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R5/targeted.json",
+      "log": "governance/capability-governance/reviews/GOV-02-R5/targeted.log",
+      "log_sha256": "d033087fe9441b6d965294a8d378eef4db87e0fd4c50c672d186cb8eb6025336"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-R5/validation.json",
+      "log": "governance/capability-governance/reviews/GOV-02-F3/validation.log",
+      "log_sha256": "26539145d47c3b3e25e69fd6d52bc70d3ace8c84ebd208cf140b94a2aff08298"
+    }
+  ],
+  "excluded_historical_diagnostics": [
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F1/pre-f1-focused-regression.json",
+      "reason": "Superseded pre-F1 diagnostic report; original log bytes unavailable; excluded from closure acceptance"
+    },
+    {
+      "report": "governance/capability-governance/reviews/GOV-02-F1/pre-f1-full-regression.json",
+      "reason": "Superseded pre-F1 diagnostic report; original log bytes unavailable; excluded from closure acceptance"
+    }
+  ],
+  "review": "PASS",
+  "independence": "PASS",
+  "provider_diversity": "NOT ESTABLISHED",
+  "prior_findings": {
+    "R1-M1": "CLOSED",
+    "R1-M2": "CLOSED",
+    "R1-M3": "CLOSED",
+    "R3-M1": "CLOSED",
+    "R3-M2": "CLOSED",
+    "R3-M3": "CLOSED",
+    "R4-M1": "CLOSED",
+    "R4-M2": "CLOSED"
+  },
+  "findings": {
+    "critical": 0,
+    "major": 0,
+    "minor": 0
+  },
+  "R5_completed_stages": {
+    "targeted": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": 114,
+      "elapsed_seconds": 747.525,
+      "log_sha256": "d033087fe9441b6d965294a8d378eef4db87e0fd4c50c672d186cb8eb6025336"
+    },
+    "adversarial": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": 22,
+      "elapsed_seconds": 725.578,
+      "log_sha256": "9e0bf70012d7304e2696cdb0c2215670e423b9482f879aea80e7d8d03f51e3c2"
+    },
+    "r3-adversarial": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": 6,
+      "elapsed_seconds": 111.341,
+      "log_sha256": "fa0a905a68964c8d28a2ffff8f0f23d420d6d0f36401c231a8e87bc74fb23047"
+    },
+    "r3-multifile": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": null,
+      "elapsed_seconds": 6.03,
+      "log_sha256": "75fb91bebd05980b8e6ab0d064261451010c124f464d34a890c0925f87dcfa84"
+    },
+    "combined": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": 3,
+      "elapsed_seconds": 66.381,
+      "log_sha256": "89dfee8eed5c12d9c591634cd40446b9f36588d2570980063d216ee1705530c9"
+    },
+    "replay-confirmation": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": null,
+      "elapsed_seconds": 17.149,
+      "log_sha256": "566623653fd72b3649e8a14e3ea0fd5038f1e5a8b5e0c37e24d99f615d9fafd8"
+    },
+    "rollback-confirmation": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": null,
+      "elapsed_seconds": 9.991,
+      "log_sha256": "58985acff5f3f725e4f4f945ef8a966b40b661a4442e052f53b19acbbfbf16dd"
+    },
+    "import-boundaries": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": 2,
+      "elapsed_seconds": 6.478,
+      "log_sha256": "e796dcbc45d7f25269513813ac347ddf3a92d54a74f210e4ad80d2eb761b5c87"
+    },
+    "affected": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": 163,
+      "elapsed_seconds": 1686.825,
+      "log_sha256": "044fef1839bd8e8ec0092f6cccc850ef1486b7849ce8ab7e0ef492d90b2900f4"
+    },
+    "focused": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": 847,
+      "elapsed_seconds": 5110.853,
+      "log_sha256": "1c6305752b2da2e0d2b85576aedcdd9135e04d2561dc4ac2edde16ef63a5d47a"
+    },
+    "full": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": 1308,
+      "elapsed_seconds": 2304.125,
+      "log_sha256": "981291361c6eba8396fa0e0368edecebefb9dded941ab5cf4a5cda991f5fc7db"
+    },
+    "validation": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": null,
+      "elapsed_seconds": 0.599,
+      "log_sha256": "26539145d47c3b3e25e69fd6d52bc70d3ace8c84ebd208cf140b94a2aff08298"
+    },
+    "static": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": null,
+      "elapsed_seconds": 1.128,
+      "log_sha256": "5f11729d27b6135df3f8ce23490405b74aafee42cd1cea3975b8ff449fd62375"
+    },
+    "diff-check": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": null,
+      "elapsed_seconds": 0.123,
+      "log_sha256": "254b635731c6074e3302e4bf9f602d92a33aaa01510c6f1f644fff18bcb0808f"
+    },
+    "r5-combined": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": 3,
+      "elapsed_seconds": 43.726,
+      "log_sha256": "c4e5ded204c5dcbe284a1dbaf5f448c22bc29924ee5081ae54ba16ffca53f3e0"
+    }
+  },
+  "canonical_policy_hashes": {
+    "CONSTITUTION.md": {
+      "sha256": "25273cdad156d808e5cff2e370287e40791070eefd8dc08460bebceaca74c407"
+    },
+    "AGENTS.md": {
+      "sha256": "39349be67961e6ffcdefb3288c7228b419f7c14e880efbef69f86bb6ea3624ed"
+    },
+    "skills/shared/review/SKILL.md": {
+      "sha256": "c3b6c504394753f692642292b4a0588f48fdf1ffc425b6afc3ac048bd46f801e"
+    }
+  },
+  "planned_paths_verified_absent": [
+    "orchestrator/graph",
+    "runtime/memory",
+    "shared/memory",
+    "agents/finance-pricing",
+    "agents/analytics",
+    "agents/content",
+    "agents/design",
+    "skills/search-growth",
+    "orchestrator/workflows/search-growth",
+    "skills/social-media/lifecycle",
+    "orchestrator/workflows/social-media-operations",
+    "apps/control-room/social-media-hq",
+    "observability",
+    "apps/control-room",
+    "orchestrator/decision-engine",
+    "orchestrator/decision-engine/adapters/jev",
+    "project-packs/brightshore"
+  ],
+  "closure": "PASS",
+  "implementation": "PASS",
+  "evidence": "PASS",
+  "doc_state_reconciliation": "PASS",
+  "ready_to_commit": "YES",
+  "next_checkpoint": "GOV-02 COMMIT",
+  "ORCH_01_started": false,
+  "committed": false,
+  "closure_regression_suites_rerun": false,
+  "implementation_or_review_changed": false,
+  "preserved_existing_files_verified": 774,
+  "modified_documents": {
+    "PROJECT_STATE.md": {
+      "before_sha256": "afe6652d28b8933c8a7f4bb28fc109e29f92977ad548ce3481a1380d47cb5968",
+      "after_sha256": "22fb60f4d5c2f576870a4e9b41894210b79f991d6538c3df64d279b5ec5e5718"
+    },
+    "README.md": {
+      "before_sha256": "9cc7ea9acbae28fc641d872092faaad6d6943953f175ee02cb0d50163d8b79ce",
+      "after_sha256": "86c3c32b8a2ac1131f131b6155336601c54480d184840ed0b8009913f104ad41"
+    },
+    "ROADMAP.md": {
+      "before_sha256": "68b930ef188911f41a17d333d3c2c8f43d5cc012ff2a587b1684dbc2f7dd9d5d",
+      "after_sha256": "00bda5f3ad8b03283906c01dc0ad6dc958535448a11186dad522a30ee7617254"
+    },
+    "TODO.md": {
+      "before_sha256": "4f33754d4144498f8a477aa1d1fe6a0052d4ff5fb099c9f52c5e91cdc54b458f",
+      "after_sha256": "b3f34e84cc8ae1bf90e8e140aacf2f2a38d5cadf8985bea9ff7d26976a14dd3c"
+    },
+    "governance/capability-governance/README.md": {
+      "before_sha256": "7eb353aa54670af18f59e210b32d010b41923aa5d4967054c4dac1eaa59b1564",
+      "after_sha256": "f9dc1d691ae21123d9528d5b707cb2dbe4afcec45858547505ecd31029aca3c2"
+    },
+    "governance/capability-governance/VALIDATION.md": {
+      "before_sha256": "8793d699a4b6c6385e0b8c451f4d8ddab4d24fcda9d98bd72dd64de7353bd33b",
+      "after_sha256": "50dc4a07fcbd0e6c8caced3d0ff133d17cfb972865f6ba2e2a030b376ccf9925"
+    }
+  },
+  "closure_record_sha256": "909af929c89985e5db8784ec0c565fb25aea9fe548210b9bf6a8cb6a18485ece",
+  "fresh_lightweight_checks": [
+    {
+      "command": [
+        "python",
+        "-B",
+        "governance/capability-governance/validate.py"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"python_syntax_files\": 173, \"schema_files\": 33, \"certificate_count\": 17, \"status\": \"PASS\"}",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "governance/capability-governance/reviews/GOV-02-R5/static_validation.py"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"status\": \"PASS\",\n  \"runtime_python_files\": 173,\n  \"schema_files\": 33,\n  \"certificates\": 17,\n  \"duplicate_json_keys\": \"PASS\",\n  \"local_schema_references\": \"PASS\",\n  \"production_test_imports\": 0\n}",
+      "stderr": ""
+    }
+  ],
+  "review_source_manifest": "governance/capability-governance/reviews/GOV-02-R5/source-before.json",
+  "accepted_source_manifest": "governance/capability-governance/reviews/GOV-02-F3/regression-source.json",
+  "review_artifact_manifest": "governance/capability-governance/reviews/GOV-02-R5/artifact-manifest.json",
+  "review_artifact_manifest_sha256": "003a1711bc03cc64d20047dcf74afe375b53275c7cf8f03f1c49e67494c797d7",
+  "evidence_storage": "Repository-local uncommitted artifacts; complete logs are ignored by existing policy; no Git archive claim",
+  "final_verified_at_utc": "2026-10-03T17:57:45.087469+00:00",
+  "documentation_links_verified": 28,
+  "final_git_status_short": " M PROJECT_STATE.md\n M README.md\n M ROADMAP.md\n M TODO.md\n M runtime/actions/runtime.py\n M runtime/approvals/runtime.py\n M runtime/approvals/store.py\n M runtime/core/jobs.py\n M runtime/core/task_contract.py\n M runtime/git/remote_runtime.py\n M runtime/git/runtime.py\n M runtime/progress/models.py\n M runtime/review/context.py\n M runtime/review/reviewers.py\n M runtime/review/runtime.py\n M runtime/review/store.py\n M runtime/review/verification.py\n M runtime/storage/execution_store.py\n M runtime/tests/contract_fixtures.py\n M runtime/tests/test_actions.py\n M runtime/tests/test_approval.py\n M runtime/tests/test_compute_policy.py\n M runtime/tests/test_context_discovery.py\n M runtime/tests/test_continuation.py\n M runtime/tests/test_execution_results.py\n M runtime/tests/test_external_content.py\n M runtime/tests/test_git.py\n M runtime/tests/test_progress_f1.py\n M runtime/tests/test_providers.py\n M runtime/tests/test_retry_policy.py\n M runtime/tests/test_retry_repairs.py\n M runtime/tests/test_review.py\n M runtime/tests/test_scheduler_loop.py\n M runtime/tests/test_task_contract_f1.py\n M runtime/workers/worker.py\n M schemas/progress-event.schema.json\n M schemas/task-contract.schema.json\n?? governance/capability-governance/\n?? runtime/core/capability_actions.py\n?? runtime/core/capability_governance.py\n?? runtime/tests/test_capability_actions.py\n?? runtime/tests/test_capability_governance.py\n?? runtime/tests/test_capability_governance_f1.py\n?? runtime/tests/test_capability_governance_f2.py\n?? runtime/tests/test_capability_governance_f3.py\n?? schemas/capability-certification.schema.json\n",
+  "final_git_status_exit_code": 0,
+  "final_git_diff_check": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "warning: in the working copy of 'runtime/approvals/store.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'runtime/git/remote_runtime.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'runtime/progress/models.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'runtime/review/reviewers.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'runtime/review/runtime.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'runtime/tests/test_context_discovery.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'runtime/tests/test_retry_repairs.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'runtime/tests/test_task_contract_f1.py', LF will be replaced by CRLF the next time Git touches it\n"
+  },
+  "final_head": "c5de47440973c87023bbd6652aca984262ab17f7"
+}

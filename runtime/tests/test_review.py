@@ -27,8 +27,8 @@ from runtime.providers.models import (
 from runtime.providers.routing import ProviderRouter
 from runtime.review.context import ReviewContextBuilder
 from runtime.review.models import ReviewPackage, ReviewerResponse
-from runtime.review.reviewers import ProviderBackedReviewer
-from runtime.review.runtime import ReviewerRuntime
+from runtime.tests.contract_fixtures import CertifiedReviewerFixture as ProviderBackedReviewer
+from runtime.tests.contract_fixtures import CertifiedReviewRuntimeFixture as ReviewerRuntime
 from runtime.review.store import FileReviewStore
 from runtime.review.verification import DeterministicVerifier
 from runtime.storage.execution_store import FileExecutionStore
@@ -196,6 +196,10 @@ class ReviewTestHarness:
             requested_provider=provider,
             preferred_provider=provider,
         )
+        from runtime.core.capability_governance import certified_dispatch
+        self.execution_store.begin_decision(request, executor="declared-deterministic-review-fixture", runtime=self.runtime, job=running)
+        with certified_dispatch(self.execution_store, request):
+            pass  # Missing-artifact cases retain the real pre-effect authority.
         if persist_execution:
             self.execution_store.create(request, result)
         execution_ref = {
@@ -218,6 +222,7 @@ class ReviewTestHarness:
             self.review_store,
             id_factory=lambda: "review-fixed-001",
             clock=lambda: "2026-09-22T12:00:02Z",
+            fixture_runtime=self.runtime,
         )
 
 

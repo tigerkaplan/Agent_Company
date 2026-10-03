@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "policy_id": "GOV-02-frozen-V1",
+  "certificates": {
+    "planning": {
+      "certificate_id": "GOV-02:planning",
+      "status": "certified",
+      "profiles": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_PREPARE",
+        "SENSITIVE_EXECUTE"
+      ],
+      "evidence": "governance/capability-governance/README.md"
+    },
+    "architecture": {
+      "certificate_id": "GOV-02:architecture",
+      "status": "certified",
+      "profiles": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_PREPARE",
+        "SENSITIVE_EXECUTE"
+      ],
+      "evidence": "governance/capability-governance/README.md"
+    },
+    "software_implementation": {
+      "certificate_id": "GOV-02:software_implementation",
+      "status": "certified",
+      "profiles": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_PREPARE",
+        "EXTERNAL_EXECUTE",
+        "SENSITIVE_EXECUTE"
+      ],
+      "evidence": "governance/capability-governance/README.md"
+    },
+    "repository_inspection": {
+      "certificate_id": "GOV-02:repository_inspection",
+      "status": "certified",
+      "profiles": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_PREPARE",
+        "SENSITIVE_EXECUTE"
+      ],
+      "evidence": "governance/capability-governance/README.md"
+    },
+    "debugging": {
+      "certificate_id": "GOV-02:debugging",
+      "status": "certified",
+      "profiles": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_PREPARE",
+        "SENSITIVE_EXECUTE"
+      ],
+      "evidence": "governance/capability-governance/README.md"
+    },
+    "testing": {
+      "certificate_id": "GOV-02:testing",
+      "status": "certified",
+      "profiles": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_PREPARE",
+        "SENSITIVE_EXECUTE"
+      ],
+      "evidence": "governance/capability-governance/README.md"
+    },
+    "research_synthesis": {
+      "certificate_id": "GOV-02:research_synthesis",
+      "status": "certified",
+      "profiles": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_PREPARE",
+        "SENSITIVE_EXECUTE"
+      ],
+      "evidence": "governance/capability-governance/README.md"
+    },
+    "knowledge_query": {
+      "certificate_id": "GOV-02:knowledge_query",
+      "status": "certified",
+      "profiles": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_PREPARE",
+        "SENSITIVE_EXECUTE"
+      ],
+      "evidence": "governance/capability-governance/README.md"
+    },
+    "knowledge_ingest": {
+      "certificate_id": "GOV-02:knowledge_ingest",
+      "status": "certified",
+      "profiles": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_PREPARE",
+        "SENSITIVE_EXECUTE"
+      ],
+      "evidence": "governance/capability-governance/README.md"
+    },
+    "knowledge_lint": {
+      "certificate_id": "GOV-02:knowledge_lint",
+      "status": "certified",
+      "profiles": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_PREPARE",
+        "SENSITIVE_EXECUTE"
+      ],
+      "evidence": "governance/capability-governance/README.md"
+    },
+    "business_communications": {
+      "certificate_id": "GOV-02:business_communications",
+      "status": "certified",
+      "profiles": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_PREPARE",
+        "SENSITIVE_EXECUTE"
+      ],
+      "evidence": "governance/capability-governance/README.md"
+    },
+    "sales_coordination": {
+      "certificate_id": "GOV-02:sales_coordination",
+      "status": "certified",
+      "profiles": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_PREPARE",
+        "SENSITIVE_EXECUTE"
+      ],
+      "evidence": "governance/capability-governance/README.md"
+    },
+    "marketing_analysis": {
+      "certificate_id": "GOV-02:marketing_analysis",
+      "status": "certified",
+      "profiles": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_PREPARE",
+        "SENSITIVE_EXECUTE"
+      ],
+      "evidence": "governance/capability-governance/README.md"
+    },
+    "social_media_content": {
+      "certificate_id": "GOV-02:social_media_content",
+      "status": "certified",
+      "profiles": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_PREPARE",
+        "SENSITIVE_EXECUTE"
+      ],
+      "evidence": "governance/capability-governance/README.md"
+    },
+    "operations_coordination": {
+      "certificate_id": "GOV-02:operations_coordination",
+      "status": "certified",
+      "profiles": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_PREPARE",
+        "SENSITIVE_EXECUTE"
+      ],
+      "evidence": "governance/capability-governance/README.md"
+    },
+    "long_context_review": {
+      "certificate_id": "GOV-02:long_context_review",
+      "status": "certified",
+      "profiles": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_PREPARE",
+        "SENSITIVE_EXECUTE"
+      ],
+      "evidence": "governance/capability-governance/README.md"
+    },
+    "independent_review": {
+      "certificate_id": "GOV-02:independent_review",
+      "status": "certified",
+      "profiles": [
+        "READ_ONLY"
+      ],
+      "evidence": "governance/capability-governance/README.md"
+    }
+  }
+}

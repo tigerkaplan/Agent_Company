@@ -1,0 +1,1853 @@
+diff --git a/PROJECT_STATE.md b/PROJECT_STATE.md
+index 56be0c2..6034b6f 100644
+--- a/PROJECT_STATE.md
++++ b/PROJECT_STATE.md
+@@ -1,6 +1,19 @@
+ # Agent Company Project State
+ 
+-## GOV-01 Current State - 2026-10-02
++## GOV-02 Current Implementation - 2026-10-03
++
++ACTIVE: GOV-02 Capability Governance / IMPLEMENTED, UNCOMMITTED; validation PASS; independent review pending.
++Starting HEAD: `c5de474`; V1 scope freeze remains ACTIVE.
++GOV-01 and CORE-01-11 remain the canonical approval, review, scope, budget and state owners.
++Certification, provenance, profile gates and decision traces now run in JobRuntime,
++Worker, Reviewer and executor/tool paths. No general external executor is introduced.
++Historical authority without GOV-02 provenance fails closed; no automatic migration.
++See [GOV-02 implementation and acceptance evidence](governance/capability-governance/README.md).
++No repository commit, push, deployment or ORCH-01 implementation has been performed.
++The dated GOV-01 sections below preserve their historical checkpoint evidence.
++
++
++## GOV-01 Historical Committed State - 2026-10-02
+ 
+ ACTIVE: None; GOV-01 Task & Authority Contract / CLOSED / COMMITTED at `852ec01`.
+ NEXT: GOV-02 / NOT STARTED; sequence only, no authorization to begin.
+diff --git a/README.md b/README.md
+index cfcd5f9..cd07311 100644
+--- a/README.md
++++ b/README.md
+@@ -1,6 +1,19 @@
+ # Agent Company
+ 
+-## GOV-01 Current State - 2026-10-02
++## GOV-02 Current Implementation - 2026-10-03
++
++ACTIVE: GOV-02 Capability Governance / IMPLEMENTED, UNCOMMITTED; validation PASS; independent review pending.
++Starting HEAD: `c5de474`; V1 scope freeze remains ACTIVE.
++GOV-01 and CORE-01-11 remain the canonical approval, review, scope, budget and state owners.
++Certification, provenance, profile gates and decision traces now run in JobRuntime,
++Worker, Reviewer and executor/tool paths. No general external executor is introduced.
++Historical authority without GOV-02 provenance fails closed; no automatic migration.
++See [GOV-02 implementation and acceptance evidence](governance/capability-governance/README.md).
++No repository commit, push, deployment or ORCH-01 implementation has been performed.
++The dated GOV-01 sections below preserve their historical checkpoint evidence.
++
++
++## GOV-01 Historical Committed State - 2026-10-02
+ 
+ ACTIVE: None; GOV-01 Task & Authority Contract / CLOSED / COMMITTED at `852ec01`.
+ NEXT: GOV-02 / NOT STARTED; sequence only, no authorization to begin.
+@@ -246,14 +259,22 @@ CURRENT. Governance documentation is CURRENT in `governance/task-contract/`,
+ contain their boundary READMEs.
+ These describe the integrated runtime; they do not establish duplicate authority stores.
+ 
++## GOV-02 Current Physical Paths
++
++`runtime/core/capability_governance.py`, `runtime/core/capability_actions.py`,
++`schemas/capability-certification.schema.json`, `runtime/tests/test_capability_governance.py`
++and `runtime/tests/test_capability_actions.py` are CURRENT. The real governance
++content is in `governance/capability-governance/`. Certification/provenance extend
++the existing TaskContractStore; execution and review decision traces extend their
++existing stores and CORE-07 observations. The proposed capability-certification
++and decision-trace directory labels are superseded by these integrated paths.
++
+ ## Future / Target Repository Structure
+ 
+ The proposed paths in the list below are PLANNED and absent from the current
+ physical tree. This list records structural ownership only; implementation
+ checkpoints create paths when real content exists.
+ 
+-- GOV-02: `governance/capability-certification/` and
+-  `governance/audit/decision-trace/`.
+ - ORCH-01: `orchestrator/graph/`.
+ - MEM-01 through MEM-03: `runtime/memory/` and `shared/memory/`.
+ - Agents 11-14: `agents/finance-pricing/`, `agents/analytics/`,
+diff --git a/ROADMAP.md b/ROADMAP.md
+index c235508..2daa9af 100644
+--- a/ROADMAP.md
++++ b/ROADMAP.md
+@@ -1,6 +1,19 @@
+ # Agent Company Roadmap
+ 
+-## GOV-01 Current State - 2026-10-02
++## GOV-02 Current Implementation - 2026-10-03
++
++ACTIVE: GOV-02 Capability Governance / IMPLEMENTED, UNCOMMITTED; validation PASS; independent review pending.
++Starting HEAD: `c5de474`; V1 scope freeze remains ACTIVE.
++GOV-01 and CORE-01-11 remain the canonical approval, review, scope, budget and state owners.
++Certification, provenance, profile gates and decision traces now run in JobRuntime,
++Worker, Reviewer and executor/tool paths. No general external executor is introduced.
++Historical authority without GOV-02 provenance fails closed; no automatic migration.
++See [GOV-02 implementation and acceptance evidence](governance/capability-governance/README.md).
++No repository commit, push, deployment or ORCH-01 implementation has been performed.
++The dated GOV-01 sections below preserve their historical checkpoint evidence.
++
++
++## GOV-01 Historical Committed State - 2026-10-02
+ 
+ ACTIVE: None; GOV-01 Task & Authority Contract / CLOSED / COMMITTED at `852ec01`.
+ NEXT: GOV-02 / NOT STARTED; sequence only, no authorization to begin.
+@@ -451,16 +464,22 @@ terminal persistence. The contract and completion receipts use write-once anchor
+ inside the existing job state. Missing acceptance/evidence cannot become DONE.
+ Opaque native-tool CLI providers fail closed; no native CLI confinement is claimed.
+ GOV-01 is CLOSED / COMMITTED at `852ec01` after verified independent PASS and GOV-01C2 closure.
+-GOV-02 is not started. Details: [Task Contract](governance/task-contract/README.md).
++GOV-02 implementation is uncommitted and has passed validation and awaits independent review.
++Details: [Task Contract](governance/task-contract/README.md).
+ 
+ #### GOV-02 — Capability Governance
+ 
+-GOV-02 will define Capability Certification, Decision Audit Trace,
++GOV-02 now implements Capability Certification, Decision Audit Trace,
+ policy/authority provenance, blast-radius gates, and reversibility gates.
+ Capability profiles are READ_ONLY, LOCAL_WRITE, EXTERNAL_PREPARE,
+ EXTERNAL_EXECUTE, and SENSITIVE_EXECUTE, integrated with delegation, blast
+ radius, reversibility, approval, and capability certification.
+ 
++The current implementation is in `runtime/core/capability_governance.py` and
++`governance/capability-governance/`, integrated with canonical task, execution,
++review, approval and progress stores. Unsupported external effects fail closed.
++GOV-02 remains OPEN until independent review and owner closure; ORCH-01 is not started.
++
+ ### B. Graph Orchestration
+ 
+ #### ORCH-01 — Graph Execution Runtime
+diff --git a/TODO.md b/TODO.md
+index df4eee4..1ad9724 100644
+--- a/TODO.md
++++ b/TODO.md
+@@ -1,6 +1,19 @@
+ # Agent Company TODO
+ 
+-## GOV-01 Current State - 2026-10-02
++## GOV-02 Current Implementation - 2026-10-03
++
++ACTIVE: GOV-02 Capability Governance / IMPLEMENTED, UNCOMMITTED; validation PASS; independent review pending.
++Starting HEAD: `c5de474`; V1 scope freeze remains ACTIVE.
++GOV-01 and CORE-01-11 remain the canonical approval, review, scope, budget and state owners.
++Certification, provenance, profile gates and decision traces now run in JobRuntime,
++Worker, Reviewer and executor/tool paths. No general external executor is introduced.
++Historical authority without GOV-02 provenance fails closed; no automatic migration.
++See [GOV-02 implementation and acceptance evidence](governance/capability-governance/README.md).
++No repository commit, push, deployment or ORCH-01 implementation has been performed.
++The dated GOV-01 sections below preserve their historical checkpoint evidence.
++
++
++## GOV-01 Historical Committed State - 2026-10-02
+ 
+ ACTIVE: None; GOV-01 Task & Authority Contract / CLOSED / COMMITTED at `852ec01`.
+ NEXT: GOV-02 / NOT STARTED; sequence only, no authorization to begin.
+@@ -141,11 +154,11 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
+ - [x] GOV-01 runtime implementation (CLOSED / COMMITTED at `852ec01`): canonical task contract, L0-L5 risk and
+   delegation levels, blast radius, reversibility, approvals, explicit stop
+   conditions, and evidence-gated completion.
+-- [ ] GOV-02 Capability Governance: capability certification, decision audit
+-  trace, policy/authority provenance, and blast-radius/reversibility gates. Add
+-  READ_ONLY, LOCAL_WRITE, EXTERNAL_PREPARE, EXTERNAL_EXECUTE, and
+-  SENSITIVE_EXECUTE profiles integrated with delegation, blast radius,
+-  reversibility, approval, and certification.
++- [ ] GOV-02 independent review and owner closure: runtime certification,
++  exact-work decision traces, provenance, profile and blast/reversibility gates
++  are implemented and uncommitted. Review source and completed validation
++  evidence in `governance/capability-governance/`; no closure or ORCH-01 authority
++  is inferred from implementation or test success.
+ - [ ] ORCH-01 Graph Execution Runtime: owner specifies outcomes, not workflows;
+   Agent Company selects clarification, task contract, graph, agents, skills,
+   context, tools/providers, eval/review, and approval points. Include
+diff --git a/runtime/actions/runtime.py b/runtime/actions/runtime.py
+index 5745629..1f02782 100644
+--- a/runtime/actions/runtime.py
++++ b/runtime/actions/runtime.py
+@@ -47,6 +47,21 @@ class ControlledWriteRuntime:
+         "orchestrator/approvals",
+         "orchestrator/routing",
+         "providers",
++        "governance/capability-governance",
++        "schemas/capability-certification.schema.json",
++        "runtime/core/capability_governance.py",
++        "runtime/core/capability_actions.py",
++        "runtime/core/task_contract.py",
++        "runtime/core/jobs.py",
++        "runtime/approvals/store.py",
++        "runtime/storage/execution_store.py",
++        "runtime/review",
++        "runtime/workers/worker.py",
++        "runtime/actions/runtime.py",
++        "runtime/git/runtime.py",
++        "runtime/git/remote_runtime.py",
++        "schemas/task-contract.schema.json",
++        "schemas/progress-event.schema.json",
+         "runtime/state",
+     )
+ 
+@@ -66,6 +81,8 @@ class ControlledWriteRuntime:
+     ) -> ControlledWriteOutcome:
+         from runtime.core.task_contract import require_tool
+         require_tool(request, "controlled_write")
++        from runtime.core.capability_governance import consume_effect
++        consume_effect(request, "controlled_write")
+         from runtime.core.task_contract import require_provider_tool_confinement
+         require_provider_tool_confinement(request, adapter)
+         try:
+@@ -267,6 +284,9 @@ class ControlledWriteRuntime:
+             elif request.dry_run:
+                 apply_status = "preview"
+             else:
++                # Certification/approval may become stale while the provider
++                # works in staging. Revalidate before touching the target.
++                require_tool(request, "controlled_write")
+                 try:
+                     target_post = self._apply(
+                         scope,
+@@ -276,6 +296,7 @@ class ControlledWriteRuntime:
+                         created,
+                         modified,
+                         deleted,
++                        request=request,
+                     )
+                     apply_status = "applied"
+                 except ScopeContractError as error:
+@@ -601,6 +622,7 @@ class ControlledWriteRuntime:
+         created: tuple[str, ...],
+         modified: tuple[str, ...],
+         deleted: tuple[str, ...],
++        *, request: ExecutionRequest,
+     ) -> dict[str, str | None]:
+         changed = (*created, *modified, *deleted)
+         backups: dict[str, bytes | None] = {}
+@@ -630,27 +652,44 @@ class ControlledWriteRuntime:
+                     )
+                 backups[relative] = target.read_bytes()
+ 
++        # Every target mutation (including rollback) needs current exact evidence.
++        # Evidence loss after a partial effect stops here for explicit recovery;
++        # it cannot authorize compensating writes or refund consumed work.
++        from runtime.core.task_contract import require_tool
++        from runtime.core.capability_governance import require_effect
++
++        def validate_effect():
++            require_tool(request, "controlled_write")
++            require_effect(request, "controlled_write")
++
++        validate_effect()
+         applied: list[str] = []
+         try:
+             for relative in (*created, *modified):
+                 target = self._target_path(target_root, relative)
+                 source = workspace / Path(relative)
++                data = source.read_bytes()
++                validate_effect()
+                 target.parent.mkdir(parents=True, exist_ok=True)
+-                self._atomic_write(target, source.read_bytes())
++                validate_effect()
++                self._atomic_write(target, data)
+                 applied.append(relative)
+             for relative in deleted:
+                 target = self._target_path(target_root, relative)
++                validate_effect()
+                 target.unlink()
+                 applied.append(relative)
+         except OSError:
+             for relative in reversed(applied):
+                 target = self._target_path(target_root, relative)
+                 original = backups[relative]
++                validate_effect()
+                 if original is None:
+                     if target.exists() and target.is_file():
+                         target.unlink()
+                 else:
+                     target.parent.mkdir(parents=True, exist_ok=True)
++                    validate_effect()
+                     self._atomic_write(target, original)
+             raise
+ 
+@@ -658,6 +697,7 @@ class ControlledWriteRuntime:
+         for relative in changed:
+             target = self._target_path(target_root, relative)
+             result[relative] = self._fingerprint(target)[0] if target.is_file() else None
++        validate_effect()
+         return result
+ 
+     def _diff(
+diff --git a/runtime/approvals/runtime.py b/runtime/approvals/runtime.py
+index b504c97..41fd1c8 100644
+--- a/runtime/approvals/runtime.py
++++ b/runtime/approvals/runtime.py
+@@ -472,7 +472,7 @@ class ApprovalRuntime:
+                     raise ApprovalRuntimeError(
+                         "Review store is required to restore an approval boundary"
+                     )
+-                review_record = self.review_store.load(request.review_id).get(
++                review_record = self.review_store.load(request.review_id, require_authority=True).get(
+                     "result", {}
+                 )
+                 if (
+@@ -506,7 +506,7 @@ class ApprovalRuntime:
+                     raise ApprovalRuntimeError(
+                         "Execution store is required to restore a human boundary"
+                     )
+-                record = self.execution_store.load(request.execution_id)
++                record = self.execution_store.load(request.execution_id, require_authority=True)
+                 if (
+                     record.result.job_id != request.job_id
+                     or record.result.status != "needs_human"
+@@ -694,7 +694,7 @@ class ApprovalRuntime:
+         if self.execution_store is None:
+             return {"execution_id": execution_id, "artifact_loaded": False}
+         try:
+-            result = self.execution_store.load(execution_id).result.to_dict()
++            result = self.execution_store.load(execution_id, require_authority=True).result.to_dict()
+         except ExecutionStoreError as error:
+             raise ApprovalRuntimeError(str(error)) from error
+         summary = {
+@@ -710,7 +710,7 @@ class ApprovalRuntime:
+         if self.review_store is None:
+             return {"review_id": review_id, "artifact_loaded": False}
+         try:
+-            result = self.review_store.load(review_id).get("result", {})
++            result = self.review_store.load(review_id, require_authority=True).get("result", {})
+         except ReviewStoreError as error:
+             raise ApprovalRuntimeError(str(error)) from error
+         summary = {
+diff --git a/runtime/approvals/store.py b/runtime/approvals/store.py
+index c6e97c5..918102f 100644
+--- a/runtime/approvals/store.py
++++ b/runtime/approvals/store.py
+@@ -64,12 +64,13 @@ class FileApprovalStore:
+             raise ApprovalStoreError("Approval resolution must be terminal")
+         self._write(self._path(request.approval_id), request)
+ 
+-    def load(self, approval_id: str) -> ApprovalRequest:
++    def load(self, approval_id: str, *, require_canonical: bool = False) -> ApprovalRequest:
+         path = self._path(approval_id)
+         if not path.is_file():
+             raise ApprovalStoreError(f"Approval request not found: {approval_id}")
+         try:
+-            value = json.loads(path.read_text(encoding="utf-8"))
++            raw = path.read_bytes()
++            value = json.loads(raw.decode("utf-8"))
+         except (OSError, ValueError, RecursionError) as error:
+             raise ApprovalStoreError(
+                 f"Could not read approval request {approval_id}: {error}"
+@@ -82,13 +83,15 @@ class FileApprovalStore:
+             request = ApprovalRequest.from_dict(value)
+             if request.approval_id != approval_id:
+                 raise ApprovalContractError("Approval artifact identity differs from its path")
++            if require_canonical and raw != self._encoded(request).encode("utf-8"):
++                raise ApprovalContractError("Approval artifact is not canonical")
+             return request
+         except ApprovalContractError as error:
+             raise ApprovalStoreError(
+                 f"Approval request is invalid: {approval_id}: {error}"
+             ) from error
+ 
+-    def completion_evidence(self, job, execution_id, review_id, *, pinned_refs=None):
++    def completion_evidence(self, job, execution_id, review_id, *, pinned_refs=None, execution_only=False):
+         """Verify completed-task approvals using this canonical approval owner.
+ 
+         GOV-01 pins returned artifacts; it does not parse approvals or decide
+@@ -148,7 +151,7 @@ class FileApprovalStore:
+         gates = job["task_contract"]["approval_requirements"]
+         if gates["execution"] and not actions & {"EXECUTE_JOB", "RESOLVE_HUMAN_CONDITION"}:
+             raise ApprovalStoreError("Required execution approval artifact is missing")
+-        if gates["completion"] and "COMPLETE_REVIEWED_JOB" not in actions:
++        if not execution_only and gates["completion"] and "COMPLETE_REVIEWED_JOB" not in actions:
+             raise ApprovalStoreError("Required completion approval artifact is missing")
+         if compact is not None:
+             ref = f"runtime-approval:{compact.get('approval_id')}"
+@@ -198,14 +201,7 @@ class FileApprovalStore:
+                 newline="\n",
+             ) as handle:
+                 temporary_path = Path(handle.name)
+-                json.dump(
+-                    request.to_dict(),
+-                    handle,
+-                    indent=2,
+-                    sort_keys=True,
+-                    ensure_ascii=True,
+-                )
+-                handle.write("\n")
++                handle.write(self._encoded(request))
+                 handle.flush()
+                 os.fsync(handle.fileno())
+             os.replace(temporary_path, path)
+@@ -216,3 +212,7 @@ class FileApprovalStore:
+         finally:
+             if temporary_path is not None and temporary_path.exists():
+                 temporary_path.unlink()
++
++    @staticmethod
++    def _encoded(request: ApprovalRequest) -> str:
++        return json.dumps(request.to_dict(), indent=2, sort_keys=True, ensure_ascii=True) + "\n"
+diff --git a/runtime/core/jobs.py b/runtime/core/jobs.py
+index 1a4c2c3..618b33a 100644
+--- a/runtime/core/jobs.py
++++ b/runtime/core/jobs.py
+@@ -1098,6 +1098,8 @@ class JobRuntime:
+                     }
+                 )
+                 self._validate_against_persisted_lineage(child)
++                from runtime.core.capability_governance import require_child
++                require_child(parent, child)
+                 self.task_contract_store.create(child)
+                 self.store.create(child)
+                 return deepcopy(child)
+@@ -1674,7 +1676,7 @@ class JobRuntime:
+             return False
+         try:
+             persisted_approval = self.approval_store.load(approval_id)
+-            execution_record = self.execution_store.load(execution_id)
++            execution_record = self.execution_store.load(execution_id, require_authority=True)
+             request = ExecutionRequest.from_persisted_dict(execution_record.request)
+         except (
+             ApprovalStoreError,
+diff --git a/runtime/core/task_contract.py b/runtime/core/task_contract.py
+index cc1041a..74d503a 100644
+--- a/runtime/core/task_contract.py
++++ b/runtime/core/task_contract.py
+@@ -131,7 +131,7 @@ def default_contract(job):
+             "required_checks": checks, "required_evidence": [],
+             "stop_conditions": [{"kind": "on_blocker"}],
+             "risk": job["risk_level"], "blast_radius": "local" if write else "none",
+-            "reversibility": "reversible" if write else "no_side_effect",
++            "reversibility": ("irreversible" if scope.get("write_mode") == "CREATE_MODIFY_DELETE" else "reversible") if write else "no_side_effect",
+             "delegation_level": ("L5" if write and scope.get("write_mode") == "CREATE_MODIFY_DELETE" else "L2") if write else "L1",
+             "approval_requirements": {"execution": write or job["approval_status"] != "not_required",
+                                       "completion": False, "review": job["review_required"]}}
+@@ -182,6 +182,8 @@ def validate_binding(job, *, now=None, executing=False):
+                 raise TaskContractError("Task contract stop condition prohibits execution")
+             if stop["kind"] == "deadline" and datetime.fromisoformat(now.replace("Z", "+00:00")) >= datetime.fromisoformat(stop["at"].replace("Z", "+00:00")):
+                 raise TaskContractError("Task contract deadline is stale")
++    from runtime.core.capability_governance import evaluate
++    evaluate(job)
+     return c
+ 
+ 
+@@ -204,7 +206,9 @@ class TaskContractStore:
+         return {k: deepcopy(job.get(k)) for k in fields}
+ 
+     def create(self, job):
+-        value = {"schema_version": 2, "boundary": self.boundary(job)}
++        from runtime.core.capability_governance import evaluate
++        value = {"schema_version": 3, "boundary": self.boundary(job),
++                 "governance": evaluate(job)}
+         self.root.mkdir(parents=True, exist_ok=True)
+         try:
+             for suffix in ("witness", "anchor"):
+@@ -224,15 +228,17 @@ class TaskContractStore:
+         try:
+             anchor = self._path(job["job_id"], "anchor")
+             original = json.loads(self._read(anchor))
+-            if (type(original) is not dict or set(original) != {"schema_version", "boundary"}
+-                    or type(original["schema_version"]) is not int or original["schema_version"] != 2
++            if (type(original) is not dict or set(original) != {"schema_version", "boundary", "governance"}
++                    or type(original["schema_version"]) is not int or original["schema_version"] != 3
+                     or type(original["boundary"]) is not dict):
+                 raise TaskContractError("Pre-F1 task authority requires explicit recovery; no automatic migration")
+             initial = original["boundary"]["review_required"]
+             if type(initial) is not bool or initial and not candidate["review_required"]:
+                 raise TaskContractError("Task review gate was weakened")
+             candidate["review_required"] = initial
+-            expected = encoded({"schema_version": 2, "boundary": candidate}, max_bytes=512 * 1024)
++            from runtime.core.capability_governance import evaluate
++            expected = encoded({"schema_version": 3, "boundary": candidate,
++                                "governance": evaluate(job)}, max_bytes=512 * 1024)
+             for suffix in ("witness", "anchor"):
+                 path = self._path(job["job_id"], suffix)
+                 if self._read(path) != expected:
+@@ -245,8 +251,10 @@ class TaskContractStore:
+         boundary = self.boundary(job)
+         # The creation identity stays fixed when the effective gate strengthens.
+         boundary["review_required"] = False
+-        return {"schema_version": 1, "job_id": job["job_id"],
+-                "boundary_digest": digest(boundary), "review_required": review_required}
++        from runtime.core.capability_governance import evaluate
++        return {"schema_version": 2, "job_id": job["job_id"],
++                "boundary_digest": digest(boundary), "review_required": review_required,
++                "governance_digest": digest(evaluate(job))}
+ 
+     def _gates(self, job, initial):
+         try:
+@@ -417,6 +425,8 @@ def require_tool(request, tool, *, now=None):
+     boundary["task_contract"] = c
+     boundary["execution_budget"] = c["budget_references"]
+     validate_binding(boundary, now=now or datetime.now(timezone.utc).isoformat(), executing=True)
++    from runtime.core.capability_governance import require_dispatch
++    require_dispatch(request)
+     if tool not in c["allowed_tools"]:
+         raise TaskContractError(f"Tool {tool} is outside task contract")
+     if c["delegation_level"] == "L0" and tool == "provider_call":
+@@ -453,7 +463,7 @@ def completion(runtime, job, *, verify_only=False):
+     refs = [r["ref"] for r in job["output_refs"] if r["ref"].startswith("runtime-execution:")]
+     if not refs:
+         raise TaskContractError("DONE requires persisted execution evidence")
+-    record = runtime.execution_store.load(refs[-1].split(":", 1)[1])
++    record = runtime.execution_store.load(refs[-1].split(":", 1)[1], require_authority=True)
+     execution_boundary = deepcopy(job)
+     if record.request is not None and record.result.status == "needs_review":
+         execution_boundary["review_required"] = record.request["review_required"]
+@@ -529,7 +539,7 @@ def completion(runtime, job, *, verify_only=False):
+         review_refs = [r["ref"] for r in job["output_refs"] if r["ref"].startswith("runtime-review:")]
+         if not review_refs:
+             raise TaskContractError("DONE requires persisted independent review")
+-        review_record = runtime.review_store.load(review_refs[-1].split(":", 1)[1])
++        review_record = runtime.review_store.load(review_refs[-1].split(":", 1)[1], require_authority=True)
+         review_ref = review_refs[-1]
+         review_digest = digest(review_record)
+         if type(review_record.get("schema_version")) is not int or review_record["schema_version"] != 1:
+diff --git a/runtime/git/remote_runtime.py b/runtime/git/remote_runtime.py
+index abeafa7..7fffab3 100644
+--- a/runtime/git/remote_runtime.py
++++ b/runtime/git/remote_runtime.py
+@@ -173,6 +173,9 @@ class RemoteGitRuntime:
+         return {"push_plan": plan.to_dict(), "approval": run.request.to_dict()}
+ 
+     def push(self, push_plan_id: str) -> dict[str, Any]:
++        return self._run_governed_action(self._push_governed, push_plan_id)
++
++    def _push_governed(self, push_plan_id, audits):
+         try:
+             plan = self.store.load_push_plan(push_plan_id)
+         except GitStoreError as error:
+@@ -180,13 +183,15 @@ class RemoteGitRuntime:
+         if plan.dry_run:
+             self._fail("remote_dry_run_forbidden", "Dry-run push plans cannot mutate a remote")
+         approval = self._approved(plan, "PUSH_GIT_COMMIT")
++        audit = self._capability_action(plan, approval)
++        audits.append(audit)
+         if plan.push_evidence_ref is not None:
+             evidence_id = plan.push_evidence_ref["ref"].split(":", 1)[1]
+             evidence = self.store.load_push_evidence(evidence_id)
+             current = self._remote_head(Path(plan.repository_root), plan.remote_name, plan.remote_branch)
+             if current != evidence.remote_head_after:
+                 self._fail("remote_evidence_stale", "Persisted pushed commit is no longer remote branch HEAD")
+-            return {"push_plan": plan.to_dict(), "push_evidence": evidence.to_dict()}
++            return self._finish_capability_action(audit, {"push_plan": plan.to_dict(), "push_evidence": evidence.to_dict()})
+         repository = self.git_runtime._validate_repository(Path(plan.repository_root))
+         change_set = self.store.load_change_set(plan.change_set_id)
+         commit = self.store.load_evidence(plan.commit_evidence_ref["ref"].split(":", 1)[1])
+@@ -204,6 +209,7 @@ class RemoteGitRuntime:
+             self._fail("remote_head_stale", "Remote branch HEAD changed after approval")
+         already_present = remote_before == plan.commit_hash
+         if not already_present:
++            self._consume_capability_action(audit)
+             result = self._git(
+                 repository,
+                 [
+@@ -247,7 +253,7 @@ class RemoteGitRuntime:
+                 self.store.save_push_plan(plan)
+             except GitStoreError as error:
+                 self._fail("remote_persistence_failed", str(error))
+-            return {"push_plan": plan.to_dict(), "push_evidence": recovered.to_dict()}
++            return self._finish_capability_action(audit, {"push_plan": plan.to_dict(), "push_evidence": recovered.to_dict()})
+         fields = {
+             "push_evidence_id": evidence_id,
+             "push_plan_id": plan.push_plan_id,
+@@ -276,7 +282,7 @@ class RemoteGitRuntime:
+             self.store.save_push_plan(plan)
+         except GitStoreError as error:
+             self._fail("remote_persistence_failed", str(error))
+-        return {"push_plan": plan.to_dict(), "push_evidence": evidence.to_dict()}
++        return self._finish_capability_action(audit, {"push_plan": plan.to_dict(), "push_evidence": evidence.to_dict()})
+ 
+     def prepare_pull_request(
+         self,
+@@ -376,6 +382,9 @@ class RemoteGitRuntime:
+         return {"pull_request_plan": plan.to_dict(), "approval": run.request.to_dict()}
+ 
+     def create_pull_request(self, plan_id: str) -> dict[str, Any]:
++        return self._run_governed_action(self._create_pull_request_governed, plan_id)
++
++    def _create_pull_request_governed(self, plan_id, audits):
+         if self.pull_request_adapter is None:
+             self._fail("forge_unavailable", "Pull-request adapter is not configured")
+         try:
+@@ -385,10 +394,12 @@ class RemoteGitRuntime:
+         if plan.dry_run:
+             self._fail("remote_dry_run_forbidden", "Dry-run PR plans cannot create a pull request")
+         approval = self._approved(plan, "CREATE_PULL_REQUEST")
++        audit = self._capability_action(plan, approval)
++        audits.append(audit)
+         if plan.pull_request_evidence_ref is not None:
+             evidence_id = plan.pull_request_evidence_ref["ref"].split(":", 1)[1]
+             evidence = self.store.load_pull_request_evidence(evidence_id)
+-            return {"pull_request_plan": plan.to_dict(), "pull_request_evidence": evidence.to_dict()}
++            return self._finish_capability_action(audit, {"pull_request_plan": plan.to_dict(), "pull_request_evidence": evidence.to_dict()})
+         push_evidence_id = plan.push_evidence_ref["ref"].split(":", 1)[1]
+         push_evidence = self.store.load_push_evidence(push_evidence_id)
+         push_plan = self.store.load_push_plan(push_evidence.push_plan_id)
+@@ -406,6 +417,7 @@ class RemoteGitRuntime:
+             )
+             already_present = state is not None
+             if state is None:
++                self._consume_capability_action(audit)
+                 state = self.pull_request_adapter.create(
+                     plan.repository_slug,
+                     plan.head_branch,
+@@ -445,7 +457,40 @@ class RemoteGitRuntime:
+             self.store.save_pull_request_plan(plan)
+         except GitStoreError as error:
+             self._fail("remote_persistence_failed", str(error))
+-        return {"pull_request_plan": plan.to_dict(), "pull_request_evidence": evidence.to_dict()}
++        return self._finish_capability_action(audit, {"pull_request_plan": plan.to_dict(), "pull_request_evidence": evidence.to_dict()})
++
++    def _consume_capability_action(self, audit):
++        try:
++            audit.consume()
++            audit.before_mutation()
++        except ValueError as error:
++            self._fail("capability_governance_rejected", str(error))
++
++    def _run_governed_action(self, operation, identity):
++        audits = []
++        try:
++            return operation(identity, audits)
++        except ValueError as error:
++            if audits:
++                try:
++                    audits[0].fail(getattr(error, "code", "action_contract_failure"))
++                except ValueError:
++                    self._fail("capability_audit_incomplete", "Failure trace is unavailable; explicit recovery required")
++            raise
++
++    def _finish_capability_action(self, audit, result):
++        try:
++            return audit.finish(result)
++        except ValueError as error:
++            self._fail("capability_governance_rejected", str(error))
++
++    def _capability_action(self, plan, approval):
++        from runtime.core.capability_actions import ActionDecision
++        try:
++            return ActionDecision(self.git_runtime.jobs, self.approvals.store,
++                self.store, approval, plan.approval_scope, "canonical-remote-git")
++        except ValueError as error:
++            self._fail("capability_governance_rejected", str(error))
+ 
+     def _approved(self, plan: PushPlan | PullRequestPlan, action: str) -> dict[str, Any]:
+         approval_ref = plan.approval_ref
+diff --git a/runtime/git/runtime.py b/runtime/git/runtime.py
+index f30e0e3..f675bfa 100644
+--- a/runtime/git/runtime.py
++++ b/runtime/git/runtime.py
+@@ -114,7 +114,7 @@ class GitRuntime:
+             self._fail("mutation_evidence_mismatch", "Mutation file sets are inconsistent")
+         try:
+             scope = ExecutionScope.from_dict(
+-                (self.executions.load(execution_id).request or {}).get(
++                (self.executions.load(execution_id, require_authority=True).request or {}).get(
+                     "execution_scope", {}
+                 )
+             )
+@@ -226,6 +226,18 @@ class GitRuntime:
+         }
+ 
+     def commit(self, change_set_id: str) -> dict[str, Any]:
++        audits = []
++        try:
++            return self._commit_governed(change_set_id, audits)
++        except ValueError as error:
++            if audits:
++                try:
++                    audits[0].fail(getattr(error, "code", "action_contract_failure"))
++                except ValueError:
++                    self._fail("capability_audit_incomplete", "Failure trace is unavailable; explicit recovery required")
++            raise
++
++    def _commit_governed(self, change_set_id, audits):
+         """Revalidate, exactly stage, commit, and independently verify one change set."""
+ 
+         try:
+@@ -236,13 +248,25 @@ class GitRuntime:
+             self._fail("git_dry_run_forbidden", "Dry-run change sets cannot stage or commit")
+         repository = self._validate_repository(Path(change_set.repository_root))
+         approval = self._approved_commit_authority(change_set)
++        from runtime.core.capability_actions import ActionDecision
++        try:
++            audit = ActionDecision(self.jobs, self.approvals.store, self.store,
++                approval, change_set.commit_scope, "canonical-local-git")
++        except ValueError as error:
++            self._fail("capability_governance_rejected", str(error))
++        audits.append(audit)
+         recovered = self._recover_committed(change_set, repository, approval)
+         if recovered is not None:
+-            return recovered
++            return self._finish_capability_action(audit, recovered)
+         snapshot = self._snapshot(repository)
+         self._assert_snapshot(change_set, snapshot, "before staging")
+         author_name = self._local_identity(repository, "user.name")
+         author_email = self._local_identity(repository, "user.email")
++        try:
++            audit.consume()
++            audit.before_mutation()
++        except ValueError as error:
++            self._fail("capability_governance_rejected", str(error))
+         stage = self._git(repository, ["add", "--", *change_set.changed_files])
+         if stage.returncode != 0:
+             self._fail("git_stage_failed", self._bounded_git_error(stage))
+@@ -254,6 +278,10 @@ class GitRuntime:
+         )
+         if self._sha(staged_diff.encode("utf-8")) != change_set.diff_fingerprint:
+             self._fail("git_diff_stale", "Staged diff differs from the approved diff")
++        try:
++            audit.before_mutation()
++        except ValueError as error:
++            self._fail("capability_governance_rejected", str(error))
+         committed = self._git(
+             repository,
+             [
+@@ -268,9 +296,15 @@ class GitRuntime:
+         )
+         if committed.returncode != 0:
+             self._fail("git_commit_failed", self._bounded_git_error(committed))
+-        return self._verify_and_persist_commit(
++        return self._finish_capability_action(audit, self._verify_and_persist_commit(
+             change_set, repository, approval, author_name, author_email
+-        )
++        ))
++
++    def _finish_capability_action(self, audit, result):
++        try:
++            return audit.finish(result)
++        except ValueError as error:
++            self._fail("capability_governance_rejected", str(error))
+ 
+     def show(self, change_set_id: str) -> dict[str, Any]:
+         try:
+@@ -294,7 +328,7 @@ class GitRuntime:
+     ) -> tuple[dict[str, Any], dict[str, Any], str]:
+         try:
+             job = self.jobs.show(job_id)
+-            execution = self.executions.load(execution_id)
++            execution = self.executions.load(execution_id, require_authority=True)
+             mutation = self.mutations.load(execution_id)
+         except (JobRuntimeError, ExecutionStoreError, MutationArtifactError) as error:
+             self._fail("mutation_evidence_missing", str(error))
+@@ -346,7 +380,7 @@ class GitRuntime:
+             self._fail("review_evidence_missing", "Exactly one final review is required")
+         review_id = review_refs[0].split(":", 1)[1]
+         try:
+-            review = self.reviews.load(review_id).get("result", {})
++            review = self.reviews.load(review_id, require_authority=True).get("result", {})
+         except ReviewStoreError as error:
+             self._fail("review_evidence_missing", str(error))
+         checks = review.get("deterministic_checks")
+diff --git a/runtime/progress/models.py b/runtime/progress/models.py
+index 95336b4..e599e75 100644
+--- a/runtime/progress/models.py
++++ b/runtime/progress/models.py
+@@ -46,6 +46,12 @@ class ProgressEvent:
+                 or self.evidence_id is None or len(self.evidence_id) != 64
+                 or any(character not in "0123456789abcdef" for character in self.evidence_id)):
+             raise ProgressError("Task gate observations require bounded canonical evidence")
++        if self.event_type in {"decision_intent_observed", "decision_result_observed", "decision_review_observed", "decision_consumption_observed"} and (
++                self.execution_id is None or self.evidence_id is None
++                or len(self.evidence_id) != 64
++                or any(c not in "0123456789abcdef" for c in self.evidence_id)
++                or self.detail != "none"):
++            raise ProgressError("Decision intent observations require exact-work digest")
+ 
+     def to_dict(self):
+         return asdict(self)
+diff --git a/runtime/review/context.py b/runtime/review/context.py
+index 08f51f6..03048fe 100644
+--- a/runtime/review/context.py
++++ b/runtime/review/context.py
+@@ -76,7 +76,7 @@ class ReviewContextBuilder:
+ 
+         evidence: list[ReviewEvidence] = []
+         try:
+-            execution_record = self.execution_store.load(result.execution_id)
++            execution_record = self.execution_store.load(result.execution_id, require_authority=True)
+         except ExecutionStoreError:
+             execution_record = None
+         if execution_record is not None:
+diff --git a/runtime/review/reviewers.py b/runtime/review/reviewers.py
+index f43c7a2..f208bd7 100644
+--- a/runtime/review/reviewers.py
++++ b/runtime/review/reviewers.py
+@@ -69,6 +69,10 @@ class ProviderBackedReviewer:
+             inputs=deepcopy(list(package.available_evidence_refs)), expected_outputs=[],
+             allowed_tools=["provider_call"], allowed_capabilities=["independent_review"],
+             write_scope=None, blast_radius="none", reversibility="no_side_effect", delegation_level="L1")
++        contract["capability_profile"] = "READ_ONLY"
++        from runtime.core.capability_governance import require_child
++        require_child(parent, {**parent, "task_contract": contract,
++                              "execution_mode": "READ_ONLY", "execution_scope": None})
+         review_request = ExecutionRequest(
+             execution_id=f"review-execution-{package.review_id}",
+             job_id=str(package.job["job_id"]),
+diff --git a/runtime/review/runtime.py b/runtime/review/runtime.py
+index 3b99c1a..bc41271 100644
+--- a/runtime/review/runtime.py
++++ b/runtime/review/runtime.py
+@@ -63,6 +63,11 @@ class ReviewerRuntime:
+         *, compute_budget_decision=None,
+     ) -> ReviewRun:
+         review_id = self.id_factory()
++        try:
++            self.store.begin_decision(review_id, job, request, execution_result,
++                type(self.reviewer).__module__ + "." + type(self.reviewer).__qualname__)
++        except ValueError as error:
++            raise ReviewRuntimeError("Review certification/decision trace rejected") from error
+         verification = self.verifier.verify(job, request, execution_result)
+         try:
+             package = self.context_builder.build(
+diff --git a/runtime/review/store.py b/runtime/review/store.py
+index 699e7ff..3bbd056 100644
+--- a/runtime/review/store.py
++++ b/runtime/review/store.py
+@@ -23,6 +23,30 @@ class FileReviewStore:
+     def __init__(self, root: Path) -> None:
+         self.root = Path(root)
+ 
++    def _decisions(self):
++        from runtime.storage.execution_store import FileExecutionStore
++        return FileExecutionStore(self.root)
++
++    def begin_decision(self, review_id, job, request, execution, reviewer):
++        from runtime.core.capability_governance import evaluate, require_review_dispatch, dispatch_intent
++        from runtime.core.task_contract import digest
++        require_review_dispatch(request)
++        if (job["job_id"] != request.job_id or job["task_contract"] != request.to_dict()["task_contract"]
++                or execution.job_id != request.job_id or execution.execution_id != request.execution_id):
++            raise ReviewStoreError("Review decision does not bind exact authorized work")
++        value = {"schema_version": 1, "requested_action": "REVIEW",
++                 "request_digest": digest(request.to_dict()),
++                 "execution_digest": digest(execution.to_dict()),
++                 "policy_evaluation": evaluate(job),
++                 "authority_source": {"job_id": job["job_id"],
++                                      "task_contract_digest": digest(job["task_contract"])},
++                 "approval_required": job["task_contract"]["approval_requirements"],
++                 "approval_received": "parent-dispatch-verified" if job["task_contract"]["approval_requirements"]["execution"] else "not-required",
++                 "executor": reviewer, "parent_decision": dispatch_intent()}
++        if value["parent_decision"] is not None:
++            self._decisions()._observe(value["parent_decision"], "decision_review_observed", review_id, digest(value))
++        return self._decisions()._decision_pair(review_id, "review-intent", value)
++
+     def create(
+         self,
+         package: ReviewPackage,
+@@ -44,6 +68,18 @@ class FileReviewStore:
+         from runtime.core.task_contract import digest
+         record["task_contract_digest"] = digest(package.job.get("task_contract"))
+         record["execution_request_digest"] = digest(execution_request)
++        decisions = self._decisions()
++        paths = [decisions._decision_path(result.review_id, "review-intent", s) for s in ("anchor", "witness")]
++        intent = decisions._decision_pair(result.review_id, "review-intent") if any(p.exists() for p in paths) else None
++        if intent is not None and intent["request_digest"] != record["execution_request_digest"]:
++            raise ReviewStoreError("Review decision does not bind the exact execution request")
++        trace = {
++            "schema_version": 1, "record_digest": digest(record),
++            "intent_digest": digest(intent) if intent is not None else None,
++            "evidence": result.to_dict()["evidence_refs"]}
++        if intent is not None and intent["parent_decision"] is not None:
++            decisions._observe(intent["parent_decision"], "decision_result_observed", result.review_id, digest(trace))
++        decisions._decision_pair(result.review_id, "review-result", trace)
+         self._write(path, record)
+         return {
+             "ref_type": "review",
+@@ -51,7 +87,7 @@ class FileReviewStore:
+             "description": "Normalized review decision and bounded evidence package",
+         }
+ 
+-    def load(self, review_id: str) -> dict[str, Any]:
++    def load(self, review_id: str, *, require_authority=False) -> dict[str, Any]:
+         path = self._path(review_id)
+         if not path.is_file():
+             raise ReviewStoreError(f"Review artifact not found: {review_id}")
+@@ -63,6 +99,33 @@ class FileReviewStore:
+             ) from error
+         if not isinstance(value, dict):
+             raise ReviewStoreError(f"Review artifact is not an object: {review_id}")
++        from runtime.core.task_contract import digest
++        from runtime.storage.execution_store import ExecutionStoreError
++        try:
++            trace = self._decisions()._decision_pair(review_id, "review-result")
++            if trace != {"schema_version": 1, "record_digest": digest(value),
++                         "intent_digest": trace.get("intent_digest"),
++                         "evidence": value["result"]["evidence_refs"]}:
++                raise ReviewStoreError("Review result trace is stale or tampered")
++            if require_authority and trace["intent_digest"] is None:
++                raise ReviewStoreError("Imported review observation has no review authority")
++            if trace["intent_digest"] is not None:
++                intent = self._decisions()._decision_pair(review_id, "review-intent")
++                if digest(intent) != trace["intent_digest"] or intent["request_digest"] != value["execution_request_digest"]:
++                    raise ReviewStoreError("Review intent trace is stale or tampered")
++                if require_authority and intent["parent_decision"] is None:
++                    raise ReviewStoreError("Review has no canonical parent authority")
++                if intent["parent_decision"] is not None:
++                    decisions = self._decisions()
++                    decisions._verify_intent(intent["parent_decision"])
++                    from runtime.storage.execution_store import FileExecutionStore
++                    parent_store = FileExecutionStore(Path(intent["parent_decision"]["authority_source"]["execution_store_root"]))
++                    parent_store._verify_consumption(intent["parent_decision"], "dispatch-review", {
++                        "schema_version": 1, "intent_digest": digest(intent["parent_decision"]), "purpose": "review"})
++                    decisions._verify_observation(intent["parent_decision"], "decision_review_observed", review_id, digest(intent))
++                    decisions._verify_observation(intent["parent_decision"], "decision_result_observed", review_id, digest(trace))
++        except (ExecutionStoreError, KeyError, TypeError) as error:
++            raise ReviewStoreError("Review trace unavailable; explicit recovery required") from error
+         return value
+ 
+     def list(self) -> list[dict[str, Any]]:
+diff --git a/runtime/review/verification.py b/runtime/review/verification.py
+index 359027f..bd397ce 100644
+--- a/runtime/review/verification.py
++++ b/runtime/review/verification.py
+@@ -77,7 +77,7 @@ class DeterministicVerifier:
+         )
+ 
+         try:
+-            stored = self.execution_store.load(result.execution_id)
++            stored = self.execution_store.load(result.execution_id, require_authority=True)
+             stored_request = stored.request
+             stored_result = stored.result.to_dict()
+             stored_valid = (
+diff --git a/runtime/storage/execution_store.py b/runtime/storage/execution_store.py
+index 342407a..26777c3 100644
+--- a/runtime/storage/execution_store.py
++++ b/runtime/storage/execution_store.py
+@@ -68,6 +68,267 @@ class FileExecutionStore:
+     def exists(self, execution_id: str) -> bool:
+         return self._path(execution_id).is_file()
+ 
++    def _decision_path(self, execution_id, stage, suffix):
++        self._path(execution_id)  # Validate before composing any path.
++        if type(stage) is not str or self._SAFE_ID.fullmatch(stage) is None or len(stage) > 100 or suffix not in {"anchor", "witness"}:
++            raise ExecutionStoreError("Decision stage/suffix contains unsupported path characters")
++        return self.root / ".decisions" / f"{execution_id}.{stage}.{suffix}.json"
++
++    def _decision_pair(self, execution_id, stage, value=None):
++        from runtime.core.task_contract import TaskContractStore, encoded
++        paths = [self._decision_path(execution_id, stage, s) for s in ("witness", "anchor")]
++        try:
++            if value is not None:
++                paths[0].parent.mkdir(parents=True, exist_ok=True)
++                for path in paths:
++                    TaskContractStore._write_new(path, value)
++            raw = TaskContractStore._read(paths[0])
++            other = TaskContractStore._read(paths[1])
++            parsed = json.loads(raw)
++            if (type(parsed) is not dict or type(parsed.get("schema_version")) is not int
++                    or parsed["schema_version"] != 1
++                    or raw != other or raw != encoded(parsed, max_bytes=512 * 1024)):
++                raise ExecutionStoreError("Decision trace is partial, stale or tampered")
++            return parsed
++        except (OSError, ValueError, TypeError) as error:
++            raise ExecutionStoreError("Decision trace unavailable; explicit recovery required") from error
++
++    def begin_decision(self, request, *, executor, runtime, job):
++        """Consume exact-work intent before effects; restart never retries it."""
++        from runtime.core.capability_governance import decision
++        from runtime.core.task_contract import digest, TaskContractError
++        from runtime.approvals.store import FileApprovalStore
++        try:
++            canonical = runtime.validate_execution_authority(job["job_id"], job.get("claimed_by"))
++            if (runtime.task_contract_store.boundary(canonical) != runtime.task_contract_store.boundary(job)
++                    or any(canonical.get(k) != job.get(k) for k in ("claimed_by", "attempt", "approval_status"))):
++                raise ExecutionStoreError("Decision requires the current canonical active claim")
++        except ValueError as error:
++            raise ExecutionStoreError("Decision requires canonical execution authority") from error
++        runtime.task_contract_store.verify(job)
++        from runtime.workers.worker import Worker
++        expected = Worker._build_request(job, request.execution_id, request.context_refs)
++        if request.to_dict() != expected.to_dict():
++            raise ExecutionStoreError("Decision request differs from authorized exact work")
++        try:
++            approval_store = runtime.approval_store or FileApprovalStore(runtime.store.root.parent / "approvals")
++            approvals = approval_store.completion_evidence(job, request.execution_id, None, execution_only=True)
++            value = decision(request, executor=executor,
++                authority_source={"job_id": job["job_id"],
++                    "task_boundary_digest": digest(runtime.task_contract_store.boundary(job)),
++                    "task_store_root": str(runtime.task_contract_store.root.resolve()),
++                    "job_store_root": str(runtime.store.root.resolve()),
++                    "claimed_by": job["claimed_by"],
++                    "budget_store_root": str(runtime.budget_store.root.resolve()),
++                    "execution_store_root": str(self.root.resolve()),
++                    "review_evidence_refs": list(job.get("output_refs", [])),
++                    "progress_store_root": str(runtime.progress.store.root.resolve()),
++                    "logical_job_id": runtime.progress.logical_id(job),
++                    "approval_store_root": str(approval_store.root.resolve())}, approvals=approvals)
++        except (ValueError, TaskContractError) as error:
++            raise ExecutionStoreError("Decision authority/approval evidence rejected") from error
++        self._verify_live_dispatch(value)
++        # Coordinate using the existing CORE-07 transition lock. The authorized
++        # job attempt is one work claim even if a caller invents another ID/store.
++        with runtime.progress.transition_lock():
++            self._verify_live_dispatch(value)
++            history = runtime.progress.store.read(runtime.progress.logical_id(job))
++            identity = self._intent_work_id(value)
++            # Retained intent pairs independently veto a rolled-back journal.
++            # Scan the canonical execution owner under the existing transition lock.
++            roots = {self.root, runtime.store.root.parent / "executions"}
++            for owner in roots:
++                decisions = FileExecutionStore(owner)
++                directory = owner / ".decisions"
++                retained_ids = set()
++                for stage in ("intent", "dispatch-execute", "dispatch-review", "effect-controlled_write"):
++                    for path in directory.glob("*." + stage + ".*.json"):
++                        retained_ids.add(path.name.rsplit("." + stage + ".", 1)[0])
++                for prior_id in sorted(retained_ids):
++                    prior = decisions._decision_pair(prior_id, "intent")
++                    try:
++                        source = prior["authority_source"]
++                        if (prior["request"]["execution_id"] != prior_id
++                                or source["job_id"] != prior["request"]["job_id"]
++                                or prior["request_digest"] != digest(prior["request"])
++                                or Path(source["progress_store_root"]).resolve()
++                                != runtime.progress.store.root.resolve()):
++                            raise ExecutionStoreError("Retained intent identity/provenance changed; recovery required")
++                        prior_identity = self._intent_work_id(prior)
++                        # Journal observations independently bind even apparently
++                        # foreign retained entries. No live historical job is
++                        # needed, but mutable paired records cannot certify each
++                        # other or redirect verification to another journal owner.
++                        decisions._verify_observation(prior, "decision_intent_observed", prior_id, digest(prior))
++                        decisions._verify_observation(prior, "decision_consumption_observed", prior_identity, digest(prior))
++                    except (KeyError, TypeError, ValueError) as error:
++                        raise ExecutionStoreError("Retained intent malformed; explicit recovery required") from error
++                    if prior_identity == identity:
++                        raise ExecutionStoreError("Decision job attempt already consumed in retained intent; journal rollback requires recovery")
++                    # Surviving consumption pairs bind the original intent even
++                    # if its job/work identity is coherently edited. This check
++                    # needs no live job record for unrelated completed work.
++                    for stage, purpose in (("dispatch-execute", "execute"), ("dispatch-review", "review")):
++                        if any(decisions._decision_path(prior_id, stage, suffix).exists()
++                               for suffix in ("anchor", "witness")):
++                            claim = {"schema_version": 1, "intent_digest": digest(prior), "purpose": purpose}
++                            decisions._verify_consumption(prior, stage, claim)
++                    # A changed work identity is never trusted from retained
++                    # bytes alone; canonical provenance and observations veto it.
++                    if (prior["request"]["job_id"] == request.job_id
++                            or prior["authority_source"]["job_id"] == request.job_id):
++                        decisions._verify_intent(prior)
++
++            if any((e.execution_id == identity and e.event_type == "decision_consumption_observed")
++                   or (e.execution_id == request.execution_id and e.event_type == "decision_intent_observed")
++                   for e in history):
++                raise ExecutionStoreError("Decision job attempt already consumed; no replay authority")
++            runtime.progress.store.append(runtime.progress.event(job, "decision_consumption_observed",
++                execution_id=identity, evidence_id=digest(value)))
++            runtime.progress.store.append(runtime.progress.event(job, "decision_intent_observed",
++                execution_id=request.execution_id, evidence_id=digest(value)))
++            canonical_store = FileExecutionStore(runtime.store.root.parent / "executions")
++            if canonical_store.root.resolve() != self.root.resolve():
++                canonical_store._decision_pair(request.execution_id, "intent", value)
++            return self._decision_pair(request.execution_id, "intent", value)
++
++    @staticmethod
++    def _intent_work_id(intent):
++        from runtime.core.task_contract import digest
++        request = intent["request"]
++        # Only receipts already verified by the canonical ApprovalStore can
++        # distinguish an explicit human resumption. Advice, IDs and quota cannot.
++        receipts = sorted(ref for ref, record in intent["approval_received"].items()
++            if record["requested_action"] in {"EXECUTE_JOB", "RESOLVE_HUMAN_CONDITION"})
++        return "intent-work-" + digest({"job_id": request["job_id"], "attempt": request["attempt"],
++                                       "execution_authority_refs": receipts})
++
++    def verify_decision(self, request, result, *, require_authority=False):
++        from runtime.core.task_contract import digest
++        value = self._decision_pair(result.execution_id, "result")
++        if value != {"schema_version": 1, "request_digest": digest(request),
++                     "result_digest": digest(result.to_dict()),
++                     "intent_digest": value.get("intent_digest"),
++                     "evidence": result.to_dict()["artifacts"]}:
++            raise ExecutionStoreError("Decision result trace does not bind exact work/evidence")
++        if require_authority and value["intent_digest"] is None:
++            raise ExecutionStoreError("Imported observation has no execution authority")
++        if value["intent_digest"] is not None:
++            intent = self._decision_pair(result.execution_id, "intent")
++            if digest(intent) != value["intent_digest"] or intent["request_digest"] != digest(request):
++                raise ExecutionStoreError("Decision intent is stale or replayed")
++            self._verify_intent(intent)
++            self._verify_consumption(intent, "dispatch-execute", {
++                "schema_version": 1, "intent_digest": digest(intent), "purpose": "execute"})
++            if request["execution_mode"] == "CONTROLLED_WRITE" and result.status in {"succeeded", "needs_review"}:
++                self.verify_effect(intent, "controlled_write")
++            self._verify_observation(intent, "decision_result_observed", result.execution_id, digest(value))
++        return value
++
++    def verify_effect(self, intent, tool):
++        from runtime.core.task_contract import digest
++        self._verify_consumption(intent, "effect-" + tool, {
++            "schema_version": 1, "request_digest": digest(intent["request"]), "tool": tool})
++
++    def _verify_consumption(self, intent, stage, claim):
++        from runtime.core.task_contract import digest
++        identity = "consumed-" + digest({"execution_id": intent["request"]["execution_id"], "stage": stage})
++        if self._decision_pair(intent["request"]["execution_id"], stage) != claim:
++            raise ExecutionStoreError("Consumed decision trace is stale or tampered")
++        self._verify_observation(intent, "decision_consumption_observed", identity, digest(claim))
++
++    @staticmethod
++    def _observe(intent, kind, identity, evidence):
++        from runtime.progress.models import ProgressEvent
++        from runtime.progress.store import ProgressStore
++        source = intent["authority_source"]
++        event = ProgressEvent(kind, source["logical_job_id"], source["job_id"],
++                              execution_id=identity, evidence_id=evidence)
++        ProgressStore(Path(source["progress_store_root"])).append(event)
++
++    @staticmethod
++    def _verify_observation(intent, kind, identity, evidence):
++        from runtime.progress.store import ProgressStore
++        source = intent["authority_source"]
++        events = ProgressStore(Path(source["progress_store_root"])).read(source["logical_job_id"])
++        found = [e for e in events if e.event_type == kind and e.execution_id == identity]
++        if len(found) != 1 or found[0].evidence_id != evidence or found[0].job_id != source["job_id"]:
++            raise ExecutionStoreError("Decision trace differs from independent durable observation")
++
++    @staticmethod
++    def _verify_intent(intent):
++        from runtime.core.capability_governance import decision
++        from runtime.execution.models import ExecutionRequest
++        from runtime.core.task_contract import digest
++        from runtime.progress.store import ProgressStore
++        from runtime.approvals.store import FileApprovalStore
++        try:
++            request = ExecutionRequest.from_persisted_dict(intent["request"])
++            expected = decision(request, executor=intent["executor"],
++                authority_source=intent["authority_source"], approvals=intent["approval_received"])
++            if intent != expected:
++                raise ExecutionStoreError("Decision certification/policy provenance changed")
++            source = intent["authority_source"]
++            from runtime.core.task_contract import TaskContractStore
++            from runtime.progress.runtime import ProgressRuntime
++            from runtime.storage.file_store import FileJobStore
++            current_job = FileJobStore(Path(source["job_store_root"])).load(request.job_id)
++            JobValidator().validate(current_job)
++            tasks = TaskContractStore(Path(source["task_store_root"]),
++                progress=ProgressRuntime(Path(source["progress_store_root"])))
++            tasks.verify(current_job)
++            boundary = tasks.boundary(current_job)
++            # GOV-01 permits a verified monotonic strengthening of this gate.
++            # TaskContractStore has already checked its original anchor, paired
++            # strengthening record and independent journal; no scope is added.
++            boundary["review_required"] = request.review_required
++            if digest(boundary) != source["task_boundary_digest"]:
++                raise ExecutionStoreError("Decision parent authority changed")
++            history = ProgressStore(Path(source["progress_store_root"])).read(source["logical_job_id"])
++            observed = [e for e in history if e.execution_id == request.execution_id
++                        and e.event_type == "decision_intent_observed"]
++            if (len(observed) != 1 or observed[0].job_id != request.job_id
++                    or observed[0].evidence_id != digest(intent)):
++                raise ExecutionStoreError("Decision intent differs from independent durable evidence")
++            work = [e for e in history if e.event_type == "decision_consumption_observed"
++                    and e.execution_id == FileExecutionStore._intent_work_id(intent)]
++            if len(work) != 1 or work[0].job_id != request.job_id or work[0].evidence_id != digest(intent):
++                raise ExecutionStoreError("Decision job-attempt consumption is missing or tampered")
++            approvals = FileApprovalStore(Path(source["approval_store_root"]))
++            for ref, record in intent["approval_received"].items():
++                if approvals.load(ref.split(":", 1)[1]).to_dict() != record:
++                    raise ExecutionStoreError("Decision approval evidence changed")
++        except (ValueError, OSError, KeyError, TypeError) as error:
++            raise ExecutionStoreError("Decision intent provenance unavailable or tampered") from error
++
++    @staticmethod
++    def _verify_live_dispatch(intent):
++        """Reuse operational claim/budget records; provenance cannot grant them."""
++        from runtime.storage.file_store import FileJobStore
++        from runtime.budget.models import BudgetBinding
++        from runtime.budget.store import FileExecutionBudgetStore
++        try:
++            source, request = intent["authority_source"], intent["request"]
++            job = FileJobStore(Path(source["job_store_root"])).load(request["job_id"])
++            if (job["status"] != "running" or not job.get("claimed_by")
++                    or job["claimed_by"] != source["claimed_by"]
++                    or job["attempt"] != request["attempt"]
++                    or job["approval_status"] != request["approval_status"]):
++                raise ExecutionStoreError("Certified dispatch has no exact active canonical claim")
++            if request["task_contract"]["budget_references"] is not None:
++                binding = BudgetBinding.from_dict(request["task_contract"]["budget_references"])
++                store = FileExecutionBudgetStore(Path(source["budget_store_root"]))
++                store.load_policy(binding)
++                state = store.load_state(binding)
++                reservations = [r for r in state["reservations"]
++                    if r["execution_id"] == request["execution_id"]]
++                if (state["clock_rollback_detected"] or len(reservations) != 1
++                        or reservations[0]["job_id"] != request["job_id"]
++                        or reservations[0]["state"] != "active"):
++                    raise ExecutionStoreError("Certified dispatch has no active canonical budget reservation")
++        except (ValueError, OSError, KeyError, TypeError) as error:
++            raise ExecutionStoreError("Dispatch claim/budget evidence unavailable") from error
++
+     def create(
+         self,
+         request: ExecutionRequest | None,
+@@ -88,10 +349,33 @@ class FileExecutionStore:
+             "request": request.to_dict() if request is not None else None,
+             "result": result.to_dict(),
+         }
++        if request is not None and request.task_contract is not None:
++            from runtime.core.task_contract import digest
++            intent_path = self._decision_path(result.execution_id, "intent", "anchor")
++            witness_path = self._decision_path(result.execution_id, "intent", "witness")
++            intent = self._decision_pair(result.execution_id, "intent") if intent_path.exists() or witness_path.exists() else None
++            if intent is not None and intent["request_digest"] != digest(request.to_dict()):
++                raise ExecutionStoreError("Decision intent request substitution rejected")
++            # Direct artifact imports record observations, never pre-effect
++            # authorization. Canonical Worker records an intent before dispatch.
++            trace = {
++                "schema_version": 1, "request_digest": digest(request.to_dict()),
++                "result_digest": digest(result.to_dict()),
++                "intent_digest": digest(intent) if intent is not None else None,
++                "evidence": result.to_dict()["artifacts"]}
++            if intent is not None:
++                self._verify_intent(intent)
++                from runtime.progress.store import ProgressStore
++                source = intent["authority_source"]
++                history = ProgressStore(Path(source["progress_store_root"])).read(source["logical_job_id"])
++                if any(e.event_type == "decision_result_observed" and e.execution_id == result.execution_id for e in history):
++                    raise ExecutionStoreError("Result trace already observed; explicit recovery required")
++                self._observe(intent, "decision_result_observed", result.execution_id, digest(trace))
++            self._decision_pair(result.execution_id, "result", trace)
+         self._write(path, record)
+         return path
+ 
+-    def load(self, execution_id: str) -> ExecutionRecord:
++    def load(self, execution_id: str, *, require_authority=False) -> ExecutionRecord:
+         value = self.load_raw(execution_id)
+         if set(value) - {"schema_version", "request", "result"}:
+             raise ExecutionStoreError(
+@@ -132,6 +416,10 @@ class FileExecutionStore:
+                 f"Execution artifact identity mismatch: {execution_id}"
+             )
+         self._validate_request_result_binding(request, result)
++        if require_authority and (request is None or request.get("task_contract") is None):
++            raise ExecutionStoreError("Observation lacks canonical task and execution authority")
++        if request is not None and request.get("task_contract") is not None:
++            self.verify_decision(request, result, require_authority=require_authority)
+         return ExecutionRecord(
+             EXECUTION_ARTIFACT_SCHEMA_VERSION, deepcopy(request), result
+         )
+diff --git a/runtime/tests/contract_fixtures.py b/runtime/tests/contract_fixtures.py
+index 9636b94..aee8d7a 100644
+--- a/runtime/tests/contract_fixtures.py
++++ b/runtime/tests/contract_fixtures.py
+@@ -4,6 +4,7 @@ These tests certify lifecycle/result integrity, not business task completion.
+ Production default_contract deliberately leaves acceptance unresolved.
+ """
+ from copy import deepcopy
++from contextlib import contextmanager
+ from runtime.core.task_contract import default_contract
+ 
+ 
+@@ -34,6 +35,7 @@ def persist_fixture_review(store, job, request, execution, run):
+     result = replace(run.result, deterministic_checks=(check.to_dict(),), created_at=execution.completed_at)
+     package = ReviewPackage(result.review_id, job, execution.to_dict(),
+                             VerificationResult("PASS", (check,)), (), ())
++    store.begin_decision(result.review_id, job, request, execution, "reviewer")
+     ref = store.create(package, result, "", execution_request=request.to_dict())
+     return ReviewRun(result, ref)
+ 
+@@ -45,7 +47,8 @@ def persist_execution_fixture(runtime, job, execution_id):
+     store = runtime.execution_store or FileExecutionStore(runtime.store.root.parent / "executions")
+     runtime.execution_store = store
+     request = Worker._build_request(job, execution_id, ())
+-    result = LocalExecutor().execute(request)
++    with certified_fixture_dispatch(request, runtime=runtime, store=store):
++        result = LocalExecutor().execute(request)
+     store.create(request, result)
+     return {"ref_type": "artifact", "ref": "runtime-execution:" + execution_id,
+             "description": "Persisted deterministic fixture"}
+@@ -62,3 +65,97 @@ from runtime.providers.adapters import CliProviderAdapter
+ class ToolFreeCliFixture(CliProviderAdapter):
+     """All runners in adapter unit tests return canned data; no native tools."""
+     native_tools = frozenset()
++
++    def execute(self, request, context, **kwargs):
++        with certified_fixture_dispatch(request):
++            return super().execute(request, context, **kwargs)
++
++
++@contextmanager
++def certified_fixture_dispatch(request, *, runtime=None, store=None, purpose="execute"):
++    """Explicit test-only admission/human decisions; production never uses it."""
++    from runtime.core import capability_governance as gov
++    if gov._DISPATCH.get() is not None:
++        yield
++        return
++    import tempfile
++    from pathlib import Path
++    from runtime.core.jobs import JobRuntime
++    from runtime.approvals.runtime import ApprovalRuntime
++    from runtime.approvals.store import FileApprovalStore
++    from runtime.storage.execution_store import FileExecutionStore
++    with tempfile.TemporaryDirectory() as temporary:
++        if runtime is None:
++            data = request.to_dict()
++            if data["task_contract"] is None:
++                yield  # Deliberately malformed requests still hit the real guard.
++                return
++            root = Path(temporary)
++            runtime = JobRuntime(root / "jobs", id_factory=lambda: request.job_id)
++            payload = {k: data[k] for k in ("task", "task_class", "project_id", "agent", "skill", "workflow",
++                "capability", "provider", "risk_level", "review_required", "input_refs", "execution_mode",
++                "execution_scope", "dry_run", "task_contract") if data[k] is not None}
++            payload.update(created_by="explicit-human-test-fixture", max_attempts=max(3, request.attempt),
++                approval_status="required" if data["task_contract"]["approval_requirements"]["execution"] else "not_required")
++            if data["task_contract"]["budget_references"] is not None:
++                payload["execution_budget"] = data["task_contract"]["budget_references"]
++            try:
++                job = runtime.create(payload)
++                if request.approval_status == "approved":
++                    approvals = ApprovalRuntime(runtime, FileApprovalStore(root / "approvals"))
++                    pending = approvals.request_execution(job["job_id"], reason="Explicit deterministic test authority")
++                    job = approvals.resolve(pending.request.approval_id, decision="APPROVED", decided_by="fixture-owner")["job"]
++                if job["status"] == "created": runtime.enqueue(job["job_id"])
++                job = runtime.claim(claimed_by="explicit-test-worker")
++            except ValueError:
++                yield  # Invalid declarations never receive a dispatch context.
++                return
++        else:
++            job = runtime.show(request.job_id)
++        store = store or FileExecutionStore(runtime.store.root.parent / "fixture-decisions")
++        paths = [store._decision_path(request.execution_id, "intent", s) for s in ("anchor", "witness")]
++        if job.get("execution_budget") is not None and not any(p.exists() for p in paths):
++            from runtime.budget.runtime import ExecutionBudgetRuntime
++            outcome = ExecutionBudgetRuntime(runtime.budget_store, wall_clock=runtime.clock).reserve_execution(
++                job["execution_budget"], execution_id=request.execution_id, job_id=job["job_id"])
++            if outcome.status != "ALLOW": raise AssertionError(outcome.reason)
++        if any(p.exists() for p in paths):
++            store._verify_intent(store._decision_pair(request.execution_id, "intent"))
++        else:
++            store.begin_decision(request, executor="explicit-deterministic-test-fixture", runtime=runtime, job=job)
++        with gov.certified_dispatch(store, request, purpose=purpose):
++            yield
++
++
++from runtime.providers.executor import ProviderExecutor as _ProviderExecutor
++from runtime.review.reviewers import ProviderBackedReviewer as _ProviderBackedReviewer
++
++
++class CertifiedProviderFixture(_ProviderExecutor):
++    def execute(self, request, **kwargs):
++        with certified_fixture_dispatch(request):
++            return super().execute(request, **kwargs)
++
++
++class CertifiedReviewerFixture(_ProviderBackedReviewer):
++    def review(self, package):
++        from runtime.workers.worker import Worker
++        if "task_contract" not in package.job:
++            return super().review(package)  # Policy-only probes cannot call tools.
++        request = Worker._build_request(package.job, package.execution["execution_id"], ())
++        with certified_fixture_dispatch(request, purpose="review"):
++            return super().review(package)
++
++
++from runtime.review.runtime import ReviewerRuntime as _ReviewerRuntime
++
++
++class CertifiedReviewRuntimeFixture(_ReviewerRuntime):
++    def __init__(self, *args, fixture_runtime=None, **kwargs):
++        self.fixture_runtime = fixture_runtime
++        super().__init__(*args, **kwargs)
++
++    def run(self, job, request, execution_result, **kwargs):
++        with certified_fixture_dispatch(request, runtime=self.fixture_runtime,
++                                        store=self.verifier.execution_store, purpose="review"):
++            return super().run(job, request, execution_result, **kwargs)
+diff --git a/runtime/tests/test_actions.py b/runtime/tests/test_actions.py
+index 9b8dbc2..2130c01 100644
+--- a/runtime/tests/test_actions.py
++++ b/runtime/tests/test_actions.py
+@@ -7,6 +7,7 @@ from runtime.tests.contract_fixtures import declare_fixture_contract
+ import json
+ import tempfile
+ import unittest
++from contextlib import ExitStack
+ from pathlib import Path
+ from types import SimpleNamespace
+ from unittest.mock import patch
+@@ -72,8 +73,10 @@ class ControlledWriteTests(unittest.TestCase):
+         (self.target / "src" / "existing.txt").write_text("before\n", encoding="utf-8")
+         self.mutations = FileMutationArtifactStore(self.root / "mutations")
+         self.runtime = ControlledWriteRuntime(REPOSITORY_ROOT, self.mutations)
++        self.dispatch_contexts = ExitStack()
+ 
+     def tearDown(self) -> None:
++        self.dispatch_contexts.close()
+         self.temporary.cleanup()
+ 
+     def scope(self, **overrides):
+@@ -116,7 +119,28 @@ class ControlledWriteTests(unittest.TestCase):
+         values.update(overrides)
+         values = declare_fixture_contract(values)
+         values["authorization_fingerprint"] = authorization_fingerprint(values)
+-        return ExecutionRequest(**values)
++        request = ExecutionRequest(**values)
++        # These lower-level mutation tests now use real canonical task authority
++        # and a persisted local-operator approval rather than an approved string.
++        from runtime.core.capability_governance import certified_dispatch
++        from uuid import uuid4
++        state = self.root / ("authority-" + uuid4().hex)
++        jobs = JobRuntime(state / "jobs", id_factory=lambda: request.job_id)
++        payload = {k: request.to_dict()[k] for k in (
++            "task", "task_class", "project_id", "agent", "skill", "workflow", "capability", "provider",
++            "risk_level", "review_required", "input_refs", "execution_mode", "execution_scope", "dry_run", "task_contract")}
++        payload.update(created_by="human-fixture", approval_status="required")
++        payload = {k: v for k, v in payload.items() if v is not None}
++        job = jobs.create(payload)
++        approvals = ApprovalRuntime(jobs, FileApprovalStore(state / "approvals"))
++        pending = approvals.request_execution(job["job_id"], reason="Explicit unit-test fixture authority")
++        approved = approvals.resolve(pending.request.approval_id, decision="APPROVED", decided_by="fixture-owner")
++        job = approved["job"]
++        job = jobs.claim(claimed_by="controlled-write-test-worker")
++        executions = FileExecutionStore(state / "executions")
++        executions.begin_decision(request, executor="controlled-write-fixture", runtime=jobs, job=job)
++        self.dispatch_contexts.enter_context(certified_dispatch(executions, request))
++        return request
+ 
+     def execute_controlled(self, adapter, request=None):
+         return self.runtime.execute(
+@@ -160,8 +184,8 @@ class ControlledWriteTests(unittest.TestCase):
+         adapter = MutatingAdapter(lambda root: (root / "src" / "new.txt").write_text("x"))
+         request = self.request(authorization_fingerprint="0" * 64)
+         object.__setattr__(request, "authorization_fingerprint", "0" * 64)
+-        outcome = self.execute_controlled(adapter, request)
+-        self.assertEqual(outcome.provider_result.error_category, "write_not_authorized")
++        from runtime.core.task_contract import TaskContractError
++        with self.assertRaises(TaskContractError): self.execute_controlled(adapter, request)
+         self.assertEqual(adapter.workspaces, [])
+ 
+     def test_d1_project_scope_must_match_canonical_project_root(self) -> None:
+@@ -620,7 +644,8 @@ class ControlledWriteTests(unittest.TestCase):
+         self.assertTrue(
+             any(ref["ref"].startswith("runtime-mutation:") for ref in result.output_refs)
+         )
+-        executions = FileExecutionStore(self.root / "executions")
++        from runtime.core.capability_governance import _DISPATCH
++        executions = _DISPATCH.get()[0]
+         executions.create(request, result)
+         execution_ref = {
+             "ref_type": "artifact",
+@@ -704,7 +729,8 @@ class ControlledWriteTests(unittest.TestCase):
+             controlled_write_runtime=self.runtime,
+         )
+         result = executor.execute(request)
+-        executions = FileExecutionStore(self.root / "executions")
++        from runtime.core.capability_governance import _DISPATCH
++        executions = _DISPATCH.get()[0]
+         executions.create(request, result)
+         execution_ref = {
+             "ref_type": "artifact",
+diff --git a/runtime/tests/test_approval.py b/runtime/tests/test_approval.py
+index 44a62e6..757623c 100644
+--- a/runtime/tests/test_approval.py
++++ b/runtime/tests/test_approval.py
+@@ -159,6 +159,11 @@ class ApprovalRuntimeTests(unittest.TestCase):
+             started_at=self.clock(),
+             completed_at=self.clock(),
+         )
++        from runtime.core.capability_governance import certified_dispatch
++        request = Worker._build_request(running, execution_id, ())
++        self.execution_store.begin_decision(request, executor="declared-approval-fixture", runtime=self.jobs, job=running)
++        with certified_dispatch(self.execution_store, request):
++            LocalExecutor().execute(request)
+         self.execution_store.create(request, execution)
+         execution_ref = {
+             "ref_type": "artifact",
+@@ -201,7 +206,9 @@ class ApprovalRuntimeTests(unittest.TestCase):
+             context=(),
+             evidence=(),
+         )
+-        review_ref = self.review_store.create(package, review, reason, execution_request=request.to_dict())
++        with certified_dispatch(self.execution_store, request, purpose="review"):
++            self.review_store.begin_decision(review_id, reviewing, request, execution, "reviewer")
++            review_ref = self.review_store.create(package, review, reason, execution_request=request.to_dict())
+         approval_run = self.approvals.request_review_completion(
+             str(created["job_id"]), execution_id, review, review_ref
+         )
+@@ -531,6 +538,11 @@ class ApprovalRuntimeTests(unittest.TestCase):
+             started_at=self.clock(),
+             completed_at=self.clock(),
+         )
++        from runtime.core.capability_governance import certified_dispatch
++        request = Worker._build_request(running, execution_id, ())
++        self.execution_store.begin_decision(request, executor="declared-approval-fixture", runtime=self.jobs, job=running)
++        with certified_dispatch(self.execution_store, request):
++            LocalExecutor().execute(request)
+         self.execution_store.create(request, execution)
+         execution_ref = {
+             "ref_type": "artifact",
+@@ -563,7 +575,9 @@ class ApprovalRuntimeTests(unittest.TestCase):
+             (),
+             (),
+         )
+-        review_ref = self.review_store.create(package, review, "", execution_request=request.to_dict())
++        with certified_dispatch(self.execution_store, request, purpose="review"):
++            self.review_store.begin_decision(review.review_id, reviewing, request, execution, "reviewer")
++            review_ref = self.review_store.create(package, review, "", execution_request=request.to_dict())
+         pending = self.approvals.request_review_completion(
+             str(created["job_id"]), execution_id, review, review_ref
+         )
+diff --git a/runtime/tests/test_compute_policy.py b/runtime/tests/test_compute_policy.py
+index 78c0c77..53c2726 100644
+--- a/runtime/tests/test_compute_policy.py
++++ b/runtime/tests/test_compute_policy.py
+@@ -16,11 +16,11 @@ from runtime.tests.test_providers import CliAdapterTests
+ from types import SimpleNamespace
+ from runtime.providers.artifacts import FileProviderArtifactStore
+ from runtime.providers.config import ProviderConfiguration, ProviderConfigError
+-from runtime.providers.executor import ProviderExecutor
++from runtime.tests.contract_fixtures import CertifiedProviderFixture as ProviderExecutor
+ from runtime.providers.models import ExecutionPackage, ProviderExecutionResult
+ from runtime.providers.routing import ProviderRouter
+ from runtime.review.models import ReviewPackage, VerificationResult
+-from runtime.review.reviewers import ProviderBackedReviewer
++from runtime.tests.contract_fixtures import CertifiedReviewerFixture as ProviderBackedReviewer
+ from runtime.storage.execution_store import FileExecutionStore
+ from runtime.core.jobs import JobRuntime
+ from runtime.tests.test_providers import FakeAdapter, REPOSITORY_ROOT, request
+diff --git a/runtime/tests/test_context_discovery.py b/runtime/tests/test_context_discovery.py
+index ab82e92..fbb8ccb 100644
+--- a/runtime/tests/test_context_discovery.py
++++ b/runtime/tests/test_context_discovery.py
+@@ -22,7 +22,7 @@ from runtime.providers.context import ContextBuildError, ContextDiscoveryBlocked
+ from runtime.tests.test_providers import FakeAdapter, request
+ from runtime.providers.artifacts import FileProviderArtifactStore
+ from runtime.providers.config import ProviderConfiguration
+-from runtime.providers.executor import ProviderExecutor
++from runtime.tests.contract_fixtures import CertifiedProviderFixture as ProviderExecutor
+ from runtime.providers.routing import ProviderRouter
+ from runtime.review.context import ReviewContextBuilder
+ 
+diff --git a/runtime/tests/test_continuation.py b/runtime/tests/test_continuation.py
+index 76362aa..ab3605b 100644
+--- a/runtime/tests/test_continuation.py
++++ b/runtime/tests/test_continuation.py
+@@ -1032,7 +1032,9 @@ class ContinuationTests(unittest.TestCase):
+         self.jobs.review_store = reviewer.store
+         record = self.executions.load("review-window")
+         request = ExecutionRequest.from_persisted_dict(record.request)
+-        review_ref = reviewer.run(reviewing, request, record.result).artifact_ref
++        from runtime.core.capability_governance import certified_dispatch
++        with certified_dispatch(self.executions, request, purpose="review"):
++            review_ref = reviewer.run(reviewing, request, record.result).artifact_ref
+         review_decision = ContinuationPolicy.decide_review(
+             reviewing, decision="PASS", review_ref=str(review_ref["ref"])
+         )
+diff --git a/runtime/tests/test_execution_results.py b/runtime/tests/test_execution_results.py
+index b8e6d14..d71ce6c 100644
+--- a/runtime/tests/test_execution_results.py
++++ b/runtime/tests/test_execution_results.py
+@@ -28,7 +28,7 @@ from runtime.providers.adapters import sanitize_provider_text
+ from runtime.providers.artifacts import FileProviderArtifactStore
+ from runtime.providers.config import ProviderConfiguration
+ from runtime.providers.context import ExecutionContextBuilder
+-from runtime.providers.executor import ProviderExecutor
++from runtime.tests.contract_fixtures import CertifiedProviderFixture as ProviderExecutor
+ from runtime.providers.models import (
+     ProviderAvailability,
+     ProviderExecutionResult,
+@@ -203,7 +203,10 @@ class ExecutionResultContractTests(unittest.TestCase):
+             )
+ 
+     def test_local_deterministic_executor_normalizes_without_provider_prose(self) -> None:
+-        execution = LocalExecutor().execute(request(provider=None))
++        from runtime.tests.contract_fixtures import certified_fixture_dispatch
++        execution_request = request(provider=None)
++        with certified_fixture_dispatch(execution_request):
++            execution = LocalExecutor().execute(execution_request)
+         self.assertEqual(execution.status, "succeeded")
+         self.assertIsNone(execution.provider)
+         self.assertEqual(execution.evidence[0]["kind"], "deterministic_check")
+diff --git a/runtime/tests/test_external_content.py b/runtime/tests/test_external_content.py
+index d544290..4447863 100644
+--- a/runtime/tests/test_external_content.py
++++ b/runtime/tests/test_external_content.py
+@@ -13,7 +13,7 @@ from runtime.tests.test_providers import request
+ from runtime.tests.test_providers import FakeAdapter
+ from runtime.providers.artifacts import FileProviderArtifactStore
+ from runtime.providers.config import ProviderConfiguration
+-from runtime.providers.executor import ProviderExecutor
++from runtime.tests.contract_fixtures import CertifiedProviderFixture as ProviderExecutor
+ from runtime.providers.routing import ProviderRouter
+ from runtime.providers.models import ContextEntry
+ from runtime.review.models import ReviewEvidence, ReviewPackage, VerificationResult
+diff --git a/runtime/tests/test_git.py b/runtime/tests/test_git.py
+index 98bed45..4ccb79b 100644
+--- a/runtime/tests/test_git.py
++++ b/runtime/tests/test_git.py
+@@ -248,6 +248,12 @@ class GitRuntimeTests(unittest.TestCase):
+             execution_mode="CONTROLLED_WRITE",
+             dry_run=False,
+         )
++        from runtime.core.capability_governance import certified_dispatch, consume_effect
++        from runtime.workers.worker import Worker
++        request = Worker._build_request(running, execution_id, ())
++        self.executions.begin_decision(request, executor="deterministic-controlled-fixture", runtime=self.jobs, job=running)
++        with certified_dispatch(self.executions, request):
++            consume_effect(request, "controlled_write")
+         self.executions.create(request, result)
+         reviewing = self.jobs.record_execution_success(
+             created_job["job_id"], [execution_ref, mutation_ref]
+@@ -282,7 +288,9 @@ class GitRuntimeTests(unittest.TestCase):
+             context=(ContextEntry(ref="test", description="test", content="test"),),
+             evidence=(),
+         )
+-        review_ref = self.reviews.create(package, review, "review output", execution_request=request.to_dict())
++        with certified_dispatch(self.executions, request, purpose="review"):
++            self.reviews.begin_decision(review_id, reviewing, request, result, "reviewer")
++            review_ref = self.reviews.create(package, review, "review output", execution_request=request.to_dict())
+         if review_decision == "PASS":
+             self.jobs.apply_review_decision(
+                 created_job["job_id"],
+diff --git a/runtime/tests/test_progress_f1.py b/runtime/tests/test_progress_f1.py
+index c183e49..c70a70d 100644
+--- a/runtime/tests/test_progress_f1.py
++++ b/runtime/tests/test_progress_f1.py
+@@ -7,7 +7,7 @@ from pathlib import Path
+ import sqlite3
+ import subprocess
+ import sys
+-from threading import Barrier
++from threading import Barrier, Lock
+ import unittest
+ from unittest.mock import patch
+ 
+@@ -58,27 +58,26 @@ class ProgressRepairTests(unittest.TestCase):
+         second.worker_id = first.worker_id
+         second.id_factory = lambda: "execution-second"
+         self.runtime.claim(claimed_by=first.worker_id)
+-        execution_barrier, save_barrier = Barrier(2), Barrier(2)
+-        original_save = self.runtime._save
+-
+-        def synchronized_save(value, **kwargs):
+-            if value["status"] in {"completed", "failed"}:
+-                save_barrier.wait(timeout=10)
+-            return original_save(value, **kwargs)
++        delivery_barrier, calls_lock = Barrier(2), Lock()
++        calls = []
+ 
+         class Executor:
+             supported_execution_modes = frozenset({"READ_ONLY"})
+             def __init__(self, status):
+                 self.status = status
+             def execute(self, request):
+-                execution_barrier.wait(timeout=10)
++                with calls_lock:
++                    calls.append(request.execution_id)
+                 return fixture.StaticResultExecutor(self.status).execute(request)
+ 
+         first.executor, second.executor = Executor("succeeded"), Executor(second_status)
+-        with patch.object(self.runtime, "_save", side_effect=synchronized_save):
+-            with ThreadPoolExecutor(max_workers=2) as pool:
+-                futures = [pool.submit(worker.run_claimed, job["job_id"]) for worker in (first, second)]
+-                outcomes = [future.result(timeout=30) for future in futures]
++        def deliver(worker):
++            delivery_barrier.wait(timeout=10)
++            return worker.run_claimed(job["job_id"])
++        with ThreadPoolExecutor(max_workers=2) as pool:
++            futures = [pool.submit(deliver, worker) for worker in (first, second)]
++            outcomes = [future.result(timeout=30) for future in futures]
++        self.assertEqual(len(calls), 1)
+         self.assertEqual(sum(outcome.status == "worker_error" for outcome in outcomes), 1)
+         status = self.runtime.show(job["job_id"])["status"]
+         terminal = [event for event in self.events(job) if event.event_type in {"job_completed", "job_failed"}]
+diff --git a/runtime/tests/test_providers.py b/runtime/tests/test_providers.py
+index ce6c666..acb1c2c 100644
+--- a/runtime/tests/test_providers.py
++++ b/runtime/tests/test_providers.py
+@@ -28,7 +28,7 @@ from runtime.providers.config import (
+     ProviderConfiguration,
+ )
+ from runtime.providers.context import ExecutionContextBuilder
+-from runtime.providers.executor import ProviderExecutor
++from runtime.tests.contract_fixtures import CertifiedProviderFixture as ProviderExecutor
+ from runtime.providers.models import (
+     ProviderAvailability,
+     ProviderExecutionResult,
+diff --git a/runtime/tests/test_retry_policy.py b/runtime/tests/test_retry_policy.py
+index e2f49d0..1ff39f4 100644
+--- a/runtime/tests/test_retry_policy.py
++++ b/runtime/tests/test_retry_policy.py
+@@ -480,6 +480,11 @@ class RetryPolicyTests(RetryHarness, unittest.TestCase):
+         # consumed-attempt/admission evidence is missing.
+         self.jobs.retry_runtime.reserve_execution(claimed, execution_id)
+         self.jobs.retry_runtime.admit_execution(claimed, request)
++        from runtime.core.capability_governance import certified_dispatch
++        from runtime.executors.local import LocalExecutor
++        self.executions.begin_decision(request, executor="declared-retry-recovery-fixture", runtime=self.jobs, job=claimed)
++        with certified_dispatch(self.executions, request):
++            LocalExecutor(clock=lambda: self.clock_value).execute(request)
+         self.executions.create(request, result)
+         recovered = worker.recover_persisted_results()
+         self.assertEqual(recovered[0].status, "completed")
+diff --git a/runtime/tests/test_retry_repairs.py b/runtime/tests/test_retry_repairs.py
+index 0d714e3..0189012 100644
+--- a/runtime/tests/test_retry_repairs.py
++++ b/runtime/tests/test_retry_repairs.py
+@@ -468,7 +468,7 @@ print(json.dumps(worker.run_claimed(job_id).to_dict()))
+         record = json.loads(path.read_text())
+         record["request"]["context_refs"].append({"ref_type": "other", "ref": "unrelated"})
+         path.write_text(json.dumps(record), encoding="utf-8")
+-        with self.assertRaisesRegex(JobRuntimeError, "immutable admission"):
++        with self.assertRaisesRegex(JobRuntimeError, "immutable admission|Decision result trace does not bind exact work/evidence"):
+             self.jobs.retry_or_stop(claimed["job_id"])
+ 
+     def test_f7_reviewer_no_progress_preserves_structured_replan_and_plan(self):
+diff --git a/runtime/tests/test_review.py b/runtime/tests/test_review.py
+index a4475fe..8f1f9db 100644
+--- a/runtime/tests/test_review.py
++++ b/runtime/tests/test_review.py
+@@ -27,8 +27,8 @@ from runtime.providers.models import (
+ from runtime.providers.routing import ProviderRouter
+ from runtime.review.context import ReviewContextBuilder
+ from runtime.review.models import ReviewPackage, ReviewerResponse
+-from runtime.review.reviewers import ProviderBackedReviewer
+-from runtime.review.runtime import ReviewerRuntime
++from runtime.tests.contract_fixtures import CertifiedReviewerFixture as ProviderBackedReviewer
++from runtime.tests.contract_fixtures import CertifiedReviewRuntimeFixture as ReviewerRuntime
+ from runtime.review.store import FileReviewStore
+ from runtime.review.verification import DeterministicVerifier
+ from runtime.storage.execution_store import FileExecutionStore
+@@ -196,6 +196,10 @@ class ReviewTestHarness:
+             requested_provider=provider,
+             preferred_provider=provider,
+         )
++        from runtime.core.capability_governance import certified_dispatch
++        self.execution_store.begin_decision(request, executor="declared-deterministic-review-fixture", runtime=self.runtime, job=running)
++        with certified_dispatch(self.execution_store, request):
++            pass  # Missing-artifact cases retain the real pre-effect authority.
+         if persist_execution:
+             self.execution_store.create(request, result)
+         execution_ref = {
+@@ -218,6 +222,7 @@ class ReviewTestHarness:
+             self.review_store,
+             id_factory=lambda: "review-fixed-001",
+             clock=lambda: "2026-09-22T12:00:02Z",
++            fixture_runtime=self.runtime,
+         )
+ 
+ 
+diff --git a/runtime/tests/test_scheduler_loop.py b/runtime/tests/test_scheduler_loop.py
+index a098f24..e45ffd3 100644
+--- a/runtime/tests/test_scheduler_loop.py
++++ b/runtime/tests/test_scheduler_loop.py
+@@ -454,7 +454,9 @@ class SchedulerLoopTests(unittest.TestCase):
+             "execution-invalid-recovery",
+             self.worker.resolver.resolve(claimed),
+         )
+-        result = self.executor.execute(request)
++        from runtime.tests.contract_fixtures import certified_fixture_dispatch
++        with certified_fixture_dispatch(request, runtime=self.jobs, store=self.executions):
++            result = self.executor.execute(request)
+         path = self.executions.create(request, result)
+         record = json.loads(path.read_text(encoding="utf-8"))
+         record["request"]["workflow"] = "different-workflow"
+diff --git a/runtime/tests/test_task_contract_f1.py b/runtime/tests/test_task_contract_f1.py
+index 34f5017..3cd7327 100644
+--- a/runtime/tests/test_task_contract_f1.py
++++ b/runtime/tests/test_task_contract_f1.py
+@@ -247,9 +247,13 @@ class ReviewerAuthorityF1Tests(unittest.TestCase):
+         self.assertEqual(self.claude.calls, 1)
+ 
+     def test_parent_stop_conditions_apply_to_reviewer_dispatch(self):
+-        run, _ = self.run_review(stop={"kind": "no_execution"})
++        from runtime.storage.execution_store import ExecutionStoreError
++        # Admission rejects the stopped parent before the simulated execution
++        # fixture can establish evidence for any later Reviewer dispatch.
++        with self.assertRaisesRegex(ExecutionStoreError, "canonical execution authority"):
++            self.run_review(stop={"kind": "no_execution"})
+         self.assertEqual(self.codex.calls, 0)
+-        self.assertEqual(run.result.error_category, "task_authority_blocked")
++        self.assertTrue(all(j["status"] != "completed" for j in self.fixture.runtime.list()))
+ 
+ 
+ if __name__ == "__main__": unittest.main()
+diff --git a/runtime/workers/worker.py b/runtime/workers/worker.py
+index d0fd774..eed3730 100644
+--- a/runtime/workers/worker.py
++++ b/runtime/workers/worker.py
+@@ -252,14 +252,17 @@ class Worker:
+             )
+ 
+         try:
++            self.execution_store.begin_decision(request, executor=type(self.executor).__module__ + "." + type(self.executor).__qualname__,
++                                                runtime=self.runtime, job=job)
+             self.runtime.progress.execution_started(job, execution_id)
+-            with execution_observer(self.runtime.progress, job, execution_id):
++            from runtime.core.capability_governance import certified_dispatch
++            with execution_observer(self.runtime.progress, job, execution_id), certified_dispatch(self.execution_store, request):
+                 result = self._execute_safely(request, job=job, budget_decision=budget_decision)
+         except ProgressError:
+             if budget_binding is not None:
+                 self.budget_runtime.finalize_execution(budget_binding, execution_id=execution_id)
+             raise
+-        except RetryStoreError as error:
++        except (RetryStoreError, ExecutionStoreError) as error:
+             if budget_binding is not None:
+                 budget_decision = self.budget_runtime.finalize_execution(
+                     budget_binding, execution_id=execution_id
+@@ -684,12 +687,14 @@ class Worker:
+                     if request is None:
+                         raise RuntimeError("Review-required execution has no request")
+                     try:
+-                        if isinstance(self.executor, ProviderExecutor):
+-                            review_run = self.reviewer_runtime.run(
+-                                updated, request, result, compute_budget_decision=compute_budget_decision)
+-                        else:
+-                            review_run = self.reviewer_runtime.run(updated, request, result)
+-                    except ReviewRuntimeError as error:
++                        from runtime.core.capability_governance import certified_dispatch
++                        with certified_dispatch(self.execution_store, request, purpose="review"):
++                            if isinstance(self.executor, ProviderExecutor):
++                                review_run = self.reviewer_runtime.run(
++                                    updated, request, result, compute_budget_decision=compute_budget_decision)
++                            else:
++                                review_run = self.reviewer_runtime.run(updated, request, result)
++                    except (ReviewRuntimeError, ExecutionStoreError) as error:
+                         return WorkerRunOutcome(
+                             status="worker_error",
+                             job_id=job["job_id"],
+diff --git a/schemas/progress-event.schema.json b/schemas/progress-event.schema.json
+index 261518f..0835e77 100644
+--- a/schemas/progress-event.schema.json
++++ b/schemas/progress-event.schema.json
+@@ -50,7 +50,11 @@
+         "stop_requested",
+         "continuation_reserved",
+         "worker_exited",
+-        "recovery_completed"
++        "recovery_completed",
++        "decision_intent_observed",
++        "decision_result_observed",
++        "decision_review_observed",
++        "decision_consumption_observed"
+       ]
+     },
+     "logical_job_id": {
+diff --git a/schemas/task-contract.schema.json b/schemas/task-contract.schema.json
+index 2c88bc8..1ee25c8 100644
+--- a/schemas/task-contract.schema.json
++++ b/schemas/task-contract.schema.json
+@@ -300,6 +300,15 @@
+           "type": "boolean"
+         }
+       }
++    },
++    "capability_profile": {
++      "enum": [
++        "READ_ONLY",
++        "LOCAL_WRITE",
++        "EXTERNAL_PREPARE",
++        "EXTERNAL_EXECUTE",
++        "SENSITIVE_EXECUTE"
++      ]
+     }
+   },
+   "$schema": "https://json-schema.org/draft/2020-12/schema",

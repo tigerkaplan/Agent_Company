@@ -1,0 +1,23 @@
+{
+  "command": [
+    "C:\\Python314\\python.exe",
+    "-B",
+    "-m",
+    "unittest",
+    "runtime.tests.test_capability_governance_f3",
+    "runtime.tests.test_capability_governance_f2",
+    "runtime.tests.test_capability_governance_f1",
+    "runtime.tests.test_capability_governance",
+    "runtime.tests.test_capability_actions",
+    "runtime.tests.test_actions",
+    "-v"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 747.525,
+  "test_count": 114,
+  "complete": true,
+  "passed": true,
+  "log": "targeted.log",
+  "log_sha256": "d033087fe9441b6d965294a8d378eef4db87e0fd4c50c672d186cb8eb6025336",
+  "source_sha256": "db84c2bc9dc114377ffe5002167b2c3a8e2211c32e7974ebec9eb37296c9fbb2"
+}

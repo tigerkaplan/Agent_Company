@@ -173,6 +173,9 @@ class RemoteGitRuntime:
         return {"push_plan": plan.to_dict(), "approval": run.request.to_dict()}
 
     def push(self, push_plan_id: str) -> dict[str, Any]:
+        return self._run_governed_action(self._push_governed, push_plan_id)
+
+    def _push_governed(self, push_plan_id, audits):
         try:
             plan = self.store.load_push_plan(push_plan_id)
         except GitStoreError as error:
@@ -180,13 +183,15 @@ class RemoteGitRuntime:
         if plan.dry_run:
             self._fail("remote_dry_run_forbidden", "Dry-run push plans cannot mutate a remote")
         approval = self._approved(plan, "PUSH_GIT_COMMIT")
+        audit = self._capability_action(plan, approval)
+        audits.append(audit)
         if plan.push_evidence_ref is not None:
             evidence_id = plan.push_evidence_ref["ref"].split(":", 1)[1]
             evidence = self.store.load_push_evidence(evidence_id)
             current = self._remote_head(Path(plan.repository_root), plan.remote_name, plan.remote_branch)
             if current != evidence.remote_head_after:
                 self._fail("remote_evidence_stale", "Persisted pushed commit is no longer remote branch HEAD")
-            return {"push_plan": plan.to_dict(), "push_evidence": evidence.to_dict()}
+            return self._finish_capability_action(audit, {"push_plan": plan.to_dict(), "push_evidence": evidence.to_dict()})
         repository = self.git_runtime._validate_repository(Path(plan.repository_root))
         change_set = self.store.load_change_set(plan.change_set_id)
         commit = self.store.load_evidence(plan.commit_evidence_ref["ref"].split(":", 1)[1])
@@ -204,6 +209,7 @@ class RemoteGitRuntime:
             self._fail("remote_head_stale", "Remote branch HEAD changed after approval")
         already_present = remote_before == plan.commit_hash
         if not already_present:
+            self._consume_capability_action(audit)
             result = self._git(
                 repository,
                 [
@@ -247,7 +253,7 @@ class RemoteGitRuntime:
                 self.store.save_push_plan(plan)
             except GitStoreError as error:
                 self._fail("remote_persistence_failed", str(error))
-            return {"push_plan": plan.to_dict(), "push_evidence": recovered.to_dict()}
+            return self._finish_capability_action(audit, {"push_plan": plan.to_dict(), "push_evidence": recovered.to_dict()})
         fields = {
             "push_evidence_id": evidence_id,
             "push_plan_id": plan.push_plan_id,
@@ -276,7 +282,7 @@ class RemoteGitRuntime:
             self.store.save_push_plan(plan)
         except GitStoreError as error:
             self._fail("remote_persistence_failed", str(error))
-        return {"push_plan": plan.to_dict(), "push_evidence": evidence.to_dict()}
+        return self._finish_capability_action(audit, {"push_plan": plan.to_dict(), "push_evidence": evidence.to_dict()})
 
     def prepare_pull_request(
         self,
@@ -376,6 +382,9 @@ class RemoteGitRuntime:
         return {"pull_request_plan": plan.to_dict(), "approval": run.request.to_dict()}
 
     def create_pull_request(self, plan_id: str) -> dict[str, Any]:
+        return self._run_governed_action(self._create_pull_request_governed, plan_id)
+
+    def _create_pull_request_governed(self, plan_id, audits):
         if self.pull_request_adapter is None:
             self._fail("forge_unavailable", "Pull-request adapter is not configured")
         try:
@@ -385,10 +394,12 @@ class RemoteGitRuntime:
         if plan.dry_run:
             self._fail("remote_dry_run_forbidden", "Dry-run PR plans cannot create a pull request")
         approval = self._approved(plan, "CREATE_PULL_REQUEST")
+        audit = self._capability_action(plan, approval)
+        audits.append(audit)
         if plan.pull_request_evidence_ref is not None:
             evidence_id = plan.pull_request_evidence_ref["ref"].split(":", 1)[1]
             evidence = self.store.load_pull_request_evidence(evidence_id)
-            return {"pull_request_plan": plan.to_dict(), "pull_request_evidence": evidence.to_dict()}
+            return self._finish_capability_action(audit, {"pull_request_plan": plan.to_dict(), "pull_request_evidence": evidence.to_dict()})
         push_evidence_id = plan.push_evidence_ref["ref"].split(":", 1)[1]
         push_evidence = self.store.load_push_evidence(push_evidence_id)
         push_plan = self.store.load_push_plan(push_evidence.push_plan_id)
@@ -406,6 +417,7 @@ class RemoteGitRuntime:
             )
             already_present = state is not None
             if state is None:
+                self._consume_capability_action(audit)
                 state = self.pull_request_adapter.create(
                     plan.repository_slug,
                     plan.head_branch,
@@ -445,7 +457,40 @@ class RemoteGitRuntime:
             self.store.save_pull_request_plan(plan)
         except GitStoreError as error:
             self._fail("remote_persistence_failed", str(error))
-        return {"pull_request_plan": plan.to_dict(), "pull_request_evidence": evidence.to_dict()}
+        return self._finish_capability_action(audit, {"pull_request_plan": plan.to_dict(), "pull_request_evidence": evidence.to_dict()})
+
+    def _consume_capability_action(self, audit):
+        try:
+            audit.consume()
+            audit.before_mutation()
+        except ValueError as error:
+            self._fail("capability_governance_rejected", str(error))
+
+    def _run_governed_action(self, operation, identity):
+        audits = []
+        try:
+            return operation(identity, audits)
+        except ValueError as error:
+            if audits:
+                try:
+                    audits[0].fail(getattr(error, "code", "action_contract_failure"))
+                except ValueError:
+                    self._fail("capability_audit_incomplete", "Failure trace is unavailable; explicit recovery required")
+            raise
+
+    def _finish_capability_action(self, audit, result):
+        try:
+            return audit.finish(result)
+        except ValueError as error:
+            self._fail("capability_governance_rejected", str(error))
+
+    def _capability_action(self, plan, approval):
+        from runtime.core.capability_actions import ActionDecision
+        try:
+            return ActionDecision(self.git_runtime.jobs, self.approvals.store,
+                self.store, approval, plan.approval_scope, "canonical-remote-git")
+        except ValueError as error:
+            self._fail("capability_governance_rejected", str(error))
 
     def _approved(self, plan: PushPlan | PullRequestPlan, action: str) -> dict[str, Any]:
         approval_ref = plan.approval_ref

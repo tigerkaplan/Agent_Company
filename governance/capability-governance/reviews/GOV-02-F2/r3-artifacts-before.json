@@ -1,0 +1,349 @@
+{
+  "adversarial-corrected.json": {
+    "bytes": 403,
+    "sha256": "d88303b0490ba98d4c9de63bebc5f4b77694d56853855a47d58102052891970c",
+    "json_type": "dict",
+    "exit_code": 1,
+    "test_count": 6,
+    "passed": false
+  },
+  "adversarial-corrected.log": {
+    "bytes": 4067,
+    "sha256": "d147772f7d665aea0b06293210f740bab7ad858184ce07d2e0163b8b206d5c6d",
+    "completed_tests": [
+      "6"
+    ],
+    "outcomes": [
+      "FAILED (failures=3)\r"
+    ]
+  },
+  "adversarial-observations-initial.json": {
+    "bytes": 3065,
+    "sha256": "7bc6a11881c00a470f76dd0cdcb34400a0aa494a8daa5a351f16a3e9deb736a7",
+    "json_type": "list"
+  },
+  "adversarial-observations.json": {
+    "bytes": 3145,
+    "sha256": "c929355ce697843c10059024b0b201e76f86ba53da116ff2b4d698b171762501",
+    "json_type": "list"
+  },
+  "adversarial.json": {
+    "bytes": 393,
+    "sha256": "106b844bd73a4eb55c4f6006ab39fea326ff3699783e3393e7572f2f5a67b57e",
+    "json_type": "dict",
+    "exit_code": 1,
+    "test_count": 6,
+    "passed": false
+  },
+  "adversarial.log": {
+    "bytes": 6004,
+    "sha256": "6834648ed8e9204e7608b3af071d2af287e852f77ab6a39916a871bb4b5f7bf2",
+    "completed_tests": [
+      "6"
+    ],
+    "outcomes": [
+      "FAILED (failures=3, errors=1)\r"
+    ]
+  },
+  "adversarial.py": {
+    "bytes": 11052,
+    "sha256": "132aeed732bf9b2fe8b8ac93816d308326a5d5d7ff59864d15752f274b4d6609",
+    "functions": [
+      "pair",
+      "test_import_cannot_complete_or_dispatch",
+      "test_final_apply_combined_journal_and_effect_rollback",
+      "test_rollback_combined_identity_and_consumption_rebinding_fresh_process",
+      "test_git_import_and_review_dispatch_deletion_denied",
+      "test_child_ceiling_combined_substitution",
+      "test_git_policy_pair_loss_between_admission_and_effect",
+      "lost_policy",
+      "mutate"
+    ]
+  },
+  "affected.json": {
+    "bytes": 486,
+    "sha256": "fda28236e38b34956f34d13bddca9e10247590b09fa5a3733467b12e1e81f93a",
+    "json_type": "dict",
+    "exit_code": 0,
+    "test_count": 156,
+    "passed": true
+  },
+  "affected.log": {
+    "bytes": 24010,
+    "sha256": "18184ce188e8851a39505ee47a6d968552735f27442d6d7d289dbab0cf6f494b",
+    "completed_tests": [
+      "156"
+    ],
+    "outcomes": []
+  },
+  "confirm_rollback.py": {
+    "bytes": 2958,
+    "sha256": "7c3c65cf4d7abc17e7630ed368d53b8968596f42ad8676b343a59f7ab071354a",
+    "functions": [
+      "fingerprints"
+    ]
+  },
+  "diff-check.json": {
+    "bytes": 270,
+    "sha256": "ba8ef6b76c48f40da9b904c9586f88c4e41ff41eba68a5996e90ecda16289a15",
+    "json_type": "dict",
+    "exit_code": 0,
+    "test_count": null,
+    "passed": true
+  },
+  "diff-check.log": {
+    "bytes": 989,
+    "sha256": "254b635731c6074e3302e4bf9f602d92a33aaa01510c6f1f644fff18bcb0808f",
+    "completed_tests": [],
+    "outcomes": []
+  },
+  "finalize_review.py": {
+    "bytes": 7426,
+    "sha256": "daa278acb2903792f31cd2baae37f06c975c7afe245883ca019ba20a07d469b1",
+    "functions": [
+      "read"
+    ]
+  },
+  "focused.json": {
+    "bytes": 1362,
+    "sha256": "ce312b18e9de25283c3a73e90592f545a41e3efd038da62a808c0e5f3dcd79c0",
+    "json_type": "dict",
+    "exit_code": 0,
+    "test_count": 832,
+    "passed": true
+  },
+  "focused.log": {
+    "bytes": 141093,
+    "sha256": "4e255195bb8fb4cde17f251e85e09dc98037e34ea070ad994fc91ac1baf72209",
+    "completed_tests": [
+      "832"
+    ],
+    "outcomes": []
+  },
+  "full.json": {
+    "bytes": 359,
+    "sha256": "f9719c2232fcd8831e1e605547e3fc709c6dc56dc402a81dd62724854e025fdf",
+    "json_type": "dict",
+    "exit_code": 0,
+    "test_count": 1293,
+    "passed": true
+  },
+  "full.log": {
+    "bytes": 196433,
+    "sha256": "18718d3420641333ca2fd78b37f59733e3b932c8448d21fb16e3f66e2642549f",
+    "completed_tests": [
+      "1293"
+    ],
+    "outcomes": []
+  },
+  "integrity.json": {
+    "bytes": 125,
+    "sha256": "8a571751124dbd6b33d9e9aa0abffca55d9c3a622fc0ec6cf17dc12b1b168300",
+    "json_type": "dict",
+    "unchanged": true,
+    "head": "c5de47440973c87023bbd6652aca984262ab17f7"
+  },
+  "multifile-apply-confirmed.json": {
+    "bytes": 401,
+    "sha256": "e8b6dd0f8fb53eb0c4078983245b6ba7a427433578e84a07f9e02945627d3be0",
+    "json_type": "dict",
+    "exit_code": 1,
+    "test_count": null,
+    "passed": false
+  },
+  "multifile-apply-confirmed.log": {
+    "bytes": 397,
+    "sha256": "177bd33233fe867e2abb68fd1e16029ade2576b5e00dd85c18004f68b6d324cf",
+    "completed_tests": [],
+    "outcomes": []
+  },
+  "multifile-apply-observations-initial.json": {
+    "bytes": 269,
+    "sha256": "1f5d2b0a4c97fa5185cde34542d559a9cdf782447692375dbae57acfe814e15f",
+    "json_type": "dict"
+  },
+  "multifile-apply-observations.json": {
+    "bytes": 397,
+    "sha256": "177bd33233fe867e2abb68fd1e16029ade2576b5e00dd85c18004f68b6d324cf",
+    "json_type": "dict"
+  },
+  "multifile-apply.json": {
+    "bytes": 391,
+    "sha256": "cbe9c7862269e7fb8be3715c593898187b7b903e8d7a9d3cf5d1e3dcfc313e78",
+    "json_type": "dict",
+    "exit_code": 1,
+    "test_count": null,
+    "passed": false
+  },
+  "multifile-apply.log": {
+    "bytes": 269,
+    "sha256": "1f5d2b0a4c97fa5185cde34542d559a9cdf782447692375dbae57acfe814e15f",
+    "completed_tests": [],
+    "outcomes": []
+  },
+  "multifile_apply.py": {
+    "bytes": 2794,
+    "sha256": "7228605d819c6080547410fafa5e1d35bbf83647df52b0de6f6836e3d0f78ffe",
+    "functions": [
+      "observed_write",
+      "mutate"
+    ]
+  },
+  "resume-audit.json": {
+    "bytes": 835,
+    "sha256": "6fef15ee9416af7f315e5df552ac3470268ff8f07a5b2b1941219c8412e24a1f",
+    "json_type": "dict",
+    "head": "c5de47440973c87023bbd6652aca984262ab17f7"
+  },
+  "REVIEW.md": {
+    "bytes": 7544,
+    "sha256": "f90d5ad74d94d34ffc5332a52127e0dbb941332e061e236bfd195502975a7b5d",
+    "headings": [
+      "# GOV-02-R3 independent review",
+      "## Reproduced findings",
+      "### R3-M1: combined journal rollback and retained-record rebinding permits redispatch (MAJOR)",
+      "### R3-M2: losing Git action-policy records after admission does not deny mutation or successful acceptance (MAJOR)",
+      "### R3-M3: multi-file controlled apply continues after effect evidence is lost (MAJOR)",
+      "## Original R1 assessment",
+      "## Fresh validation so far"
+    ]
+  },
+  "rollback-confirmation-observations.json": {
+    "bytes": 2320,
+    "sha256": "52f14191be625cb9dd78be2352fa97552f3dafffdb63cb929b53a08b6a2f6487",
+    "json_type": "list"
+  },
+  "rollback-confirmation.json": {
+    "bytes": 399,
+    "sha256": "7ef5e3182830a91e1bd3a09afd355e3edd10a3c94dace806d2bcd79afe13d52d",
+    "json_type": "dict",
+    "exit_code": 1,
+    "test_count": null,
+    "passed": false
+  },
+  "rollback-confirmation.log": {
+    "bytes": 2320,
+    "sha256": "52f14191be625cb9dd78be2352fa97552f3dafffdb63cb929b53a08b6a2f6487",
+    "completed_tests": [],
+    "outcomes": []
+  },
+  "routing-tools.json": {
+    "bytes": 365,
+    "sha256": "4dcf895563409259ae3f7160c912d487008ba7ecc0290282b41b19e1c988e62f",
+    "json_type": "dict"
+  },
+  "routing.txt": {
+    "bytes": 280,
+    "sha256": "83fe7aa7458f8f1a2fe0347865752d75dc17dadd7394dbed4145a17f3bbd7ee5"
+  },
+  "run_review.py": {
+    "bytes": 3458,
+    "sha256": "2c145e8253ce606feda0a86f229304141d628755ed8f1cbc2d6e83940b809027",
+    "functions": [
+      "snapshot",
+      "record"
+    ]
+  },
+  "source-after.json": {
+    "bytes": 54148,
+    "sha256": "80f7539fa1cdbdb1b2334082ac158cd7f590a1af17d4df0ae5884850ee067acd",
+    "json_type": "dict"
+  },
+  "source-before.json": {
+    "bytes": 54148,
+    "sha256": "80f7539fa1cdbdb1b2334082ac158cd7f590a1af17d4df0ae5884850ee067acd",
+    "json_type": "dict"
+  },
+  "status-before.txt": {
+    "bytes": 1496,
+    "sha256": "3ec581d14e38f7777b258076826264c5c6c1dc9de75a4581bf7a95473e0c0c9f"
+  },
+  "targeted.json": {
+    "bytes": 493,
+    "sha256": "616ca1a07f458cec5df50d970f9a3b5e32bfcab94df1cffb16e1ab18c6c600d1",
+    "json_type": "dict",
+    "exit_code": 0,
+    "test_count": 99,
+    "passed": true
+  },
+  "targeted.log": {
+    "bytes": 18411,
+    "sha256": "cd7818ccf4a7038ff24a188c0fb84c5416ecdb2d819e772cfb9e5436aef816be",
+    "completed_tests": [
+      "99"
+    ],
+    "outcomes": []
+  },
+  "tracked.diff": {
+    "bytes": 98780,
+    "sha256": "470b321c60cf374525cb58a58bbb8c13b0a83410e7851a3fb54c01a24bafc03d",
+    "paths": [
+      "a/PROJECT_STATE.md b/PROJECT_STATE.md",
+      "a/README.md b/README.md",
+      "a/ROADMAP.md b/ROADMAP.md",
+      "a/TODO.md b/TODO.md",
+      "a/runtime/actions/runtime.py b/runtime/actions/runtime.py",
+      "a/runtime/approvals/runtime.py b/runtime/approvals/runtime.py",
+      "a/runtime/approvals/store.py b/runtime/approvals/store.py",
+      "a/runtime/core/jobs.py b/runtime/core/jobs.py",
+      "a/runtime/core/task_contract.py b/runtime/core/task_contract.py",
+      "a/runtime/git/remote_runtime.py b/runtime/git/remote_runtime.py",
+      "a/runtime/git/runtime.py b/runtime/git/runtime.py",
+      "a/runtime/progress/models.py b/runtime/progress/models.py",
+      "a/runtime/review/context.py b/runtime/review/context.py",
+      "a/runtime/review/reviewers.py b/runtime/review/reviewers.py",
+      "a/runtime/review/runtime.py b/runtime/review/runtime.py",
+      "a/runtime/review/store.py b/runtime/review/store.py",
+      "a/runtime/review/verification.py b/runtime/review/verification.py",
+      "a/runtime/storage/execution_store.py b/runtime/storage/execution_store.py",
+      "a/runtime/tests/contract_fixtures.py b/runtime/tests/contract_fixtures.py",
+      "a/runtime/tests/test_actions.py b/runtime/tests/test_actions.py",
+      "a/runtime/tests/test_approval.py b/runtime/tests/test_approval.py",
+      "a/runtime/tests/test_compute_policy.py b/runtime/tests/test_compute_policy.py",
+      "a/runtime/tests/test_context_discovery.py b/runtime/tests/test_context_discovery.py",
+      "a/runtime/tests/test_continuation.py b/runtime/tests/test_continuation.py",
+      "a/runtime/tests/test_execution_results.py b/runtime/tests/test_execution_results.py",
+      "a/runtime/tests/test_external_content.py b/runtime/tests/test_external_content.py",
+      "a/runtime/tests/test_git.py b/runtime/tests/test_git.py",
+      "a/runtime/tests/test_progress_f1.py b/runtime/tests/test_progress_f1.py",
+      "a/runtime/tests/test_providers.py b/runtime/tests/test_providers.py",
+      "a/runtime/tests/test_retry_policy.py b/runtime/tests/test_retry_policy.py",
+      "a/runtime/tests/test_retry_repairs.py b/runtime/tests/test_retry_repairs.py",
+      "a/runtime/tests/test_review.py b/runtime/tests/test_review.py",
+      "a/runtime/tests/test_scheduler_loop.py b/runtime/tests/test_scheduler_loop.py",
+      "a/runtime/tests/test_task_contract_f1.py b/runtime/tests/test_task_contract_f1.py",
+      "a/runtime/workers/worker.py b/runtime/workers/worker.py",
+      "a/schemas/progress-event.schema.json b/schemas/progress-event.schema.json",
+      "a/schemas/task-contract.schema.json b/schemas/task-contract.schema.json"
+    ]
+  },
+  "validation.json": {
+    "bytes": 358,
+    "sha256": "77b0c0f31594cc27eb493eeb7c5950793f3dc35cb292a2c49487e72f217c76b7",
+    "json_type": "dict",
+    "exit_code": 0,
+    "test_count": null,
+    "passed": true
+  },
+  "validation.log": {
+    "bytes": 93,
+    "sha256": "fedb5be7da086f0d51f93241f4440d4850e3b519db2bcbc6a133fbf8f34bf392",
+    "completed_tests": [],
+    "outcomes": []
+  },
+  "verdict-at-request.json": {
+    "bytes": 4483,
+    "sha256": "25fe752f6e58070ff8a4de85c849555f1b2109a54f58993927b52c848b0d12a6",
+    "json_type": "dict",
+    "head": "c5de47440973c87023bbd6652aca984262ab17f7",
+    "review": "FIX",
+    "validation_complete": false
+  },
+  "VERDICT-AT-REQUEST.md": {
+    "bytes": 1593,
+    "sha256": "0a2cc05bb3818da5536f92fe5818c9586a100bd13560123d91c78724a166dd80",
+    "headings": [
+      "# R3 verdict at requested finalization"
+    ]
+  }
+}

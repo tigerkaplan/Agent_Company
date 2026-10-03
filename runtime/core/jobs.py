@@ -1098,6 +1098,8 @@ class JobRuntime:
                     }
                 )
                 self._validate_against_persisted_lineage(child)
+                from runtime.core.capability_governance import require_child
+                require_child(parent, child)
                 self.task_contract_store.create(child)
                 self.store.create(child)
                 return deepcopy(child)
@@ -1674,7 +1676,7 @@ class JobRuntime:
             return False
         try:
             persisted_approval = self.approval_store.load(approval_id)
-            execution_record = self.execution_store.load(execution_id)
+            execution_record = self.execution_store.load(execution_id, require_authority=True)
             request = ExecutionRequest.from_persisted_dict(execution_record.request)
         except (
             ApprovalStoreError,

@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "head": "c5de47440973c87023bbd6652aca984262ab17f7",
+  "preserved_preexisting_files_checked": 474,
+  "prior_review_bytes_unchanged": true,
+  "stage_reports_verified": [
+    "targeted",
+    "adversarial",
+    "affected",
+    "focused",
+    "full",
+    "validation",
+    "static",
+    "r3-adversarial",
+    "r3-multifile",
+    "r4-combined",
+    "r4-replay"
+  ],
+  "full_test_count": 1308,
+  "final_diff_check": {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit_code": 0,
+    "passed": true,
+    "log": "diff-check-final.log",
+    "log_sha256": "254b635731c6074e3302e4bf9f602d92a33aaa01510c6f1f644fff18bcb0808f"
+  },
+  "final_source_fingerprint_match": true
+}

@@ -1,0 +1,15 @@
+{
+  "command": [
+    "C:\\Python314\\python.exe",
+    "-B",
+    "E:\\Software\\Agent_Company\\governance\\capability-governance\\reviews\\GOV-02-R5\\confirm_rollback.py"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 9.991,
+  "test_count": null,
+  "complete": true,
+  "passed": true,
+  "log": "rollback-confirmation.log",
+  "log_sha256": "58985acff5f3f725e4f4f945ef8a966b40b661a4442e052f53b19acbbfbf16dd",
+  "source_sha256": "db84c2bc9dc114377ffe5002167b2c3a8e2211c32e7974ebec9eb37296c9fbb2"
+}

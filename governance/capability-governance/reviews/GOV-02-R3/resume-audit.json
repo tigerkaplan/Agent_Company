@@ -1,0 +1,35 @@
+{
+  "head": "c5de47440973c87023bbd6652aca984262ab17f7",
+  "files_checked": 496,
+  "changed_non_r3_files": [],
+  "completed_runs": {
+    "targeted": {
+      "exit_code": 0,
+      "test_count": 99,
+      "log_hash_verified": true
+    },
+    "adversarial-corrected": {
+      "exit_code": 1,
+      "test_count": 6,
+      "log_hash_verified": true
+    },
+    "affected": {
+      "exit_code": 0,
+      "test_count": 156,
+      "log_hash_verified": true
+    },
+    "rollback-confirmation": {
+      "exit_code": 1,
+      "test_count": null,
+      "log_hash_verified": true
+    },
+    "multifile-apply-confirmed": {
+      "exit_code": 1,
+      "test_count": null,
+      "log_hash_verified": true
+    }
+  },
+  "focused": "RUNNING; no completed result yet",
+  "full": "NOT_STARTED",
+  "runner_session": 69749
+}

@@ -300,6 +300,15 @@
           "type": "boolean"
         }
       }
+    },
+    "capability_profile": {
+      "enum": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_PREPARE",
+        "EXTERNAL_EXECUTE",
+        "SENSITIVE_EXECUTE"
+      ]
     }
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",

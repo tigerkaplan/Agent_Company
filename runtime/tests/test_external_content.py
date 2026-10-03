@@ -13,7 +13,7 @@ from runtime.tests.test_providers import request
 from runtime.tests.test_providers import FakeAdapter
 from runtime.providers.artifacts import FileProviderArtifactStore
 from runtime.providers.config import ProviderConfiguration
-from runtime.providers.executor import ProviderExecutor
+from runtime.tests.contract_fixtures import CertifiedProviderFixture as ProviderExecutor
 from runtime.providers.routing import ProviderRouter
 from runtime.providers.models import ContextEntry
 from runtime.review.models import ReviewEvidence, ReviewPackage, VerificationResult

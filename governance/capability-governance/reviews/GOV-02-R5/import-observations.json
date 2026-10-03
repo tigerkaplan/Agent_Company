@@ -1,0 +1,11 @@
+[
+  {
+    "case": "import-to-completion-after-runtime-restart",
+    "authority_denied": true
+  },
+  {
+    "case": "import-to-human-resumption",
+    "observation_readable": true,
+    "authority_denied": true
+  }
+]

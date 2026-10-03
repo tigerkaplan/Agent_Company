@@ -1,0 +1,11 @@
+{
+  "status": "COMPLETE",
+  "stages": [
+    "affected",
+    "focused",
+    "full",
+    "validation",
+    "static",
+    "diff-check"
+  ]
+}

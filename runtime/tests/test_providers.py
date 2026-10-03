@@ -28,7 +28,7 @@ from runtime.providers.config import (
     ProviderConfiguration,
 )
 from runtime.providers.context import ExecutionContextBuilder
-from runtime.providers.executor import ProviderExecutor
+from runtime.tests.contract_fixtures import CertifiedProviderFixture as ProviderExecutor
 from runtime.providers.models import (
     ProviderAvailability,
     ProviderExecutionResult,

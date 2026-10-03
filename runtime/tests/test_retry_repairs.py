@@ -468,7 +468,7 @@ print(json.dumps(worker.run_claimed(job_id).to_dict()))
         record = json.loads(path.read_text())
         record["request"]["context_refs"].append({"ref_type": "other", "ref": "unrelated"})
         path.write_text(json.dumps(record), encoding="utf-8")
-        with self.assertRaisesRegex(JobRuntimeError, "immutable admission"):
+        with self.assertRaisesRegex(JobRuntimeError, "immutable admission|Decision result trace does not bind exact work/evidence"):
             self.jobs.retry_or_stop(claimed["job_id"])
 
     def test_f7_reviewer_no_progress_preserves_structured_replan_and_plan(self):

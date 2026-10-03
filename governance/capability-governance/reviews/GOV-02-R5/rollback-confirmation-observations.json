@@ -1,0 +1,38 @@
+[
+  {
+    "alternate": false,
+    "first_status": "succeeded",
+    "returncode": 0,
+    "stdout": "{\"denied\": true, \"error\": \"Retained intent malformed; explicit recovery required\"}\n",
+    "stderr": "",
+    "authority_and_job_files_unchanged": true,
+    "same_job": true,
+    "same_attempt": true,
+    "approval_received": {},
+    "authority_fingerprints": {
+      "jobs\\.task-contracts\\job-e46c9db75ccc410da3aacf43af043426.anchor.json": "ec84ac6253b916dc2451a609de91a45c90d9f272553eadef61584d79ae794c26",
+      "jobs\\.task-contracts\\job-e46c9db75ccc410da3aacf43af043426.gate-anchor.json": "3e6db6e50a3c8a4d0f0062aa3362536a2cb4ed4724f4542f87cf542d3e5e495b",
+      "jobs\\.task-contracts\\job-e46c9db75ccc410da3aacf43af043426.gate-witness.json": "3e6db6e50a3c8a4d0f0062aa3362536a2cb4ed4724f4542f87cf542d3e5e495b",
+      "jobs\\.task-contracts\\job-e46c9db75ccc410da3aacf43af043426.witness.json": "ec84ac6253b916dc2451a609de91a45c90d9f272553eadef61584d79ae794c26",
+      "jobs\\job-e46c9db75ccc410da3aacf43af043426.json": "57687b02da8cef9eb4e52997732091c4a0672f608428977729b0975d1667da9b"
+    }
+  },
+  {
+    "alternate": true,
+    "first_status": "succeeded",
+    "returncode": 0,
+    "stdout": "{\"denied\": true, \"error\": \"Retained intent malformed; explicit recovery required\"}\n",
+    "stderr": "",
+    "authority_and_job_files_unchanged": true,
+    "same_job": true,
+    "same_attempt": true,
+    "approval_received": {},
+    "authority_fingerprints": {
+      "jobs\\.task-contracts\\job-55eec81c36674cae9c68d1a6eaa0e671.anchor.json": "c03a4cc1ce1956388452a95a6c7c4fa3bb6f1f7f0cbed4bed40d473288aeb49a",
+      "jobs\\.task-contracts\\job-55eec81c36674cae9c68d1a6eaa0e671.gate-anchor.json": "7add842c8ef9bbf1662cdfd893b2a483177cdce550adb2c8b05abec7c90eccdc",
+      "jobs\\.task-contracts\\job-55eec81c36674cae9c68d1a6eaa0e671.gate-witness.json": "7add842c8ef9bbf1662cdfd893b2a483177cdce550adb2c8b05abec7c90eccdc",
+      "jobs\\.task-contracts\\job-55eec81c36674cae9c68d1a6eaa0e671.witness.json": "c03a4cc1ce1956388452a95a6c7c4fa3bb6f1f7f0cbed4bed40d473288aeb49a",
+      "jobs\\job-55eec81c36674cae9c68d1a6eaa0e671.json": "c54a9a2f6015849fefbda9d01176e85fc8de359c627cdea58514d421b07b6b79"
+    }
+  }
+]

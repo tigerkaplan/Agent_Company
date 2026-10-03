@@ -1,0 +1,23 @@
+{
+  "command": [
+    "C:\\Python314\\python.exe",
+    "-B",
+    "-m",
+    "unittest",
+    "runtime.tests.test_capability_governance_f2",
+    "runtime.tests.test_capability_governance_f1",
+    "runtime.tests.test_capability_governance",
+    "runtime.tests.test_capability_actions",
+    "runtime.tests.test_actions",
+    "-v"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 174.249,
+  "test_count": 107,
+  "complete": true,
+  "passed": true,
+  "log": "governance/capability-governance/reviews/GOV-02-F2/targeted.log",
+  "log_sha256": "2c9642780712e32919d692324f23d74a940bca6a6f0b273fe789aab50faca4c3",
+  "source_sha256": "052d71f1283160d4de1f21adefd7cb69cf5f977f2378a63edd7c59e93c16689b",
+  "phase": "GOV-02-F2"
+}

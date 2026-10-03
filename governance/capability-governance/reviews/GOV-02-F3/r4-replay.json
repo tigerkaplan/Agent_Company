@@ -1,0 +1,15 @@
+{
+  "command": [
+    "C:\\Python314\\python.exe",
+    "-B",
+    "E:\\Software\\Agent_Company\\governance\\capability-governance\\reviews\\GOV-02-F3\\confirm_replay.py"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 5.202,
+  "test_count": null,
+  "complete": true,
+  "passed": true,
+  "log": "r4-replay.log",
+  "log_sha256": "1244aa801a04dd8ea580a40957f25e6ecb7182140251e94ca169321956ff98a1",
+  "source_sha256": "818b02044ea789a75ae69881c919dcf6ad3c841f437c66af72ff6728c6258a92"
+}

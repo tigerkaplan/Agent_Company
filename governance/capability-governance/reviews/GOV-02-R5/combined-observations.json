@@ -1,0 +1,131 @@
+[
+  {
+    "case": "git-journal-rollback-after-consumption",
+    "commit_created": false,
+    "success": false,
+    "error": "capability_governance_rejected: Decision trace differs from independent durable observation",
+    "result_trace": null,
+    "surviving_effect_pair": true,
+    "restart_accepted": false,
+    "restart_error": "capability_audit_incomplete: Failure trace is unavailable; explicit recovery required"
+  },
+  {
+    "case": "git-loss-after-staging",
+    "stage": "action-policy",
+    "commit_created": false,
+    "success": false,
+    "error": "capability_audit_incomplete: Failure trace is unavailable; explicit recovery required",
+    "commands": [
+      [
+        "rev-parse",
+        "--is-inside-work-tree"
+      ],
+      [
+        "rev-parse",
+        "--show-toplevel"
+      ],
+      [
+        "rev-parse",
+        "HEAD"
+      ],
+      [
+        "rev-parse",
+        "--verify",
+        "HEAD"
+      ],
+      [
+        "status",
+        "--porcelain=v1",
+        "-z",
+        "--untracked-files=all"
+      ],
+      [
+        "config",
+        "--local",
+        "--get",
+        "user.name"
+      ],
+      [
+        "config",
+        "--local",
+        "--get",
+        "user.email"
+      ],
+      [
+        "add",
+        "--",
+        "hello.txt"
+      ],
+      [
+        "diff",
+        "--cached",
+        "--name-only",
+        "-z"
+      ]
+    ]
+  },
+  {
+    "case": "git-loss-after-staging",
+    "stage": "action-effect",
+    "commit_created": false,
+    "success": false,
+    "error": "capability_governance_rejected: Decision trace unavailable; explicit recovery required",
+    "commands": [
+      [
+        "rev-parse",
+        "--is-inside-work-tree"
+      ],
+      [
+        "rev-parse",
+        "--show-toplevel"
+      ],
+      [
+        "rev-parse",
+        "HEAD"
+      ],
+      [
+        "rev-parse",
+        "--verify",
+        "HEAD"
+      ],
+      [
+        "status",
+        "--porcelain=v1",
+        "-z",
+        "--untracked-files=all"
+      ],
+      [
+        "config",
+        "--local",
+        "--get",
+        "user.name"
+      ],
+      [
+        "config",
+        "--local",
+        "--get",
+        "user.email"
+      ],
+      [
+        "add",
+        "--",
+        "hello.txt"
+      ],
+      [
+        "diff",
+        "--cached",
+        "--name-only",
+        "-z"
+      ]
+    ]
+  },
+  {
+    "case": "remote-push-rollback-after-effect",
+    "remote_head": "5af85b520d7564ec5273242c5b0975cbeba513a6\trefs/heads/phase-6j-test",
+    "success": false,
+    "error": "capability_governance_rejected: Decision trace differs from independent durable observation",
+    "result_trace": null,
+    "restart_accepted": false,
+    "restart_error": "capability_governance_rejected: Decision trace differs from independent durable observation"
+  }
+]

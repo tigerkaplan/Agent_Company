@@ -1,0 +1,6 @@
+{
+  "method": "Search available ALL_TOOLS names and descriptions for Claude, Anthropic, Gemini, independent review or agent execute/run routes",
+  "matching_tools": [],
+  "claim": "No distinct-provider reviewer execution route observed in exposed tool metadata; this does not prove no external installation exists",
+  "provider_diverse_acceptance_signoff": false
+}

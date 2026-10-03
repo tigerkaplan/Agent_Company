@@ -1,0 +1,23 @@
+{
+  "command": [
+    "C:\\Python314\\python.exe",
+    "-B",
+    "-m",
+    "unittest",
+    "runtime.tests.test_git",
+    "runtime.tests.test_remote_git",
+    "runtime.tests.test_review",
+    "runtime.tests.test_approval",
+    "runtime.tests.test_worker",
+    "-v"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 408.381,
+  "test_count": 156,
+  "complete": true,
+  "passed": true,
+  "log": "governance/capability-governance/reviews/GOV-02-F2/affected.log",
+  "log_sha256": "d92b390f94392e51d1cf8787733ae9e670993a084b401b9cfcef4c60ab570246",
+  "source_sha256": "052d71f1283160d4de1f21adefd7cb69cf5f977f2378a63edd7c59e93c16689b",
+  "phase": "GOV-02-F2"
+}

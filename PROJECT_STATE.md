@@ -1,6 +1,29 @@
 # Agent Company Project State
 
-## GOV-01 Current State - 2026-10-02
+## GOV-02 Owner Closure - 2026-10-03
+
+ACTIVE: GOV-02 Capability Governance / CLOSED / READY TO COMMIT; implementation remains uncommitted.
+NEXT CHECKPOINT: GOV-02 COMMIT. ORCH-01: NOT STARTED; no authorization to begin.
+Verified HEAD: `c5de474`; V1 scope freeze remains ACTIVE.
+Implementation and independent R5 review: PASS; all eight prior majors CLOSED;
+0 critical / 0 major / 0 minor. Same-provider reviewer role separation satisfies
+canonical independence; no provider-diverse review is claimed.
+Closure verified 706 R5-pinned files, 213 accepted source files, 72 R5 artifact
+hashes and complete review logs, including the uninterrupted 1,308-test full run.
+Fresh closure syntax/schema/certificate and integrity checks: PASS.
+See [owner closure and evidence](governance/capability-governance/CLOSURE.md).
+The two superseded pre-F1 reports with unavailable original logs are excluded
+from acceptance; historical records and all R1-R5/F1-F3 evidence are preserved.
+GOV-01 and CORE-01-11 remain the canonical approval, review, scope, budget and state owners.
+Certification, provenance, profile gates and decision traces now run in JobRuntime,
+Worker, Reviewer and executor/tool paths. No general external executor is introduced.
+Historical authority without GOV-02 provenance fails closed; no automatic migration.
+See [GOV-02 implementation and acceptance evidence](governance/capability-governance/README.md).
+No repository commit, push, deployment or ORCH-01 implementation has been performed.
+The dated GOV-01 sections below preserve their historical checkpoint evidence.
+
+
+## GOV-01 Historical Committed State - 2026-10-02
 
 ACTIVE: None; GOV-01 Task & Authority Contract / CLOSED / COMMITTED at `852ec01`.
 NEXT: GOV-02 / NOT STARTED; sequence only, no authorization to begin.

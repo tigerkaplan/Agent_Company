@@ -1,0 +1,448 @@
+{
+  "prompt": "GOV-02-R4-INDEPENDENT / GOV-02-R4-RESUME",
+  "head": "c5de47440973c87023bbd6652aca984262ab17f7",
+  "review": "FIX",
+  "canonical_skill_decision": "FAIL",
+  "independence": "PASS",
+  "independence_basis": "Fresh reviewer session performed no GOV-02/F1/F2 execution or implementation repair",
+  "provider": "Codex",
+  "provider_diversity": "NOT ESTABLISHED",
+  "high_risk_provider_routing_gate": "NOT SATISFIED",
+  "r1_findings": {
+    "1": "CLOSED",
+    "2": "CLOSED",
+    "3": "CLOSED"
+  },
+  "r3_majors": {
+    "1": "CLOSED",
+    "2": "OPEN",
+    "3": "CLOSED"
+  },
+  "r3_major_2_basis": "Original attack denied; adjacent Git mutation/consumption/provenance variants remain open",
+  "finding_counts": {
+    "critical": 0,
+    "major": 2,
+    "minor": 0
+  },
+  "findings": [
+    {
+      "id": "R4-M1",
+      "severity": "major",
+      "title": "Git consumption rollback can launder provenance and refund consumed work",
+      "source": "runtime/core/capability_actions.py:75",
+      "acceptance_source": "runtime/core/capability_actions.py:133",
+      "evidence": [
+        "combined-observations.json",
+        "action-confirmation-observations.json",
+        "replay-confirmation-observations.json"
+      ]
+    },
+    {
+      "id": "R4-M2",
+      "severity": "major",
+      "title": "Git commit proceeds after evidence loss during staging",
+      "source": "runtime/git/runtime.py:280",
+      "evidence": [
+        "combined-observations.json"
+      ]
+    }
+  ],
+  "authority": "FAIL",
+  "certification": "PASS",
+  "provenance": "FAIL",
+  "trace": "FAIL",
+  "replay": "FAIL",
+  "compatibility": "PASS",
+  "parent_scope_ceilings": "PASS",
+  "blast_radius_reversibility": "PASS",
+  "canonical_approval_actor_scope": "PASS",
+  "gov01_invariants": "PASS on inspected and regression-tested task/completion/delegation boundaries",
+  "tests": {
+    "targeted": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "runtime.tests.test_capability_governance_f2",
+        "runtime.tests.test_capability_governance_f1",
+        "runtime.tests.test_capability_governance",
+        "runtime.tests.test_capability_actions",
+        "runtime.tests.test_actions",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 175.69,
+      "test_count": 107,
+      "complete": true,
+      "passed": true,
+      "log": "targeted.log",
+      "log_sha256": "2bbc42485d9405f26048dccc56ee3d1d2482f9bdc28dc9f5052d6cddcdd2086d",
+      "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467"
+    },
+    "adversarial": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "runtime.tests.test_capability_governance_f2",
+        "runtime.tests.test_capability_governance_f1",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 96.805,
+      "test_count": 15,
+      "complete": true,
+      "passed": true,
+      "log": "adversarial.log",
+      "log_sha256": "09f5addb6148b542b8d10f581920478cceb5745927cade43d3d87da4aea26bf7",
+      "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467"
+    },
+    "r3-adversarial": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "E:\\Software\\Agent_Company\\governance\\capability-governance\\reviews\\GOV-02-R4\\adversarial.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 33.649,
+      "test_count": 6,
+      "complete": true,
+      "passed": true,
+      "log": "r3-adversarial.log",
+      "log_sha256": "a96e27c73359fd7bcc8bb3a7a21d249b0387ac4ac0fb80e9cce9bf075b7ac081",
+      "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467"
+    },
+    "r3-multifile": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "E:\\Software\\Agent_Company\\governance\\capability-governance\\reviews\\GOV-02-R4\\multifile_apply.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.681,
+      "test_count": null,
+      "complete": true,
+      "passed": true,
+      "log": "r3-multifile.log",
+      "log_sha256": "75fb91bebd05980b8e6ab0d064261451010c124f464d34a890c0925f87dcfa84",
+      "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467"
+    },
+    "affected": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "runtime.tests.test_git",
+        "runtime.tests.test_remote_git",
+        "runtime.tests.test_review",
+        "runtime.tests.test_approval",
+        "runtime.tests.test_worker",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 392.747,
+      "test_count": 156,
+      "complete": true,
+      "passed": true,
+      "log": "affected.log",
+      "log_sha256": "d3faa3caafab20b569133b8f66294d264b8c078b1507fac6fe13e27949bbf2ab",
+      "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467"
+    },
+    "focused": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "runtime.tests.test_capability_governance_f2",
+        "runtime.tests.test_capability_governance_f1",
+        "runtime.tests.test_capability_governance",
+        "runtime.tests.test_capability_actions",
+        "runtime.tests.test_task_contract",
+        "runtime.tests.test_task_contract_f1",
+        "runtime.tests.test_task_contract_f2",
+        "runtime.tests.test_review",
+        "runtime.tests.test_approval",
+        "runtime.tests.test_worker",
+        "runtime.tests.test_tool_discovery",
+        "runtime.tests.test_providers",
+        "runtime.tests.test_runtime",
+        "runtime.tests.test_actions",
+        "runtime.tests.test_progress",
+        "runtime.tests.test_progress_f1",
+        "runtime.tests.test_progress_f2",
+        "runtime.tests.test_execution_budget",
+        "runtime.tests.test_retry_policy",
+        "runtime.tests.test_continuation",
+        "runtime.tests.test_compute_policy",
+        "runtime.tests.test_git",
+        "runtime.tests.test_remote_git",
+        "runtime.tests.test_context_discovery",
+        "runtime.tests.test_external_content",
+        "runtime.tests.test_scheduler_loop",
+        "runtime.tests.test_retry_repairs",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1106.151,
+      "test_count": 840,
+      "complete": true,
+      "passed": true,
+      "log": "focused.log",
+      "log_sha256": "a363ccbb03c8d295fa0d464a58daa989517f3d6bf037211f61b0b48d6c654036",
+      "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467"
+    },
+    "full": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "runtime/tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1357.646,
+      "test_count": 1301,
+      "complete": true,
+      "passed": true,
+      "log": "full.log",
+      "log_sha256": "bd59e9317d9817dbe79956cc4336333150c97fd22458c3c5f8898c57d60e40c4",
+      "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467"
+    },
+    "validation": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "E:\\Software\\Agent_Company\\governance\\capability-governance\\validate.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.816,
+      "test_count": null,
+      "complete": true,
+      "passed": true,
+      "log": "validation.log",
+      "log_sha256": "8a88e133cbc4083df3d1d1e5a2823fdcd689c94662d16193742b0aa030c3e0d6",
+      "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467"
+    },
+    "diff-check": {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.079,
+      "test_count": null,
+      "complete": true,
+      "passed": true,
+      "log": "diff-check.log",
+      "log_sha256": "254b635731c6074e3302e4bf9f602d92a33aaa01510c6f1f644fff18bcb0808f",
+      "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467"
+    },
+    "combined": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "E:\\Software\\Agent_Company\\governance\\capability-governance\\reviews\\GOV-02-R4\\combined.py",
+        "-v"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 23.745,
+      "test_count": 3,
+      "complete": true,
+      "passed": false,
+      "log": "combined.log",
+      "log_sha256": "1400241a01d8a384cbd23e35277e4da10aea50758801eca6ab3a75c96c461e16",
+      "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467"
+    },
+    "action-confirmation": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "E:\\Software\\Agent_Company\\governance\\capability-governance\\reviews\\GOV-02-R4\\confirm_actions.py"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 20.055,
+      "test_count": null,
+      "complete": true,
+      "passed": false,
+      "log": "action-confirmation.log",
+      "log_sha256": "a3096224b91ef82db45fdedf547b2d7261bfb98e0616375149e57029b1fc1732",
+      "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467"
+    },
+    "replay-confirmation": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "E:\\Software\\Agent_Company\\governance\\capability-governance\\reviews\\GOV-02-R4\\confirm_replay.py"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 6.897,
+      "test_count": null,
+      "complete": true,
+      "passed": false,
+      "log": "replay-confirmation.log",
+      "log_sha256": "2e3fe6d66751cd659b5dc6f9ef9358f4ec809536cbab0d57b34c0d394bec8d6a",
+      "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467"
+    },
+    "rollback-confirmation": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "E:\\Software\\Agent_Company\\governance\\capability-governance\\reviews\\GOV-02-R4\\confirm_rollback.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.231,
+      "test_count": null,
+      "complete": true,
+      "passed": true,
+      "log": "rollback-confirmation.log",
+      "log_sha256": "0d6aed82ec2d5d7d533ab1c156d2f981e2e9c8a74b4ca75f7e45bd4e0741a1d4",
+      "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467"
+    },
+    "import-boundaries-corrected": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "E:\\Software\\Agent_Company\\governance\\capability-governance\\reviews\\GOV-02-R4\\import_boundaries.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.045,
+      "test_count": 2,
+      "complete": true,
+      "passed": true,
+      "log": "import-boundaries-corrected.log",
+      "log_sha256": "a552da63c88998d26a35c508c41f239501a6172bd531d9aca029255ceb3edc0d",
+      "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467"
+    },
+    "static-review": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "E:\\Software\\Agent_Company\\governance\\capability-governance\\reviews\\GOV-02-R4\\static_review.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.271,
+      "test_count": null,
+      "complete": true,
+      "passed": true,
+      "log": "static-review.log",
+      "log_sha256": "a9512ebff3d30e930813908b7251ceb620b534b5d182b26823cc20bc83586b3f",
+      "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467"
+    }
+  },
+  "adversarial_acceptance": "FAIL",
+  "ready_for_owner_closure": "NO",
+  "integrity": {
+    "head": "c5de47440973c87023bbd6652aca984262ab17f7",
+    "non_R4_files_checked": 596,
+    "outside_R4_changed": [],
+    "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467",
+    "missing_stages": [],
+    "completed_stages": {
+      "targeted": {
+        "passed": true,
+        "complete": true,
+        "test_count": 107,
+        "log_sha256": "2bbc42485d9405f26048dccc56ee3d1d2482f9bdc28dc9f5052d6cddcdd2086d"
+      },
+      "adversarial": {
+        "passed": true,
+        "complete": true,
+        "test_count": 15,
+        "log_sha256": "09f5addb6148b542b8d10f581920478cceb5745927cade43d3d87da4aea26bf7"
+      },
+      "r3-adversarial": {
+        "passed": true,
+        "complete": true,
+        "test_count": 6,
+        "log_sha256": "a96e27c73359fd7bcc8bb3a7a21d249b0387ac4ac0fb80e9cce9bf075b7ac081"
+      },
+      "r3-multifile": {
+        "passed": true,
+        "complete": true,
+        "test_count": null,
+        "log_sha256": "75fb91bebd05980b8e6ab0d064261451010c124f464d34a890c0925f87dcfa84"
+      },
+      "affected": {
+        "passed": true,
+        "complete": true,
+        "test_count": 156,
+        "log_sha256": "d3faa3caafab20b569133b8f66294d264b8c078b1507fac6fe13e27949bbf2ab"
+      },
+      "focused": {
+        "passed": true,
+        "complete": true,
+        "test_count": 840,
+        "log_sha256": "a363ccbb03c8d295fa0d464a58daa989517f3d6bf037211f61b0b48d6c654036"
+      },
+      "full": {
+        "passed": true,
+        "complete": true,
+        "test_count": 1301,
+        "log_sha256": "bd59e9317d9817dbe79956cc4336333150c97fd22458c3c5f8898c57d60e40c4"
+      },
+      "validation": {
+        "passed": true,
+        "complete": true,
+        "test_count": null,
+        "log_sha256": "8a88e133cbc4083df3d1d1e5a2823fdcd689c94662d16193742b0aa030c3e0d6"
+      },
+      "diff-check": {
+        "passed": true,
+        "complete": true,
+        "test_count": null,
+        "log_sha256": "254b635731c6074e3302e4bf9f602d92a33aaa01510c6f1f644fff18bcb0808f"
+      },
+      "combined": {
+        "passed": false,
+        "complete": true,
+        "test_count": 3,
+        "log_sha256": "1400241a01d8a384cbd23e35277e4da10aea50758801eca6ab3a75c96c461e16"
+      },
+      "action-confirmation": {
+        "passed": false,
+        "complete": true,
+        "test_count": null,
+        "log_sha256": "a3096224b91ef82db45fdedf547b2d7261bfb98e0616375149e57029b1fc1732"
+      },
+      "replay-confirmation": {
+        "passed": false,
+        "complete": true,
+        "test_count": null,
+        "log_sha256": "2e3fe6d66751cd659b5dc6f9ef9358f4ec809536cbab0d57b34c0d394bec8d6a"
+      },
+      "rollback-confirmation": {
+        "passed": true,
+        "complete": true,
+        "test_count": null,
+        "log_sha256": "0d6aed82ec2d5d7d533ab1c156d2f981e2e9c8a74b4ca75f7e45bd4e0741a1d4"
+      },
+      "import-boundaries-corrected": {
+        "passed": true,
+        "complete": true,
+        "test_count": 2,
+        "log_sha256": "a552da63c88998d26a35c508c41f239501a6172bd531d9aca029255ceb3edc0d"
+      },
+      "static-review": {
+        "passed": true,
+        "complete": true,
+        "test_count": null,
+        "log_sha256": "a9512ebff3d30e930813908b7251ceb620b534b5d182b26823cc20bc83586b3f"
+      }
+    }
+  },
+  "review_only": true,
+  "implementation_modified": false,
+  "repository_commit_performed": false,
+  "orch01_started": false,
+  "completed_at_utc": "2026-10-03T12:43:52.787396+00:00"
+}

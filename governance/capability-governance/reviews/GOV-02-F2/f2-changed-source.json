@@ -1,0 +1,18 @@
+{
+  "runtime/core/capability_actions.py": {
+    "r3_sha256": "8ad2156fa33e72c1e6e2c71e8e27f9bea1c0f3ee61ebfc646bc53872408d8e52",
+    "f2_sha256": "b05df6ee494ee9da78734f1eaa35ec5d9d6dbdea351771cc29d8596b259a97f2"
+  },
+  "runtime/storage/execution_store.py": {
+    "r3_sha256": "1ea093b0660ee295416f67623d43850896c08300ddbb023c8f5b9552eaca0506",
+    "f2_sha256": "436106a903040e262ccc1af0359a194b9546348156c2aad741079e6c1d596647"
+  },
+  "runtime/actions/runtime.py": {
+    "r3_sha256": "7a8d1ac6e611ef4be201b305911b7bfc3ce7a2cbcbc6847f805545b223150eeb",
+    "f2_sha256": "4417353d0aee9584950a6492e39b5ff2dd4390182885024f0097315df87ab604"
+  },
+  "runtime/tests/test_capability_governance_f2.py": {
+    "r3_sha256": null,
+    "f2_sha256": "a59bb273f008d594e2c15c64848d94b22b7c1657c58757ef788c14d010ef6461"
+  }
+}

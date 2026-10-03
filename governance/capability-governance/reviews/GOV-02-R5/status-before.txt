@@ -1,0 +1,46 @@
+ M PROJECT_STATE.md
+ M README.md
+ M ROADMAP.md
+ M TODO.md
+ M runtime/actions/runtime.py
+ M runtime/approvals/runtime.py
+ M runtime/approvals/store.py
+ M runtime/core/jobs.py
+ M runtime/core/task_contract.py
+ M runtime/git/remote_runtime.py
+ M runtime/git/runtime.py
+ M runtime/progress/models.py
+ M runtime/review/context.py
+ M runtime/review/reviewers.py
+ M runtime/review/runtime.py
+ M runtime/review/store.py
+ M runtime/review/verification.py
+ M runtime/storage/execution_store.py
+ M runtime/tests/contract_fixtures.py
+ M runtime/tests/test_actions.py
+ M runtime/tests/test_approval.py
+ M runtime/tests/test_compute_policy.py
+ M runtime/tests/test_context_discovery.py
+ M runtime/tests/test_continuation.py
+ M runtime/tests/test_execution_results.py
+ M runtime/tests/test_external_content.py
+ M runtime/tests/test_git.py
+ M runtime/tests/test_progress_f1.py
+ M runtime/tests/test_providers.py
+ M runtime/tests/test_retry_policy.py
+ M runtime/tests/test_retry_repairs.py
+ M runtime/tests/test_review.py
+ M runtime/tests/test_scheduler_loop.py
+ M runtime/tests/test_task_contract_f1.py
+ M runtime/workers/worker.py
+ M schemas/progress-event.schema.json
+ M schemas/task-contract.schema.json
+?? governance/capability-governance/
+?? runtime/core/capability_actions.py
+?? runtime/core/capability_governance.py
+?? runtime/tests/test_capability_actions.py
+?? runtime/tests/test_capability_governance.py
+?? runtime/tests/test_capability_governance_f1.py
+?? runtime/tests/test_capability_governance_f2.py
+?? runtime/tests/test_capability_governance_f3.py
+?? schemas/capability-certification.schema.json

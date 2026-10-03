@@ -1,0 +1,10 @@
+{
+  "README.md": "fa7fb6c4a80438017158d56a35987a625fcd3e7bb5b99cad73ea59b568cc7032",
+  "VALIDATION.md": "cf02433d7045e4e526a6d4a6819aa87224a7787b99f54c3fb4276788c38d7471",
+  "validated-source.json": "aa1aadbc9366a850c3358446d758d7b3c1d725cb465532db16c2f8752d244c73",
+  "targeted-regression.json": "e6fc3dbc0f65af667a12ea8d2576003de200e6aa99064d54502fdf38e4f153fe",
+  "adversarial-regression.json": "f75dd609e7afe976dc10be8a5d41e7c69f9304fff876ba756b8b4d3c6fbbb0a0",
+  "affected-regression.json": "5fd75c85714ca95e5b13793a7f31b8245e72e864a21e5a2426363cbe9834b02a",
+  "focused-regression.json": "dd8759f18a9acac49781e7f01120e27a95e61767751c2cd3325987c187aa077e",
+  "full-regression.json": "6f60d9c6cb6565df0ca45b4e1721f79b3801a7b1e03c8165f6e113a6e588fbc0"
+}

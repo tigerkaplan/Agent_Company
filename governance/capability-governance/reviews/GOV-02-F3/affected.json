@@ -1,0 +1,23 @@
+{
+  "command": [
+    "C:\\Python314\\python.exe",
+    "-B",
+    "-m",
+    "unittest",
+    "runtime.tests.test_capability_governance_f3",
+    "runtime.tests.test_git",
+    "runtime.tests.test_remote_git",
+    "runtime.tests.test_review",
+    "runtime.tests.test_approval",
+    "runtime.tests.test_worker",
+    "-v"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 619.573,
+  "test_count": 163,
+  "complete": true,
+  "passed": true,
+  "log": "affected.log",
+  "log_sha256": "dbbf6634ab9a3c5951ca1d9f4b5670e6beb6006551f412adb013ee68fd1c54cb",
+  "source_sha256": "818b02044ea789a75ae69881c919dcf6ad3c841f437c66af72ff6728c6258a92"
+}

@@ -1,0 +1,181 @@
+[
+  {
+    "case": "duplicate-approval",
+    "value": "same",
+    "error": "capability_governance_rejected: Approval request is invalid: approval-2d4c1abbfbad30c9dbdfc3347474d6f6: Approval artifact is not canonical",
+    "commands": [
+      "rev-parse",
+      "rev-parse"
+    ],
+    "target_head_unchanged": true
+  },
+  {
+    "case": "duplicate-approval",
+    "value": "different",
+    "error": "capability_governance_rejected: Approval request is invalid: approval-d368dff01dae4562c320f4321878e447: Approval artifact is not canonical",
+    "commands": [
+      "rev-parse",
+      "rev-parse"
+    ],
+    "target_head_unchanged": true
+  },
+  {
+    "case": "retained-failure-combined",
+    "action": "commit",
+    "partial_failure": false,
+    "restart": {
+      "denied": true,
+      "error": "capability_audit_incomplete: Failure trace is unavailable; explicit recovery required",
+      "commands": [
+        "rev-parse",
+        "rev-parse",
+        "rev-parse",
+        "rev-parse",
+        "status",
+        "config",
+        "config"
+      ]
+    },
+    "canonical_authorities_unchanged": true,
+    "surviving_failure_unchanged": true,
+    "target_unchanged": true
+  },
+  {
+    "case": "retained-failure-combined",
+    "action": "commit",
+    "partial_failure": true,
+    "restart": {
+      "denied": true,
+      "error": "capability_audit_incomplete: Failure trace is unavailable; explicit recovery required",
+      "commands": [
+        "rev-parse",
+        "rev-parse",
+        "rev-parse",
+        "rev-parse",
+        "status",
+        "config",
+        "config"
+      ]
+    },
+    "canonical_authorities_unchanged": true,
+    "surviving_failure_unchanged": true,
+    "target_unchanged": true
+  },
+  {
+    "case": "retained-failure-combined",
+    "action": "push",
+    "partial_failure": false,
+    "restart": {
+      "denied": true,
+      "error": "capability_audit_incomplete: Failure trace is unavailable; explicit recovery required",
+      "commands": [
+        "rev-parse",
+        "remote",
+        "remote",
+        "ls-remote"
+      ]
+    },
+    "canonical_authorities_unchanged": true,
+    "surviving_failure_unchanged": true,
+    "target_unchanged": true
+  },
+  {
+    "case": "retained-failure-combined",
+    "action": "push",
+    "partial_failure": true,
+    "restart": {
+      "denied": true,
+      "error": "capability_audit_incomplete: Failure trace is unavailable; explicit recovery required",
+      "commands": [
+        "rev-parse",
+        "remote",
+        "remote",
+        "ls-remote"
+      ]
+    },
+    "canonical_authorities_unchanged": true,
+    "surviving_failure_unchanged": true,
+    "target_unchanged": true
+  },
+  {
+    "case": "staging-combined",
+    "loss": "effect",
+    "error": "capability_governance_rejected: Git mutation requires intact uncompleted action consumption",
+    "commands": [
+      "rev-parse",
+      "rev-parse",
+      "rev-parse",
+      "rev-parse",
+      "status",
+      "config",
+      "config",
+      "add",
+      "diff"
+    ],
+    "restart": {
+      "denied": true,
+      "error": "capability_audit_incomplete: Failure trace is unavailable; explicit recovery required",
+      "commands": [
+        "rev-parse",
+        "rev-parse",
+        "rev-parse",
+        "rev-parse",
+        "status"
+      ]
+    },
+    "target_head_unchanged": true,
+    "canonical_authorities_unchanged": true
+  },
+  {
+    "case": "staging-combined",
+    "loss": "effect-and-policy-witness",
+    "error": "capability_audit_incomplete: Failure trace is unavailable; explicit recovery required",
+    "commands": [
+      "rev-parse",
+      "rev-parse",
+      "rev-parse",
+      "rev-parse",
+      "status",
+      "config",
+      "config",
+      "add",
+      "diff"
+    ],
+    "restart": {
+      "denied": true,
+      "error": "capability_governance_rejected: Decision trace unavailable; explicit recovery required",
+      "commands": [
+        "rev-parse",
+        "rev-parse"
+      ]
+    },
+    "target_head_unchanged": true,
+    "canonical_authorities_unchanged": true
+  },
+  {
+    "case": "staging-combined",
+    "loss": "effect-and-approval",
+    "error": "capability_governance_rejected: Approval request not found: approval-01eede0f1267ee7b4f6f0dc80be94121",
+    "commands": [
+      "rev-parse",
+      "rev-parse",
+      "rev-parse",
+      "rev-parse",
+      "status",
+      "config",
+      "config",
+      "add",
+      "diff"
+    ],
+    "restart": {
+      "denied": true,
+      "error": "commit_approval_missing: Approval request not found: approval-01eede0f1267ee7b4f6f0dc80be94121",
+      "commands": [
+        "rev-parse",
+        "rev-parse"
+      ]
+    },
+    "target_head_unchanged": true,
+    "canonical_authorities_unchanged": false
+  }
+]

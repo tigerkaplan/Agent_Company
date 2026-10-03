@@ -1,0 +1,24 @@
+{
+  "case": "consumed-git-generation-refunded-despite-retained-failure",
+  "first_error": "git_stage_failed: R4 simulated staging failure",
+  "first_target_unchanged": true,
+  "retained_failure": {
+    "evidence": {
+      "approved_scope_digest": "d0936f0f620ddf4f176a18a5ebb4e2e6e80a75815e17a313b159faee72228bbb"
+    },
+    "policy_digest": "a1d9c1e7b222be8562f910431b9c3f0baa1b63b1daab651718bd2e5a93b6894b",
+    "result": {
+      "effect_may_be_partial": true,
+      "error_code": "git_stage_failed",
+      "status": "FAILED"
+    },
+    "schema_version": 1
+  },
+  "retained_failure_pair_unchanged": true,
+  "child_returncode": 0,
+  "child_stdout": "{\"accepted\": false, \"error\": \"capability_audit_incomplete: Failure trace is unavailable; explicit recovery required\", \"commit_count_before\": \"1\", \"commit_count_after\": \"1\"}\n",
+  "child_stderr": "",
+  "commit_created_after_restart": false,
+  "same_canonical_approval_id": "approval-da3a66543e4b4a0d6941210e0d4a9751",
+  "new_human_approval": false
+}

@@ -16,11 +16,11 @@ from runtime.tests.test_providers import CliAdapterTests
 from types import SimpleNamespace
 from runtime.providers.artifacts import FileProviderArtifactStore
 from runtime.providers.config import ProviderConfiguration, ProviderConfigError
-from runtime.providers.executor import ProviderExecutor
+from runtime.tests.contract_fixtures import CertifiedProviderFixture as ProviderExecutor
 from runtime.providers.models import ExecutionPackage, ProviderExecutionResult
 from runtime.providers.routing import ProviderRouter
 from runtime.review.models import ReviewPackage, VerificationResult
-from runtime.review.reviewers import ProviderBackedReviewer
+from runtime.tests.contract_fixtures import CertifiedReviewerFixture as ProviderBackedReviewer
 from runtime.storage.execution_store import FileExecutionStore
 from runtime.core.jobs import JobRuntime
 from runtime.tests.test_providers import FakeAdapter, REPOSITORY_ROOT, request

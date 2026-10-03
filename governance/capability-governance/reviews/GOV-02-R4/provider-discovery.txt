@@ -1,0 +1,7 @@
+
+Name      Source                                     
+----      ------                                     
+codex.ps1 C:\Users\DELL\AppData\Roaming\npm\codex.ps1
+
+
+

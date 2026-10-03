@@ -1,0 +1,37 @@
+[
+  {
+    "case": "commit-journal-only-rollback-fresh-process",
+    "success": true,
+    "effect_performed": false,
+    "commit_created": true,
+    "effect_pair_survived": true,
+    "authority_job_approval_files_unchanged": true,
+    "authority_fingerprints": {
+      "state\\approvals\\approval-09e6bacc2745d4061b4eac3c64553e10.approval.json": "4ce3ac92a5650a9f27bc1543314e18b8abb135ced10bf08d23bb189920e073ff",
+      "state\\approvals\\approval-e2e8f26faffc404356321c9a98032889.approval.json": "4a95e23e68b6b80c904785c1d67c26f0f2c428473c1cee1e0ef8ae29e786bd3c",
+      "state\\jobs\\.retry-policy\\.acceptance-creation\\retry-policy-d318924629f6e342ea7f889bdf799e7f\\0000.json": "1989b52bda881cb6b63c8e3b056e1ca0738f5f7495cdd2c7b9c3ab9f3cc0eb85",
+      "state\\jobs\\.retry-policy\\.accepted-revisions\\retry-policy-d318924629f6e342ea7f889bdf799e7f\\0000.json": "1989b52bda881cb6b63c8e3b056e1ca0738f5f7495cdd2c7b9c3ab9f3cc0eb85",
+      "state\\jobs\\.retry-policy\\.creation-evidence\\retry-policy-d318924629f6e342ea7f889bdf799e7f.created.json": "1d9d12e523a6e49ea3dbc0eea46e4de7d564c6ba4b2fa665da1ac2067d8c1eb6",
+      "state\\jobs\\.retry-policy\\.state\\retry-policy-d318924629f6e342ea7f889bdf799e7f.state.json": "fad3690f15a51ba9ff7f525525b44130dd087afba3b41d54d70584a86331c5f0",
+      "state\\jobs\\.retry-policy\\retry-policy-d318924629f6e342ea7f889bdf799e7f.json": "1d9d12e523a6e49ea3dbc0eea46e4de7d564c6ba4b2fa665da1ac2067d8c1eb6",
+      "state\\jobs\\.task-contracts\\job-0b7b7372e69c48e9a27d6a81be767d61.anchor.json": "2aa6c595dbe41abff4077c8f500d8627473a959fca3db27536a8e1748515ad1e",
+      "state\\jobs\\.task-contracts\\job-0b7b7372e69c48e9a27d6a81be767d61.completion-anchor.json": "52e1d28f66b4a8bf6b19bf965bad7ca7604c4c7a15e9707218cab0e60f2dd10f",
+      "state\\jobs\\.task-contracts\\job-0b7b7372e69c48e9a27d6a81be767d61.completion-witness.json": "52e1d28f66b4a8bf6b19bf965bad7ca7604c4c7a15e9707218cab0e60f2dd10f",
+      "state\\jobs\\.task-contracts\\job-0b7b7372e69c48e9a27d6a81be767d61.gate-anchor.json": "f5fc65fa0eec022892386e892fa420309ae30f311cad223279ab512970e42d0e",
+      "state\\jobs\\.task-contracts\\job-0b7b7372e69c48e9a27d6a81be767d61.gate-witness.json": "f5fc65fa0eec022892386e892fa420309ae30f311cad223279ab512970e42d0e",
+      "state\\jobs\\.task-contracts\\job-0b7b7372e69c48e9a27d6a81be767d61.witness.json": "2aa6c595dbe41abff4077c8f500d8627473a959fca3db27536a8e1748515ad1e",
+      "state\\jobs\\job-0b7b7372e69c48e9a27d6a81be767d61.json": "4d62873e85eac4ea24fc528737cdfefecd18184643fd635dc1b4a78da7e31f30"
+    },
+    "child_returncode": 3,
+    "child_stdout": "{\"accepted\": true, \"error\": null, \"commit_count_before\": \"2\", \"commit_count_after\": \"2\"}\n",
+    "child_stderr": ""
+  },
+  {
+    "case": "fake-pr-journal-only-rollback-after-effect",
+    "success": true,
+    "effect_performed": false,
+    "adapter_create_calls": 1,
+    "effect_pair_survived": true,
+    "authority_job_approval_files_unchanged": true
+  }
+]

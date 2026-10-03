@@ -69,6 +69,10 @@ class ProviderBackedReviewer:
             inputs=deepcopy(list(package.available_evidence_refs)), expected_outputs=[],
             allowed_tools=["provider_call"], allowed_capabilities=["independent_review"],
             write_scope=None, blast_radius="none", reversibility="no_side_effect", delegation_level="L1")
+        contract["capability_profile"] = "READ_ONLY"
+        from runtime.core.capability_governance import require_child
+        require_child(parent, {**parent, "task_contract": contract,
+                              "execution_mode": "READ_ONLY", "execution_scope": None})
         review_request = ExecutionRequest(
             execution_id=f"review-execution-{package.review_id}",
             job_id=str(package.job["job_id"]),

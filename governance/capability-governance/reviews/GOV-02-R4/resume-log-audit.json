@@ -1,0 +1,99 @@
+{
+  "head": "c5de47440973c87023bbd6652aca984262ab17f7",
+  "non_R4_files_checked": 596,
+  "outside_R4_changed": [],
+  "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467",
+  "missing_stages": [],
+  "completed_stages": {
+    "targeted": {
+      "passed": true,
+      "complete": true,
+      "test_count": 107,
+      "log_sha256": "2bbc42485d9405f26048dccc56ee3d1d2482f9bdc28dc9f5052d6cddcdd2086d"
+    },
+    "adversarial": {
+      "passed": true,
+      "complete": true,
+      "test_count": 15,
+      "log_sha256": "09f5addb6148b542b8d10f581920478cceb5745927cade43d3d87da4aea26bf7"
+    },
+    "r3-adversarial": {
+      "passed": true,
+      "complete": true,
+      "test_count": 6,
+      "log_sha256": "a96e27c73359fd7bcc8bb3a7a21d249b0387ac4ac0fb80e9cce9bf075b7ac081"
+    },
+    "r3-multifile": {
+      "passed": true,
+      "complete": true,
+      "test_count": null,
+      "log_sha256": "75fb91bebd05980b8e6ab0d064261451010c124f464d34a890c0925f87dcfa84"
+    },
+    "affected": {
+      "passed": true,
+      "complete": true,
+      "test_count": 156,
+      "log_sha256": "d3faa3caafab20b569133b8f66294d264b8c078b1507fac6fe13e27949bbf2ab"
+    },
+    "focused": {
+      "passed": true,
+      "complete": true,
+      "test_count": 840,
+      "log_sha256": "a363ccbb03c8d295fa0d464a58daa989517f3d6bf037211f61b0b48d6c654036"
+    },
+    "full": {
+      "passed": true,
+      "complete": true,
+      "test_count": 1301,
+      "log_sha256": "bd59e9317d9817dbe79956cc4336333150c97fd22458c3c5f8898c57d60e40c4"
+    },
+    "validation": {
+      "passed": true,
+      "complete": true,
+      "test_count": null,
+      "log_sha256": "8a88e133cbc4083df3d1d1e5a2823fdcd689c94662d16193742b0aa030c3e0d6"
+    },
+    "diff-check": {
+      "passed": true,
+      "complete": true,
+      "test_count": null,
+      "log_sha256": "254b635731c6074e3302e4bf9f602d92a33aaa01510c6f1f644fff18bcb0808f"
+    },
+    "combined": {
+      "passed": false,
+      "complete": true,
+      "test_count": 3,
+      "log_sha256": "1400241a01d8a384cbd23e35277e4da10aea50758801eca6ab3a75c96c461e16"
+    },
+    "action-confirmation": {
+      "passed": false,
+      "complete": true,
+      "test_count": null,
+      "log_sha256": "a3096224b91ef82db45fdedf547b2d7261bfb98e0616375149e57029b1fc1732"
+    },
+    "replay-confirmation": {
+      "passed": false,
+      "complete": true,
+      "test_count": null,
+      "log_sha256": "2e3fe6d66751cd659b5dc6f9ef9358f4ec809536cbab0d57b34c0d394bec8d6a"
+    },
+    "rollback-confirmation": {
+      "passed": true,
+      "complete": true,
+      "test_count": null,
+      "log_sha256": "0d6aed82ec2d5d7d533ab1c156d2f981e2e9c8a74b4ca75f7e45bd4e0741a1d4"
+    },
+    "import-boundaries-corrected": {
+      "passed": true,
+      "complete": true,
+      "test_count": 2,
+      "log_sha256": "a552da63c88998d26a35c508c41f239501a6172bd531d9aca029255ceb3edc0d"
+    },
+    "static-review": {
+      "passed": true,
+      "complete": true,
+      "test_count": null,
+      "log_sha256": "a9512ebff3d30e930813908b7251ceb620b534b5d182b26823cc20bc83586b3f"
+    }
+  }
+}

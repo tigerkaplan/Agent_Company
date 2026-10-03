@@ -472,7 +472,7 @@ class ApprovalRuntime:
                     raise ApprovalRuntimeError(
                         "Review store is required to restore an approval boundary"
                     )
-                review_record = self.review_store.load(request.review_id).get(
+                review_record = self.review_store.load(request.review_id, require_authority=True).get(
                     "result", {}
                 )
                 if (
@@ -506,7 +506,7 @@ class ApprovalRuntime:
                     raise ApprovalRuntimeError(
                         "Execution store is required to restore a human boundary"
                     )
-                record = self.execution_store.load(request.execution_id)
+                record = self.execution_store.load(request.execution_id, require_authority=True)
                 if (
                     record.result.job_id != request.job_id
                     or record.result.status != "needs_human"
@@ -694,7 +694,7 @@ class ApprovalRuntime:
         if self.execution_store is None:
             return {"execution_id": execution_id, "artifact_loaded": False}
         try:
-            result = self.execution_store.load(execution_id).result.to_dict()
+            result = self.execution_store.load(execution_id, require_authority=True).result.to_dict()
         except ExecutionStoreError as error:
             raise ApprovalRuntimeError(str(error)) from error
         summary = {
@@ -710,7 +710,7 @@ class ApprovalRuntime:
         if self.review_store is None:
             return {"review_id": review_id, "artifact_loaded": False}
         try:
-            result = self.review_store.load(review_id).get("result", {})
+            result = self.review_store.load(review_id, require_authority=True).get("result", {})
         except ReviewStoreError as error:
             raise ApprovalRuntimeError(str(error)) from error
         summary = {

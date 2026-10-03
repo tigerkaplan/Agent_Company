@@ -1,0 +1,13 @@
+{
+  "command": [
+    "python",
+    "-B",
+    "governance\\capability-governance\\reviews\\GOV-02-R1\\adversarial_checks.py"
+  ],
+  "exit_code": 1,
+  "tests": 4,
+  "failed": 4,
+  "seconds": 0.16,
+  "log_sha256": "20418bd725abc6da3fc792dca68915ddeeec9073bfeeed79db4f0134e0858382",
+  "probe_results_sha256": "a44a7f90dd3307a1b49553e45965911b7b9780c7a089a98fa44b16cb70eb3cfe"
+}

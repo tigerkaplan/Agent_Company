@@ -1,0 +1,16 @@
+{
+  "command": [
+    "C:\\Python314\\python.exe",
+    "-B",
+    "E:\\Software\\Agent_Company\\governance\\capability-governance\\reviews\\GOV-02-R5\\adversarial.py",
+    "-v"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 111.341,
+  "test_count": 6,
+  "complete": true,
+  "passed": true,
+  "log": "r3-adversarial.log",
+  "log_sha256": "fa0a905a68964c8d28a2ffff8f0f23d420d6d0f36401c231a8e87bc74fb23047",
+  "source_sha256": "db84c2bc9dc114377ffe5002167b2c3a8e2211c32e7974ebec9eb37296c9fbb2"
+}

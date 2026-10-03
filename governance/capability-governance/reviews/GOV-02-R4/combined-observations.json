@@ -1,0 +1,345 @@
+[
+  {
+    "case": "git-journal-rollback-after-consumption",
+    "commit_created": true,
+    "success": true,
+    "error": null,
+    "result_trace": {
+      "effect_performed": false,
+      "evidence": {
+        "change_set": {
+          "approval_ref": {
+            "description": "Scoped human approval request and decision",
+            "ref": "runtime-approval:approval-6aee21171cbab218502a35af0bedd710",
+            "ref_type": "approval"
+          },
+          "base_head": "75a1b261302c9bf28b6f58a0052aa748719f1912",
+          "change_set_id": "change-set-e8a06d6ddf03cc1d47681141dbeb5b8b",
+          "changed_files": [
+            "hello.txt"
+          ],
+          "commit_evidence_ref": {
+            "description": "Independently verified Git commit evidence",
+            "ref": "runtime-git-commit:commit-30fa77f2dbe2886f8df4053ac8ef6d0b",
+            "ref_type": "artifact"
+          },
+          "commit_message": "Apply verified hello update",
+          "created_at": "2026-10-03T11:52:21.427198Z",
+          "created_files": [],
+          "deleted_files": [],
+          "diff_fingerprint": "7d3d5066c5038a70e984519a4246eb73adb81e892ec84492a653afafa2eec978",
+          "diff_ref": {
+            "description": "Bounded runtime-generated Git change-set diff",
+            "ref": "runtime-git-diff:change-set-e8a06d6ddf03cc1d47681141dbeb5b8b",
+            "ref_type": "artifact"
+          },
+          "dry_run": false,
+          "error": null,
+          "execution_id": "execution-job-f7e8b536d06d4183a7191965033a50ff",
+          "job_id": "job-f7e8b536d06d4183a7191965033a50ff",
+          "modified_files": [
+            "hello.txt"
+          ],
+          "mutation_ref": {
+            "description": "Independent bounded mutation evidence",
+            "ref": "runtime-mutation:execution-job-f7e8b536d06d4183a7191965033a50ff",
+            "ref_type": "artifact"
+          },
+          "repository_root": "C:\\Users\\DELL\\AppData\\Local\\Temp\\tmppucpcmmy\\target",
+          "schema_version": 1,
+          "scope_fingerprint": "76b48655f40f2ffd96d6171cdf133b19d1269c4982d46ec65ae81feb8918a7ba",
+          "status": "COMMITTED",
+          "unrelated_files": [],
+          "unrelated_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "worktree_fingerprint": "2818e06844cc63172175a327be067ab432d823c078833f5bd64d6be76f94f83a"
+        },
+        "commit_evidence": {
+          "approval_ref": {
+            "description": "Scoped human approval request and decision",
+            "ref": "runtime-approval:approval-6aee21171cbab218502a35af0bedd710",
+            "ref_type": "approval"
+          },
+          "author_email": "agent-company@example.invalid",
+          "author_name": "Agent Company Test",
+          "change_set_id": "change-set-e8a06d6ddf03cc1d47681141dbeb5b8b",
+          "commit_hash": "30fa77f2dbe2886f8df4053ac8ef6d0b28009c59",
+          "commit_message": "Apply verified hello update",
+          "committed_at": "2026-10-03T12:52:22+01:00",
+          "committed_files": [
+            "hello.txt"
+          ],
+          "diff_fingerprint": "7d3d5066c5038a70e984519a4246eb73adb81e892ec84492a653afafa2eec978",
+          "evidence_fingerprint": "ab0ce4216028b9d1f293c9c73260ee86d0098412c38c15a8b6ffd925773a5039",
+          "evidence_id": "commit-30fa77f2dbe2886f8df4053ac8ef6d0b",
+          "execution_id": "execution-job-f7e8b536d06d4183a7191965033a50ff",
+          "job_id": "job-f7e8b536d06d4183a7191965033a50ff",
+          "parent_hash": "75a1b261302c9bf28b6f58a0052aa748719f1912",
+          "repository_root": "C:\\Users\\DELL\\AppData\\Local\\Temp\\tmppucpcmmy\\target",
+          "schema_version": 1
+        }
+      },
+      "policy_digest": "d7e0654209bbb91de4e55634e3bae1ddde40c9835b105823778931af1838de7d",
+      "result_digest": "a6b4338d99420a39cf914c61b31b0dbc06787c519c25457aa9be4307822ca1aa",
+      "schema_version": 1
+    },
+    "surviving_effect_pair": true,
+    "restart_accepted": true,
+    "restart_error": null
+  },
+  {
+    "case": "git-loss-after-staging",
+    "stage": "action-policy",
+    "commit_created": true,
+    "success": false,
+    "error": "capability_audit_incomplete: Failure trace is unavailable; explicit recovery required",
+    "commands": [
+      [
+        "rev-parse",
+        "--is-inside-work-tree"
+      ],
+      [
+        "rev-parse",
+        "--show-toplevel"
+      ],
+      [
+        "rev-parse",
+        "HEAD"
+      ],
+      [
+        "rev-parse",
+        "--verify",
+        "HEAD"
+      ],
+      [
+        "status",
+        "--porcelain=v1",
+        "-z",
+        "--untracked-files=all"
+      ],
+      [
+        "config",
+        "--local",
+        "--get",
+        "user.name"
+      ],
+      [
+        "config",
+        "--local",
+        "--get",
+        "user.email"
+      ],
+      [
+        "add",
+        "--",
+        "hello.txt"
+      ],
+      [
+        "diff",
+        "--cached",
+        "--name-only",
+        "-z"
+      ],
+      [
+        "commit",
+        "-m",
+        "Apply verified hello update",
+        "--only",
+        "--",
+        "hello.txt"
+      ],
+      [
+        "show",
+        "-s",
+        "--format=%H%x00%P%x00%an%x00%ae%x00%aI%x00%B",
+        "HEAD"
+      ],
+      [
+        "diff-tree",
+        "--no-commit-id",
+        "--name-only",
+        "-r",
+        "-z",
+        "fde7339b983e0364607cc34590168b72c634d722"
+      ],
+      [
+        "rev-parse",
+        "--verify",
+        "HEAD"
+      ],
+      [
+        "status",
+        "--porcelain=v1",
+        "-z",
+        "--untracked-files=all"
+      ]
+    ]
+  },
+  {
+    "case": "git-loss-after-staging",
+    "stage": "action-effect",
+    "commit_created": true,
+    "success": false,
+    "error": "capability_governance_rejected: Decision trace unavailable; explicit recovery required",
+    "commands": [
+      [
+        "rev-parse",
+        "--is-inside-work-tree"
+      ],
+      [
+        "rev-parse",
+        "--show-toplevel"
+      ],
+      [
+        "rev-parse",
+        "HEAD"
+      ],
+      [
+        "rev-parse",
+        "--verify",
+        "HEAD"
+      ],
+      [
+        "status",
+        "--porcelain=v1",
+        "-z",
+        "--untracked-files=all"
+      ],
+      [
+        "config",
+        "--local",
+        "--get",
+        "user.name"
+      ],
+      [
+        "config",
+        "--local",
+        "--get",
+        "user.email"
+      ],
+      [
+        "add",
+        "--",
+        "hello.txt"
+      ],
+      [
+        "diff",
+        "--cached",
+        "--name-only",
+        "-z"
+      ],
+      [
+        "commit",
+        "-m",
+        "Apply verified hello update",
+        "--only",
+        "--",
+        "hello.txt"
+      ],
+      [
+        "show",
+        "-s",
+        "--format=%H%x00%P%x00%an%x00%ae%x00%aI%x00%B",
+        "HEAD"
+      ],
+      [
+        "diff-tree",
+        "--no-commit-id",
+        "--name-only",
+        "-r",
+        "-z",
+        "deb3a94436c5991298a7f1726b1028b8bb340d83"
+      ],
+      [
+        "rev-parse",
+        "--verify",
+        "HEAD"
+      ],
+      [
+        "status",
+        "--porcelain=v1",
+        "-z",
+        "--untracked-files=all"
+      ]
+    ]
+  },
+  {
+    "case": "remote-push-rollback-after-effect",
+    "remote_head": "81108c4add10bd11725ec5c64665c40f4cedf34d\trefs/heads/phase-6j-test",
+    "success": true,
+    "error": null,
+    "result_trace": {
+      "effect_performed": false,
+      "evidence": {
+        "push_evidence": {
+          "already_present": false,
+          "approval_ref": {
+            "description": "Scoped human approval request and decision",
+            "ref": "runtime-approval:approval-17a44c4210341e41f6dbad997c8ea275",
+            "ref_type": "approval"
+          },
+          "change_set_id": "change-set-2f7a4745fe2baa0accbda5a12f260766",
+          "commit_evidence_ref": {
+            "description": "Independently verified Git commit evidence",
+            "ref": "runtime-git-commit:commit-81108c4add10bd11725ec5c64665c40f",
+            "ref_type": "artifact"
+          },
+          "commit_hash": "81108c4add10bd11725ec5c64665c40f4cedf34d",
+          "evidence_fingerprint": "b53fb722022ae4ba66e9282aaa6d5be968a806efd2d785caa7ce2d42c1ed8fa5",
+          "push_evidence_id": "push-84ae103ebb79551d07fb145cf1e255de",
+          "push_plan_id": "push-plan-8ca5a1d93336cf146ac9486f08fb70fb",
+          "pushed_at": "2026-10-03T11:52:40.214496Z",
+          "remote_branch": "phase-6j-test",
+          "remote_head_after": "81108c4add10bd11725ec5c64665c40f4cedf34d",
+          "remote_head_before": null,
+          "remote_name": "origin",
+          "remote_url_display": "local:C:\\Users\\DELL\\AppData\\Local\\Temp\\tmppchj_v5b\\remote.git",
+          "remote_url_fingerprint": "ff2d39dd77ac56f5408cbc3d0e172d5864e9504ec5d171b450691b683a4e6620",
+          "repository_root": "C:\\Users\\DELL\\AppData\\Local\\Temp\\tmppchj_v5b\\target",
+          "schema_version": 1
+        },
+        "push_plan": {
+          "approval_ref": {
+            "description": "Scoped human approval request and decision",
+            "ref": "runtime-approval:approval-17a44c4210341e41f6dbad997c8ea275",
+            "ref_type": "approval"
+          },
+          "change_set_id": "change-set-2f7a4745fe2baa0accbda5a12f260766",
+          "commit_evidence_ref": {
+            "description": "Independently verified Git commit evidence",
+            "ref": "runtime-git-commit:commit-81108c4add10bd11725ec5c64665c40f",
+            "ref_type": "artifact"
+          },
+          "commit_hash": "81108c4add10bd11725ec5c64665c40f4cedf34d",
+          "created_at": "2026-10-03T11:52:38.484189Z",
+          "dry_run": false,
+          "execution_id": "execution-job-0dec92a071344d5d82e9f37318ec30fc",
+          "expected_remote_head": null,
+          "job_id": "job-0dec92a071344d5d82e9f37318ec30fc",
+          "local_branch": "master",
+          "parent_hash": "a91f73e2595b101e4dbd5c25b5d4489f8beab4b2",
+          "push_evidence_ref": {
+            "description": "Independently verified remote Git push evidence",
+            "ref": "runtime-git-push:push-84ae103ebb79551d07fb145cf1e255de",
+            "ref_type": "artifact"
+          },
+          "push_plan_id": "push-plan-8ca5a1d93336cf146ac9486f08fb70fb",
+          "remote_branch": "phase-6j-test",
+          "remote_host": null,
+          "remote_kind": "local",
+          "remote_name": "origin",
+          "remote_url_display": "local:C:\\Users\\DELL\\AppData\\Local\\Temp\\tmppchj_v5b\\remote.git",
+          "remote_url_fingerprint": "ff2d39dd77ac56f5408cbc3d0e172d5864e9504ec5d171b450691b683a4e6620",
+          "repository_root": "C:\\Users\\DELL\\AppData\\Local\\Temp\\tmppchj_v5b\\target",
+          "repository_slug": null,
+          "schema_version": 1,
+          "status": "PUSHED"
+        }
+      },
+      "policy_digest": "8d44aa8241193c954dc543d7bf7c1fe3daab554b9e642aac63b6b4bd85beb510",
+      "result_digest": "4643c592933050686e4e7fab67c6e0e5be07c3eb397898a183e323e77ec4be7c",
+      "schema_version": 1
+    },
+    "restart_accepted": true,
+    "restart_error": null
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "command": [
+    "C:\\Python314\\python.exe",
+    "-B",
+    "-m",
+    "unittest",
+    "runtime.tests.test_git",
+    "runtime.tests.test_remote_git",
+    "runtime.tests.test_review",
+    "runtime.tests.test_approval",
+    "runtime.tests.test_worker",
+    "-v"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 1163.078,
+  "test_count": 156,
+  "passed": true,
+  "log": "affected.log",
+  "log_sha256": "18184ce188e8851a39505ee47a6d968552735f27442d6d7d289dbab0cf6f494b"
+}

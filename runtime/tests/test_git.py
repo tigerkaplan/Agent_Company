@@ -248,6 +248,12 @@ class GitRuntimeTests(unittest.TestCase):
             execution_mode="CONTROLLED_WRITE",
             dry_run=False,
         )
+        from runtime.core.capability_governance import certified_dispatch, consume_effect
+        from runtime.workers.worker import Worker
+        request = Worker._build_request(running, execution_id, ())
+        self.executions.begin_decision(request, executor="deterministic-controlled-fixture", runtime=self.jobs, job=running)
+        with certified_dispatch(self.executions, request):
+            consume_effect(request, "controlled_write")
         self.executions.create(request, result)
         reviewing = self.jobs.record_execution_success(
             created_job["job_id"], [execution_ref, mutation_ref]
@@ -282,7 +288,9 @@ class GitRuntimeTests(unittest.TestCase):
             context=(ContextEntry(ref="test", description="test", content="test"),),
             evidence=(),
         )
-        review_ref = self.reviews.create(package, review, "review output", execution_request=request.to_dict())
+        with certified_dispatch(self.executions, request, purpose="review"):
+            self.reviews.begin_decision(review_id, reviewing, request, result, "reviewer")
+            review_ref = self.reviews.create(package, review, "review output", execution_request=request.to_dict())
         if review_decision == "PASS":
             self.jobs.apply_review_decision(
                 created_job["job_id"],

@@ -1,0 +1,30 @@
+{
+  "prompt_id": "GOV-02-R5-POLICY-RECONCILE",
+  "canonical_distinct_provider_requirement": "NO",
+  "canonical_distinct_model_requirement": "NO",
+  "sources": {
+    "CONSTITUTION.md": {
+      "sha256": "25273cdad156d808e5cff2e370287e40791070eefd8dc08460bebceaca74c407"
+    },
+    "AGENTS.md": {
+      "sha256": "39349be67961e6ffcdefb3288c7228b419f7c14e880efbef69f86bb6ea3624ed"
+    },
+    "skills/shared/review/SKILL.md": {
+      "sha256": "c3b6c504394753f692642292b4a0588f48fdf1ffc425b6afc3ac048bd46f801e"
+    }
+  },
+  "exact_requirements": {
+    "CONSTITUTION.md:41": "Important, risky, user-facing, security-sensitive, financial, or irreversible work must be validated by a reviewer or gatekeeper that is independent from the initial executor.",
+    "AGENTS.md:57": "Critical work requires independent validation. The reviewer or gatekeeper should check the actual output, relevant source files, and tool results rather than trusting an executor summary.",
+    "skills/shared/review/SKILL.md:26": "- Stay independent from the executor.",
+    "CONSTITUTION.md:7": "1. The company core is provider-independent."
+  },
+  "distinction": "Reviewer independence concerns separation from the executor and evidence-based validation. Provider independence concerns a core and canonical policy that do not depend on a particular engine. Neither specifies a different model or provider for acceptance.",
+  "earlier_interpretation": "Superseded: lower-level routing fallback was treated as a universal canonical acceptance gate.",
+  "routing_disclosure": "The earlier report cited real different-provider fallback/escalation text. It is not deleted or claimed absent. Under the current human instruction and AGENTS.md precedence, it is not an additional universal acceptance requirement in the three requested canonical sources. Routing files and provider adapters are unchanged.",
+  "provider_diversity": "NOT ESTABLISHED; same-provider review disclosed",
+  "technical_results_reused_without_rerun": true,
+  "corrected_review": "PASS",
+  "ready_for_owner_closure": "YES",
+  "owner_status": "GOV-02 remains OPEN and uncommitted until owner closure"
+}

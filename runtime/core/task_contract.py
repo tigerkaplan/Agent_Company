@@ -131,7 +131,7 @@ def default_contract(job):
             "required_checks": checks, "required_evidence": [],
             "stop_conditions": [{"kind": "on_blocker"}],
             "risk": job["risk_level"], "blast_radius": "local" if write else "none",
-            "reversibility": "reversible" if write else "no_side_effect",
+            "reversibility": ("irreversible" if scope.get("write_mode") == "CREATE_MODIFY_DELETE" else "reversible") if write else "no_side_effect",
             "delegation_level": ("L5" if write and scope.get("write_mode") == "CREATE_MODIFY_DELETE" else "L2") if write else "L1",
             "approval_requirements": {"execution": write or job["approval_status"] != "not_required",
                                       "completion": False, "review": job["review_required"]}}
@@ -182,6 +182,8 @@ def validate_binding(job, *, now=None, executing=False):
                 raise TaskContractError("Task contract stop condition prohibits execution")
             if stop["kind"] == "deadline" and datetime.fromisoformat(now.replace("Z", "+00:00")) >= datetime.fromisoformat(stop["at"].replace("Z", "+00:00")):
                 raise TaskContractError("Task contract deadline is stale")
+    from runtime.core.capability_governance import evaluate
+    evaluate(job)
     return c
 
 
@@ -204,7 +206,9 @@ class TaskContractStore:
         return {k: deepcopy(job.get(k)) for k in fields}
 
     def create(self, job):
-        value = {"schema_version": 2, "boundary": self.boundary(job)}
+        from runtime.core.capability_governance import evaluate
+        value = {"schema_version": 3, "boundary": self.boundary(job),
+                 "governance": evaluate(job)}
         self.root.mkdir(parents=True, exist_ok=True)
         try:
             for suffix in ("witness", "anchor"):
@@ -224,15 +228,17 @@ class TaskContractStore:
         try:
             anchor = self._path(job["job_id"], "anchor")
             original = json.loads(self._read(anchor))
-            if (type(original) is not dict or set(original) != {"schema_version", "boundary"}
-                    or type(original["schema_version"]) is not int or original["schema_version"] != 2
+            if (type(original) is not dict or set(original) != {"schema_version", "boundary", "governance"}
+                    or type(original["schema_version"]) is not int or original["schema_version"] != 3
                     or type(original["boundary"]) is not dict):
                 raise TaskContractError("Pre-F1 task authority requires explicit recovery; no automatic migration")
             initial = original["boundary"]["review_required"]
             if type(initial) is not bool or initial and not candidate["review_required"]:
                 raise TaskContractError("Task review gate was weakened")
             candidate["review_required"] = initial
-            expected = encoded({"schema_version": 2, "boundary": candidate}, max_bytes=512 * 1024)
+            from runtime.core.capability_governance import evaluate
+            expected = encoded({"schema_version": 3, "boundary": candidate,
+                                "governance": evaluate(job)}, max_bytes=512 * 1024)
             for suffix in ("witness", "anchor"):
                 path = self._path(job["job_id"], suffix)
                 if self._read(path) != expected:
@@ -245,8 +251,10 @@ class TaskContractStore:
         boundary = self.boundary(job)
         # The creation identity stays fixed when the effective gate strengthens.
         boundary["review_required"] = False
-        return {"schema_version": 1, "job_id": job["job_id"],
-                "boundary_digest": digest(boundary), "review_required": review_required}
+        from runtime.core.capability_governance import evaluate
+        return {"schema_version": 2, "job_id": job["job_id"],
+                "boundary_digest": digest(boundary), "review_required": review_required,
+                "governance_digest": digest(evaluate(job))}
 
     def _gates(self, job, initial):
         try:
@@ -417,6 +425,8 @@ def require_tool(request, tool, *, now=None):
     boundary["task_contract"] = c
     boundary["execution_budget"] = c["budget_references"]
     validate_binding(boundary, now=now or datetime.now(timezone.utc).isoformat(), executing=True)
+    from runtime.core.capability_governance import require_dispatch
+    require_dispatch(request)
     if tool not in c["allowed_tools"]:
         raise TaskContractError(f"Tool {tool} is outside task contract")
     if c["delegation_level"] == "L0" and tool == "provider_call":
@@ -453,7 +463,7 @@ def completion(runtime, job, *, verify_only=False):
     refs = [r["ref"] for r in job["output_refs"] if r["ref"].startswith("runtime-execution:")]
     if not refs:
         raise TaskContractError("DONE requires persisted execution evidence")
-    record = runtime.execution_store.load(refs[-1].split(":", 1)[1])
+    record = runtime.execution_store.load(refs[-1].split(":", 1)[1], require_authority=True)
     execution_boundary = deepcopy(job)
     if record.request is not None and record.result.status == "needs_review":
         execution_boundary["review_required"] = record.request["review_required"]
@@ -529,7 +539,7 @@ def completion(runtime, job, *, verify_only=False):
         review_refs = [r["ref"] for r in job["output_refs"] if r["ref"].startswith("runtime-review:")]
         if not review_refs:
             raise TaskContractError("DONE requires persisted independent review")
-        review_record = runtime.review_store.load(review_refs[-1].split(":", 1)[1])
+        review_record = runtime.review_store.load(review_refs[-1].split(":", 1)[1], require_authority=True)
         review_ref = review_refs[-1]
         review_digest = digest(review_record)
         if type(review_record.get("schema_version")) is not int or review_record["schema_version"] != 1:

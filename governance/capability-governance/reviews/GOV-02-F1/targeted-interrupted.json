@@ -1,0 +1,8 @@
+{
+  "complete": false,
+  "passed": false,
+  "test_count": null,
+  "status": "INTERRUPTED_FOR_OWNER_SCOPE_REFINEMENT",
+  "log": "targeted-interrupted.log",
+  "log_sha256": "09ea7b6abf5e2be27b8dc78bdce4a9b6f0b8d637d670f1f0ed87209ae66f5a1c"
+}

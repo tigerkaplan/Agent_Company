@@ -1,0 +1,38 @@
+[
+  {
+    "alternate": false,
+    "first_status": "succeeded",
+    "returncode": 3,
+    "stdout": "{\"denied\": false, \"redispatched\": true, \"result_status\": \"succeeded\", \"execution_id\": \"r3-actual-redispatch\"}\n",
+    "stderr": "",
+    "authority_and_job_files_unchanged": true,
+    "same_job": true,
+    "same_attempt": true,
+    "approval_received": {},
+    "authority_fingerprints": {
+      "jobs\\.task-contracts\\job-279cc7de475b4de0b33e001a73fd673c.anchor.json": "f5d9ea6cfcd57584f0d92a78295d7f31e31d39dadb5895b166598b77e73ca3e6",
+      "jobs\\.task-contracts\\job-279cc7de475b4de0b33e001a73fd673c.gate-anchor.json": "017ed5f41cb985ece8cea1b5f2ab56df8e86be124e949c3df7015b4c8c85a78a",
+      "jobs\\.task-contracts\\job-279cc7de475b4de0b33e001a73fd673c.gate-witness.json": "017ed5f41cb985ece8cea1b5f2ab56df8e86be124e949c3df7015b4c8c85a78a",
+      "jobs\\.task-contracts\\job-279cc7de475b4de0b33e001a73fd673c.witness.json": "f5d9ea6cfcd57584f0d92a78295d7f31e31d39dadb5895b166598b77e73ca3e6",
+      "jobs\\job-279cc7de475b4de0b33e001a73fd673c.json": "047da2e48c17373476a8a778fc32737f9286cd6daff1c0252098d83604680aad"
+    }
+  },
+  {
+    "alternate": true,
+    "first_status": "succeeded",
+    "returncode": 3,
+    "stdout": "{\"denied\": false, \"redispatched\": true, \"result_status\": \"succeeded\", \"execution_id\": \"r3-actual-redispatch\"}\n",
+    "stderr": "",
+    "authority_and_job_files_unchanged": true,
+    "same_job": true,
+    "same_attempt": true,
+    "approval_received": {},
+    "authority_fingerprints": {
+      "jobs\\.task-contracts\\job-41600955899948f28ad56fc35e889bbb.anchor.json": "0b3c40fcdfdfbb61380847e3aa5707d162ba7a3308a906f34888ef39e9d3a887",
+      "jobs\\.task-contracts\\job-41600955899948f28ad56fc35e889bbb.gate-anchor.json": "ff057fe56edd45181c9e30a69d2cfe4b31df40769ec3228787b2a2b98a11f500",
+      "jobs\\.task-contracts\\job-41600955899948f28ad56fc35e889bbb.gate-witness.json": "ff057fe56edd45181c9e30a69d2cfe4b31df40769ec3228787b2a2b98a11f500",
+      "jobs\\.task-contracts\\job-41600955899948f28ad56fc35e889bbb.witness.json": "0b3c40fcdfdfbb61380847e3aa5707d162ba7a3308a906f34888ef39e9d3a887",
+      "jobs\\job-41600955899948f28ad56fc35e889bbb.json": "34dda45b2b87ffff74b9fab892701bfae96db6504ac6caaf9548312543c78811"
+    }
+  }
+]

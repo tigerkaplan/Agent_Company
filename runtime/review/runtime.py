@@ -63,6 +63,11 @@ class ReviewerRuntime:
         *, compute_budget_decision=None,
     ) -> ReviewRun:
         review_id = self.id_factory()
+        try:
+            self.store.begin_decision(review_id, job, request, execution_result,
+                type(self.reviewer).__module__ + "." + type(self.reviewer).__qualname__)
+        except ValueError as error:
+            raise ReviewRuntimeError("Review certification/decision trace rejected") from error
         verification = self.verifier.verify(job, request, execution_result)
         try:
             package = self.context_builder.build(

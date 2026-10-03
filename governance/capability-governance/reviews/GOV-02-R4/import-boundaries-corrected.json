@@ -1,0 +1,16 @@
+{
+  "command": [
+    "C:\\Python314\\python.exe",
+    "-B",
+    "E:\\Software\\Agent_Company\\governance\\capability-governance\\reviews\\GOV-02-R4\\import_boundaries.py",
+    "-v"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 2.045,
+  "test_count": 2,
+  "complete": true,
+  "passed": true,
+  "log": "import-boundaries-corrected.log",
+  "log_sha256": "a552da63c88998d26a35c508c41f239501a6172bd531d9aca029255ceb3edc0d",
+  "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467"
+}

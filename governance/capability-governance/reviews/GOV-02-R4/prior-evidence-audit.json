@@ -1,0 +1,169 @@
+{
+  "GOV-02-R1": {
+    "targeted": {
+      "exit_code": 0,
+      "passed": true,
+      "complete": true,
+      "test_count": null,
+      "log_exists": true,
+      "log_matches": true
+    },
+    "focused": {
+      "exit_code": 0,
+      "passed": true,
+      "complete": true,
+      "test_count": null,
+      "log_exists": true,
+      "log_matches": true
+    },
+    "full": {
+      "exit_code": 0,
+      "passed": true,
+      "complete": true,
+      "test_count": null,
+      "log_exists": true,
+      "log_matches": true
+    },
+    "validation": {
+      "exit_code": null,
+      "passed": null,
+      "complete": null,
+      "test_count": null,
+      "log_exists": false,
+      "log_matches": false
+    }
+  },
+  "GOV-02-R3": {
+    "targeted": {
+      "exit_code": 0,
+      "passed": true,
+      "complete": null,
+      "test_count": 99,
+      "log_exists": true,
+      "log_matches": true
+    },
+    "adversarial": {
+      "exit_code": 1,
+      "passed": false,
+      "complete": null,
+      "test_count": 6,
+      "log_exists": true,
+      "log_matches": true
+    },
+    "adversarial-corrected": {
+      "exit_code": 1,
+      "passed": false,
+      "complete": null,
+      "test_count": 6,
+      "log_exists": true,
+      "log_matches": true
+    },
+    "affected": {
+      "exit_code": 0,
+      "passed": true,
+      "complete": null,
+      "test_count": 156,
+      "log_exists": true,
+      "log_matches": true
+    },
+    "focused": {
+      "exit_code": 0,
+      "passed": true,
+      "complete": null,
+      "test_count": 832,
+      "log_exists": true,
+      "log_matches": true
+    },
+    "full": {
+      "exit_code": 0,
+      "passed": true,
+      "complete": null,
+      "test_count": 1293,
+      "log_exists": true,
+      "log_matches": true
+    },
+    "validation": {
+      "exit_code": 0,
+      "passed": true,
+      "complete": null,
+      "test_count": null,
+      "log_exists": true,
+      "log_matches": true
+    },
+    "diff-check": {
+      "exit_code": 0,
+      "passed": true,
+      "complete": null,
+      "test_count": null,
+      "log_exists": true,
+      "log_matches": true
+    }
+  },
+  "GOV-02-F2": {
+    "targeted": {
+      "exit_code": 0,
+      "passed": true,
+      "complete": true,
+      "test_count": 107,
+      "log_exists": true,
+      "log_matches": true
+    },
+    "adversarial": {
+      "exit_code": 0,
+      "passed": true,
+      "complete": true,
+      "test_count": 15,
+      "log_exists": true,
+      "log_matches": true
+    },
+    "affected": {
+      "exit_code": 0,
+      "passed": true,
+      "complete": true,
+      "test_count": 156,
+      "log_exists": true,
+      "log_matches": true
+    },
+    "focused": {
+      "exit_code": 0,
+      "passed": true,
+      "complete": true,
+      "test_count": 840,
+      "log_exists": true,
+      "log_matches": true
+    },
+    "full": {
+      "exit_code": 0,
+      "passed": true,
+      "complete": true,
+      "test_count": 1301,
+      "log_exists": true,
+      "log_matches": true
+    },
+    "validation": {
+      "exit_code": 0,
+      "passed": true,
+      "complete": true,
+      "test_count": null,
+      "log_exists": true,
+      "log_matches": true
+    },
+    "diff-check": {
+      "exit_code": 0,
+      "passed": true,
+      "complete": true,
+      "test_count": null,
+      "log_exists": true,
+      "log_matches": true
+    }
+  },
+  "current_validated_source": {
+    "files": 212,
+    "mismatches": []
+  },
+  "copied_exact_probes": {
+    "adversarial.py": true,
+    "multifile_apply.py": true,
+    "confirm_rollback.py": true
+  }
+}

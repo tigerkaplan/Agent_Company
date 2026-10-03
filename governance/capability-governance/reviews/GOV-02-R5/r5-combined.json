@@ -1,0 +1,15 @@
+{
+  "command": [
+    "C:\\Python314\\python.exe",
+    "-B",
+    "E:\\Software\\Agent_Company\\governance\\capability-governance\\reviews\\GOV-02-R5\\r5_combined.py"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 43.726,
+  "test_count": 3,
+  "complete": true,
+  "passed": true,
+  "log": "r5-combined.log",
+  "log_sha256": "c4e5ded204c5dcbe284a1dbaf5f448c22bc29924ee5081ae54ba16ffca53f3e0",
+  "source_sha256": "db84c2bc9dc114377ffe5002167b2c3a8e2211c32e7974ebec9eb37296c9fbb2"
+}

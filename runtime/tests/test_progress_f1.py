@@ -7,7 +7,7 @@ from pathlib import Path
 import sqlite3
 import subprocess
 import sys
-from threading import Barrier
+from threading import Barrier, Lock
 import unittest
 from unittest.mock import patch
 
@@ -58,27 +58,26 @@ class ProgressRepairTests(unittest.TestCase):
         second.worker_id = first.worker_id
         second.id_factory = lambda: "execution-second"
         self.runtime.claim(claimed_by=first.worker_id)
-        execution_barrier, save_barrier = Barrier(2), Barrier(2)
-        original_save = self.runtime._save
-
-        def synchronized_save(value, **kwargs):
-            if value["status"] in {"completed", "failed"}:
-                save_barrier.wait(timeout=10)
-            return original_save(value, **kwargs)
+        delivery_barrier, calls_lock = Barrier(2), Lock()
+        calls = []
 
         class Executor:
             supported_execution_modes = frozenset({"READ_ONLY"})
             def __init__(self, status):
                 self.status = status
             def execute(self, request):
-                execution_barrier.wait(timeout=10)
+                with calls_lock:
+                    calls.append(request.execution_id)
                 return fixture.StaticResultExecutor(self.status).execute(request)
 
         first.executor, second.executor = Executor("succeeded"), Executor(second_status)
-        with patch.object(self.runtime, "_save", side_effect=synchronized_save):
-            with ThreadPoolExecutor(max_workers=2) as pool:
-                futures = [pool.submit(worker.run_claimed, job["job_id"]) for worker in (first, second)]
-                outcomes = [future.result(timeout=30) for future in futures]
+        def deliver(worker):
+            delivery_barrier.wait(timeout=10)
+            return worker.run_claimed(job["job_id"])
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            futures = [pool.submit(deliver, worker) for worker in (first, second)]
+            outcomes = [future.result(timeout=30) for future in futures]
+        self.assertEqual(len(calls), 1)
         self.assertEqual(sum(outcome.status == "worker_error" for outcome in outcomes), 1)
         status = self.runtime.show(job["job_id"])["status"]
         terminal = [event for event in self.events(job) if event.event_type in {"job_completed", "job_failed"}]

@@ -114,7 +114,7 @@ class GitRuntime:
             self._fail("mutation_evidence_mismatch", "Mutation file sets are inconsistent")
         try:
             scope = ExecutionScope.from_dict(
-                (self.executions.load(execution_id).request or {}).get(
+                (self.executions.load(execution_id, require_authority=True).request or {}).get(
                     "execution_scope", {}
                 )
             )
@@ -226,6 +226,18 @@ class GitRuntime:
         }
 
     def commit(self, change_set_id: str) -> dict[str, Any]:
+        audits = []
+        try:
+            return self._commit_governed(change_set_id, audits)
+        except ValueError as error:
+            if audits:
+                try:
+                    audits[0].fail(getattr(error, "code", "action_contract_failure"))
+                except ValueError:
+                    self._fail("capability_audit_incomplete", "Failure trace is unavailable; explicit recovery required")
+            raise
+
+    def _commit_governed(self, change_set_id, audits):
         """Revalidate, exactly stage, commit, and independently verify one change set."""
 
         try:
@@ -236,13 +248,25 @@ class GitRuntime:
             self._fail("git_dry_run_forbidden", "Dry-run change sets cannot stage or commit")
         repository = self._validate_repository(Path(change_set.repository_root))
         approval = self._approved_commit_authority(change_set)
+        from runtime.core.capability_actions import ActionDecision
+        try:
+            audit = ActionDecision(self.jobs, self.approvals.store, self.store,
+                approval, change_set.commit_scope, "canonical-local-git")
+        except ValueError as error:
+            self._fail("capability_governance_rejected", str(error))
+        audits.append(audit)
         recovered = self._recover_committed(change_set, repository, approval)
         if recovered is not None:
-            return recovered
+            return self._finish_capability_action(audit, recovered)
         snapshot = self._snapshot(repository)
         self._assert_snapshot(change_set, snapshot, "before staging")
         author_name = self._local_identity(repository, "user.name")
         author_email = self._local_identity(repository, "user.email")
+        try:
+            audit.consume()
+            audit.before_mutation()
+        except ValueError as error:
+            self._fail("capability_governance_rejected", str(error))
         stage = self._git(repository, ["add", "--", *change_set.changed_files])
         if stage.returncode != 0:
             self._fail("git_stage_failed", self._bounded_git_error(stage))
@@ -254,6 +278,10 @@ class GitRuntime:
         )
         if self._sha(staged_diff.encode("utf-8")) != change_set.diff_fingerprint:
             self._fail("git_diff_stale", "Staged diff differs from the approved diff")
+        try:
+            audit.before_mutation()
+        except ValueError as error:
+            self._fail("capability_governance_rejected", str(error))
         committed = self._git(
             repository,
             [
@@ -268,9 +296,15 @@ class GitRuntime:
         )
         if committed.returncode != 0:
             self._fail("git_commit_failed", self._bounded_git_error(committed))
-        return self._verify_and_persist_commit(
+        return self._finish_capability_action(audit, self._verify_and_persist_commit(
             change_set, repository, approval, author_name, author_email
-        )
+        ))
+
+    def _finish_capability_action(self, audit, result):
+        try:
+            return audit.finish(result)
+        except ValueError as error:
+            self._fail("capability_governance_rejected", str(error))
 
     def show(self, change_set_id: str) -> dict[str, Any]:
         try:
@@ -294,7 +328,7 @@ class GitRuntime:
     ) -> tuple[dict[str, Any], dict[str, Any], str]:
         try:
             job = self.jobs.show(job_id)
-            execution = self.executions.load(execution_id)
+            execution = self.executions.load(execution_id, require_authority=True)
             mutation = self.mutations.load(execution_id)
         except (JobRuntimeError, ExecutionStoreError, MutationArtifactError) as error:
             self._fail("mutation_evidence_missing", str(error))
@@ -346,7 +380,7 @@ class GitRuntime:
             self._fail("review_evidence_missing", "Exactly one final review is required")
         review_id = review_refs[0].split(":", 1)[1]
         try:
-            review = self.reviews.load(review_id).get("result", {})
+            review = self.reviews.load(review_id, require_authority=True).get("result", {})
         except ReviewStoreError as error:
             self._fail("review_evidence_missing", str(error))
         checks = review.get("deterministic_checks")

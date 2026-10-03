@@ -1,0 +1,169 @@
+{
+  "review": "FIX",
+  "runtime_acceptance_checks": "PASS",
+  "canonical_decision": "NEEDS_HUMAN",
+  "independence": "PASS",
+  "independence_scope": "Fresh session and executor/reviewer role separation; same provider",
+  "provider_diversity": "NOT ESTABLISHED",
+  "high_risk_provider_gate": "UNSATISFIED",
+  "prior_findings": "CLOSED",
+  "prior_findings_detail": {
+    "R1-M1": "CLOSED",
+    "R1-M2": "CLOSED",
+    "R1-M3": "CLOSED",
+    "R3-M1": "CLOSED",
+    "R3-M2": "CLOSED",
+    "R3-M3": "CLOSED",
+    "R4-M1": "CLOSED",
+    "R4-M2": "CLOSED"
+  },
+  "findings": {
+    "critical": 0,
+    "major": 0,
+    "minor": 0
+  },
+  "authority": "PASS",
+  "certification": "PASS",
+  "provenance": "PASS",
+  "trace": "PASS",
+  "replay": "PASS",
+  "compatibility": "PASS",
+  "tests": {
+    "targeted": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": 114,
+      "elapsed_seconds": 747.525,
+      "log_sha256": "d033087fe9441b6d965294a8d378eef4db87e0fd4c50c672d186cb8eb6025336"
+    },
+    "adversarial": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": 22,
+      "elapsed_seconds": 725.578,
+      "log_sha256": "9e0bf70012d7304e2696cdb0c2215670e423b9482f879aea80e7d8d03f51e3c2"
+    },
+    "r3-adversarial": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": 6,
+      "elapsed_seconds": 111.341,
+      "log_sha256": "fa0a905a68964c8d28a2ffff8f0f23d420d6d0f36401c231a8e87bc74fb23047"
+    },
+    "r3-multifile": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": null,
+      "elapsed_seconds": 6.03,
+      "log_sha256": "75fb91bebd05980b8e6ab0d064261451010c124f464d34a890c0925f87dcfa84"
+    },
+    "combined": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": 3,
+      "elapsed_seconds": 66.381,
+      "log_sha256": "89dfee8eed5c12d9c591634cd40446b9f36588d2570980063d216ee1705530c9"
+    },
+    "replay-confirmation": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": null,
+      "elapsed_seconds": 17.149,
+      "log_sha256": "566623653fd72b3649e8a14e3ea0fd5038f1e5a8b5e0c37e24d99f615d9fafd8"
+    },
+    "rollback-confirmation": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": null,
+      "elapsed_seconds": 9.991,
+      "log_sha256": "58985acff5f3f725e4f4f945ef8a966b40b661a4442e052f53b19acbbfbf16dd"
+    },
+    "import-boundaries": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": 2,
+      "elapsed_seconds": 6.478,
+      "log_sha256": "e796dcbc45d7f25269513813ac347ddf3a92d54a74f210e4ad80d2eb761b5c87"
+    },
+    "affected": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": 163,
+      "elapsed_seconds": 1686.825,
+      "log_sha256": "044fef1839bd8e8ec0092f6cccc850ef1486b7849ce8ab7e0ef492d90b2900f4"
+    },
+    "focused": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": 847,
+      "elapsed_seconds": 5110.853,
+      "log_sha256": "1c6305752b2da2e0d2b85576aedcdd9135e04d2561dc4ac2edde16ef63a5d47a"
+    },
+    "full": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": 1308,
+      "elapsed_seconds": 2304.125,
+      "log_sha256": "981291361c6eba8396fa0e0368edecebefb9dded941ab5cf4a5cda991f5fc7db"
+    },
+    "validation": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": null,
+      "elapsed_seconds": 0.599,
+      "log_sha256": "26539145d47c3b3e25e69fd6d52bc70d3ace8c84ebd208cf140b94a2aff08298"
+    },
+    "static": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": null,
+      "elapsed_seconds": 1.128,
+      "log_sha256": "5f11729d27b6135df3f8ce23490405b74aafee42cd1cea3975b8ff449fd62375"
+    },
+    "diff-check": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": null,
+      "elapsed_seconds": 0.123,
+      "log_sha256": "254b635731c6074e3302e4bf9f602d92a33aaa01510c6f1f644fff18bcb0808f"
+    },
+    "r5-combined": {
+      "passed": true,
+      "complete": true,
+      "exit_code": 0,
+      "test_count": 3,
+      "elapsed_seconds": 43.726,
+      "log_sha256": "c4e5ded204c5dcbe284a1dbaf5f448c22bc29924ee5081ae54ba16ffca53f3e0"
+    }
+  },
+  "ready_for_owner_closure": "NO",
+  "head": "c5de47440973c87023bbd6652aca984262ab17f7",
+  "files_checked": 706,
+  "non_R5_files_unchanged": true,
+  "review_writes_only": "governance/capability-governance/reviews/GOV-02-R5/",
+  "implementation_repairs": false,
+  "repository_commit": false,
+  "ORCH_01_started": false,
+  "routing_reason": "High-risk same-provider fallback requires escalation under fallback.yaml and escalation.yaml; no eligible distinct-provider route was observed.",
+  "required_next_action": "Obtain the eligible distinct-provider acceptance review or an explicit canonical human routing decision; keep GOV-02 OPEN.",
+  "limitations": [
+    "Temporary Git repositories and local bare remotes only",
+    "Existing fake PR adapter only",
+    "No live provider, forge, deployment, publication, VPS or provider escape validation",
+    "Trusted filesystem boundary unchanged; no protection against replacing every authority owner and policy is claimed"
+  ]
+}

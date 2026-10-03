@@ -1,0 +1,151 @@
+{
+  "prompt_id": "GOV-02-F1",
+  "status": "PASS",
+  "head": "c5de47440973c87023bbd6652aca984262ab17f7",
+  "findings": {
+    "1": "FIXED",
+    "2": "FIXED",
+    "3": "FIXED"
+  },
+  "authority": "PASS",
+  "provenance": "PASS",
+  "trace": "PASS",
+  "replay": "PASS",
+  "compatibility": "PASS",
+  "tests": {
+    "targeted": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "runtime.tests.test_capability_governance_f1",
+        "runtime.tests.test_capability_governance",
+        "runtime.tests.test_capability_actions",
+        "runtime.tests.test_actions",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 103.532,
+      "test_count": 99,
+      "complete": true,
+      "passed": true,
+      "log": "gov02-targeted-complete.log",
+      "log_sha256": "0b59ff4045bdd965199eec3c36b5c3251c6dd89105d26276c851a6690188abe2"
+    },
+    "adversarial": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "runtime.tests.test_capability_governance_f1",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 32.202,
+      "test_count": 7,
+      "complete": true,
+      "passed": true,
+      "log": "gov02-adversarial-complete.log",
+      "log_sha256": "b7e0e929bf04c907e5c09bf931aadc794c01e69beb67f25ade9b0524427bf46e"
+    },
+    "affected": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "runtime.tests.test_git",
+        "runtime.tests.test_remote_git",
+        "runtime.tests.test_review",
+        "runtime.tests.test_approval",
+        "runtime.tests.test_worker",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 357.023,
+      "test_count": 156,
+      "complete": true,
+      "passed": true,
+      "log": "gov02-affected-complete.log",
+      "log_sha256": "36a39252f913f7e1b03af1b86f84a4864e8f5bc2c93971aed689ddc76879b64a"
+    },
+    "focused": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "runtime.tests.test_capability_governance_f1",
+        "runtime.tests.test_capability_governance",
+        "runtime.tests.test_capability_actions",
+        "runtime.tests.test_task_contract",
+        "runtime.tests.test_task_contract_f1",
+        "runtime.tests.test_task_contract_f2",
+        "runtime.tests.test_review",
+        "runtime.tests.test_approval",
+        "runtime.tests.test_worker",
+        "runtime.tests.test_tool_discovery",
+        "runtime.tests.test_providers",
+        "runtime.tests.test_runtime",
+        "runtime.tests.test_actions",
+        "runtime.tests.test_progress",
+        "runtime.tests.test_progress_f1",
+        "runtime.tests.test_progress_f2",
+        "runtime.tests.test_execution_budget",
+        "runtime.tests.test_retry_policy",
+        "runtime.tests.test_continuation",
+        "runtime.tests.test_compute_policy",
+        "runtime.tests.test_git",
+        "runtime.tests.test_remote_git",
+        "runtime.tests.test_context_discovery",
+        "runtime.tests.test_external_content",
+        "runtime.tests.test_scheduler_loop",
+        "runtime.tests.test_retry_repairs",
+        "-v",
+        "-f"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 990.657,
+      "test_count": 832,
+      "complete": true,
+      "passed": true,
+      "log": "gov02-focused-complete.log",
+      "log_sha256": "02158638215a64049ede65a7f23468d86f3a06061dfe4af96520aec29a0972fa"
+    },
+    "full": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "runtime/tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1249.995,
+      "test_count": 1293,
+      "complete": true,
+      "passed": true,
+      "log": "gov02-full-complete.log",
+      "log_sha256": "440fae51df19e65a46d8768eda772d6d65e02f661ba9789bda9ec3ab0eae1595"
+    }
+  },
+  "static_schema": {
+    "python_syntax_files": 171,
+    "schema_files": 33,
+    "certificate_count": 17,
+    "status": "PASS"
+  },
+  "diff_check": "PASS",
+  "source_manifest": "regression-source.json",
+  "source_files_verified": 208,
+  "ready_for_fresh_independent_r2": true,
+  "gov02_state": "OPEN",
+  "committed": false,
+  "orch01_started": false,
+  "independent_review_performed": false
+}

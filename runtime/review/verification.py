@@ -77,7 +77,7 @@ class DeterministicVerifier:
         )
 
         try:
-            stored = self.execution_store.load(result.execution_id)
+            stored = self.execution_store.load(result.execution_id, require_authority=True)
             stored_request = stored.request
             stored_result = stored.result.to_dict()
             stored_valid = (

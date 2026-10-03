@@ -1,0 +1,252 @@
+{
+  "GOV-02-R1": {
+    "targeted": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": null,
+      "passed": true,
+      "complete": true
+    },
+    "focused": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": null,
+      "passed": true,
+      "complete": true
+    },
+    "full": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": null,
+      "passed": true,
+      "complete": true
+    },
+    "validation": {
+      "format": "structured evidence without log binding"
+    }
+  },
+  "GOV-02-R2": {},
+  "GOV-02-R3": {
+    "targeted": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": 99,
+      "passed": true,
+      "complete": null
+    },
+    "adversarial": {
+      "log_matches": true,
+      "exit_code": 1,
+      "tests": 6,
+      "passed": false,
+      "complete": null
+    },
+    "adversarial-corrected": {
+      "log_matches": true,
+      "exit_code": 1,
+      "tests": 6,
+      "passed": false,
+      "complete": null
+    },
+    "affected": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": 156,
+      "passed": true,
+      "complete": null
+    },
+    "focused": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": 832,
+      "passed": true,
+      "complete": null
+    },
+    "full": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": 1293,
+      "passed": true,
+      "complete": null
+    },
+    "validation": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": null,
+      "passed": true,
+      "complete": null
+    },
+    "diff-check": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": null,
+      "passed": true,
+      "complete": null
+    }
+  },
+  "GOV-02-R4": {
+    "targeted": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": 107,
+      "passed": true,
+      "complete": true
+    },
+    "adversarial": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": 15,
+      "passed": true,
+      "complete": true
+    },
+    "affected": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": 156,
+      "passed": true,
+      "complete": true
+    },
+    "focused": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": 840,
+      "passed": true,
+      "complete": true
+    },
+    "full": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": 1301,
+      "passed": true,
+      "complete": true
+    },
+    "validation": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": null,
+      "passed": true,
+      "complete": true
+    },
+    "combined": {
+      "log_matches": true,
+      "exit_code": 1,
+      "tests": 3,
+      "passed": false,
+      "complete": true
+    },
+    "diff-check": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": null,
+      "passed": true,
+      "complete": true
+    }
+  },
+  "GOV-02-F3": {
+    "targeted": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": 114,
+      "passed": true,
+      "complete": true
+    },
+    "adversarial": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": 22,
+      "passed": true,
+      "complete": true
+    },
+    "affected": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": 163,
+      "passed": true,
+      "complete": true
+    },
+    "focused": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": 847,
+      "passed": true,
+      "complete": true
+    },
+    "full": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": 1308,
+      "passed": true,
+      "complete": true
+    },
+    "validation": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": null,
+      "passed": true,
+      "complete": true
+    },
+    "static": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": null,
+      "passed": true,
+      "complete": true
+    },
+    "r4-combined": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": 3,
+      "passed": true,
+      "complete": true
+    },
+    "r4-replay": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": null,
+      "passed": true,
+      "complete": true
+    },
+    "diff-check": {
+      "log_matches": true,
+      "exit_code": 0,
+      "tests": null,
+      "passed": true,
+      "complete": true
+    }
+  },
+  "F3_current_source": {
+    "files": 213,
+    "mismatches": []
+  },
+  "R4_copied_probe_hashes": {
+    "adversarial.py": "132aeed732bf9b2fe8b8ac93816d308326a5d5d7ff59864d15752f274b4d6609",
+    "multifile_apply.py": "7228605d819c6080547410fafa5e1d35bbf83647df52b0de6f6836e3d0f78ffe",
+    "combined.py": "e56e274d0bd5d11d32efdb93b68ce23e2ba7c36c0e2daa2ded2b20c519bbb3d3",
+    "confirm_replay.py": "303d267f175abc7a89f66877ed815d2293bde36d0fd8ea10f71898021f47dd5f",
+    "confirm_rollback.py": "7c3c65cf4d7abc17e7630ed368d53b8968596f42ad8676b343a59f7ab071354a",
+    "import_boundaries.py": "7570b159d7c70104f98e05c95c101d6a41a92d134103f5dc6d99af48654a4631",
+    "confirm_actions.py": "e4fb776ab72abefc027bb21d9540682ca2329724ac69c4c954788cec27392572"
+  },
+  "provider_route": {
+    "separate_reviewer_session": true,
+    "implementation_or_F1_F2_F3_performed_in_this_session": false,
+    "path_discovery": "Codex only; Claude and Gemini did not resolve",
+    "callable_distinct_provider_tool": false,
+    "role_independence": "PASS",
+    "provider_diversity": "NOT ESTABLISHED",
+    "high_risk_provider_gate": "NOT A CANONICAL ACCEPTANCE REQUIREMENT",
+    "policy": [
+      "orchestrator/routing/fallback.yaml",
+      "orchestrator/routing/escalation.yaml"
+    ],
+    "canonical_distinct_provider_requirement": "NO",
+    "canonical_distinct_model_requirement": "NO",
+    "policy_reconciliation": "policy-reconciliation.json",
+    "previous_gate_interpretation": "UNSATISFIED interpretation superseded; see superseded-policy-verdict/",
+    "canonical_policy": [
+      "CONSTITUTION.md",
+      "AGENTS.md",
+      "skills/shared/review/SKILL.md"
+    ]
+  }
+}

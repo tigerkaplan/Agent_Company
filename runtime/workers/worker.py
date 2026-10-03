@@ -252,14 +252,17 @@ class Worker:
             )
 
         try:
+            self.execution_store.begin_decision(request, executor=type(self.executor).__module__ + "." + type(self.executor).__qualname__,
+                                                runtime=self.runtime, job=job)
             self.runtime.progress.execution_started(job, execution_id)
-            with execution_observer(self.runtime.progress, job, execution_id):
+            from runtime.core.capability_governance import certified_dispatch
+            with execution_observer(self.runtime.progress, job, execution_id), certified_dispatch(self.execution_store, request):
                 result = self._execute_safely(request, job=job, budget_decision=budget_decision)
         except ProgressError:
             if budget_binding is not None:
                 self.budget_runtime.finalize_execution(budget_binding, execution_id=execution_id)
             raise
-        except RetryStoreError as error:
+        except (RetryStoreError, ExecutionStoreError) as error:
             if budget_binding is not None:
                 budget_decision = self.budget_runtime.finalize_execution(
                     budget_binding, execution_id=execution_id
@@ -684,12 +687,14 @@ class Worker:
                     if request is None:
                         raise RuntimeError("Review-required execution has no request")
                     try:
-                        if isinstance(self.executor, ProviderExecutor):
-                            review_run = self.reviewer_runtime.run(
-                                updated, request, result, compute_budget_decision=compute_budget_decision)
-                        else:
-                            review_run = self.reviewer_runtime.run(updated, request, result)
-                    except ReviewRuntimeError as error:
+                        from runtime.core.capability_governance import certified_dispatch
+                        with certified_dispatch(self.execution_store, request, purpose="review"):
+                            if isinstance(self.executor, ProviderExecutor):
+                                review_run = self.reviewer_runtime.run(
+                                    updated, request, result, compute_budget_decision=compute_budget_decision)
+                            else:
+                                review_run = self.reviewer_runtime.run(updated, request, result)
+                    except (ReviewRuntimeError, ExecutionStoreError) as error:
                         return WorkerRunOutcome(
                             status="worker_error",
                             job_id=job["job_id"],

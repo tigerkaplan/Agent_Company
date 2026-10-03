@@ -1,0 +1,14 @@
+{
+  "status": "COMPLETE",
+  "stages": [
+    "targeted",
+    "adversarial",
+    "r3-adversarial",
+    "r3-multifile",
+    "affected",
+    "focused",
+    "full",
+    "validation",
+    "diff-check"
+  ]
+}

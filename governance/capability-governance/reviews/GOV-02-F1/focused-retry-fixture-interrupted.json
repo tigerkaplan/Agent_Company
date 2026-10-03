@@ -1,0 +1,8 @@
+{
+  "complete": false,
+  "passed": false,
+  "test_count": null,
+  "status": "INTERRUPTED_AFTER_OBSERVATION_FIXTURE_FAILURE",
+  "log": "focused-retry-fixture-interrupted.log",
+  "log_sha256": "4705770d86977d161b6618acf25fdf14907278dbcef7216b8c41de7ed334ff28"
+}

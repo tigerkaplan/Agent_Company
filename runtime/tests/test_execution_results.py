@@ -28,7 +28,7 @@ from runtime.providers.adapters import sanitize_provider_text
 from runtime.providers.artifacts import FileProviderArtifactStore
 from runtime.providers.config import ProviderConfiguration
 from runtime.providers.context import ExecutionContextBuilder
-from runtime.providers.executor import ProviderExecutor
+from runtime.tests.contract_fixtures import CertifiedProviderFixture as ProviderExecutor
 from runtime.providers.models import (
     ProviderAvailability,
     ProviderExecutionResult,
@@ -203,7 +203,10 @@ class ExecutionResultContractTests(unittest.TestCase):
             )
 
     def test_local_deterministic_executor_normalizes_without_provider_prose(self) -> None:
-        execution = LocalExecutor().execute(request(provider=None))
+        from runtime.tests.contract_fixtures import certified_fixture_dispatch
+        execution_request = request(provider=None)
+        with certified_fixture_dispatch(execution_request):
+            execution = LocalExecutor().execute(execution_request)
         self.assertEqual(execution.status, "succeeded")
         self.assertIsNone(execution.provider)
         self.assertEqual(execution.evidence[0]["kind"], "deterministic_check")

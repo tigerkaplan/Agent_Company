@@ -247,9 +247,13 @@ class ReviewerAuthorityF1Tests(unittest.TestCase):
         self.assertEqual(self.claude.calls, 1)
 
     def test_parent_stop_conditions_apply_to_reviewer_dispatch(self):
-        run, _ = self.run_review(stop={"kind": "no_execution"})
+        from runtime.storage.execution_store import ExecutionStoreError
+        # Admission rejects the stopped parent before the simulated execution
+        # fixture can establish evidence for any later Reviewer dispatch.
+        with self.assertRaisesRegex(ExecutionStoreError, "canonical execution authority"):
+            self.run_review(stop={"kind": "no_execution"})
         self.assertEqual(self.codex.calls, 0)
-        self.assertEqual(run.result.error_category, "task_authority_blocked")
+        self.assertTrue(all(j["status"] != "completed" for j in self.fixture.runtime.list()))
 
 
 if __name__ == "__main__": unittest.main()

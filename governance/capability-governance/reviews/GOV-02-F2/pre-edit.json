@@ -1,0 +1,47 @@
+{
+  "r3_artifacts_read": 43,
+  "head": "c5de47440973c87023bbd6652aca984262ab17f7",
+  "changed_since_r3": [],
+  "r3_validation": {
+    "targeted": {
+      "exit_code": 0,
+      "test_count": 99,
+      "passed": true
+    },
+    "adversarial-corrected": {
+      "exit_code": 1,
+      "test_count": 6,
+      "passed": false
+    },
+    "affected": {
+      "exit_code": 0,
+      "test_count": 156,
+      "passed": true
+    },
+    "focused": {
+      "exit_code": 0,
+      "test_count": 832,
+      "passed": true
+    },
+    "full": {
+      "exit_code": 0,
+      "test_count": 1293,
+      "passed": true
+    },
+    "validation": {
+      "exit_code": 0,
+      "test_count": null,
+      "passed": true
+    },
+    "diff-check": {
+      "exit_code": 0,
+      "test_count": null,
+      "passed": true
+    },
+    "integrity": {
+      "unchanged": true
+    }
+  },
+  "r3_runner_finished": true,
+  "existing_f2_implementation_changes": false
+}

@@ -1,0 +1,15 @@
+{
+  "command": [
+    "C:\\Python314\\python.exe",
+    "-B",
+    "E:\\Software\\Agent_Company\\governance\\capability-governance\\reviews\\GOV-02-R4\\static_review.py"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 1.271,
+  "test_count": null,
+  "complete": true,
+  "passed": true,
+  "log": "static-review.log",
+  "log_sha256": "a9512ebff3d30e930813908b7251ceb620b534b5d182b26823cc20bc83586b3f",
+  "source_sha256": "47e895424ad3fe837d60be38be019e044f4b3b73ce79719b3edcd9e757ba7467"
+}

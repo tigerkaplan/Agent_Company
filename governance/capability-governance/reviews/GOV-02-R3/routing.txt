@@ -1,0 +1,1 @@
+Fresh reviewer role; this session has not executed GOV-02 or F1. PATH discovery: only codex.ps1 resolved; claude and gemini did not resolve. No distinct-provider callable route observed. No provider-diverse acceptance sign-off claimed. Canonical high-risk routing still applies.
