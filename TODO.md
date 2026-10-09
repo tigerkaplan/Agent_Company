@@ -1,6 +1,24 @@
 # Agent Company TODO
 
-## POST-GOV-02 DOC-TREE - 2026-10-03
+## POST-ORCH-01 DOC-TREE - 2026-10-09
+
+ORCH-01 Graph Execution Runtime: CLOSED / COMMITTED at `d38780817ca9f233051efa31b77d3a8eabe1473a`
+(`feat: add graph execution runtime`). Independent R4 refresh-02 PASS and owner
+closure PASS; no unresolved acceptance blockers. ACTIVE: None.
+NEXT: MEM-01 Knowledge / Memory Foundation / NOT STARTED, by frozen roadmap order
+only; no implementation authority follows from this reconciliation.
+See [owner closure](orchestrator/graph/CLOSURE.md) and
+[closure evidence](orchestrator/graph/CLOSURE_EVIDENCE.json).
+
+## Historical ORCH-01 executor validation PASS - 2026-10-03
+
+ACTIVE: ORCH-01 / IMPLEMENTED / EXECUTOR VALIDATION PASS / UNCOMMITTED.
+NEXT: ORCH-01 independent review and owner closure. GOV-01/GOV-02 remain CLOSED.
+Remaining: independent review and owner closure. Required executor validation passed.
+See [acceptance and validation](orchestrator/graph/README.md). MEM-01 is NOT STARTED.
+No commit is authorized.
+
+## Historical POST-GOV-02 DOC-TREE - 2026-10-03
 
 ACTIVE: None. CORE-01-11 and GOV-01 are CLOSED / COMMITTED.
 GOV-02 Capability Governance: CLOSED / COMMITTED at `e6dbe3f`
@@ -184,15 +202,14 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
   are CLOSED / COMMITTED at `e6dbe3f`. All prior findings are CLOSED;
   0 critical / 0 major / 0 minor. See `governance/capability-governance/CLOSURE.md`.
 - [x] GOV-02 implementation and closure committed at `e6dbe3f`.
-- [ ] ORCH-01 Graph Execution Runtime — NEXT / NOT STARTED: owner specifies
-  outcomes, not workflows;
-  Agent Company selects clarification, task contract, graph, agents, skills,
-  context, tools/providers, eval/review, and approval points. Include
-  planner/splitter, worker and deterministic nodes, gates, dependencies,
-  fan-out/fan-in, correction/replan/learning edges, edge validation, isolated
-  branch contexts, and unit-level repair integration. ORCH-01 is not CORE-12;
-  loops remain inside nodes and graphs connect nodes.
-- [ ] MEM-01 Knowledge / Memory Foundation: provider-neutral MemoryInterface,
+- [x] ORCH-01 Graph Execution Runtime — CLOSED / COMMITTED at `d3878081`:
+  canonical contracted nodes, planner/splitter, bounded parallel fan-out/fan-in,
+  gates, isolated inputs, correction/replan and recovery integration. Required
+  validation, independent R4 refresh-02 and owner closure PASS; no acceptance blockers.
+  Loops remain inside nodes and graphs connect nodes; ORCH-01 is not CORE-12.
+  Operational observations do not implement memory or learning promotion.
+- [ ] MEM-01 Knowledge / Memory Foundation — NEXT / NOT STARTED, sequence only:
+  provider-neutral MemoryInterface,
   project isolation, provenance, confidence, and verification semantics while
   preserving Knowledge != Memory != State.
 - [ ] MEM-02 Knowledge Lifecycle + Retrieval / RAG: normalized, deduplicated,

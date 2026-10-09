@@ -1,6 +1,27 @@
 # Agent Company Project State
 
-## POST-GOV-02 DOC-TREE - 2026-10-03
+## POST-ORCH-01 DOC-TREE - 2026-10-09
+
+ORCH-01 Graph Execution Runtime: CLOSED / COMMITTED at `d38780817ca9f233051efa31b77d3a8eabe1473a`
+(`feat: add graph execution runtime`). Independent R4 refresh-02 PASS and owner
+closure PASS; no unresolved acceptance blockers. ACTIVE: None.
+NEXT: MEM-01 Knowledge / Memory Foundation / NOT STARTED, by frozen roadmap order
+only; no implementation authority follows from this reconciliation.
+See [owner closure](orchestrator/graph/CLOSURE.md) and
+[closure evidence](orchestrator/graph/CLOSURE_EVIDENCE.json).
+
+## Historical ORCH-01 executor validation PASS - 2026-10-03
+
+ACTIVE: ORCH-01 / IMPLEMENTED / EXECUTOR VALIDATION PASS / UNCOMMITTED.
+NEXT: ORCH-01 independent review and owner closure. GOV-01/GOV-02 remain CLOSED.
+Expected HEAD `8e1381a` was verified against the initially clean authoritative
+checkout. Graph topology/admission and recovery gaps are implemented through
+canonical jobs and existing governance/runtime owners. Executor validation passed:
+55 graph tests, 325 affected, 761 focused and one complete 1,364-test full regression.
+See [validation](orchestrator/graph/VALIDATION.md). MEM-01 is NOT STARTED.
+No commit, push or deployment has been performed.
+
+## Historical POST-GOV-02 DOC-TREE - 2026-10-03
 
 ACTIVE: None. CORE-01-11 and GOV-01 are CLOSED / COMMITTED.
 GOV-02 Capability Governance: CLOSED / COMMITTED at `e6dbe3f`
@@ -165,7 +186,14 @@ future directory is created. Dated prior checkpoints below remain historical.
 
 ## Current Checkpoint
 
-- ACTIVE: None; NEXT: ORCH-01 / NOT STARTED; sequence only.
+- ACTIVE: None.
+- NEXT: MEM-01 Knowledge / Memory Foundation / NOT STARTED; sequence only.
+- ORCH-01: CLOSED / COMMITTED at `d3878081` after independent R4 refresh-02 PASS
+  and owner closure PASS. Targeted 66, Adversarial 25, Graph integration 14,
+  Affected 724, Focused 805 and Full 1408 all PASS on the accepted frozen source;
+  schema/static and integrity checks PASS. R3-M1 and Signals 1/2/3 are CLOSED.
+  Historical failures and bounded Windows/Python/concurrency risks remain
+  documented in `orchestrator/graph/CLOSURE.md` and retained local evidence.
 - GOV-01 Task & Authority Contract: CLOSED / COMMITTED at `852ec01`.
 - GOV-02 Capability Governance: CLOSED / COMMITTED at `e6dbe3f`; implementation,
   policy/schema, tests and retained governance evidence are CURRENT. See
@@ -191,7 +219,9 @@ future directory is created. Dated prior checkpoints below remain historical.
   CLOSED / COMMITTED at `dd72cb2` after CORE-10R3 PASS; CORE-11 is CLOSED / COMMITTED at `8bda7eb`.
 - Phase 6M, the Scheduler / Autonomous Run Loop, is the highest explicitly represented Phase 6 capability.
 - No canonical Phase 6N subphase is defined.
-- The runtime remains local-first, file-backed, and deliberately limited to one concurrent Worker.
+- The runtime remains local-first and file-backed. Ordinary work retains its
+  serial budget admission; ORCH-01 permits bounded graph batches of up to sixteen
+  canonical Workers through existing claims, leases and shared accounting.
 - Phase 7 is completed and closed. The final repository-backed architecture and
   security review passed on 2026-09-24.
 - Phase 8A architecture and threat-model design is COMPLETED / CLOSED under

@@ -1,6 +1,23 @@
 # Agent Company
 
-## POST-GOV-02 DOC-TREE - 2026-10-03
+## POST-ORCH-01 DOC-TREE - 2026-10-09
+
+ORCH-01 Graph Execution Runtime: CLOSED / COMMITTED at `d38780817ca9f233051efa31b77d3a8eabe1473a`
+(`feat: add graph execution runtime`). Independent R4 refresh-02 PASS and owner
+closure PASS; no unresolved acceptance blockers. ACTIVE: None.
+NEXT: MEM-01 Knowledge / Memory Foundation / NOT STARTED, by frozen roadmap order
+only; no implementation authority follows from this reconciliation.
+See [owner closure](orchestrator/graph/CLOSURE.md) and
+[closure evidence](orchestrator/graph/CLOSURE_EVIDENCE.json).
+
+## Historical ORCH-01 executor validation PASS - 2026-10-03
+
+ACTIVE: ORCH-01 / IMPLEMENTED / EXECUTOR VALIDATION PASS / UNCOMMITTED.
+NEXT: ORCH-01 independent review and owner closure. GOV-01/GOV-02 remain CLOSED.
+MEM-01 is NOT STARTED. See [graph runtime](runtime/graph/README.md) and
+[acceptance and validation](orchestrator/graph/README.md).
+
+## Historical POST-GOV-02 DOC-TREE - 2026-10-03
 
 ACTIVE: None. CORE-01-11 and GOV-01 are CLOSED / COMMITTED.
 GOV-02 Capability Governance: CLOSED / COMMITTED at `e6dbe3f`
@@ -171,11 +188,13 @@ termination, merge authority, or deployment authority.
 the canonical capability roadmap.
 
 GOV-01 is CLOSED / COMMITTED at `852ec01`; GOV-02 Capability Governance is
-CLOSED / COMMITTED at `e6dbe3f`. ORCH-01 is NEXT / NOT STARTED.
+CLOSED / COMMITTED at `e6dbe3f`. ORCH-01 is CLOSED / COMMITTED at `d3878081`
+after independent R4 PASS and owner closure PASS. MEM-01 is NEXT / NOT STARTED.
 
 ## Current Repository Structure
 
-CURRENT: audited against committed checkpoint `e6dbe3f`. This is the physical
+CURRENT: audited against implementation HEAD `d38780817ca9f233051efa31b77d3a8eabe1473a`
+on `master`. This is the physical
 structure in the current checkout; generated contents and
 ignored local configuration are intentionally not expanded.
 
@@ -184,14 +203,14 @@ ignored local configuration are intentionally not expanded.
   software. Each keeps `ROLE.md`, `GUARDRAILS.md`, and agent-specific `MEMORY.md`.
 - `skills/` — separate reusable HOW definitions in communications, marketing,
   operations, sales, shared, and social-media families.
-- `orchestrator/` — `dispatcher/`, `routing/`, `workflows/`, `approvals/`, and
-  `dry-run/`.
+- `orchestrator/` — `dispatcher/`, `routing/`, `workflows/`, `approvals/`,
+  `dry-run/`, and `graph/` (ORCH-01 contracts, closure records and retained evidence).
 - `providers/` — Claude and Codex execution-provider definitions only.
 - `integrations/` — github, gmail, google-calendar, google-drive, obsidian,
   telegram, and webhooks; runtime implementations exist only where explicitly
   represented by source.
 - `runtime/` — `actions/`, `approvals/`, `budget/`, `cache/`, `cli/`, `compute_policy/`, `context/`, `continuation/`,
-  `core/`, `evals/`, `execution/`, `executors/`, `git/`, `host/`, `jobs/`,
+  `core/`, `evals/`, `execution/`, `executors/`, `git/`, `graph/`, `host/`, `jobs/`,
   `notifications/`, `progress/`, `providers/`, `queue/`, `remote/`, `review/`, `retry/`,
   `scheduler/`, `storage/`, `tests/`, `tools/`, `webhooks/`, and `workers/`.
   `runtime/progress/` is the CURRENT CORE-07 implementation, CLOSED / COMMITTED
@@ -228,7 +247,8 @@ ignored local configuration are intentionally not expanded.
   `retry-policy.schema.json`, `retry-state.schema.json`, and
   `execution-artifact.schema.json`, CORE-07 `progress-event.schema.json`,
   GOV-01 `task-contract.schema.json` and GOV-02
-  `capability-certification.schema.json`.
+  `capability-certification.schema.json`, plus ORCH-01 `graph-plan.schema.json`
+  and `graph-binding.schema.json`.
 - `config/` — tracked non-secret examples only: `host.example.json`,
   `remote.example.json`, and `webhooks.example.json`. Ignored local files,
   tokens, real IDs, and secret values are not documentation inputs.
@@ -317,13 +337,31 @@ and decision-trace directory labels are superseded by these integrated paths;
 no separate governance authority store is introduced. Capability profiles are
 execution constraints, not canonical agents.
 
+## ORCH-01 Current Physical Paths
+
+`runtime/graph/` contains `README.md`, `__init__.py`, `executor.py`, `models.py`,
+`planner.py`, and `runtime.py`. The graph plan/binding schemas and six
+`runtime/tests/test_graph*.py` modules are CURRENT and committed at `d3878081`.
+Integration extends existing canonical job, task, execution, Worker, retry,
+budget, progress, provider and CLI owners. Graph batches support at most sixteen
+active units; execution profiles do not add agents or authority stores.
+
+`orchestrator/graph/` contains committed `ACCEPTANCE.md`, `README.md`,
+`VALIDATION.md`, `run_validation.py`, `CLOSURE.md` and `CLOSURE_EVIDENCE.json`.
+Only `reviews/ORCH-01-R1/probes.py` and `reviews/ORCH-01-R2/probes.py` are
+committed review test support, required by the F2/F3 regression modules.
+Other `reviews/` and `fixes/` artifacts, including final F3 validation and R4
+acceptance evidence, remain retained local/untracked evidence. Existing ignored
+logs and generated archives are not represented as committed Git evidence.
+`ACCEPTANCE.md`, `VALIDATION.md`, dated reviews and closure records retain their
+original checkpoint wording; the current status above supersedes it.
+
 ## Future / Target Repository Structure
 
 The proposed paths in the list below are PLANNED and absent from the current
 physical tree. This list records structural ownership only; implementation
 checkpoints create paths when real content exists.
 
-- ORCH-01: `orchestrator/graph/`.
 - MEM-01 through MEM-03: `runtime/memory/` and `shared/memory/`.
 - Agents 11-14: `agents/finance-pricing/`, `agents/analytics/`,
   `agents/content/`, and `agents/design/`.
@@ -374,8 +412,9 @@ and SYNC-04A. The exception gate and accepted refinements live in
 LATER / REFERENCE; only critical implementation, security, data-loss, authority,
 architectural-consistency, or completion-correctness blockers may be evaluated
 for V1. They do not interrupt the checkpoint sequence or grant implementation
-authority. ACTIVE: None; GOV-02 is CLOSED / COMMITTED at `e6dbe3f`.
-GOV-01 remains CLOSED / COMMITTED at `852ec01`; ORCH-01 is NEXT / NOT STARTED.
+authority. ACTIVE: None; NEXT: MEM-01 / NOT STARTED, sequence only.
+ORCH-01 is CLOSED / COMMITTED at `d3878081`; GOV-02 remains CLOSED / COMMITTED at `e6dbe3f`.
+GOV-01 remains CLOSED / COMMITTED at `852ec01`.
 
 Current canonical agents: 10; frozen V1 target: 14. CAP-CREATIVE-01 is accepted
 non-blocking capability/tool architecture; CAP-DOC-01, summary-indexed retrieval,

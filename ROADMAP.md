@@ -1,6 +1,23 @@
 # Agent Company Roadmap
 
-## POST-GOV-02 DOC-TREE - 2026-10-03
+## POST-ORCH-01 DOC-TREE - 2026-10-09
+
+ORCH-01 Graph Execution Runtime: CLOSED / COMMITTED at `d38780817ca9f233051efa31b77d3a8eabe1473a`
+(`feat: add graph execution runtime`). Independent R4 refresh-02 PASS and owner
+closure PASS; no unresolved acceptance blockers. ACTIVE: None.
+NEXT: MEM-01 Knowledge / Memory Foundation / NOT STARTED, by frozen roadmap order
+only; no implementation authority follows from this reconciliation.
+See [owner closure](orchestrator/graph/CLOSURE.md) and
+[closure evidence](orchestrator/graph/CLOSURE_EVIDENCE.json).
+
+## Historical ORCH-01 executor validation PASS - 2026-10-03
+
+ACTIVE: ORCH-01 / IMPLEMENTED / EXECUTOR VALIDATION PASS / UNCOMMITTED.
+NEXT: ORCH-01 independent review and owner closure. GOV-01/GOV-02 remain CLOSED.
+MEM-01 is NOT STARTED. See [graph acceptance](orchestrator/graph/ACCEPTANCE.md)
+and [validation](orchestrator/graph/VALIDATION.md).
+
+## Historical POST-GOV-02 DOC-TREE - 2026-10-03
 
 ACTIVE: None. CORE-01-11 and GOV-01 are CLOSED / COMMITTED.
 GOV-02 Capability Governance: CLOSED / COMMITTED at `e6dbe3f`
@@ -133,7 +150,8 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
 - CORE-11: CLOSED / COMMITTED at `8bda7eb`.
 - GOV-01 Task & Authority Contract: CLOSED / COMMITTED at `852ec01`.
 - GOV-02 Capability Governance: CLOSED / COMMITTED at `e6dbe3f`.
-- ORCH-01 Graph Execution Runtime: NEXT / NOT STARTED.
+- ORCH-01 Graph Execution Runtime: CLOSED / COMMITTED at `d3878081`.
+- MEM-01 Knowledge / Memory Foundation: NEXT / NOT STARTED; sequence only.
 - Phase 8E: PAUSED / BLOCKED; deployment not started because the VPS has not
   yet been created.
 - Phase 8F: NOT STARTED.
@@ -158,9 +176,10 @@ serious inconsistency / completion correctness issue? YES -> evaluate for V1;
 NO -> POST-V1 / LATER / REFERENCE. Later ideas must not interrupt the checkpoint
 sequence or expand the existing Canonical V1 Definition below.
 
-One ACTIVE and one NEXT checkpoint slot: ACTIVE = None; NEXT = ORCH-01 / NOT STARTED.
+One ACTIVE and one NEXT checkpoint slot: ACTIVE = None;
+NEXT = MEM-01 Knowledge / Memory Foundation / NOT STARTED, sequence only.
 GOV-01 remains CLOSED / COMMITTED at `852ec01`; GOV-02 is CLOSED / COMMITTED
-at `e6dbe3f`. ORCH-01 requires separate implementation authorization.
+at `e6dbe3f`; ORCH-01 is CLOSED / COMMITTED at `d3878081`.
 CORE-11 is CLOSED / COMMITTED at `8bda7eb` after Independent Re-review R2 PASS. Lifecycle remains IMPLEMENT -> INDEPENDENT
 REVIEW -> BOUNDED FIX if required -> RE-REVIEW -> CLOSURE -> COMMIT -> NEXT.
 Core Runtime Foundation = COMPLETE. GOV-01 is CLOSED / COMMITTED at `852ec01`;
@@ -369,7 +388,8 @@ limits, and the Retry -> Replan boundary. It must not treat provider prose,
 `retryable`, `next_actions`, an available budget, or an unfinished job as retry
 authority. The implementation is under `runtime/retry/`, with policy/state
 schemas and Worker/Scheduler/job integration. `REPLAN_REQUIRED` is a boundary
-only; automatic graph replanning remains owned by future ORCH-01. CORE-06 is
+only for RetryRuntime; ORCH-01 now routes predeclared contracted alternatives
+after the verified decision. It does not authorize generated replacement work. CORE-06 is
 CLOSED / COMMITTED at `4a6e5c4` after R6 PASS. Exact-work and approval requirements
 are preserved, restart/concurrency safety prevents consumed-attempt replay,
 and canonical corruption fails closed. Retry remains separate from continuation
@@ -517,13 +537,25 @@ Unsupported external effects fail closed.
 GOV-02 is CLOSED / COMMITTED at `e6dbe3f` after independent R5 PASS and owner closure.
 All prior findings are CLOSED, with 0 critical / 0 major / 0 minor.
 See [closure evidence](governance/capability-governance/CLOSURE.md).
-NEXT: ORCH-01 / NOT STARTED; `orchestrator/graph/` remains PLANNED and absent.
+ORCH-01 is CLOSED / COMMITTED at `d3878081`; `runtime/graph/` and
+`orchestrator/graph/` are CURRENT. NEXT: MEM-01 / NOT STARTED, sequence only.
 
 ### B. Graph Orchestration
 
 #### ORCH-01 — Graph Execution Runtime
 
-NEXT / NOT STARTED. This roadmap position does not authorize implementation.
+CLOSED / COMMITTED at `d3878081` after independent R4 refresh-02 PASS and owner
+closure PASS. All required validation tiers passed on frozen source; R3-M1 and
+Signals 1/2/3 are CLOSED, with no unresolved acceptance blockers. See
+[owner closure](orchestrator/graph/CLOSURE.md). This roadmap is status evidence only.
+
+CURRENT: `runtime/graph/`, `orchestrator/graph/`, graph plan/binding schemas,
+and graph targeted/adversarial/integration tests. Admission extends canonical
+jobs, task anchors, Worker, execution intent/provenance, budget reservations,
+request/package profiles and CLI. Correction/replan routes use predeclared
+contracted alternatives after canonical REPLAN_REQUIRED. No new canonical
+agent or independent scheduler, authority, retry, state or review owner exists.
+See [invariants and classification](orchestrator/graph/ACCEPTANCE.md).
 
 ORCH-01 is not CORE-12. A loop operates inside a node; a graph connects nodes.
 The owner specifies outcomes rather than workflows; Agent Company selects

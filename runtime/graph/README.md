@@ -1,6 +1,7 @@
 # Canonical graph execution runtime
 
-ORCH-01 implementation; independent review and owner closure remain pending.
+ORCH-01 is CLOSED / COMMITTED at `d3878081` after independent R4 refresh-02 PASS
+and owner closure PASS. See [closure](../../orchestrator/graph/CLOSURE.md).
 The pre-implementation reality classification, invariants and acceptance cases
 are in [the graph acceptance contract](../../orchestrator/graph/ACCEPTANCE.md).
 
