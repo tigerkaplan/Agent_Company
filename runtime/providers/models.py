@@ -73,6 +73,7 @@ class ExecutionPackage:
     context_pack: Any = None
     compute_decision: Any = None
     task_contract: Any = None
+    execution_profile: str | None = None
 
     def render(self) -> str:
         for entry in self.context:
@@ -97,6 +98,12 @@ class ExecutionPackage:
             "execution_scope": self._provider_scope(),
             "dry_run": self.dry_run,
         }
+        if self.execution_profile is not None:
+            from runtime.execution.models import ExecutionContractError
+            if self.execution_profile not in {"planner", "splitter", "researcher", "explorer", "worker", "critic", "deterministic"}:
+                raise ExecutionContractError("Unknown graph execution profile")
+            metadata["execution_profile"] = self.execution_profile
+            metadata["profile_boundary"] = "Execution role only; canonical agent, capability, task contract and approvals retain authority."
         if self.compute_decision is not None:
             from dataclasses import asdict
             metadata['compute_policy'] = asdict(self.compute_decision)

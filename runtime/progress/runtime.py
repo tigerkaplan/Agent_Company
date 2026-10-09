@@ -16,8 +16,8 @@ class ProgressRuntime:
     def logical_id(job):
         return (job.get("continuation") or job.get("retry_policy") or {}).get("logical_job_id", job["job_id"])
 
-    def transition_lock(self):
-        return FileJobStore(self.store.root / ".transitions").claim_transaction()
+    def transition_lock(self, *, timeout_seconds=5.0):
+        return FileJobStore(self.store.root / ".transitions").claim_transaction(timeout_seconds=timeout_seconds)
 
     @contextmanager
     def recovery_lock(self):

@@ -39,7 +39,7 @@
   "transitions": {
     "created": ["queued", "waiting_approval", "cancelled"],
     "queued": ["running", "waiting_approval", "cancelled"],
-    "running": ["reviewing", "completed", "failed", "waiting_approval", "cancelled"],
+    "running": ["reviewing", "completed", "failed", "waiting_approval", "cancelled", "queued"],
     "waiting_approval": ["queued", "completed", "failed", "cancelled"],
     "reviewing": ["completed", "failed", "waiting_approval", "cancelled"],
     "completed": [],

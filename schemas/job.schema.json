@@ -90,6 +90,8 @@
     }
   ],
   "properties": {
+    "graph_plan": {"$ref": "graph-plan.schema.json"},
+    "graph_binding": {"$ref": "graph-binding.schema.json"},
     "task_contract": {"$ref": "task-contract.schema.json"},
     "task_completion": {
       "type": "object",

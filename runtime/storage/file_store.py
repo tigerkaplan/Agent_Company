@@ -17,6 +17,10 @@ class JobStoreError(ValueError):
     """Raised when local job persistence cannot satisfy an operation."""
 
 
+class ClaimLockTimeout(JobStoreError):
+    """The bounded canonical claim lock could not be acquired; no mutation."""
+
+
 class FileJobStore:
     """Store one canonical job per JSON file with a bounded claim lock."""
 
@@ -71,20 +75,15 @@ class FileJobStore:
             candidate = None
             try:
                 try:
-                    candidate = lock_path.open("x+b")
-                    candidate.write(b"0")
-                    candidate.flush()
+                    candidate = lock_path.open("x+b", buffering=0)
                 except FileExistsError:
-                    candidate = lock_path.open("r+b")
-                    if os.fstat(candidate.fileno()).st_size == 0:
-                        candidate.write(b"0")
-                        candidate.flush()
+                    candidate = lock_path.open("r+b", buffering=0)
                 handle = candidate
             except OSError as error:
                 if candidate is not None:
                     candidate.close()
                 if time.monotonic() >= deadline:
-                    raise JobStoreError(
+                    raise ClaimLockTimeout(
                         "Timed out opening the canonical claim lock"
                     ) from error
                 time.sleep(0.01)
@@ -104,11 +103,17 @@ class FileJobStore:
             except (OSError, BlockingIOError) as error:
                 if time.monotonic() >= deadline:
                     handle.close()
-                    raise JobStoreError(
+                    raise ClaimLockTimeout(
                         "Timed out waiting for the canonical claim lock"
                     ) from error
                 time.sleep(0.01)
         try:
+            # Windows permits a byte lock beyond EOF. A delayed creator must
+            # not flush buffered initialization underneath another owner.
+            # Initialize only after owning the same cross-process byte lock.
+            if os.fstat(handle.fileno()).st_size == 0:
+                handle.seek(0)
+                handle.write(b"0")
             yield
         finally:
             try:

@@ -32,6 +32,10 @@ class ExecutionBudgetStoreError(ValueError):
     """Raised when canonical budget persistence cannot be trusted."""
 
 
+class BudgetLockTimeout(ExecutionBudgetStoreError):
+    """No budget transaction was entered; capacity and evidence are unknown."""
+
+
 class FileExecutionBudgetStore:
     """Persist immutable policies and atomically updated logical-job usage."""
 
@@ -218,7 +222,7 @@ class FileExecutionBudgetStore:
             except (OSError, BlockingIOError) as error:
                 if time.monotonic() >= deadline:
                     handle.close()
-                    raise ExecutionBudgetStoreError(
+                    raise BudgetLockTimeout(
                         "Timed out waiting for the canonical budget lock"
                     ) from error
                 time.sleep(0.01)

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Runtime-managed canonical graph node binding",
+  "type": "object", "additionalProperties": false,
+  "required": ["root_job_id", "plan_digest", "node_id", "profile", "dependency_jobs", "recovery_source_job_id"],
+  "properties": {
+    "root_job_id": {"type": "string", "pattern": "[A-Za-z0-9][A-Za-z0-9._-]*", "maxLength": 200},
+    "plan_digest": {"type": "string", "pattern": "[a-f0-9]{64}"},
+    "node_id": {"type": "string", "pattern": "[A-Za-z0-9][A-Za-z0-9._-]{0,79}"},
+    "profile": {"type": "string", "enum": ["planner", "splitter", "researcher", "explorer", "worker", "critic", "deterministic"]},
+    "dependency_jobs": {"type": "array", "maxItems": 64, "uniqueItems": true,
+      "items": {"type": "string", "pattern": "[A-Za-z0-9][A-Za-z0-9._-]*", "maxLength": 200}},
+    "recovery_source_job_id": {"type": ["string", "null"], "maxLength": 200}
+  }
+}

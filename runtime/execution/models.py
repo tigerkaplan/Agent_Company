@@ -365,8 +365,12 @@ class ExecutionRequest:
     continuation_execution_ref: str | None = None
     retry_repair_scope: dict[str, Any] | None = None
     task_contract: dict[str, Any] | None = None
+    execution_profile: str | None = None
 
     def __post_init__(self) -> None:
+        if self.execution_profile is not None and (type(self.execution_profile) is not str
+                or self.execution_profile not in {"planner", "splitter", "researcher", "explorer", "worker", "critic", "deterministic"}):
+            raise ExecutionContractError("Unknown graph execution profile")
         if self.task_contract is not None:
             from runtime.core.task_contract import validate, TaskContractError
             try:
@@ -438,7 +442,7 @@ class ExecutionRequest:
                 )
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        value = {
             "execution_id": self.execution_id,
             "job_id": self.job_id,
             "task": self.task,
@@ -467,6 +471,9 @@ class ExecutionRequest:
             "retry_repair_scope": deepcopy(self.retry_repair_scope),
             "task_contract": _thaw_value(self.task_contract) if self.task_contract is not None else None,
         }
+        if self.execution_profile is not None:
+            value["execution_profile"] = self.execution_profile
+        return value
 
     @classmethod
     def from_persisted_dict(cls, value: Any) -> ExecutionRequest:
@@ -476,9 +483,12 @@ class ExecutionRequest:
                 "Persisted ExecutionRequest must be a canonical object"
             )
         actual = set(value)
-        if actual != cls.PERSISTED_FIELDS:
+        expected = cls.PERSISTED_FIELDS | ({"execution_profile"} if "execution_profile" in actual else set())
+        if "execution_profile" in actual and value["execution_profile"] is None:
+            raise ExecutionContractError("Persisted graph execution profile cannot be null")
+        if actual != expected:
             missing = sorted(cls.PERSISTED_FIELDS - actual)
-            unexpected = sorted(actual - cls.PERSISTED_FIELDS)
+            unexpected = sorted(actual - expected)
             details: list[str] = []
             if missing:
                 details.append(f"missing fields: {', '.join(missing)}")

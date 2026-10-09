@@ -177,6 +177,10 @@ class JobValidator:
                     )
             for name, item in value.items():
                 if name in properties:
+                    if name == "graph_plan" and path == "$":
+                        from runtime.graph.models import reuse_root_plan_schema
+                        if reuse_root_plan_schema(self, item, properties[name], value, schema_path):
+                            continue
                     self._validate(
                         item,
                         properties[name],

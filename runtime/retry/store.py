@@ -6,6 +6,7 @@ import json
 import os
 import re
 import tempfile
+import threading
 import time
 from contextlib import contextmanager
 from copy import deepcopy
@@ -25,6 +26,9 @@ from runtime.retry.models import (
 
 class RetryStoreError(ValueError):
     """Raised when retry authority or history cannot be trusted."""
+
+
+_TRANSACTIONS = threading.local()
 
 
 class FileRetryStore:
@@ -314,6 +318,16 @@ class FileRetryStore:
 
     @contextmanager
     def transaction(self, *, timeout_seconds: float = 5.0) -> Iterator[None]:
+        # Graph provenance may read this same history inside a canonical writer,
+        # including through another store instance. Reuse only this thread's
+        # already held OS transaction for this process and canonical directory.
+        key = (os.getpid(), self.root.resolve())
+        held = getattr(_TRANSACTIONS, "held", None)
+        if held is None:
+            held = _TRANSACTIONS.held = set()
+        if key in held:
+            yield
+            return
         self.root.mkdir(parents=True, exist_ok=True)
         lock_path = self.root / ".retry.lock"
         deadline = time.monotonic() + timeout_seconds
@@ -355,9 +369,11 @@ class FileRetryStore:
                     handle.close()
                     raise RetryStoreError("Timed out waiting for retry-state lock") from error
                 time.sleep(0.01)
+        held.add(key)
         try:
             yield
         finally:
+            held.remove(key)
             try:
                 handle.seek(0)
                 if os.name == "nt":

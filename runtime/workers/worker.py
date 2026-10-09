@@ -13,7 +13,7 @@ from runtime.budget.models import BudgetDecision
 from runtime.budget.runtime import ExecutionBudgetRuntime
 from runtime.continuation.models import ContinuationContractError, ContinuationPolicy
 from runtime.continuation.runtime import ContinuationRuntime
-from runtime.core.jobs import JobRuntime, RuntimeError, utc_now
+from runtime.core.jobs import ClaimContention, JobRuntime, RuntimeError, utc_now
 from runtime.compute_policy.canonical import canonical_inputs
 from runtime.compute_policy.policy import ComputeError
 from runtime.core.references import CanonicalReferenceResolver, ReferenceResolutionError
@@ -26,6 +26,7 @@ from runtime.providers.executor import ProviderExecutor
 from runtime.review.runtime import ReviewerRuntime, ReviewRuntimeError
 from runtime.retry.store import RetryStoreError
 from runtime.storage.execution_store import ExecutionStoreError, FileExecutionStore
+from runtime.storage.file_store import ClaimLockTimeout
 
 
 def new_execution_id() -> str:
@@ -118,8 +119,12 @@ class Worker:
         if getattr(reviewer_runtime, "store", None) is not None:
             self.runtime.review_store = reviewer_runtime.store
             self.approval_runtime.review_store = reviewer_runtime.store
-        self.runtime.provider_artifact_store = getattr(executor, "artifact_store", None)
-        self.runtime.mutation_artifact_store = getattr(getattr(executor, "controlled_write_runtime", None), "store", None)
+        provider_store = getattr(executor, "artifact_store", None)
+        mutation_store = getattr(getattr(executor, "controlled_write_runtime", None), "store", None)
+        if provider_store is not None or not hasattr(self.runtime, "provider_artifact_store"):
+            self.runtime.provider_artifact_store = provider_store
+        if mutation_store is not None or not hasattr(self.runtime, "mutation_artifact_store"):
+            self.runtime.mutation_artifact_store = mutation_store
         self.runtime.retry_runtime.execution_store = execution_store
         self.budget_runtime = ExecutionBudgetRuntime(
             runtime.budget_store,
@@ -212,19 +217,45 @@ class Worker:
             job = self.runtime.validate_execution_authority(
                 job["job_id"], self.worker_id
             )
-            reservation, fresh = self.runtime.retry_runtime.reserve_execution(job, execution_id)
-            if not fresh:
-                return self._reserved_outcome(job, reservation)
+            from runtime.graph.runtime import validate_executor
+            try:
+                validate_executor(self.runtime, job, self.executor)
+            except ValueError as error:
+                raise RuntimeError(str(error)) from error
             budget_binding = job.get("execution_budget")
-            if budget_binding is not None:
+            def admit_budget():
+                nonlocal budget_decision
                 budget_decision = self.budget_runtime.reserve_execution(
                     budget_binding,
                     execution_id=execution_id,
                     job_id=job["job_id"],
+                    **({"job_runtime": self.runtime,
+                        "claim_identity": tuple(job[field] for field in
+                            ("claimed_by", "claimed_at", "lease_until"))}
+                       if job.get("graph_binding") else {}),
                 )
+                return budget_decision
+            reservation, fresh = self.runtime.retry_runtime.reserve_execution(
+                job, execution_id, budget_admission=(admit_budget
+                    if budget_binding is not None and job.get("graph_binding") else None))
+            # Ordinary retries retain their established consumption-before-budget
+            # crash boundary. Only graph admission can release proven unstarted
+            # claims and therefore postpone attempt consumption on contention.
+            if fresh and budget_binding is not None and budget_decision is None:
+                admit_budget()
+            if budget_decision is not None:
                 if budget_decision.status != "ALLOW":
+                    if budget_decision.status == "DEFER":
+                        # Graph contention consumed no attempt; ordinary retry
+                        # reservations retain their existing consumed identity.
+                        return WorkerRunOutcome(status="execution_reserved", job_id=job["job_id"],
+                            execution_id=execution_id if reservation is not None else None,
+                            error={"code": "budget_contention", "message": budget_decision.reason,
+                                   "retryable": False}, budget=budget_decision.to_dict())
                     return self._record_budget_denial(job, budget_decision)
                 admission_budget_decision = budget_decision
+            if not fresh:
+                return self._reserved_outcome(job, reservation)
             context_refs = self.resolver.resolve(job)
             request = self._build_request(job, execution_id, context_refs)
             self.runtime.retry_runtime.admit_execution(job, request)
@@ -262,6 +293,17 @@ class Worker:
             if budget_binding is not None:
                 self.budget_runtime.finalize_execution(budget_binding, execution_id=execution_id)
             raise
+        except ClaimLockTimeout as error:
+            if job.get("graph_binding") is None:
+                raise
+            # Intent lock contention never reopens this claim or consumed retry
+            # reservation. Preserve canonical recovery state, and account for
+            # already reserved usage before returning a bounded blocked outcome.
+            if budget_binding is not None:
+                budget_decision = self.budget_runtime.finalize_execution(budget_binding, execution_id=execution_id)
+            return WorkerRunOutcome(status="worker_error", job_id=job["job_id"], execution_id=execution_id,
+                error={"code": "claim_contention", "message": str(error), "retryable": False},
+                budget=(budget_decision.to_dict() if budget_decision else None))
         except (RetryStoreError, ExecutionStoreError) as error:
             if budget_binding is not None:
                 budget_decision = self.budget_runtime.finalize_execution(
@@ -372,6 +414,7 @@ class Worker:
             retry_repair_scope=(job.get("retry_authorization", {}).get("repair_scope")
                                 if isinstance(job.get("retry_authorization"), dict) else None),
             task_contract=job.get("task_contract"),
+            execution_profile=job.get("graph_binding", {}).get("profile"),
         )
 
     def recover_persisted_results(self) -> list[WorkerRunOutcome]:
@@ -474,10 +517,24 @@ class Worker:
                     )
                 )
                 continue
+            budget_decision = None
+            if job.get("execution_budget") is not None:
+                budget_decision = self.budget_runtime.finalize_execution(
+                    job["execution_budget"], execution_id=record.result.execution_id)
+                if budget_decision.status in {"DEFER", "ERROR"}:
+                    # Direct Worker/Scheduler recovery uses the same budget
+                    # gate as graph recovery. No lifecycle or continuation is
+                    # advanced while canonical usage is unavailable or untrusted.
+                    recovered.append(WorkerRunOutcome(status="execution_reserved", job_id=job["job_id"],
+                        execution_id=record.result.execution_id, result=record.result.to_dict(),
+                        error={"code": ("budget_contention" if budget_decision.status == "DEFER"
+                                        else "execution_budget_error"), "message": budget_decision.reason,
+                               "retryable": False}, budget=budget_decision.to_dict()))
+                    continue
             self.runtime.progress.begin_recovery(job, record.result.execution_id)
             record_outcome(
                 self._record_result(
-                    job, request, record.result, persist_result=False
+                    job, request, record.result, persist_result=False, budget_decision=budget_decision
                 )
             )
         return recovered
@@ -653,6 +710,16 @@ class Worker:
 
         self.runtime.progress.observe_execution(job, result)
 
+        if budget_decision is not None and budget_decision.status in {"DEFER", "ERROR"}:
+            # The immutable result is durable, but its usage window still needs
+            # trusted canonical accounting. Do not admit downstream work or turn that
+            # active reservation into a trusted permanent budget failure.
+            return WorkerRunOutcome(status="execution_reserved", job_id=job["job_id"],
+                execution_id=result.execution_id, result=serialized_result,
+                error={"code": ("budget_contention" if budget_decision.status == "DEFER"
+                                else "execution_budget_error"), "message": budget_decision.reason,
+                       "retryable": False}, budget=budget_decision.to_dict())
+
         artifact_ref = {
             "ref_type": "artifact",
             "ref": f"runtime-execution:{result.execution_id}",
@@ -689,7 +756,7 @@ class Worker:
                     try:
                         from runtime.core.capability_governance import certified_dispatch
                         with certified_dispatch(self.execution_store, request, purpose="review"):
-                            if isinstance(self.executor, ProviderExecutor):
+                            if isinstance(self.executor, ProviderExecutor) or getattr(self.reviewer_runtime, "compute_policy", None) is not None:
                                 review_run = self.reviewer_runtime.run(
                                     updated, request, result, compute_budget_decision=compute_budget_decision)
                             else:
@@ -812,6 +879,14 @@ class Worker:
                     continuation=continuation_decision.checkpoint,
                 )
         except (RuntimeError, ApprovalRuntimeError, ContinuationContractError) as error:
+            if job.get("graph_binding") is not None and (
+                    isinstance(error, ClaimContention) or isinstance(error.__cause__, ClaimContention)):
+                # The immutable result already exists. Only canonical result
+                # recovery may finish its lifecycle; another executor call or
+                # new identity cannot satisfy this pending transition.
+                return WorkerRunOutcome(status="execution_reserved", job_id=job["job_id"],
+                    execution_id=result.execution_id, result=serialized_result,
+                    error={"code": "claim_contention", "message": str(error), "retryable": False})
             from runtime.core.task_contract import TaskContractError
             if isinstance(error.__cause__, TaskContractError):
                 try:

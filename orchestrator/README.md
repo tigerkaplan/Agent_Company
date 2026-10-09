@@ -29,6 +29,8 @@ It does not itself execute providers, queue or claim jobs, run the Scheduler, mu
 - `approvals/`: human approval policy and risk levels.
 - `workflows/`: minimal workflow skeletons.
 - `dry-run/`: dry-run behavior for inspection-only work.
+- `graph/`: ORCH-01 graph invariants, acceptance contracts and validation evidence;
+  execution coordination remains in `../runtime/graph/`.
 
 ## Planned Decision Engine
 

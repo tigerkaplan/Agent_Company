@@ -25,6 +25,13 @@ _SOURCE_FILES = (
     "runtime/actions/runtime.py", "runtime/storage/execution_store.py",
     "runtime/review/reviewers.py", "runtime/review/runtime.py", "runtime/review/store.py",
     "runtime/workers/worker.py", "runtime/git/runtime.py", "runtime/git/remote_runtime.py",
+    "schemas/graph-plan.schema.json", "schemas/graph-binding.schema.json",
+    "runtime/graph/models.py", "runtime/graph/planner.py", "runtime/graph/runtime.py",
+    "runtime/graph/executor.py", "runtime/budget/runtime.py",
+    "runtime/execution/models.py", "runtime/providers/context.py", "runtime/providers/models.py",
+    "runtime/actions/authorization.py", "schemas/job.schema.json",
+    "runtime/retry/runtime.py",
+    "runtime/storage/file_store.py",
 )
 
 
@@ -274,9 +281,17 @@ def require_child(parent, child):
             or c["budget_references"] != p["budget_references"]
             or any(s not in c["stop_conditions"] for s in p["stop_conditions"])):
         raise TaskContractError("Child capability authority exceeds authorized parent")
-    # Canonical continuation inherits exact scope; Reviewer may remove it.
-    if c["write_scope"] is not None and c["write_scope"] != p["write_scope"]:
-        raise TaskContractError("Child write scope exceeds authorized parent")
+    # Use the existing filesystem-aware scope owner for monotonic narrowing.
+    if c["write_scope"] is not None:
+        from runtime.actions.models import ExecutionScope
+        from runtime.core.jobs import JobRuntime
+        try:
+            narrower = p["write_scope"] is not None and JobRuntime._scope_is_no_broader(
+                ExecutionScope.from_dict(c["write_scope"]), ExecutionScope.from_dict(p["write_scope"]))
+        except ValueError as error:
+            raise TaskContractError("Invalid delegated write scope") from error
+        if not narrower:
+            raise TaskContractError("Child write scope exceeds authorized parent")
     if (c["blast_radius"] not in ("none", p["blast_radius"])
             or c["reversibility"] not in ("no_side_effect", p["reversibility"])
             or c["risk"] != p["risk"]):

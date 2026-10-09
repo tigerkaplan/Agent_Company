@@ -427,9 +427,15 @@ class RetryPolicyTests(RetryHarness, unittest.TestCase):
         self.assertIsNone(result["retry_job"])
         self.assertNotIn("continuation", result["decision"])
 
-    def test_32_no_orch01_graph_runtime_is_implemented(self) -> None:
-        self.assertFalse((REPOSITORY_ROOT / "runtime" / "graph").exists())
-        self.assertFalse((REPOSITORY_ROOT / "runtime" / "orchestration").exists())
+    def test_32_replan_does_not_create_or_admit_graph_work(self) -> None:
+        failed = self.fail(self.running(max_attempts=1, retry_policy=self.retry_config()))
+        before = {job["job_id"] for job in self.jobs.list()}
+        result = self.jobs.retry_or_stop(str(failed["job_id"]))
+        self.assertEqual(result["decision"]["decision"], "REPLAN_REQUIRED")
+        self.assertIsNone(result["retry_job"])
+        after = self.jobs.list()
+        self.assertEqual({job["job_id"] for job in after}, before)
+        self.assertTrue(all("graph_plan" not in job and "graph_binding" not in job for job in after))
 
     def test_33_crash_before_retry_execution_preserves_reservation(self) -> None:
         failed = self.fail(self.running())

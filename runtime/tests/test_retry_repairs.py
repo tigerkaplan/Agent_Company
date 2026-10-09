@@ -494,7 +494,9 @@ print(json.dumps(worker.run_claimed(job_id).to_dict()))
         self.assertIsNone(second.retry_job_id)
         self.assertNotEqual(second.error["code"], "lifecycle_update_error")
         self.assertEqual(self.jobs.show(created["job_id"])["continuation_plan"], plan)
-        self.assertFalse((REPOSITORY_ROOT / "runtime/graph").exists())
+        jobs = self.jobs.list()
+        self.assertEqual(len(jobs), 2)
+        self.assertTrue(all("graph_plan" not in job and "graph_binding" not in job for job in jobs))
 
     def test_f8_redigested_boolean_versions_rejected_by_model_schema_and_store(self):
         failed = self.fail(self.running())

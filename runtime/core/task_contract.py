@@ -203,7 +203,13 @@ class TaskContractStore:
         fields = ("job_id", "created_at", "task", "task_class", "project_id", "agent", "skill", "workflow",
                   "capability", "risk_level", "review_required", "execution_mode", "execution_scope",
                   "input_refs", "execution_budget", "max_attempts", "dry_run", "task_contract")
-        return {k: deepcopy(job.get(k)) for k in fields}
+        boundary = {k: deepcopy(job.get(k)) for k in fields}
+        # Preserve existing GOV-01/GOV-02 identities for jobs without graphs.
+        # Graph topology and node admission are exact work, never mutable state.
+        for key in ("graph_plan", "graph_binding"):
+            if key in job:
+                boundary[key] = deepcopy(job[key])
+        return boundary
 
     def create(self, job):
         from runtime.core.capability_governance import evaluate

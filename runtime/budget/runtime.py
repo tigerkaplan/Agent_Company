@@ -15,7 +15,7 @@ from runtime.budget.models import (
     BudgetPolicy,
     parse_timestamp,
 )
-from runtime.budget.store import ExecutionBudgetStoreError, FileExecutionBudgetStore
+from runtime.budget.store import BudgetLockTimeout, ExecutionBudgetStoreError, FileExecutionBudgetStore
 
 
 def utc_now() -> str:
@@ -43,10 +43,29 @@ class ExecutionBudgetRuntime:
         *,
         execution_id: str,
         job_id: str,
+        job_runtime: Any | None = None,
+        claim_identity: tuple[str, str, str] | None = None,
     ) -> BudgetDecision:
         try:
             binding = BudgetBinding.from_dict(binding_value)
-            with self.store.transaction():
+            parallel = self._graph_parallel_context(job_runtime, binding, job_id)
+            if parallel is not None and claim_identity is not None and parallel[2] != claim_identity:
+                return BudgetDecision("DEFER", "claim changed before budget admission",
+                                      {"measured_at": self.wall_clock(), "may_begin": False})
+            with self.store.transaction(timeout_seconds=30.0 if parallel is not None else 5.0):
+                # A recovery may release an unstarted claim while this caller
+                # waits. Recheck its exact lease before reserving any capacity.
+                if parallel is not None:
+                    current = job_runtime.store.load(job_id)
+                    current_claim = tuple(current.get(field) for field in
+                                          ("claimed_by", "claimed_at", "lease_until"))
+                    if current["status"] != "running" or current_claim != parallel[2]:
+                        return BudgetDecision("DEFER", "claim changed while waiting for budget ownership",
+                                              {"measured_at": self.wall_clock(), "may_begin": False})
+                    # Authority was validated before locking. This fresh raw
+                    # canonical record must still carry that exact live claim;
+                    # repeating full work validation here serializes siblings.
+                    job_runtime._require_active_claim(current, parallel[2][0])
                 policy = self.store.load_policy(binding)
                 state = self.store.load_state(binding)
                 now = self.wall_clock()
@@ -78,14 +97,21 @@ class ExecutionBudgetRuntime:
                         self._snapshot(policy, state, now),
                         deepcopy(existing),
                     )
-                exhausted = self._exhausted(policy, state)
+                live_usage = deepcopy(state)
+                if parallel is not None:
+                    live_usage["consumed_elapsed_ms"] += sum(
+                        self._wall_elapsed_ms(item["last_accounted_at"], now)
+                        for item in state["reservations"] if item["state"] == "active")
+                exhausted = self._exhausted(policy, live_usage)
                 if exhausted:
                     return BudgetDecision(
                         "DENY_EXHAUSTED",
                         "one or more configured budget dimensions are exhausted",
                         self._snapshot(policy, state, now),
                     )
-                if any(item["state"] == "active" for item in state["reservations"]):
+                active = [item for item in state["reservations"] if item["state"] == "active"]
+                if active and (parallel is None or len(active) >= parallel[0]
+                        or any(item["job_id"] not in parallel[1] or item["job_id"] == job_id for item in active)):
                     return BudgetDecision(
                         "ERROR",
                         "an earlier execution reservation still requires recovery",
@@ -111,12 +137,46 @@ class ExecutionBudgetRuntime:
                     self._snapshot(policy, state, now),
                     deepcopy(reservation),
                 )
+        except BudgetLockTimeout as error:
+            return self._contention(error)
         except (BudgetContractError, ExecutionBudgetStoreError, ValueError) as error:
             return BudgetDecision(
                 "ERROR",
                 str(error),
                 {"measured_at": self.wall_clock(), "may_begin": False},
             )
+
+    def _graph_parallel_context(self, jobs, binding, job_id):
+        """Allow simultaneous windows only for verified, actively claimed siblings.
+
+        This is canonical budget accounting, not execution approval. Ordinary
+        callers retain the serial recovery rule. Validation precedes the budget
+        lock so graph/retry validation cannot invert owner lock order.
+        """
+        if jobs is None:
+            return None
+        from runtime.core.jobs import JobRuntime
+        if type(jobs) is not JobRuntime or jobs.budget_store.root.resolve() != self.store.root.resolve():
+            raise BudgetContractError("Graph budget requires the canonical job owner")
+        job = jobs.show(job_id)
+        if job.get("graph_binding") is None:
+            raise BudgetContractError("Parallel budget request is not graph work")
+        if job.get("execution_budget") != binding.to_dict():
+            raise BudgetContractError("Graph budget differs from its task allocation")
+        from runtime.graph.models import preflight_plan_scope
+        with preflight_plan_scope(jobs.store.root, job["graph_binding"]["root_job_id"]):
+            job = jobs.validate_execution_authority(job_id, job.get("claimed_by"))
+            root = jobs.show(job["graph_binding"]["root_job_id"])
+            permitted = set()
+            for candidate in jobs.store.list():
+                if (candidate.get("graph_binding", {}).get("root_job_id") == root["job_id"]
+                        and candidate["status"] == "running"):
+                    candidate = jobs.validate_claim(candidate["job_id"], candidate.get("claimed_by"))
+                    if candidate.get("execution_budget") != binding.to_dict():
+                        raise BudgetContractError("Graph sibling budget allocation differs")
+                    permitted.add(candidate["job_id"])
+            claim = tuple(job[field] for field in ("claimed_by", "claimed_at", "lease_until"))
+            return root["graph_plan"]["max_parallel"], permitted, claim
 
     def finalize_execution(
         self,
@@ -182,6 +242,8 @@ class ExecutionBudgetRuntime:
                     self._snapshot(policy, state, now),
                     deepcopy(reservation),
                 )
+        except BudgetLockTimeout as error:
+            return self._contention(error)
         except (BudgetContractError, ExecutionBudgetStoreError, ValueError) as error:
             return BudgetDecision(
                 "ERROR",
@@ -200,7 +262,8 @@ class ExecutionBudgetRuntime:
                 prior_clock_fault = state["clock_rollback_detected"]
                 rollback = self._observe_clock(state, now)
                 reconciled = False
-                for reservation in state["reservations"]:
+                for index in range(len(state["reservations"])):
+                    reservation = state["reservations"][index]
                     if reservation["state"] != "active":
                         continue
                     elapsed_ms = self._wall_elapsed_ms(
@@ -215,11 +278,16 @@ class ExecutionBudgetRuntime:
                         now if not rollback else state["last_observed_at"]
                     )
                     state["consumed_elapsed_ms"] += elapsed_ms
+                    # The canonical ledger accepts one reservation transition
+                    # per event. Commit each recovery transition under this same
+                    # lock, then reload its store-owned sequence before the next.
+                    self.store.save_state(binding, state)
+                    state = self.store.load_state(binding)
                     reconciled = True
                     self._monotonic_starts.pop(
                         (binding.budget_id, reservation["execution_id"]), None
                     )
-                if reconciled or (rollback and not prior_clock_fault):
+                if not reconciled and rollback and not prior_clock_fault:
                     self.store.save_state(binding, state)
                 status = "ERROR" if state["clock_rollback_detected"] else "ALLOW"
                 reason = (
@@ -228,6 +296,8 @@ class ExecutionBudgetRuntime:
                     else "active reservations reconciled conservatively"
                 )
                 return BudgetDecision(status, reason, self._snapshot(policy, state, now))
+        except BudgetLockTimeout as error:
+            return self._contention(error)
         except (BudgetContractError, ExecutionBudgetStoreError, ValueError) as error:
             return BudgetDecision(
                 "ERROR",
@@ -251,12 +321,18 @@ class ExecutionBudgetRuntime:
                     "canonical budget state",
                     self._snapshot(policy, state, now),
                 )
+        except BudgetLockTimeout as error:
+            return self._contention(error)
         except (BudgetContractError, ExecutionBudgetStoreError, ValueError) as error:
             return BudgetDecision(
                 "ERROR",
                 str(error),
                 {"measured_at": self.wall_clock(), "may_begin": False},
             )
+
+    def _contention(self, error):
+        return BudgetDecision("DEFER", str(error),
+                              {"measured_at": self.wall_clock(), "may_begin": False})
 
     @staticmethod
     def _observe_clock(state: dict[str, Any], now: str) -> bool:

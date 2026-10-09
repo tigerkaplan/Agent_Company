@@ -13,6 +13,59 @@ from pathlib import Path
 from runtime.approvals.runtime import ApprovalRuntime
 from runtime.approvals.store import FileApprovalStore
 from runtime.core.jobs import JobRuntime, RuntimeError as JobRuntimeError
+from runtime.storage.file_store import FileJobStore
+
+
+class FileStoreLockTests(unittest.TestCase):
+    @unittest.skipUnless(sys.platform == "win32", "Windows byte-lock initialization race")
+    def test_delayed_creator_cannot_write_under_another_owner_lock(self):
+        from concurrent.futures import ThreadPoolExecutor
+        from threading import Event, get_ident
+        from unittest.mock import patch
+        import msvcrt
+
+        with tempfile.TemporaryDirectory() as directory:
+            store = FileJobStore(Path(directory))
+            lock_path = store.root / ".claim.lock"
+            created, second_acquired, first_blocked = Event(), Event(), Event()
+            creator = {}
+            original_open, original_lock = Path.open, msvcrt.locking
+
+            def delayed_open(path, mode="r", *args, **kwargs):
+                handle = original_open(path, mode, *args, **kwargs)
+                if path == lock_path and mode == "x+b":
+                    creator["thread"] = get_ident()
+                    created.set()
+                    if not second_acquired.wait(5):
+                        handle.close()
+                        raise AssertionError("Contender did not acquire the empty lock")
+                return handle
+
+            def observe_lock(*args):
+                try:
+                    return original_lock(*args)
+                except OSError:
+                    if get_ident() == creator.get("thread"):
+                        first_blocked.set()
+                    raise
+
+            def create():
+                with store.claim_transaction():
+                    return "creator"
+
+            def contend():
+                self.assertTrue(created.wait(5))
+                with store.claim_transaction():
+                    second_acquired.set()
+                    self.assertTrue(first_blocked.wait(5))
+                return "contender"
+
+            with patch.object(Path, "open", delayed_open), patch.object(msvcrt, "locking", observe_lock):
+                with ThreadPoolExecutor(max_workers=2) as pool:
+                    first, second = pool.submit(create), pool.submit(contend)
+                    self.assertEqual(first.result(timeout=10), "creator")
+                    self.assertEqual(second.result(timeout=10), "contender")
+            self.assertEqual(lock_path.read_bytes(), b"0")
 
 
 class DeterministicClock:

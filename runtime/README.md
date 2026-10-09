@@ -1,5 +1,11 @@
 # Runtime
 
+ORCH-01 graph execution lives in [`graph/`](graph/README.md), with graph
+contracts and executor evidence in `../orchestrator/graph/`. It coordinates
+canonical jobs and their existing execution, retry/stop, approval, review,
+budget, context, compute and recovery paths. Implementation is uncommitted;
+executor validation and independent review/owner closure remain pending.
+
 The runtime is the local-first execution coordination layer. It accepts already-classified work from the orchestrator, creates canonical jobs, manages job lifecycle state, queues work, and later lets workers execute jobs through provider abstractions.
 
 CORE-04 Tool Discovery is CLOSED / COMMITTED at `35f03f8` after CORE-04R5 PASS

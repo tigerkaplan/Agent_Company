@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from contextlib import ExitStack
 from collections.abc import Mapping
 from datetime import datetime, timedelta, timezone
 import hashlib
+import math
 from pathlib import Path
 from typing import Any, Callable
 from uuid import uuid4
@@ -21,7 +23,7 @@ from runtime.budget.models import (
     ExecutionBudgetSpec,
     budget_id_for,
 )
-from runtime.budget.store import ExecutionBudgetStoreError, FileExecutionBudgetStore
+from runtime.budget.store import BudgetLockTimeout, ExecutionBudgetStoreError, FileExecutionBudgetStore
 from runtime.continuation.models import (
     ContinuationContractError,
     ContinuationPolicy,
@@ -47,13 +49,21 @@ from runtime.progress.runtime import ProgressRuntime
 from runtime.retry.runtime import RetryRuntime
 from runtime.retry.store import FileRetryStore, RetryStoreError
 from runtime.storage.execution_store import ExecutionStoreError, FileExecutionStore
-from runtime.storage.file_store import FileJobStore, JobStoreError
+from runtime.storage.file_store import ClaimLockTimeout, FileJobStore, JobStoreError
 from runtime.core.task_contract import (TaskContractError, TaskContractStore,
                                        default_contract, validate_binding, completion, verify_completion)
 
 
 class RuntimeError(ValueError):
     """Raised when a requested runtime operation is invalid."""
+
+
+class ClaimContention(RuntimeError):
+    """Bounded claim-lock contention; execution has not been reserved."""
+
+
+class BudgetContention(RuntimeError):
+    """Budget ownership is temporarily unavailable; no decision was minted."""
 
 
 def utc_now() -> str:
@@ -88,6 +98,7 @@ class JobRuntime:
         "continuation",
         "continuation_parent_job_id",
         "retry_authorization",
+        "graph_binding",
         "error",
         "approval",
         "scheduled_at",
@@ -141,7 +152,10 @@ class JobRuntime:
             jobs = self.list()
             decisions = {}
             for snapshot in jobs:
-                with self.progress.transition_lock():
+                lock = (self.progress.transition_lock(timeout_seconds=30.0)
+                        if "graph_binding" in snapshot or "graph_plan" in snapshot
+                        else self.progress.transition_lock())
+                with lock:
                     job = self._load(snapshot["job_id"])
                     self.progress.observe_job(job)
                 if job["status"] != "failed":
@@ -156,6 +170,8 @@ class JobRuntime:
                 for entry in decisions[policy_id]:
                     if entry["source_job_id"] == job["job_id"]:
                         self.progress.observe_retry(job, self.retry_runtime._from_entry(entry))
+        except ClaimLockTimeout as error:
+            raise ClaimContention(str(error)) from error
         except (ProgressError, RetryStoreError, JobStoreError) as error:
             raise RuntimeError(str(error)) from error
 
@@ -232,14 +248,26 @@ class JobRuntime:
         *,
         claimed_by: str = "manual-worker",
         lease_seconds: int = 300,
+        job_id: str | None = None,
+        lock_timeout_seconds: float = 5.0,
     ) -> dict[str, Any] | None:
         if not isinstance(claimed_by, str) or not claimed_by.strip() or len(claimed_by) > 200:
             raise RuntimeError("Claim owner must be bounded non-empty text")
         if not isinstance(lease_seconds, int) or not 5 <= lease_seconds <= 3600:
             raise RuntimeError("Lease duration must be between 5 and 3600 seconds")
+        if (type(lock_timeout_seconds) not in {int, float} or not 0 < lock_timeout_seconds <= 30
+                or not math.isfinite(lock_timeout_seconds)):
+            raise RuntimeError("Claim lock wait must be finite and between zero and 30 seconds")
         try:
-            with self.store.claim_transaction():
-                queued = self.eligible()
+            with self.store.claim_transaction(timeout_seconds=lock_timeout_seconds):
+                if job_id is None:
+                    queued = self.eligible()
+                else:
+                    candidate = self.store.load(job_id) if self.store.exists(job_id) else None
+                    if candidate is None or "graph_binding" not in candidate:
+                        queued = [job for job in self.eligible() if job["job_id"] == job_id]
+                    else:
+                        queued = self._eligible_graph_claim(job_id)
                 if not queued:
                     return None
                 job = queued[0]
@@ -259,11 +287,29 @@ class JobRuntime:
                 )
                 updated.pop("claim_released_at", None)
                 return self._save(updated, expected_status=job["status"])
+        except ClaimLockTimeout as error:
+            raise ClaimContention(str(error)) from error
         except JobStoreError as error:
             raise RuntimeError(str(error)) from error
 
+    def _eligible_graph_claim(self, job_id: str) -> list[dict[str, Any]]:
+        """Select exact graph work while the caller owns the claim transaction."""
+        # _load revalidates the contract, graph dependencies and canonical
+        # retry/continuation lineage; unrelated jobs are not claim candidates.
+        job = self._load(job_id)
+        now = self._parse_timestamp(self.clock(), "scheduler clock")
+        if (job["status"] == "queued" and self._approval_allows_execution(job)
+                and (job.get("next_run_at") is None
+                     or self._parse_timestamp(job["next_run_at"], "next_run_at") <= now)):
+            return [job]
+        return []
+
     def validate_claim(self, job_id: str, claimed_by: str) -> dict[str, Any]:
         job = self._load(job_id)
+        return self._require_active_claim(job, claimed_by)
+
+    def _require_active_claim(self, job: dict[str, Any], claimed_by: str) -> dict[str, Any]:
+        """Check a canonical loaded claim without repeating full work validation."""
         if job["status"] != "running" or job.get("claimed_by") != claimed_by:
             raise RuntimeError("Job is not held by the expected active claim")
         if self._parse_timestamp(job["lease_until"], "lease_until") <= self._parse_timestamp(
@@ -281,6 +327,8 @@ class JobRuntime:
         job = self.validate_claim(job_id, claimed_by)
         try:
             validate_binding(job, now=self.clock(), executing=True)
+            from runtime.graph.runtime import validate_graph_job
+            validate_graph_job(self, job, executing=True)
         except TaskContractError as error:
             raise RuntimeError(str(error)) from error
         try:
@@ -377,9 +425,58 @@ class JobRuntime:
                             "retry_decision": retry_result["decision"],
                         }
                     )
+        except ClaimLockTimeout as error:
+            raise ClaimContention(str(error)) from error
         except JobStoreError as error:
             raise RuntimeError(str(error)) from error
         return recovered
+
+    def recover_unstarted_graph_claims(self, root_job_id: str) -> list[dict[str, Any]]:
+        """Release only claims with no durable admission or consumption evidence.
+
+        Explicit recovery requeues exact work; it never refunds reserved budget,
+        retry attempts, intent, results, approvals or terminal decisions.
+        """
+        recovered = []
+        try:
+            with self.store.claim_transaction(timeout_seconds=30.0):
+                for job in self.list(status="running"):
+                    if job.get("graph_binding", {}).get("root_job_id") != root_job_id:
+                        continue
+                    updated = deepcopy(job)
+                    updated.update(status="queued", claim_released_at=self.clock(), last_updated_at=self.clock())
+                    current = self._save(updated, expected_status="running", recover_unstarted=True)
+                    if current["status"] == "queued":
+                        recovered.append(current)
+        except ClaimLockTimeout as error:
+            raise ClaimContention(str(error)) from error
+        except JobStoreError as error:
+            raise RuntimeError(str(error)) from error
+        return recovered
+
+    def _unstarted_graph_claim(self, job, locks) -> bool:
+        if job.get("graph_binding") is None or self.execution_store is None:
+            raise RuntimeError("Unstarted recovery requires canonical graph/execution owners")
+        if self._parse_timestamp(job["lease_until"], "lease_until") <= self._parse_timestamp(self.clock(), "scheduler clock"):
+            # Expiration remains with the existing lease/retry owner. A lack of
+            # execution evidence cannot silently renew an expired claim.
+            return False
+        # Match retry's retry -> budget and intent's transition -> budget order. Keep ownership
+        # through the lifecycle write; late reservations revalidate the lease.
+        locks.enter_context(self.retry_store.transaction())
+        locks.enter_context(self.budget_store.transaction())
+        binding = BudgetBinding.from_dict(job["execution_budget"])
+        self.budget_store.load_policy(binding)
+        state = self.budget_store.load_state(binding)
+        if state["clock_rollback_detected"]:
+            raise RuntimeError("Unstarted recovery cannot trust a rolled-back budget clock")
+        if any(r["job_id"] == job["job_id"] for r in state["reservations"]):
+            return False
+        if any(self.retry_store.load_anchor(kind, job["job_id"]) is not None
+               for kind in ("execution", "consumed-attempt", "attempt-admission", "failure")):
+            return False
+        self.retry_store.reject_prior_execution_evidence(job["job_id"])
+        return self.execution_store.unstarted(job, self)
 
     def transition(self, job_id: str, target: str) -> dict[str, Any]:
         job = self._load(job_id)
@@ -795,6 +892,8 @@ class JobRuntime:
                 return self._retry_locked(
                     job_id, next_run_at=next_run_at, enqueue=enqueue
                 )
+        except ClaimLockTimeout as error:
+            raise ClaimContention(str(error)) from error
         except JobStoreError as error:
             raise RuntimeError(str(error)) from error
 
@@ -811,6 +910,8 @@ class JobRuntime:
         try:
             decision = self.retry_runtime.reserve(failed)
             self.progress.observe_retry(failed, decision)
+        except BudgetLockTimeout as error:
+            raise BudgetContention(str(error)) from error
         except (RetryStoreError, ProgressError) as error:
             raise RuntimeError(str(error)) from error
         if decision.decision != "RETRY":
@@ -858,6 +959,7 @@ class JobRuntime:
             "compute_requirements",
             "task_contract",
             "retry_policy",
+            "graph_binding",
         )
         payload = {
             name: deepcopy(failed[name])
@@ -948,7 +1050,7 @@ class JobRuntime:
                 job["retry_policy"] = self.retry_store.create(retry_policy).to_dict()
         except (RetryContractError, RetryStoreError) as error:
             raise RuntimeError(str(error)) from error
-        if "execution_budget" in job and parent_job_id is None:
+        if "execution_budget" in job and parent_job_id is None and "graph_binding" not in job:
             try:
                 spec = ExecutionBudgetSpec.from_input(job["execution_budget"])
                 policy = BudgetPolicy.create(job_id, spec, created_at=timestamp)
@@ -1165,11 +1267,15 @@ class JobRuntime:
                 ]
         return self._save(updated, expected_status=job["status"]) if save else updated
 
-    def _save(self, job: dict[str, Any], *, expected_status: str | None = None) -> dict[str, Any]:
+    def _save(self, job: dict[str, Any], *, expected_status: str | None = None,
+              recover_unstarted: bool = False) -> dict[str, Any]:
         try:
             # Separate lock avoids nesting the existing claim/retry OS lock.
             # Every lifecycle writer and reconciliation use the same lock order.
-            with self.progress.transition_lock():
+            lock = (self.progress.transition_lock(timeout_seconds=30.0)
+                    if "graph_binding" in job or "graph_plan" in job
+                    else self.progress.transition_lock())
+            with lock, ExitStack() as admission:
                 current = self._load(job["job_id"])
                 self.progress.observe_job(current)
                 if expected_status is not None and current["status"] != expected_status:
@@ -1180,6 +1286,13 @@ class JobRuntime:
                     return deepcopy(current)
                 if current["status"] != job["status"]:
                     self.lifecycle.require_transition(current["status"], job["status"])
+                    if current["status"] == "running" and job["status"] == "queued":
+                        # Only explicit recovery of proven unstarted graph work
+                        # can release a lease without consuming an attempt.
+                        if not recover_unstarted:
+                            raise RuntimeError("Running work can only be requeued by explicit unstarted recovery")
+                        if not self._unstarted_graph_claim(current, admission):
+                            return deepcopy(current)
                 if current["review_required"] and not job["review_required"]:
                     raise RuntimeError("Canonical review requirement cannot be weakened")
                 validate_binding(job)
@@ -1191,9 +1304,19 @@ class JobRuntime:
                     if evidence not in job["output_refs"]:
                         job["output_refs"].append(evidence)
                 self._validate_against_persisted_lineage(job)
+                if (recover_unstarted and current["status"] == "running" and job["status"] == "queued"
+                        and self._parse_timestamp(current["lease_until"], "lease_until")
+                        <= self._parse_timestamp(self.clock(), "scheduler clock")):
+                    # Proof/owner waits cannot renew a lease that expired while
+                    # recovery was checking. Leave it to expired-claim recovery.
+                    return deepcopy(current)
                 self.progress.reserve_transition(current, job)
                 self.store.save(job)
                 self.progress.observe_job(job)
+        except ClaimLockTimeout as error:
+            raise ClaimContention(str(error)) from error
+        except BudgetLockTimeout as error:
+            raise BudgetContention(str(error)) from error
         except (JobStoreError, ProgressError, LifecycleError, TaskContractError, ValueError) as error:
             raise RuntimeError(str(error)) from error
         if self.notification_emitter is not None and job["status"] in {
@@ -1288,8 +1411,8 @@ class JobRuntime:
                     raise RuntimeError(
                         "Execution budget does not match continuation logical identity"
                     )
-            elif job.get("parent_job_id") is None and binding.logical_job_id != job.get(
-                "job_id"
+            elif job.get("parent_job_id") is None and binding.logical_job_id != (
+                job.get("graph_binding", {}).get("root_job_id") or job.get("job_id")
             ):
                 raise RuntimeError(
                     "Initial execution budget does not match its logical job root"
@@ -1471,6 +1594,9 @@ class JobRuntime:
 
         try:
             validate_binding(job)
+            if "graph_plan" in job or "graph_binding" in job:
+                from runtime.graph.runtime import validate_graph_job
+                validate_graph_job(self, job)
             if self.store.exists(job["job_id"]):
                 self.task_contract_store.verify(job)
             if job["status"] == "completed":
@@ -1509,6 +1635,8 @@ class JobRuntime:
         return f"job-cont-{hashlib.sha256(boundary).hexdigest()[:32]}"
 
     def _approval_allows_execution(self, job: dict[str, Any]) -> bool:
+        if "graph_plan" in job:
+            return False
         status = job.get("approval_status")
         if status == "not_required":
             return not self._current_step_requires_approval(job)

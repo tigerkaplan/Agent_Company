@@ -93,104 +93,151 @@ class FileExecutionStore:
         except (OSError, ValueError, TypeError) as error:
             raise ExecutionStoreError("Decision trace unavailable; explicit recovery required") from error
 
+    def unstarted(self, job, runtime):
+        """Read-only veto for claim recovery, under the transition transaction.
+
+        Both retained intent halves and protected observations independently
+        veto requeue; a missing or malformed half fails closed.
+        """
+        from runtime.core.task_contract import digest
+        history = runtime.progress.store.read(runtime.progress.logical_id(job))
+        if any(e.job_id == job["job_id"] and e.event_type in {
+                "decision_intent_observed", "decision_consumption_observed",
+                "decision_result_observed", "execution_started"} for e in history):
+            return False
+        for owner in {self.root, runtime.store.root.parent / "executions"}:
+            decisions = FileExecutionStore(owner)
+            if decisions.find_for_job(job["job_id"]) is not None:
+                return False
+            ids = set()
+            for stage in ("intent", "dispatch-execute", "dispatch-review", "effect-controlled_write"):
+                ids.update(p.name.rsplit("." + stage + ".", 1)[0]
+                           for p in (owner / ".decisions").glob("*." + stage + ".*.json"))
+            for execution_id in sorted(ids):
+                prior = decisions._decision_pair(execution_id, "intent")
+                try:
+                    decisions._verify_observation(prior, "decision_intent_observed", execution_id, digest(prior))
+                    decisions._verify_observation(prior, "decision_consumption_observed",
+                                                  decisions._intent_work_id(prior), digest(prior))
+                    if prior["request"]["job_id"] == job["job_id"] or prior["authority_source"]["job_id"] == job["job_id"]:
+                        return False
+                except (KeyError, TypeError, ValueError) as error:
+                    raise ExecutionStoreError("Unstarted recovery has untrusted retained intent") from error
+        return True
+
     def begin_decision(self, request, *, executor, runtime, job):
         """Consume exact-work intent before effects; restart never retries it."""
-        from runtime.core.capability_governance import decision
-        from runtime.core.task_contract import digest, TaskContractError
-        from runtime.approvals.store import FileApprovalStore
-        try:
-            canonical = runtime.validate_execution_authority(job["job_id"], job.get("claimed_by"))
-            if (runtime.task_contract_store.boundary(canonical) != runtime.task_contract_store.boundary(job)
-                    or any(canonical.get(k) != job.get(k) for k in ("claimed_by", "attempt", "approval_status"))):
-                raise ExecutionStoreError("Decision requires the current canonical active claim")
-        except ValueError as error:
-            raise ExecutionStoreError("Decision requires canonical execution authority") from error
-        runtime.task_contract_store.verify(job)
-        from runtime.workers.worker import Worker
-        expected = Worker._build_request(job, request.execution_id, request.context_refs)
-        if request.to_dict() != expected.to_dict():
-            raise ExecutionStoreError("Decision request differs from authorized exact work")
-        try:
-            approval_store = runtime.approval_store or FileApprovalStore(runtime.store.root.parent / "approvals")
-            approvals = approval_store.completion_evidence(job, request.execution_id, None, execution_only=True)
-            value = decision(request, executor=executor,
-                authority_source={"job_id": job["job_id"],
-                    "task_boundary_digest": digest(runtime.task_contract_store.boundary(job)),
-                    "task_store_root": str(runtime.task_contract_store.root.resolve()),
-                    "job_store_root": str(runtime.store.root.resolve()),
-                    "claimed_by": job["claimed_by"],
-                    "budget_store_root": str(runtime.budget_store.root.resolve()),
-                    "execution_store_root": str(self.root.resolve()),
-                    "review_evidence_refs": list(job.get("output_refs", [])),
-                    "progress_store_root": str(runtime.progress.store.root.resolve()),
-                    "logical_job_id": runtime.progress.logical_id(job),
-                    "approval_store_root": str(approval_store.root.resolve())}, approvals=approvals)
-        except (ValueError, TaskContractError) as error:
-            raise ExecutionStoreError("Decision authority/approval evidence rejected") from error
-        self._verify_live_dispatch(value)
-        # Coordinate using the existing CORE-07 transition lock. The authorized
-        # job attempt is one work claim even if a caller invents another ID/store.
-        with runtime.progress.transition_lock():
+        from contextlib import nullcontext
+        from runtime.graph.models import preflight_plan_scope
+        binding = job.get("graph_binding")
+        # Structural proofs only; all authority/lease/intent checks stay fresh.
+        scope = (preflight_plan_scope(runtime.store.root, binding["root_job_id"])
+                 if binding is not None else nullcontext())
+        with scope:
+            from runtime.core.capability_governance import decision
+            from runtime.core.task_contract import digest, TaskContractError
+            from runtime.approvals.store import FileApprovalStore
+            try:
+                canonical = runtime.validate_execution_authority(job["job_id"], job.get("claimed_by"))
+                if (runtime.task_contract_store.boundary(canonical) != runtime.task_contract_store.boundary(job)
+                        or any(canonical.get(k) != job.get(k) for k in ("claimed_by", "attempt", "approval_status"))):
+                    raise ExecutionStoreError("Decision requires the current canonical active claim")
+            except ValueError as error:
+                raise ExecutionStoreError("Decision requires canonical execution authority") from error
+            runtime.task_contract_store.verify(job)
+            from runtime.workers.worker import Worker
+            expected = Worker._build_request(job, request.execution_id, request.context_refs)
+            if request.to_dict() != expected.to_dict():
+                raise ExecutionStoreError("Decision request differs from authorized exact work")
+            try:
+                approval_store = runtime.approval_store or FileApprovalStore(runtime.store.root.parent / "approvals")
+                approvals = approval_store.completion_evidence(job, request.execution_id, None, execution_only=True)
+                value = decision(request, executor=executor,
+                    authority_source={"job_id": job["job_id"],
+                        "task_boundary_digest": digest(runtime.task_contract_store.boundary(job)),
+                        "task_store_root": str(runtime.task_contract_store.root.resolve()),
+                        "job_store_root": str(runtime.store.root.resolve()),
+                        "claimed_by": job["claimed_by"],
+                        "budget_store_root": str(runtime.budget_store.root.resolve()),
+                        "execution_store_root": str(self.root.resolve()),
+                        "review_evidence_refs": list(job.get("output_refs", [])),
+                        "progress_store_root": str(runtime.progress.store.root.resolve()),
+                        "logical_job_id": runtime.progress.logical_id(job),
+                        "approval_store_root": str(approval_store.root.resolve())}, approvals=approvals)
+            except (ValueError, TaskContractError) as error:
+                raise ExecutionStoreError("Decision authority/approval evidence rejected") from error
             self._verify_live_dispatch(value)
-            history = runtime.progress.store.read(runtime.progress.logical_id(job))
-            identity = self._intent_work_id(value)
-            # Retained intent pairs independently veto a rolled-back journal.
-            # Scan the canonical execution owner under the existing transition lock.
-            roots = {self.root, runtime.store.root.parent / "executions"}
-            for owner in roots:
-                decisions = FileExecutionStore(owner)
-                directory = owner / ".decisions"
-                retained_ids = set()
-                for stage in ("intent", "dispatch-execute", "dispatch-review", "effect-controlled_write"):
-                    for path in directory.glob("*." + stage + ".*.json"):
-                        retained_ids.add(path.name.rsplit("." + stage + ".", 1)[0])
-                for prior_id in sorted(retained_ids):
-                    prior = decisions._decision_pair(prior_id, "intent")
-                    try:
-                        source = prior["authority_source"]
-                        if (prior["request"]["execution_id"] != prior_id
-                                or source["job_id"] != prior["request"]["job_id"]
-                                or prior["request_digest"] != digest(prior["request"])
-                                or Path(source["progress_store_root"]).resolve()
-                                != runtime.progress.store.root.resolve()):
-                            raise ExecutionStoreError("Retained intent identity/provenance changed; recovery required")
-                        prior_identity = self._intent_work_id(prior)
-                        # Journal observations independently bind even apparently
-                        # foreign retained entries. No live historical job is
-                        # needed, but mutable paired records cannot certify each
-                        # other or redirect verification to another journal owner.
-                        decisions._verify_observation(prior, "decision_intent_observed", prior_id, digest(prior))
-                        decisions._verify_observation(prior, "decision_consumption_observed", prior_identity, digest(prior))
-                    except (KeyError, TypeError, ValueError) as error:
-                        raise ExecutionStoreError("Retained intent malformed; explicit recovery required") from error
-                    if prior_identity == identity:
-                        raise ExecutionStoreError("Decision job attempt already consumed in retained intent; journal rollback requires recovery")
-                    # Surviving consumption pairs bind the original intent even
-                    # if its job/work identity is coherently edited. This check
-                    # needs no live job record for unrelated completed work.
-                    for stage, purpose in (("dispatch-execute", "execute"), ("dispatch-review", "review")):
-                        if any(decisions._decision_path(prior_id, stage, suffix).exists()
-                               for suffix in ("anchor", "witness")):
-                            claim = {"schema_version": 1, "intent_digest": digest(prior), "purpose": purpose}
-                            decisions._verify_consumption(prior, stage, claim)
-                    # A changed work identity is never trusted from retained
-                    # bytes alone; canonical provenance and observations veto it.
-                    if (prior["request"]["job_id"] == request.job_id
-                            or prior["authority_source"]["job_id"] == request.job_id):
-                        decisions._verify_intent(prior)
+            # Coordinate using the existing CORE-07 transition lock. The authorized
+            # job attempt is one work claim even if a caller invents another ID/store.
+            # Sixteen siblings also publish result/lifecycle evidence through this
+            # owner. Allow their bounded contention without reopening any attempt;
+            # the complete live authority/lease check below remains mandatory.
+            lock = (runtime.progress.transition_lock(timeout_seconds=180.0)
+                    if job.get("graph_binding") else runtime.progress.transition_lock())
+            with lock:
+                # Revalidate through the configured canonical owner after waiting.
+                # One complete live check avoids rebuilding and validating the same
+                # graph owner twice while holding the shared intent transaction.
+                self._verify_live_dispatch(value, runtime=runtime)
+                history = runtime.progress.store.read(runtime.progress.logical_id(job))
+                identity = self._intent_work_id(value)
+                # Retained intent pairs independently veto a rolled-back journal.
+                # Scan the canonical execution owner under the existing transition lock.
+                roots = {self.root, runtime.store.root.parent / "executions"}
+                for owner in roots:
+                    decisions = FileExecutionStore(owner)
+                    directory = owner / ".decisions"
+                    retained_ids = set()
+                    for stage in ("intent", "dispatch-execute", "dispatch-review", "effect-controlled_write"):
+                        for path in directory.glob("*." + stage + ".*.json"):
+                            retained_ids.add(path.name.rsplit("." + stage + ".", 1)[0])
+                    for prior_id in sorted(retained_ids):
+                        prior = decisions._decision_pair(prior_id, "intent")
+                        try:
+                            source = prior["authority_source"]
+                            if (prior["request"]["execution_id"] != prior_id
+                                    or source["job_id"] != prior["request"]["job_id"]
+                                    or prior["request_digest"] != digest(prior["request"])
+                                    or Path(source["progress_store_root"]).resolve()
+                                    != runtime.progress.store.root.resolve()):
+                                raise ExecutionStoreError("Retained intent identity/provenance changed; recovery required")
+                            prior_identity = self._intent_work_id(prior)
+                            # Journal observations independently bind even apparently
+                            # foreign retained entries. No live historical job is
+                            # needed, but mutable paired records cannot certify each
+                            # other or redirect verification to another journal owner.
+                            decisions._verify_observation(prior, "decision_intent_observed", prior_id, digest(prior))
+                            decisions._verify_observation(prior, "decision_consumption_observed", prior_identity, digest(prior))
+                        except (KeyError, TypeError, ValueError) as error:
+                            raise ExecutionStoreError("Retained intent malformed; explicit recovery required") from error
+                        if prior_identity == identity:
+                            raise ExecutionStoreError("Decision job attempt already consumed in retained intent; journal rollback requires recovery")
+                        # Surviving consumption pairs bind the original intent even
+                        # if its job/work identity is coherently edited. This check
+                        # needs no live job record for unrelated completed work.
+                        for stage, purpose in (("dispatch-execute", "execute"), ("dispatch-review", "review")):
+                            if any(decisions._decision_path(prior_id, stage, suffix).exists()
+                                   for suffix in ("anchor", "witness")):
+                                claim = {"schema_version": 1, "intent_digest": digest(prior), "purpose": purpose}
+                                decisions._verify_consumption(prior, stage, claim)
+                        # A changed work identity is never trusted from retained
+                        # bytes alone; canonical provenance and observations veto it.
+                        if (prior["request"]["job_id"] == request.job_id
+                                or prior["authority_source"]["job_id"] == request.job_id):
+                            decisions._verify_intent(prior)
 
-            if any((e.execution_id == identity and e.event_type == "decision_consumption_observed")
-                   or (e.execution_id == request.execution_id and e.event_type == "decision_intent_observed")
-                   for e in history):
-                raise ExecutionStoreError("Decision job attempt already consumed; no replay authority")
-            runtime.progress.store.append(runtime.progress.event(job, "decision_consumption_observed",
-                execution_id=identity, evidence_id=digest(value)))
-            runtime.progress.store.append(runtime.progress.event(job, "decision_intent_observed",
-                execution_id=request.execution_id, evidence_id=digest(value)))
-            canonical_store = FileExecutionStore(runtime.store.root.parent / "executions")
-            if canonical_store.root.resolve() != self.root.resolve():
-                canonical_store._decision_pair(request.execution_id, "intent", value)
-            return self._decision_pair(request.execution_id, "intent", value)
+                if any((e.execution_id == identity and e.event_type == "decision_consumption_observed")
+                       or (e.execution_id == request.execution_id and e.event_type == "decision_intent_observed")
+                       for e in history):
+                    raise ExecutionStoreError("Decision job attempt already consumed; no replay authority")
+                runtime.progress.store.append(runtime.progress.event(job, "decision_consumption_observed",
+                    execution_id=identity, evidence_id=digest(value)))
+                runtime.progress.store.append(runtime.progress.event(job, "decision_intent_observed",
+                    execution_id=request.execution_id, evidence_id=digest(value)))
+                canonical_store = FileExecutionStore(runtime.store.root.parent / "executions")
+                if canonical_store.root.resolve() != self.root.resolve():
+                    canonical_store._decision_pair(request.execution_id, "intent", value)
+                return self._decision_pair(request.execution_id, "intent", value)
 
     @staticmethod
     def _intent_work_id(intent):
@@ -277,6 +324,13 @@ class FileExecutionStore:
             tasks = TaskContractStore(Path(source["task_store_root"]),
                 progress=ProgressRuntime(Path(source["progress_store_root"])))
             tasks.verify(current_job)
+            if current_job.get("graph_binding") is not None:
+                from runtime.core.jobs import JobRuntime
+                from runtime.graph.runtime import validate_graph_job
+                jobs = JobRuntime(Path(source["job_store_root"]))
+                jobs.execution_store = FileExecutionStore(Path(source["execution_store_root"]))
+                jobs.configure_authority_stores(FileApprovalStore(Path(source["approval_store_root"])), jobs.execution_store)
+                validate_graph_job(jobs, current_job)
             boundary = tasks.boundary(current_job)
             # GOV-01 permits a verified monotonic strengthening of this gate.
             # TaskContractStore has already checked its original anchor, paired
@@ -302,30 +356,50 @@ class FileExecutionStore:
             raise ExecutionStoreError("Decision intent provenance unavailable or tampered") from error
 
     @staticmethod
-    def _verify_live_dispatch(intent):
+    def _verify_live_dispatch(intent, *, runtime=None):
         """Reuse operational claim/budget records; provenance cannot grant them."""
         from runtime.storage.file_store import FileJobStore
         from runtime.budget.models import BudgetBinding
         from runtime.budget.store import FileExecutionBudgetStore
         try:
             source, request = intent["authority_source"], intent["request"]
-            job = FileJobStore(Path(source["job_store_root"])).load(request["job_id"])
+            if runtime is None:
+                job = FileJobStore(Path(source["job_store_root"])).load(request["job_id"])
+            else:
+                from runtime.core.task_contract import digest
+                if runtime.store.root.resolve() != Path(source["job_store_root"]).resolve():
+                    raise ExecutionStoreError("Dispatch canonical job owner changed")
+                job = runtime.validate_execution_authority(request["job_id"], source["claimed_by"])
+                if digest(runtime.task_contract_store.boundary(job)) != source["task_boundary_digest"]:
+                    raise ExecutionStoreError("Dispatch exact task boundary changed during the intent wait")
             if (job["status"] != "running" or not job.get("claimed_by")
                     or job["claimed_by"] != source["claimed_by"]
                     or job["attempt"] != request["attempt"]
                     or job["approval_status"] != request["approval_status"]):
                 raise ExecutionStoreError("Certified dispatch has no exact active canonical claim")
+            if job.get("graph_binding") is not None and runtime is None:
+                from runtime.core.jobs import JobRuntime
+                from runtime.graph.runtime import validate_graph_job
+                from runtime.approvals.store import FileApprovalStore
+                jobs = JobRuntime(Path(source["job_store_root"]))
+                jobs.execution_store = FileExecutionStore(Path(source["execution_store_root"]))
+                jobs.configure_authority_stores(FileApprovalStore(Path(source["approval_store_root"])), jobs.execution_store)
+                validate_graph_job(jobs, job, executing=True)
             if request["task_contract"]["budget_references"] is not None:
                 binding = BudgetBinding.from_dict(request["task_contract"]["budget_references"])
                 store = FileExecutionBudgetStore(Path(source["budget_store_root"]))
-                store.load_policy(binding)
-                state = store.load_state(binding)
-                reservations = [r for r in state["reservations"]
-                    if r["execution_id"] == request["execution_id"]]
-                if (state["clock_rollback_detected"] or len(reservations) != 1
-                        or reservations[0]["job_id"] != request["job_id"]
-                        or reservations[0]["state"] != "active"):
-                    raise ExecutionStoreError("Certified dispatch has no active canonical budget reservation")
+                # The canonical writer publishes usage evidence before its
+                # mutable state. Parallel siblings must observe a committed
+                # pair, never mistake an in-flight transaction for corruption.
+                with store.transaction(timeout_seconds=30.0 if job.get("graph_binding") else 5.0):
+                    store.load_policy(binding)
+                    state = store.load_state(binding)
+                    reservations = [r for r in state["reservations"]
+                        if r["execution_id"] == request["execution_id"]]
+                    if (state["clock_rollback_detected"] or len(reservations) != 1
+                            or reservations[0]["job_id"] != request["job_id"]
+                            or reservations[0]["state"] != "active"):
+                        raise ExecutionStoreError("Certified dispatch has no active canonical budget reservation")
         except (ValueError, OSError, KeyError, TypeError) as error:
             raise ExecutionStoreError("Dispatch claim/budget evidence unavailable") from error
 

@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Bounded canonical graph plan",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "max_parallel", "max_handoffs", "nodes", "edges"],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "max_parallel": {"type": "integer", "minimum": 1, "maximum": 16},
+    "max_handoffs": {"type": "integer", "minimum": 0, "maximum": 64},
+    "nodes": {"type": "array", "minItems": 1, "maxItems": 64, "items": {"$ref": "#/$defs/node"}},
+    "edges": {"type": "array", "maxItems": 128, "uniqueItems": true, "items": {"$ref": "#/$defs/edge"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "[A-Za-z0-9][A-Za-z0-9._-]{0,79}"},
+    "node": {
+      "type": "object", "additionalProperties": false,
+      "required": ["node_id", "kind", "profile", "depends_on", "payload"],
+      "properties": {
+        "node_id": {"$ref": "#/$defs/id"},
+        "kind": {"type": "string", "enum": ["planner", "splitter", "worker", "deterministic", "gate", "human_gate", "merge", "fan_out", "fan_in"]},
+        "profile": {"type": "string", "enum": ["planner", "splitter", "researcher", "explorer", "worker", "critic", "deterministic"]},
+        "depends_on": {"type": "array", "maxItems": 64, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "operation": {"type": "string", "enum": ["collect", "deduplicate", "sort", "hash", "verify"]},
+        "payload": {
+          "type": "object", "additionalProperties": false, "required": ["task", "task_contract"],
+          "properties": {
+            "task": {"type": "string", "minLength": 1, "maxLength": 16384},
+            "task_contract": {"$ref": "task-contract.schema.json"},
+            "task_class": {"type": "string"}, "agent": {"type": "string"},
+            "workflow": {"type": "string"}, "skill": {"type": ["string", "null"]},
+            "provider": {"type": ["string", "null"]}, "project_id": {"type": ["string", "null"]},
+            "capability": {"type": "string"},
+            "execution_mode": {"type": "string", "enum": ["READ_ONLY", "CONTROLLED_WRITE"]},
+            "execution_scope": {"type": ["object", "null"]},
+            "review_required": {"type": "boolean"},
+            "input_refs": {"type": "array", "maxItems": 100},
+            "compute_requirements": {"type": "object"}
+          }
+        }
+      }
+    },
+    "edge": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source", "target", "kind"],
+      "properties": {
+        "source": {"$ref": "#/$defs/id"}, "target": {"$ref": "#/$defs/id"},
+        "kind": {"type": "string", "enum": ["correction", "replan"]}
+      }
+    }
+  }
+}

@@ -9,6 +9,7 @@ from typing import Any, Mapping
 
 from runtime.actions.models import ExecutionScope, ScopeContractError, normalize_relative_path, scope_path_contains
 from runtime.budget.runtime import ExecutionBudgetRuntime
+from runtime.budget.store import BudgetLockTimeout
 from runtime.retry.models import (
     FAILURE_CLASSES,
     RetryBinding,
@@ -195,14 +196,22 @@ class RetryRuntime:
             raise RetryStoreError("Failed execution request changed after immutable admission")
         return digest
 
-    def reserve_execution(self, job: Mapping[str, Any], execution_id: str) -> tuple[dict[str, Any] | None, bool]:
+    def reserve_execution(self, job: Mapping[str, Any], execution_id: str, *,
+                          budget_admission=None) -> tuple[dict[str, Any] | None, bool]:
         if job.get("retry_authorization") is None:
+            if budget_admission is not None and budget_admission().status != "ALLOW":
+                return None, False
             return None, True
         with self.store.transaction():
             self.validate_authorization(job, for_execution=True)
             existing = self.execution_reservation(job)
             if existing is not None:
                 return existing, False
+            # Serialize duplicate deliveries through the existing retry owner.
+            # Contention consumes neither budget nor the write-once attempt.
+            # The established retry -> budget lock order is unchanged.
+            if budget_admission is not None and budget_admission().status != "ALLOW":
+                return None, False
             reservation = {"job_id": job["job_id"], "attempt": job["attempt"], "execution_id": execution_id,
                            "authorization_digest": job["retry_authorization"]["authorization_digest"],
                            "work_digest": retry_work_digest(job)}
@@ -253,20 +262,7 @@ class RetryRuntime:
             work_digest = retry_work_digest(failed)
             unit_id = retry_unit_id(failed)
             with self.store.transaction():
-                evidence = self.store.load_anchor("failure", str(failed["job_id"]))
-                if evidence is None or any(evidence.get(name) != value for name, value in {
-                    "attempt": failed.get("attempt"), "work_digest": work_digest, "failed_unit_id": unit_id,
-                    "original_execution_ref": self._original_execution_ref(failed),
-                    "failure_class": self._failure_class(failed),
-                    "progress_evidence_digest": failed.get("error", {}).get("progress_evidence_digest"),
-                }.items()):
-                    raise RetryStoreError("Failed work changed or lacks immutable canonical failure evidence")
-                request_digest = self._check_execution(failed, evidence["original_execution_ref"],
-                    self.store.load_anchor("admission", evidence["original_execution_ref"].split(":", 1)[1])
-                    if evidence["original_execution_ref"] else None)
-                if request_digest != evidence["request_digest"]:
-                    raise RetryStoreError("Failed execution request changed after canonical failure")
-                self._approval_requirement(failed, evidence)
+                self._verify_failed_work(failed, work_digest, unit_id)
                 state = self.store.load_state(
                     binding.to_dict(), history_limit=policy.history_limit
                 )
@@ -287,8 +283,47 @@ class RetryRuntime:
                 return self._decide_and_append(
                     failed, binding, policy, state, work_digest, unit_id
                 )
+        except BudgetLockTimeout:
+            raise
         except (RetryContractError, RetryStoreError, TypeError, ValueError) as error:
             raise RetryStoreError(str(error)) from error
+
+    def _verify_failed_work(self, failed, work_digest, unit_id):
+        evidence = self.store.load_anchor("failure", str(failed["job_id"]))
+        if evidence is None or any(evidence.get(name) != value for name, value in {
+            "attempt": failed.get("attempt"), "work_digest": work_digest, "failed_unit_id": unit_id,
+            "original_execution_ref": self._original_execution_ref(failed),
+            "failure_class": self._failure_class(failed),
+            "progress_evidence_digest": failed.get("error", {}).get("progress_evidence_digest"),
+        }.items()):
+            raise RetryStoreError("Failed work changed or lacks immutable canonical failure evidence")
+        request_digest = self._check_execution(failed, evidence["original_execution_ref"],
+            self.store.load_anchor("admission", evidence["original_execution_ref"].split(":", 1)[1])
+            if evidence["original_execution_ref"] else None)
+        if request_digest != evidence["request_digest"]:
+            raise RetryStoreError("Failed execution request changed after canonical failure")
+        self._approval_requirement(failed, evidence)
+
+    def persisted_decision(self, failed: Mapping[str, Any]) -> dict[str, Any] | None:
+        """Verify an existing decision under the canonical publication lock.
+
+        Execution/provenance verification can re-enter this read from inside a
+        canonical writer; the store reuses that thread's existing transaction.
+        A concurrent reader waits for publication instead of confusing an active
+        write with missing history. Interrupted or corrupt evidence still fails
+        closed. This read cannot authorize a missing decision or a retry attempt.
+        """
+        with self.store.transaction():
+            binding = RetryBinding.from_dict(failed.get("retry_policy"))
+            policy = self.store.load_policy(binding.to_dict())
+            state = self.store.load_state(binding.to_dict(), history_limit=policy.history_limit)
+            entry = next((e for e in state["history"] if e["source_job_id"] == failed.get("job_id")), None)
+            if entry is not None:
+                work = retry_work_digest(failed)
+                self._verify_failed_work(failed, work, retry_unit_id(failed))
+                if entry["work_digest"] != work:
+                    raise RetryStoreError("Persisted retry decision is stale for changed work")
+            return deepcopy(entry)
 
     def validate_authorization(self, job: Mapping[str, Any], *, for_execution: bool = True) -> None:
         """Verify historical binding; current terminal state additionally revokes execution.
@@ -526,6 +561,9 @@ class RetryRuntime:
         decision = ExecutionBudgetRuntime(
             self.budget_store, wall_clock=self.clock
         ).state(binding)
+        if decision.status == "DEFER":
+            # No immutable ERROR/STOP/RETRY decision may consume contention.
+            raise BudgetLockTimeout(decision.reason)
         if decision.status == "ERROR":
             return "ERROR"
         return "EXHAUSTED" if decision.state.get("exhausted_dimensions") else "AVAILABLE"

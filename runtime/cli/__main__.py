@@ -72,6 +72,9 @@ from runtime.webhooks.models import WebhookContractError
 from runtime.webhooks.service import WebhookIngressService
 from runtime.webhooks.store import FileWebhookStore, WebhookStoreError
 from runtime.workers.worker import Worker
+from runtime.graph.runtime import GraphRuntime
+from runtime.graph.models import GraphError
+from runtime.graph.executor import DeterministicGraphExecutor
 
 
 def default_state_root() -> Path:
@@ -409,6 +412,14 @@ def build_parser() -> argparse.ArgumentParser:
         timing.add_argument("--delay-seconds", type=int)
     cancel = commands.add_parser("cancel", help="Cancel one non-terminal job")
     cancel.add_argument("job_id")
+
+    graph = top.add_parser("graph", help="Coordinate bounded canonical graph jobs")
+    graph_commands = graph.add_subparsers(dest="command", required=True)
+    for command in ("show", "advance", "run-once", "recover"):
+        graph_command = graph_commands.add_parser(command)
+        graph_command.add_argument("job_id")
+        if command in {"run-once", "recover"}:
+            graph_command.add_argument("--executor", choices=("local-success", "local-failure", "provider"), default="local-success")
 
     worker = top.add_parser("worker", help="Coordinate one local execution")
     worker_commands = worker.add_subparsers(dest="command", required=True)
@@ -1359,6 +1370,27 @@ def run(arguments: list[str] | None = None) -> int:
                     ),
                 )
                 result = notification_service.emit(event).to_dict()
+        elif args.resource == "graph":
+            runtime.execution_store = executions
+            runtime.retry_runtime.execution_store = executions
+            graph_runtime = GraphRuntime(runtime, approvals)
+            if args.command == "show":
+                result = graph_runtime.show(args.job_id)
+            elif args.command == "advance":
+                result = graph_runtime.advance(args.job_id)
+            elif args.command == "recover":
+                worker = build_worker(args.executor, runtime, executions, approvals, args.execution_root,
+                                      provider_environment=provider_environment)
+                result = graph_runtime.recover(args.job_id, worker)
+            else:
+                def graph_worker(node, job):
+                    worker = build_worker(args.executor, runtime, executions, approvals, args.execution_root,
+                                          provider_environment=provider_environment)
+                    if "operation" in node:
+                        worker.executor = DeterministicGraphExecutor(runtime)
+                    return worker
+                outcomes = graph_runtime.run_ready(args.job_id, graph_worker)
+                result = {"run": graph_runtime.show(args.job_id), "outcomes": [o.to_dict() for o in outcomes]}
         elif args.resource == "worker":
             worker = build_worker(
                 args.executor,
@@ -1422,6 +1454,7 @@ def run(arguments: list[str] | None = None) -> int:
         else:
             raise RuntimeError(f"Unsupported command: {args.command}")
     except (
+        GraphError,
         RuntimeError,
         ScheduleRuntimeError,
         ProviderConfigError,

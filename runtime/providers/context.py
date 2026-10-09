@@ -163,4 +163,5 @@ class ExecutionContextBuilder:
             dry_run=request.dry_run,
             context_pack=pack,
             task_contract=request.to_dict().get("task_contract"),
+            execution_profile=request.execution_profile,
         )
