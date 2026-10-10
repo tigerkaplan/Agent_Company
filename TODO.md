@@ -1,5 +1,31 @@
 # Agent Company TODO
 
+## MEM-01 Closure Reconciliation - 2026-10-10
+
+MEM-01 Knowledge / Memory Foundation: **CLOSED / READY_TO_COMMIT**.
+Closure assessment: **PASS** on owner-supplied acceptance, executor and independent
+R03-M1 re-review evidence, with current source hashes verified locally.
+**READY_FOR_COMMIT: YES.** Implementation and this reconciliation remain
+UNCOMMITTED against HEAD `031028b6a57859b41b46123f0347cbd9570afe95`.
+ACTIVE: None. NEXT: MEM-02 Knowledge Lifecycle + Retrieval / RAG / NOT STARTED,
+by frozen sequence only. Next action: separately authorized MEM-01 commit.
+No Git or MEM-02 implementation authority follows from this reconciliation.
+
+See [acceptance, source hashes, 232/232 evidence and limitations](PROJECT_STATE.md#mem-01-closure-reconciliation---2026-10-10).
+Review/test outcomes are owner-supplied reports; raw logs and a separate
+repository review artifact have not been verified. No mandatory unrun MEM-01
+validation gate was identified in the inspected rules; no review was repeated.
+D1 runner optimization, measurements and formal closure remain unfinished;
+archived runner M2 remains OPEN. V1 freeze and existing closed checkpoints remain intact.
+Dated pre-MEM-01 records below retain their historical status and evidence.
+
+- [x] Record A1-A7 PASS, R03-M1 CLOSED and the original FIX/repair history.
+- [x] Preserve reported independent 232/232 and verify all three source hashes.
+- [x] Reconcile MEM-01 scope, status and physical tree in the four existing owners.
+- [ ] Separately authorize and perform the MEM-01 commit. READY_TO_COMMIT does
+  not mean COMMITTED; staging, commit and push were not performed here.
+- [ ] MEM-02 stays NEXT / NOT STARTED; stop before implementation.
+
 ## POST-ORCH-01 DOC-TREE - 2026-10-09
 
 ORCH-01 Graph Execution Runtime: CLOSED / COMMITTED at `d38780817ca9f233051efa31b77d3a8eabe1473a`
@@ -258,11 +284,13 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
   validation, independent R4 refresh-02 and owner closure PASS; no acceptance blockers.
   Loops remain inside nodes and graphs connect nodes; ORCH-01 is not CORE-12.
   Operational observations do not implement memory or learning promotion.
-- [ ] MEM-01 Knowledge / Memory Foundation — NEXT / NOT STARTED, sequence only:
-  provider-neutral MemoryInterface,
-  project isolation, provenance, confidence, and verification semantics while
-  preserving Knowledge != Memory != State.
-- [ ] MEM-02 Knowledge Lifecycle + Retrieval / RAG: normalized, deduplicated,
+- [x] MEM-01 Knowledge / Memory Foundation — CLOSED / READY_TO_COMMIT,
+  UNCOMMITTED: provider-neutral MemoryInterface, project isolation, immutable
+  provenance, confidence and verification; Knowledge != Memory != State.
+  Owner-supplied A1-A7 / independent R03-M1 PASS and 232/232; current source
+  hashes match. Limitations are recorded in PROJECT_STATE; commit is pending.
+- [ ] MEM-02 Knowledge Lifecycle + Retrieval / RAG — NEXT / NOT STARTED:
+  normalized, deduplicated,
   classified, connected, evidence-backed retrieval/RAG, reranking, context
   packs, anchored/evidence-backed memory, trace-derived lessons, learning
   constraints, selective context retention, action verification, and learning.

@@ -1,5 +1,28 @@
 # Agent Company
 
+## MEM-01 Closure Reconciliation - 2026-10-10
+
+MEM-01 Knowledge / Memory Foundation: **CLOSED / READY_TO_COMMIT**.
+Closure assessment: **PASS** on owner-supplied acceptance, executor and independent
+R03-M1 re-review evidence, with current source hashes verified locally.
+**READY_FOR_COMMIT: YES.** Implementation and this reconciliation remain
+UNCOMMITTED against HEAD `031028b6a57859b41b46123f0347cbd9570afe95`.
+ACTIVE: None. NEXT: MEM-02 Knowledge Lifecycle + Retrieval / RAG / NOT STARTED,
+by frozen sequence only. Next action: separately authorized MEM-01 commit.
+No Git or MEM-02 implementation authority follows from this reconciliation.
+
+See [acceptance, source hashes, 232/232 evidence and limitations](PROJECT_STATE.md#mem-01-closure-reconciliation---2026-10-10).
+Review/test outcomes are owner-supplied reports; raw logs and a separate
+repository review artifact have not been verified. No mandatory unrun MEM-01
+validation gate was identified in the inspected rules; no review was repeated.
+D1 runner optimization, measurements and formal closure remain unfinished;
+archived runner M2 remains OPEN. V1 freeze and existing closed checkpoints remain intact.
+Dated pre-MEM-01 records below retain their historical status and evidence.
+
+CURRENT / UNCOMMITTED: `runtime/memory/__init__.py`,
+`runtime/memory/contracts.py` and `runtime/tests/test_memory_foundation.py`.
+`shared/memory/` and production memory storage/providers stay PLANNED and absent.
+
 ## POST-ORCH-01 DOC-TREE - 2026-10-09
 
 ORCH-01 Graph Execution Runtime: CLOSED / COMMITTED at `d38780817ca9f233051efa31b77d3a8eabe1473a`
@@ -211,12 +234,14 @@ the canonical capability roadmap.
 
 GOV-01 is CLOSED / COMMITTED at `852ec01`; GOV-02 Capability Governance is
 CLOSED / COMMITTED at `e6dbe3f`. ORCH-01 is CLOSED / COMMITTED at `d3878081`
-after independent R4 PASS and owner closure PASS. MEM-01 is NEXT / NOT STARTED.
+after independent R4 PASS and owner closure PASS. MEM-01 is CLOSED /
+READY_TO_COMMIT, UNCOMMITTED; MEM-02 is NEXT / NOT STARTED.
 
 ## Current Repository Structure
 
-CURRENT: audited against implementation HEAD `d38780817ca9f233051efa31b77d3a8eabe1473a`
-on `master`. This is the physical
+CURRENT: existing committed structure at HEAD
+`031028b6a57859b41b46123f0347cbd9570afe95` on `master`, with the three
+uncommitted MEM-01 contract/test additions verified during closure. This is the physical
 structure in the current checkout; generated contents and
 ignored local configuration are intentionally not expanded.
 
@@ -232,9 +257,13 @@ ignored local configuration are intentionally not expanded.
   telegram, and webhooks; runtime implementations exist only where explicitly
   represented by source.
 - `runtime/` — `actions/`, `approvals/`, `budget/`, `cache/`, `cli/`, `compute_policy/`, `context/`, `continuation/`,
-  `core/`, `evals/`, `execution/`, `executors/`, `git/`, `graph/`, `host/`, `jobs/`,
+  `core/`, `evals/`, `execution/`, `executors/`, `git/`, `graph/`, `host/`, `jobs/`, `memory/`,
   `notifications/`, `progress/`, `providers/`, `queue/`, `remote/`, `review/`, `retry/`,
   `scheduler/`, `storage/`, `tests/`, `tools/`, `webhooks/`, and `workers/`.
+  `runtime/memory/` is CURRENT / UNCOMMITTED, containing `__init__.py` and
+  `contracts.py`; `runtime/tests/test_memory_foundation.py` is its test support.
+  MEM-01 is CLOSED / READY_TO_COMMIT; no production provider or storage exists.
+  `shared/memory/` stays absent / PLANNED.
   `runtime/progress/` is the CURRENT CORE-07 implementation, CLOSED / COMMITTED
   at `6bcffa4` after CORE-07R3 PASS; it contains typed/schema-validated, bounded,
   non-authoritative events and durable, capacity-safe recovery delivery. Its
@@ -371,8 +400,9 @@ active units; execution profiles do not add agents or authority stores.
 `orchestrator/graph/` contains committed `ACCEPTANCE.md`, `README.md`,
 `VALIDATION.md`, `run_validation.py`, `CLOSURE.md` and `CLOSURE_EVIDENCE.json`.
 
-The same physical directory also contains two PRESENT / UNCOMMITTED standalone
-D1 diagnostics files, with uncommitted status supplied by the owner:
+The same physical directory also contains two CURRENT / COMMITTED standalone
+D1 diagnostics files at HEAD `031028b6`. Dated pre-commit status remains
+historical evidence; runner optimization and D1 closure remain unfinished:
 
 - [run_validation_diagnostics.py](orchestrator/graph/run_validation_diagnostics.py) — explicit-evidence observation reporter.
 - [test_run_validation_diagnostics.py](orchestrator/graph/test_run_validation_diagnostics.py) — standalone diagnostics tests.
@@ -402,7 +432,9 @@ The proposed paths in the list below are PLANNED and absent from the current
 physical tree. This list records structural ownership only; implementation
 checkpoints create paths when real content exists.
 
-- MEM-01 through MEM-03: `runtime/memory/` and `shared/memory/`.
+- MEM-02 through MEM-03: future additions under CURRENT `runtime/memory/`;
+  `shared/memory/` stays PLANNED and absent. Implemented MEM-01 files appear
+  in Current Repository Structure, not as absent target paths.
 - Agents 11-14: `agents/finance-pricing/`, `agents/analytics/`,
   `agents/content/`, and `agents/design/`.
 - CAP-SEARCH-GROWTH-01: `skills/search-growth/` and
@@ -452,7 +484,8 @@ and SYNC-04A. The exception gate and accepted refinements live in
 LATER / REFERENCE; only critical implementation, security, data-loss, authority,
 architectural-consistency, or completion-correctness blockers may be evaluated
 for V1. They do not interrupt the checkpoint sequence or grant implementation
-authority. ACTIVE: None; NEXT: MEM-01 / NOT STARTED, sequence only.
+authority. ACTIVE: None; NEXT: MEM-02 / NOT STARTED, sequence only.
+MEM-01 is CLOSED / READY_TO_COMMIT and remains UNCOMMITTED.
 ORCH-01 is CLOSED / COMMITTED at `d3878081`; GOV-02 remains CLOSED / COMMITTED at `e6dbe3f`.
 GOV-01 remains CLOSED / COMMITTED at `852ec01`.
 

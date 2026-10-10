@@ -1,5 +1,114 @@
 # Agent Company Project State
 
+## MEM-01 Closure Reconciliation - 2026-10-10
+
+MEM-01 Knowledge / Memory Foundation: **CLOSED / READY_TO_COMMIT**.
+Closure assessment: **PASS** on owner-supplied acceptance, executor and independent
+R03-M1 re-review evidence, with current source hashes verified locally.
+**READY_FOR_COMMIT: YES.** Implementation and this reconciliation remain
+UNCOMMITTED against HEAD `031028b6a57859b41b46123f0347cbd9570afe95`.
+ACTIVE: None. NEXT: MEM-02 Knowledge Lifecycle + Retrieval / RAG / NOT STARTED,
+by frozen sequence only. Next action: separately authorized MEM-01 commit.
+No Git or MEM-02 implementation authority follows from this reconciliation.
+
+### Acceptance and review provenance
+
+Authority: owner-approved `AC-MEM-01-IMPL-02` A1-A7 and the owner-supplied
+"MEM-01 - Closure Evidence Handoff" in the `AC-MEM-01-CLOSURE-06` conversation.
+PASS results below are recorded from that handoff and mapped to present source;
+this reconciliation is not a new independent review or fresh test execution.
+
+| Acceptance | Recorded result and current source correspondence |
+| --- | --- |
+| A1 - Provider-neutral contracts | PASS: frozen/slotted version-1 records, explicit project-scoped get/put_candidate Protocol and deterministic test-local in-memory double; no SDK or production persistence. |
+| A2 - Project isolation | PASS: explicit validated project/record IDs, nested project bindings, collision rejection and no company-wide fallback. |
+| A3 - Provenance | PASS after repair: source identity/version/digest/location/origin and immutable optional capture/review actor/time on source, verification and record; unknown values remain unknown, get/put preserve metadata and reject conflicting replacement. |
+| A4 - Confidence | PASS: optional finite 0-1 estimate with explicit basis; confidence cannot establish verification, trust or authority. |
+| A5 - Verification | PASS: unknown/reported/inferred/disputed/evidence-verified statuses; project, record, exact claim digest and CURRENT identified sources must bind; review metadata cannot replace verification. |
+| A6 - Security boundaries | PASS: untrusted candidate evidence, authority="none", separate Knowledge/Memory/State and preserved affected CORE-08/09/11 safeguards; no scan, policy promotion or approval bypass. |
+| A7 - Tests and governance | PASS: malformed inputs, immutability, scope, collisions, provenance, stale evidence and authority regressions; affected suites and independent re-review reported PASS; this task supplies formal closure assessment. |
+
+Original independent review: FIX, one Major `MEM-01-R03-M1`; three supplied
+capture/review metadata probes reportedly raised `TypeError: unexpected keyword
+argument`. A3 failed; A1/A2/A4/A5/A6 passed. Repair added frozen
+`ActorTimeProvenance`, separate metadata to `SourceEvidence`,
+`VerificationEvidence` and `MemoryRecord`, and 18 provenance regressions.
+Owner-supplied independent R03-M1 re-review: **PASS, no remaining findings;
+R03-M1 CLOSED**. The reviewer reported all 18 regressions inspected, unchanged
+before/after source hashes, and additional nested-metadata probes passing after
+two probe-harness errors were corrected. Original FIX and repair history remain recorded.
+
+### Accepted source identities and test evidence
+
+Current bytes were measured locally and match the independent reviewer's
+explicitly reported before/after SHA-256 values:
+
+| Source file | SHA-256 |
+| --- | --- |
+| [Contracts](runtime/memory/contracts.py) | `5fc08878d662500cbeaae8172f768f8c94154a34f0e60e7a22104d6246566507` |
+| [Exports](runtime/memory/__init__.py) | `b30f3cc96bf05d5edecfc10c34976dec592fdf24d87939005b1fabec9164a2ef` |
+| [Tests](runtime/tests/test_memory_foundation.py) | `3b7b9ac91f28e0d97f2447064f20f87d78c8b05facca6fd47ad6722dfa59f109` |
+
+Executor: reported 232 tests PASS. Independent reviewer: reported **232/232 PASS,
+exit 0, 29.322 seconds, Python 3.14.3**, with this exact command:
+
+```text
+python -B -m unittest runtime.tests.test_memory_foundation runtime.tests.test_context_discovery runtime.tests.test_context_cache runtime.tests.test_external_content runtime.tests.test_compute_policy
+```
+
+| Suite | Reported independent tests |
+| --- | ---: |
+| MEM-01 Foundation | 54 |
+| CORE-08 Context Discovery | 65 |
+| CORE-09 Context Cache | 43 |
+| CORE-11 External Content | 14 |
+| Compute Policy | 56 |
+| Total | 232 |
+
+Owner Git terminal observations reported HEAD and origin/master at
+`031028b6a57859b41b46123f0347cbd9570afe95`, exactly the three untracked MEM-01
+files above, and no staged or tracked changes. Before edits, read-only filesystem
+checks corroborated both local refs, valid index checksum, exact index/HEAD-tree
+match and unchanged tracked files. The index contains 730 entries; "empty index"
+means empty staged diff. No Git command, fetch or live remote check was performed.
+Only PROJECT_STATE, ROADMAP, TODO and README change during reconciliation.
+
+### Gates, limitations and preserved boundaries
+
+Fresh closure checks: source SHA-256 and syntax, exact four-document tracked
+change scope, unchanged HEAD/index, consistent current status, 59 local links
+and anchors, whitespace, historical-record preservation and frozen V1 scope
+all PASS. Test discovery only confirmed suite counts 54/65/43/14/56, total 232;
+it executed no tests and does not independently reproduce the reported PASS.
+
+Inspected CONSTITUTION, AGENTS, canonical review skill/workflow, approval policy,
+roadmap and DOC-GOV-01 require acceptance, relevant validation, independent
+review and formal closure. The owner-supplied A1-A7 report and exact source
+matches satisfy this bounded closure assessment. **Mandatory unrun MEM-01
+validation gates identified: NONE.** The inspected rules do not mandate raw
+console logs, repository-stored reviewer evidence or a full-repository rerun for
+this scope. No evidence requirement or gate is waived or newly introduced.
+
+Limitations: no separately verified raw 232-test log or repository-stored MEM-01
+acceptance/review artifact; independent results remain owner-supplied conversation
+evidence. Historical before-repair probe inputs/logs are unavailable. The
+executor's 1,180-file unchanged claim was not verified. Full repository regression
+was not executed. Get/put behavior was validated using test-local Protocol
+implementations; the Protocol cannot enforce arbitrary production implementations.
+No production provider, database, retrieval/RAG, external wire schema or runtime
+integration exists. No completed independent review or test suite was repeated.
+
+V1 freeze stays ACTIVE; canonical roles stay 10 with target 14. CORE-01-11,
+GOV-01/02 and ORCH-01 remain CLOSED / COMMITTED. D1 standalone diagnostics are
+committed at the present `031028b6` checkpoint; D1 runner optimization, runtime
+measurements and formal closure remain OPEN / UNFINISHED. Runner M2 remains OPEN
+in archived experimental work and absent from the committed runner. Phase 8E
+stays PAUSED / BLOCKED; Phase 8F-8H stay NOT STARTED. MEM-02, MEM-02B and MEM-03
+remain NOT STARTED; retrieval, lesson promotion, storage and providers are excluded.
+
+Dated pre-MEM-01 records below retain their historical status and evidence;
+this section supersedes their MEM-01 status without rewriting those records.
+
 ## POST-ORCH-01 DOC-TREE - 2026-10-09
 
 ORCH-01 Graph Execution Runtime: CLOSED / COMMITTED at `d38780817ca9f233051efa31b77d3a8eabe1473a`
@@ -250,7 +359,9 @@ future directory is created. Dated prior checkpoints below remain historical.
 ## Current Checkpoint
 
 - ACTIVE: None.
-- NEXT: MEM-01 Knowledge / Memory Foundation / NOT STARTED; sequence only.
+- NEXT: MEM-02 Knowledge Lifecycle + Retrieval / RAG / NOT STARTED; sequence only.
+- MEM-01: CLOSED / READY_TO_COMMIT; UNCOMMITTED. See the MEM-01 closure
+  reconciliation above for A1-A7, owner-supplied independent PASS and limitations.
 - ORCH-01: CLOSED / COMMITTED at `d3878081` after independent R4 refresh-02 PASS
   and owner closure PASS. Targeted 66, Adversarial 25, Graph integration 14,
   Affected 724, Focused 805 and Full 1408 all PASS on the accepted frozen source;

@@ -1,5 +1,29 @@
 # Agent Company Roadmap
 
+## MEM-01 Closure Reconciliation - 2026-10-10
+
+MEM-01 Knowledge / Memory Foundation: **CLOSED / READY_TO_COMMIT**.
+Closure assessment: **PASS** on owner-supplied acceptance, executor and independent
+R03-M1 re-review evidence, with current source hashes verified locally.
+**READY_FOR_COMMIT: YES.** Implementation and this reconciliation remain
+UNCOMMITTED against HEAD `031028b6a57859b41b46123f0347cbd9570afe95`.
+ACTIVE: None. NEXT: MEM-02 Knowledge Lifecycle + Retrieval / RAG / NOT STARTED,
+by frozen sequence only. Next action: separately authorized MEM-01 commit.
+No Git or MEM-02 implementation authority follows from this reconciliation.
+
+See [acceptance, source hashes, 232/232 evidence and limitations](PROJECT_STATE.md#mem-01-closure-reconciliation---2026-10-10).
+Review/test outcomes are owner-supplied reports; raw logs and a separate
+repository review artifact have not been verified. No mandatory unrun MEM-01
+validation gate was identified in the inspected rules; no review was repeated.
+D1 runner optimization, measurements and formal closure remain unfinished;
+archived runner M2 remains OPEN. V1 freeze and existing closed checkpoints remain intact.
+Dated pre-MEM-01 records below retain their historical status and evidence.
+
+MEM-01 implements contracts and test-local behavior only at `runtime/memory/`
+and `runtime/tests/test_memory_foundation.py`. `shared/memory/` stays absent /
+PLANNED; retrieval/RAG, lesson promotion, production storage/providers and runtime
+integration remain later MEM checkpoint work.
+
 ## POST-ORCH-01 DOC-TREE - 2026-10-09
 
 ORCH-01 Graph Execution Runtime: CLOSED / COMMITTED at `d38780817ca9f233051efa31b77d3a8eabe1473a`
@@ -333,7 +357,8 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
 - GOV-01 Task & Authority Contract: CLOSED / COMMITTED at `852ec01`.
 - GOV-02 Capability Governance: CLOSED / COMMITTED at `e6dbe3f`.
 - ORCH-01 Graph Execution Runtime: CLOSED / COMMITTED at `d3878081`.
-- MEM-01 Knowledge / Memory Foundation: NEXT / NOT STARTED; sequence only.
+- MEM-01 Knowledge / Memory Foundation: CLOSED / READY_TO_COMMIT; UNCOMMITTED.
+- MEM-02 Knowledge Lifecycle + Retrieval / RAG: NEXT / NOT STARTED; sequence only.
 - Phase 8E: PAUSED / BLOCKED; no VPS has been created or deployed. Hostinger is
   preferred, with paid procurement deferred until near V1 completion and still
   requiring separate approval.
@@ -360,7 +385,8 @@ NO -> POST-V1 / LATER / REFERENCE. Later ideas must not interrupt the checkpoint
 sequence or expand the existing Canonical V1 Definition below.
 
 One ACTIVE and one NEXT checkpoint slot: ACTIVE = None;
-NEXT = MEM-01 Knowledge / Memory Foundation / NOT STARTED, sequence only.
+NEXT = MEM-02 Knowledge Lifecycle + Retrieval / RAG / NOT STARTED, sequence only.
+MEM-01 is CLOSED / READY_TO_COMMIT and remains UNCOMMITTED.
 GOV-01 remains CLOSED / COMMITTED at `852ec01`; GOV-02 is CLOSED / COMMITTED
 at `e6dbe3f`; ORCH-01 is CLOSED / COMMITTED at `d3878081`.
 CORE-11 is CLOSED / COMMITTED at `8bda7eb` after Independent Re-review R2 PASS. Lifecycle remains IMPLEMENT -> INDEPENDENT
@@ -721,7 +747,8 @@ GOV-02 is CLOSED / COMMITTED at `e6dbe3f` after independent R5 PASS and owner cl
 All prior findings are CLOSED, with 0 critical / 0 major / 0 minor.
 See [closure evidence](governance/capability-governance/CLOSURE.md).
 ORCH-01 is CLOSED / COMMITTED at `d3878081`; `runtime/graph/` and
-`orchestrator/graph/` are CURRENT. NEXT: MEM-01 / NOT STARTED, sequence only.
+`orchestrator/graph/` are CURRENT. MEM-01 is CLOSED / READY_TO_COMMIT,
+UNCOMMITTED; NEXT: MEM-02 / NOT STARTED, sequence only.
 
 ### B. Graph Orchestration
 
@@ -758,9 +785,12 @@ dependency resolution.
 Knowledge is what the system knows. Memory is what happened or was learned.
 State is what is happening now. These remain separate.
 
-- MEM-01 — Knowledge / Memory Foundation: provider-neutral `MemoryInterface`,
-  project isolation, provenance, confidence, and verification semantics.
-- MEM-02 — Knowledge Lifecycle + Retrieval / RAG: capture, normalize,
+- MEM-01 — Knowledge / Memory Foundation: CLOSED / READY_TO_COMMIT,
+  UNCOMMITTED. CURRENT contract-only `runtime/memory/`: provider-neutral
+  `MemoryInterface`, project isolation, immutable source/capture/review provenance,
+  confidence and claim-bound verification. A1-A7 and independent R03-M1 PASS
+  are owner-supplied; see the closure evidence and limitations above.
+- MEM-02 — Knowledge Lifecycle + Retrieval / RAG: NEXT / NOT STARTED; capture, normalize,
   deduplicate, classify, connect, store, retrieve, rerank, build context packs,
   selectively retain relevant context, act, verify, and learn from run traces.
   Anchored evidence-backed memory may link to files,
@@ -1095,7 +1125,8 @@ local inference, and fine-tuning stay POST-V1; planned folders stay absent.
 - Phases 8F, 8G, and 8H are NOT STARTED.
 - GOV-01/GOV-02 and ORCH-01 are CLOSED / COMMITTED, not pending work; their
   historical review and closure evidence remains unchanged.
-- MEM-01/02/02B/03, agents 11-14, CAP-SOC-01 and other specifically planned
+- MEM-01 contracts are CURRENT / UNCOMMITTED, CLOSED / READY_TO_COMMIT.
+- MEM-02/02B/03, agents 11-14, CAP-SOC-01 and other specifically planned
   capability expansion, advanced Code Intelligence, Phase 9, Decision
   Engine/JEV, and Phase 10 remain planned and unimplemented as described above.
 - The SYNC-06 R4/R2 refinements are documentation mappings, not implemented
