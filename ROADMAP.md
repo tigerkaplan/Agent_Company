@@ -10,6 +10,156 @@ only; no implementation authority follows from this reconciliation.
 See [owner closure](orchestrator/graph/CLOSURE.md) and
 [closure evidence](orchestrator/graph/CLOSURE_EVIDENCE.json).
 
+## SYNC-06 R4/R2 Source Reconciliation - 2026-10-10
+
+This documentation-only reconciliation maps the accepted SYNC-06 R4/R2 source
+material onto existing owners. It does not create a new SYNC version, checkpoint,
+runtime contract, agent, authority, implementation claim, or permission to begin
+MEM-01. The V1 scope freeze remains ACTIVE; CORE-01-11, GOV-01, GOV-02, and
+ORCH-01 remain CLOSED / COMMITTED. ACTIVE remains None and MEM-01 remains NEXT /
+NOT STARTED by sequence only. D1-D8, H1-H11, SRC-01-30, UD-01-05, and EV-01-36
+are source-transfer labels rather than canonical repository IDs or mandatory
+test counts.
+
+### Ownership and acceptance mapping
+
+| Source area | Existing owner and accepted boundary | Evidence and acceptance placement |
+| --- | --- | --- |
+| D1 / H1 | Existing validation tooling and the affected checkpoint owner. Selection tiers do not require fully overlapping reruns. | Measure command wall-clock time, unique test IDs, overlap, incomplete causes, process cleanup, resource contention, and source/dependency/fixture/config/environment bindings. Preserve targeted, affected, focused, full, security, adversarial, acceptance, closure, and independent-review gates where the applicable checkpoint requires them. |
+| D2 / H2 | CAP-REV-01, Software repair, Reviewer, and CORE-03. A concern or failed harness is not a confirmed defect. | Candidate -> valid reproduction -> confirmed finding/root cause -> separately authorized narrow repair -> before/after proof -> regression -> independent read-only verdict. |
+| D3 / H2 | CORE-04 discovery, GOV-02 certification, current skill catalog, and CORE-03 evaluation. | Record identity/version, activation and non-activation, inputs, exclusions, requested tools, bounded procedure, destination, held-out cases, and keep/revert result. No third-party installation follows from this map. |
+| D4 / H8 | ORCH-01, Manager/Orchestrator, and CORE-06. ORCH-01 is not reopened. | Keep data edges, shared-resource dependencies, approval order, quotas, and permissions distinct; invalidate affected dependents while retaining valid unaffected work. Temporary roles are execution profiles, not canonical agents. |
+| D5 / H5 | Provider adapters, CORE-10, GOV-01/02, and action-specific approval. | Configured, eligible, loaded, and authorized remain distinct. External send, publishing, spend, deployment, and Git effects need exact authority; an uncertain acknowledgement never authorizes blind resend. |
+| D6 / H2/H9/H10 | DEC-01/02, CORE-03, Reviewer, and Phase 9A. | Bind question, evidence span/version, eligible options, abstention/uncertainty, dataset/system/grader/rubric identity, citation entailment, and whole-artifact coverage. Shadow decisions never act. |
+| D7 / H3/H4/H6/H7 | MEM-01/02/02B/03, Knowledge Manager, CORE-08/09, and durable operational state. | Preserve source identity/version, accepted/rejected/deferred rationale, conflicts, applicability, freshness, outcome, supersession, read coverage, and revisit triggers. Stored != selected != trusted != applied. |
+| D8 / H4-H6 | Phase 9B/9C views, scheduler/recovery, connectors, and existing approval/operating state. | Separate read, evaluate, include, authorize, deliver, receipt, and bookmark commit. A failed read is not a quiet day; configured trigger is not completed work; dry-run must prevent external writes. |
+| H11 domain methods | Existing Data/Analytics, Search Growth/SEO/GEO, Sales, Creative Media, WebMCP integration, Reviewer, CAP-SOC-01, and relevant Project Pack owners; AI Business Studio remains a separate B-track direction. | Data preserves snapshot/query/transformation and reconciliation; Search preserves existing URLs/forms/CTA/assets and the visible 12-item Local SEO set; Sales separates sourced qualification/drafts from send/follow-up authority; Creative separates artifact ownership, versioned renders and technical/visual/audio QA; WebMCP separates consumer/producer use with origin/session/schema and authorized fallback; Business Studio separates problem/workaround/interview/hypothesis/outcome. EV-29-31/36 and existing domain acceptance apply only when the relevant owner opens. Tools, pilots, installs, live data/assets, outreach and external actions require separate authority. |
+
+H1-H11 remain portable navigation aliases, not canonical requirement IDs. H1 is
+validation efficiency; H2 evidence audit, repair and skill adoption; H3 research
+and decision memory; H4 read coverage; H5 delivery uncertainty; H6 state,
+dry-run and recovery; H7 freshness and counterevidence; H8 graph repair; H9
+decision/citation coverage; H10 observed provider/economics evidence; and H11
+domain methods with pilots and the separate Business Studio B track kept distinct.
+
+### Source-to-owner and acceptance traceability
+
+This is a Roadmap crosswalk, not a second source ledger. Source claims remain
+dated evidence, not implementation proof or user approval. The useful methods,
+behavior, evidence gap, owner, acceptance, authority and timing are:
+
+| Source identities and decision | Useful method and adapted behavior | Scope, evidence/gap, owner, acceptance, authority and timing |
+| --- | --- | --- |
+| SRC-01, SRC-10, SRC-13, SRC-14, SRC-23, SRC-26, SRC-27, SRC-28 | Measure accepted-outcome cost; distinguish requested/configured/observed provider, model and effort; use deterministic prechecks before semantic judgment; retain controlled learning as a candidate. | Existing CORE-10/adapters, DEC-01/02, Reviewer and Phase 9A. Historical source economics and model claims are unverified/currentness-sensitive. EV-07-10/27-28 apply to a separately authorized bounded pilot; no provider call, account connection, spend or automatic promotion follows now. |
+| SRC-02, SRC-06, SRC-09, SRC-11, SRC-12, SRC-14, SRC-22, SRC-23 | Preserve bounded graph/loop distinctions, local repair, failure-first proof, affected-dependent invalidation and explicit stop/closure. | Closed ORCH-01, CORE-06, CAP-REV-01, Software and Reviewer remain owners; current closure evidence proves ORCH, not every source proposal. EV-01-06/08/32 apply when a relevant defect or change opens under separate repair/review authority; no ORCH reopen or new runner now. |
+| SRC-03, SRC-10, SRC-18, SRC-29 | Preserve graduated autonomy, approval queues, source bookmarks, read/delivery separation, uncertain acknowledgements, durable state and recovery. | Existing GOV-01/02, approval, scheduler, connector and delivery/recovery owners. No live routine, token, schedule or send is evidenced. EV-17-26 apply when those existing operating obligations open; external effects and new routines need exact approval. |
+| SRC-12, SRC-16, SRC-23, SRC-27, SRC-29, SRC-30 | Preserve stable source identity, rejected/deferred rationale, counterevidence, freshness, task-aware recall, outcomes and controlled lesson candidates. | MEM-01/02/02B/03, Knowledge Manager and CORE-08/09; current evidence is design direction, not a durable memory implementation. EV-11-18/33-35 apply during the relevant authorized MEM/context work; no database, scan, import or promotion now. |
+| SRC-08 | Use snapshot/query/transformation lineage, currency/date handling, duplicate/missing checks, join-cardinality checks and total reconciliation. | Existing Data/Analytics and Reviewer/Project Pack work. No live dataset or accounting result is supplied. EV-36 plus existing domain checks apply when an authorized data task opens; synthetic analysis must not be represented as real accounting. |
+| SRC-04, SRC-25, SRC-27 | Use commercial intent and source-backed briefs while preserving existing URL, form, CTA, embed, link and asset behavior; retain the visible 12 Local SEO audits without inventing eight more. | Existing Search Growth/SEO/GEO, Reviewer, CAP-SOC-01 and relevant Project Pack owners. No live site/source audit is evidenced. EV-36 and existing project acceptance apply only when that work opens; scanning, edits, publishing and outreach need separate authority. |
+| SRC-15 | Keep sourced company/contact identity, ICP/qualification, personalized draft and retention separate from sending and follow-up. | Existing Sales, Reviewer and Project Pack owners. Repositories are references, not installed capability or verified leads. EV-19-21/36 and existing sales acceptance apply when authorized; research, CRM writes, outreach and follow-up remain separately approved effects. |
+| SRC-05, SRC-07, SRC-20, SRC-24, SRC-26 | Preserve one artifact owner, seekable/versioned renders, beats/contact sheets/transition strips, format-specific composition, actual playback and separate technical/visual/audio QA. | Creative Media remains non-blocking; CAP-CREATIVE-01 and CAP-DOC-01 retain their classifications. No renderer, licensed asset or pilot result is evidenced. EV-29-31 apply when authorized; install, render, asset/voice use and publication require separate authority. |
+| SRC-13, SRC-14, SRC-17, SRC-28 | Keep atomic questions, open-set/abstention behavior, state/source spans, citation entailment and whole-artifact coverage distinct from execution authority. | DEC-01/02, CORE-03 and Reviewer. Provider formulas and reported benchmarks are not revalidated. EV-07-16/32 apply to a separately authorized decision/eval pilot; shadow output never acts. |
+| SRC-21 | Treat WebMCP consumption and site-provided tools as separate uses with origin, session, schema and authorized fallback boundaries. | Existing connector/provider and Project Pack owners; WebMCP remains reference/deferred and is not installed or connected. Relevant EV-17/22/24/36 apply only when an approved integration opens; browser/site writes require separate authority. |
+| SRC-19, SRC-20 | Keep AI Business Studio problem-first: problem, workaround, interview, hypothesis and outcome remain distinct from platform features and live pilots. | Separate B-track research direction, not Agent Company core, Phase 10 replacement or a fifteenth agent. No customer validation is evidenced. EV-36 applies if separately authorized research begins; interviews, outreach, spend and pilots need separate approval. |
+
+| User decision | Canonical effect, owner, acceptance and timing |
+| --- | --- |
+| UD-01 | Finish the accepted operational V1 without research-driven scope expansion. Existing Roadmap owners retain their obligations; acceptance is the existing checkpoint contract. Applies now and does not defer accepted V1 work. |
+| UD-02 | AI Business Studio stays in a separate B-track; Brightshore is only a possible B-track pilot while remaining the first Phase 10 Project Pack. No code, agent, purchase, outreach or live pilot is authorized; revisit only by explicit decision. |
+| UD-03 | Research/Decision Memory is an accepted design direction under MEM owners, with provenance, rationale and recall acceptance above. It is not proof of a database or unlimited implementation; revisit when the relevant MEM checkpoint opens. |
+| UD-04 | Short approvals authorized further evaluation only. Existing approval owners must bind any installation, spending, schedule, source access or external action; timing is the relevant separately approved task. |
+| UD-05 | Preserve detailed source and decision transfer in canonical planning without treating document production as project-change authority. This reconciliation satisfies documentation transfer only and remains subject to independent review. |
+
+| Evaluation scenarios | Existing owner and acceptance placement |
+| --- | --- |
+| EV-01, EV-02, EV-03, EV-04, EV-05, EV-06, EV-08 | ORCH/CORE validation and CAP-REV-01: distinguish plan from execution and zero-test success from coverage; preserve unaffected work, invalidate dependents, serialize shared writes, stop retries without evidence, and fail closed on invalid decisions. Apply only to relevant authorized changes. |
+| EV-07, EV-09, EV-10 | DEC/GOV/Reviewer: forbidden action stays denied despite confidence; other/incomplete/ambiguous remain distinct; option-order stability is measured. Use in a bounded authorized decision pilot. |
+| EV-11, EV-12, EV-13, EV-14, EV-15, EV-16, EV-17, EV-18 | MEM/context/Reviewer/connectors: preserve counterevidence and old warnings, test citation entailment and implementation provenance, separate retrieval from validity, invalidate stale reuse, and expose failed/partial reads without advancing bookmarks. Apply at the relevant MEM, review or source-read checkpoint. |
+| EV-19, EV-20, EV-21, EV-22, EV-23, EV-24, EV-25, EV-26 | Delivery/GOV/state/scheduler/recovery: reconcile uncertain posting, delivery-before-state failure and duplicates; do not default through missing preferences/state; enforce dry-run; recheck resume authority/budget; distinguish poll timeout from completion. Apply before authorized external or scheduled operation. |
+| EV-27, EV-28 | CORE-10/adapters/Reviewer: record requested/configured/observed profiles and actual advisor invocation. Apply to authorized onboarding/routing evidence, not this documentation task. |
+| EV-29, EV-30, EV-31 | Creative/Reviewer: reject bad frame/codec, separate technical from visual/audio QA, and invalidate QA after asset/source changes. Apply only to an authorized creative deliverable. |
+| EV-32 | Reviewer/CAP-REV-01: truncated diffs cannot support whole-artifact safety. Apply whenever review coverage is incomplete. |
+| EV-33, EV-34, EV-35 | MEM/GOV: preserve duplicate source identity/history, recall relevant rejected rationale, and prevent lessons from changing user policy without promotion/authority. Apply when MEM/learning work opens. |
+| EV-36 | Domain owner/Reviewer: missing site, lead, budget or other business evidence must not become fabricated facts or live action. Applies to every relevant authorized domain task. |
+
+These scenarios are acceptance examples, not 36 newly mandated tests. They are
+adopted only through the existing owner's applicable checkpoint and authority.
+
+### D1 development-time validation efficiency - bounded proposal
+
+D1 belongs to existing validation tooling during development, not solely to
+Phase 9A and not to a reopened ORCH-01 checkpoint. The exact observed owner is
+`orchestrator/graph/run_validation.py`, which selects existing `unittest` modules
+and records aggregate wall-clock time, count, completion, exit and log hash.
+Preserved logs measured targeted 55 tests / 638.869s, affected 325 / 695.838s,
+focused 761 / 2228.414s, and full 1364 / 3156.386s. The runner definitions show
+structural overlap: focused includes all targeted modules and several affected
+modules, while full discovery includes all runtime tests. The evidence does not
+record a canonical fully-qualified unique-test-ID manifest, a tier-overlap matrix,
+per-test timing, resource contention, or subprocess-cleanup telemetry. Therefore
+the measured bottleneck is long aggregate execution with demonstrated overlapping
+selection; the amount safely avoidable is still unknown and no speedup is claimed.
+
+One smallest proposal: under separate authorization, extend only this existing
+runner's report-generation path to enumerate the selected fully-qualified test
+IDs before execution, store a sorted manifest plus digest, and calculate set
+overlap against the other required tiers. Do not change tests, selection, order,
+timeouts, assertions, sharding, or pass criteria. Before/after acceptance requires
+identical required unique IDs and complete passing results for every applicable
+targeted, affected, focused, full, deterministic, security, adversarial,
+acceptance and closure gate; independent review remains separate. Compare runner
+overhead and total wall-clock time, prove incomplete/interrupted runs remain
+INCOMPLETE, bind source/tests/dependencies/fixtures/configuration/command/
+environment/policy version, and retain earlier failures rather than laundering
+them through reruns. Risks are discovery side effects, dynamic `load_tests`
+behavior, stale manifests, extra reporting overhead and misuse of overlap as
+permission to skip a required fresh stateful/concurrency test. Implementation,
+benchmarking, policy change and any suite execution require separate approval;
+this documentation repair authorizes none of them.
+
+### Preserved capability and deferred boundaries
+
+- CORE-01 through CORE-11 retain their closed contracts and authority boundaries.
+  These refinements guide future authorized work; they do not change schemas,
+  runtime instructions, policies, or accepted closure evidence.
+- CAP-REV-01 remains the artifact-native evidence-audit method under existing
+  Reviewer/Software authority. NOT_REPRODUCED, BLOCKED, or broken control does
+  not mean FIXED. Review must inspect the actual relevant artifact and provenance.
+- MEM-01/02/02B/03 retain memory, provenance, retrieval, learning/promotion, and
+  project-isolation ownership. Hindsight remains an optional future MEM-03
+  provider; Beacon remains an optional importer/reference, not a core dependency.
+- DEC-01/02 retain bounded decision ownership. Choice confidence, probability,
+  composite score, and authorization threshold remain distinct. Invalid,
+  ambiguous, unavailable, or timed-out output fails closed.
+- CAP-SOC-01 remains PLANNED / NOT STARTED within the accepted V1 target. The
+  committed Social Media checkpoint does not confer live posting authority.
+- Phase 9A/B/C and Phase 10 remain planned under their existing owners;
+  Brightshore remains the first production Project Pack for Phase 10.
+- Hermes stays an optional adapter; Higgsfield an optional creative tool;
+  CAP-CREATIVE-01 non-blocking; CAP-DOC-01 post-V1; and WebMCP, Worktree
+  Isolation, Council, Advanced Teams, local inference, and fine-tuning retain
+  their existing reference/deferred classifications.
+- AI Business Studio remains a separate problem-first B-track research direction,
+  not Agent Company core, a V1 checkpoint, a fifteenth agent, or a live pilot.
+- The current canonical roster remains 10 agents and the frozen V1 target remains
+  14 roles. Temporary graph roles and named tools/patterns are not agents.
+
+### Deployment procurement decision
+
+Hostinger is the preferred VPS provider, but no VPS has been purchased,
+provisioned, or deployed. Defer paid procurement until as near V1 completion as
+practical, then recheck capacity, current commercial terms, Linux/container and
+credential needs, backups, security, and explicit action authority. Phase 8E
+remains PAUSED / BLOCKED. Its Phase 8D live-image and target-Linux prerequisites
+remain required; Phase 8F Backup/Recovery, 8G production smoke tests, and 8H
+final independent deployment security review remain NOT STARTED and required.
+
+Revisit these source-derived refinements only when the relevant approved
+checkpoint opens, a defect is reproduced, evidence expires, a material source,
+tool, provider, licence, or authority changes, or the owner makes an explicit
+decision. Preserve conflicting and rejected evidence rather than replacing it
+by inference.
+
 ## Historical ORCH-01 executor validation PASS - 2026-10-03
 
 ACTIVE: ORCH-01 / IMPLEMENTED / EXECUTOR VALIDATION PASS / UNCOMMITTED.
@@ -152,8 +302,9 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
 - GOV-02 Capability Governance: CLOSED / COMMITTED at `e6dbe3f`.
 - ORCH-01 Graph Execution Runtime: CLOSED / COMMITTED at `d3878081`.
 - MEM-01 Knowledge / Memory Foundation: NEXT / NOT STARTED; sequence only.
-- Phase 8E: PAUSED / BLOCKED; deployment not started because the VPS has not
-  yet been created.
+- Phase 8E: PAUSED / BLOCKED; no VPS has been created or deployed. Hostinger is
+  preferred, with paid procurement deferred until near V1 completion and still
+  requiring separate approval.
 - Phase 8F: NOT STARTED.
 - Phase 8G: NOT STARTED.
 - Phase 8H: NOT STARTED.
@@ -827,7 +978,10 @@ serve as an agent or Reviewer, or act as a normal generation provider.
 
 ### H. Deployment
 
-- Phase 8E — Real VPS deployment: PAUSED / NOT COMPLETE.
+- Phase 8E — Real VPS deployment: PAUSED / NOT COMPLETE. Hostinger is preferred,
+  but no VPS has been purchased, provisioned, or deployed. Procurement remains
+  deferred until near V1 completion and requires separate approval. Phase 8D
+  live-image and target-Linux prerequisites remain required.
 - Phase 8F — Backup / Recovery: NOT STARTED.
 - Phase 8G — Production smoke tests: NOT STARTED.
 - Phase 8H — Final deployment security review: NOT STARTED.
@@ -907,7 +1061,10 @@ local inference, and fine-tuning stay POST-V1; planned folders stay absent.
   deployed.
 - Phase 8E is PAUSED / NOT COMPLETE and requires separate human approval.
 - Phases 8F, 8G, and 8H are NOT STARTED.
-- Governance, graph orchestration, memory/RAG runtime, agents 11-14, capability
-  expansion beyond the committed checkpoints, advanced Code Intelligence,
-  Phase 9, Decision Engine/JEV, and Phase 10 are
-  planned and unimplemented.
+- GOV-01/GOV-02 and ORCH-01 are CLOSED / COMMITTED, not pending work; their
+  historical review and closure evidence remains unchanged.
+- MEM-01/02/02B/03, agents 11-14, CAP-SOC-01 and other specifically planned
+  capability expansion, advanced Code Intelligence, Phase 9, Decision
+  Engine/JEV, and Phase 10 remain planned and unimplemented as described above.
+- The SYNC-06 R4/R2 refinements are documentation mappings, not implemented
+  features, passed tests, reopened checkpoints, or authority for new work.

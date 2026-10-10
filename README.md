@@ -10,6 +10,28 @@ only; no implementation authority follows from this reconciliation.
 See [owner closure](orchestrator/graph/CLOSURE.md) and
 [closure evidence](orchestrator/graph/CLOSURE_EVIDENCE.json).
 
+## SYNC-06 R4/R2 DOC-TREE Reconciliation - 2026-10-10
+
+README remains the canonical physical CURRENT/PLANNED tree summary. The
+SYNC-06 R4/R2 reconciliation creates no new Master Context, DOC-TREE, registry,
+agent, runtime, or target directory. Accepted source refinements are recorded in
+the existing `ROADMAP.md`; current status remains in `PROJECT_STATE.md`, and
+remaining work remains in `TODO.md`. The physical owners remain:
+
+- `runtime/` and its existing owner READMEs for closed CORE runtime foundations;
+- `governance/task-contract/` and `governance/capability-governance/` for
+  CLOSED / COMMITTED GOV-01 and GOV-02;
+- `runtime/graph/` and `orchestrator/graph/` for CLOSED / COMMITTED ORCH-01;
+- `agents/` for the current 10 canonical agents, with 14 retained as the frozen
+  V1 target rather than a claim that four additional roles already exist;
+- future MEM, DEC, CAP-SOC, Phase 9/10, creative/document, provider, and
+  deployment paths remain PLANNED unless separately evidenced as CURRENT.
+
+Hostinger preference and deferred purchase create no repository, host, service,
+credential, backup, or deployment path. Phase 8E remains PAUSED / BLOCKED and
+Phase 8F-8H remain required and NOT STARTED. No empty target directories were
+created. Dated DOC-TREE entries below retain their historical checkpoint meaning.
+
 ## Historical ORCH-01 executor validation PASS - 2026-10-03
 
 ACTIVE: ORCH-01 / IMPLEMENTED / EXECUTOR VALIDATION PASS / UNCOMMITTED.

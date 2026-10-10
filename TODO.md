@@ -10,6 +10,40 @@ only; no implementation authority follows from this reconciliation.
 See [owner closure](orchestrator/graph/CLOSURE.md) and
 [closure evidence](orchestrator/graph/CLOSURE_EVIDENCE.json).
 
+## SYNC-06 R4/R2 Documentation Follow-up - 2026-10-10
+
+- [x] Reconcile D1-D8 and H1-H11 into existing Roadmap owners; correct H11 as
+  domain methods; and map SRC-01-30, UD-01-05, and EV-01-36 by method, behavior,
+  evidence/gap, owner, acceptance, authority and timing without creating new IDs,
+  owners, tests, checkpoints, agents, policies, or implementation claims.
+- [x] Correct the current deferred-status contradiction: GOV-01/02 and ORCH-01
+  are CLOSED / COMMITTED; their dated historical records remain unchanged.
+- [x] Independent R2 documentation review of this four-document integration:
+  PASS with 0 Critical, 0 Major, and 0 Minor findings. No staging, commit, push,
+  or MEM-01 work was performed during formal closure reconciliation.
+- [x] Deliver the bounded D1 proposal from preserved evidence: existing owner
+  `orchestrator/graph/run_validation.py`; measured aggregate count/timing and
+  structural overlap; missing unique-ID/overlap/resource evidence; and one
+  smallest separately authorized test-ID manifest/overlap-reporting change with
+  before/after acceptance, risks, exact evidence binding and all mandatory gates.
+  No speedup, benchmark, runner/test edit, or reopened ORCH-01 is claimed.
+- [ ] If separately authorized, implement and measure that one D1 reporting
+  change. Preserve required unique coverage, incomplete/failure history,
+  stateful/concurrency freshness and independent review; do not infer permission
+  from this documentation proposal.
+- [ ] At their existing approved checkpoints, apply the mapped CAP-REV-01,
+  MEM/DEC, source-read/delivery/recovery, provider-observation, and domain
+  acceptance refinements. Do not treat source labels or scenarios as authority.
+- [ ] Keep Phase 8E PAUSED / BLOCKED. Hostinger is preferred, but defer paid
+  procurement until near V1 completion and retain Phase 8D/8E prerequisites,
+  Phase 8F recovery, Phase 8G smoke tests, and Phase 8H independent security
+  review. No spending or deployment is authorized here.
+
+Preserve CAP-SOC-01, Phase 9/10, Brightshore, Hermes, Higgsfield, Hindsight,
+Beacon, CAP-CREATIVE-01, CAP-DOC-01, WebMCP, Worktree Isolation, Council,
+Advanced Teams, local inference, fine-tuning, AI Business Studio B, and the
+14-role V1 target in their recorded classifications.
+
 ## Historical ORCH-01 executor validation PASS - 2026-10-03
 
 ACTIVE: ORCH-01 / IMPLEMENTED / EXECUTOR VALIDATION PASS / UNCOMMITTED.

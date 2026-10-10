@@ -10,6 +10,34 @@ only; no implementation authority follows from this reconciliation.
 See [owner closure](orchestrator/graph/CLOSURE.md) and
 [closure evidence](orchestrator/graph/CLOSURE_EVIDENCE.json).
 
+## SYNC-06 R4/R2 Canonical Documentation Integration - 2026-10-10
+
+At verified starting HEAD `1dbf2e754a76406cabaf49814d8e0d2a925dd342`,
+the branch was `master`, the index/worktree/untracked set was empty, and the
+locally recorded `origin/master` matched at 0/0 ahead/behind; no fetch was
+performed, so live remote synchronization is not claimed. The package source
+`ROADMAP_ORIGINAL.md` exactly matched the canonical `ROADMAP.md` SHA-256
+`80bcfd261b0140d878e596dba6160c64cc341968905e0e487c69f16ceecfcb80`.
+
+This documentation-only integration now maps D1-D8 and H1-H11 to existing
+ROADMAP owners and provides grouped source-to-decision-to-owner-to-acceptance
+crosswalks covering SRC-01-30, UD-01-05, and EV-01-36. H11 is correctly retained
+as domain methods, not skill adoption. D1 records preserved aggregate timing
+evidence, missing unique-ID/overlap/resource measurements, and one bounded
+proposal under separate authority; no validation speedup is claimed. README
+remains the physical DOC-TREE owner; no standalone Master Context or DOC-TREE
+owner was created.
+CORE-01-11, GOV-01/02, and ORCH-01 remain CLOSED / COMMITTED. The V1 scope
+freeze and 14-role target remain unchanged; current canonical roster remains 10.
+ACTIVE remains None. NEXT remains MEM-01 / NOT STARTED by sequence only, and
+this integration does not authorize it to begin.
+
+Hostinger is recorded as the preferred VPS provider, with purchase deferred
+until near V1 completion. No purchase, provisioning, deployment, runtime test,
+code, policy, schema, skill, or runtime-instruction change is asserted. Phase 8E
+remains PAUSED / BLOCKED and Phase 8F-8H remain NOT STARTED with their existing
+prerequisites intact. The dated records below remain historical evidence.
+
 ## Historical ORCH-01 executor validation PASS - 2026-10-03
 
 ACTIVE: ORCH-01 / IMPLEMENTED / EXECUTOR VALIDATION PASS / UNCOMMITTED.
