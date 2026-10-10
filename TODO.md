@@ -1,5 +1,30 @@
 # Agent Company TODO
 
+## MEM-01 Current Status - 2026-10-10
+
+MEM-01 Knowledge / Memory Foundation: **CLOSED / COMMITTED** at
+`5e29cdb177838adb1682ab3b36728623d714c5e3` (`feat: add memory foundation contracts`).
+Commit and GitHub push are owner-verified. Read-only filesystem checks corroborate
+local `master` and `origin/master` refs at that commit. All three MEM-01 source
+SHA-256 identities match the accepted closure evidence.
+ACTIVE: None. NEXT: MEM-02 Knowledge Lifecycle + Retrieval / RAG / NOT STARTED,
+by frozen sequence only.
+
+The dated closure and earlier snapshots below remain unchanged historical
+evidence; this current status supersedes their pre-commit status and next actions.
+A1-A7 PASS, independent R03-M1 PASS / CLOSED, reported 232/232 PASS and their
+limitations remain in the [closure record](PROJECT_STATE.md#mem-01-closure-reconciliation---2026-10-10).
+V1 freeze stays ACTIVE; CORE-01-11, GOV-01/02 and ORCH-01 stay CLOSED / COMMITTED.
+D1 optimization, measurements and formal closure remain unfinished; archived
+runner M2 remains OPEN. Phase 8E stays PAUSED / BLOCKED; Phase 8F-8H stay NOT STARTED.
+MEM-02 scope is unchanged. This task ends at documentation reconciliation.
+
+- [x] Owner verified MEM-01 commit and GitHub push at `5e29cdb177838adb1682ab3b36728623d714c5e3`.
+- [x] Resolve the earlier MEM-01 commit action: completed by the owner; no current
+  MEM-01 commit action remains. Its unchecked entry below is a preserved pre-commit snapshot.
+- [x] Reconcile the four existing documentation owners after the commit.
+- [ ] MEM-02 remains NEXT / NOT STARTED; separate implementation authorization is required.
+
 ## MEM-01 Closure Reconciliation - 2026-10-10
 
 MEM-01 Knowledge / Memory Foundation: **CLOSED / READY_TO_COMMIT**.
@@ -284,11 +309,13 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
   validation, independent R4 refresh-02 and owner closure PASS; no acceptance blockers.
   Loops remain inside nodes and graphs connect nodes; ORCH-01 is not CORE-12.
   Operational observations do not implement memory or learning promotion.
-- [x] MEM-01 Knowledge / Memory Foundation — CLOSED / READY_TO_COMMIT,
-  UNCOMMITTED: provider-neutral MemoryInterface, project isolation, immutable
+- [x] MEM-01 Knowledge / Memory Foundation — CLOSED / COMMITTED at
+  `5e29cdb177838adb1682ab3b36728623d714c5e3`: provider-neutral MemoryInterface,
+  project isolation, immutable
   provenance, confidence and verification; Knowledge != Memory != State.
   Owner-supplied A1-A7 / independent R03-M1 PASS and 232/232; current source
-  hashes match. Limitations are recorded in PROJECT_STATE; commit is pending.
+  hashes match. Limitations are recorded in PROJECT_STATE; commit and GitHub push
+  are owner-verified, and the previous commit action is resolved.
 - [ ] MEM-02 Knowledge Lifecycle + Retrieval / RAG — NEXT / NOT STARTED:
   normalized, deduplicated,
   classified, connected, evidence-backed retrieval/RAG, reranking, context

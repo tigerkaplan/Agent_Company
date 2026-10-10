@@ -1,5 +1,28 @@
 # Agent Company Roadmap
 
+## MEM-01 Current Status - 2026-10-10
+
+MEM-01 Knowledge / Memory Foundation: **CLOSED / COMMITTED** at
+`5e29cdb177838adb1682ab3b36728623d714c5e3` (`feat: add memory foundation contracts`).
+Commit and GitHub push are owner-verified. Read-only filesystem checks corroborate
+local `master` and `origin/master` refs at that commit. All three MEM-01 source
+SHA-256 identities match the accepted closure evidence.
+ACTIVE: None. NEXT: MEM-02 Knowledge Lifecycle + Retrieval / RAG / NOT STARTED,
+by frozen sequence only.
+
+The dated closure and earlier snapshots below remain unchanged historical
+evidence; this current status supersedes their pre-commit status and next actions.
+A1-A7 PASS, independent R03-M1 PASS / CLOSED, reported 232/232 PASS and their
+limitations remain in the [closure record](PROJECT_STATE.md#mem-01-closure-reconciliation---2026-10-10).
+V1 freeze stays ACTIVE; CORE-01-11, GOV-01/02 and ORCH-01 stay CLOSED / COMMITTED.
+D1 optimization, measurements and formal closure remain unfinished; archived
+runner M2 remains OPEN. Phase 8E stays PAUSED / BLOCKED; Phase 8F-8H stay NOT STARTED.
+MEM-02 scope is unchanged. This task ends at documentation reconciliation.
+
+CURRENT / COMMITTED MEM-01 contracts and test support retain their existing
+`runtime/memory/` and `runtime/tests/test_memory_foundation.py` ownership.
+`shared/memory/` stays PLANNED / absent; later MEM scope remains unchanged.
+
 ## MEM-01 Closure Reconciliation - 2026-10-10
 
 MEM-01 Knowledge / Memory Foundation: **CLOSED / READY_TO_COMMIT**.
@@ -357,7 +380,7 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
 - GOV-01 Task & Authority Contract: CLOSED / COMMITTED at `852ec01`.
 - GOV-02 Capability Governance: CLOSED / COMMITTED at `e6dbe3f`.
 - ORCH-01 Graph Execution Runtime: CLOSED / COMMITTED at `d3878081`.
-- MEM-01 Knowledge / Memory Foundation: CLOSED / READY_TO_COMMIT; UNCOMMITTED.
+- MEM-01 Knowledge / Memory Foundation: CLOSED / COMMITTED at `5e29cdb177838adb1682ab3b36728623d714c5e3`.
 - MEM-02 Knowledge Lifecycle + Retrieval / RAG: NEXT / NOT STARTED; sequence only.
 - Phase 8E: PAUSED / BLOCKED; no VPS has been created or deployed. Hostinger is
   preferred, with paid procurement deferred until near V1 completion and still
@@ -386,7 +409,7 @@ sequence or expand the existing Canonical V1 Definition below.
 
 One ACTIVE and one NEXT checkpoint slot: ACTIVE = None;
 NEXT = MEM-02 Knowledge Lifecycle + Retrieval / RAG / NOT STARTED, sequence only.
-MEM-01 is CLOSED / READY_TO_COMMIT and remains UNCOMMITTED.
+MEM-01 is CLOSED / COMMITTED at `5e29cdb177838adb1682ab3b36728623d714c5e3`.
 GOV-01 remains CLOSED / COMMITTED at `852ec01`; GOV-02 is CLOSED / COMMITTED
 at `e6dbe3f`; ORCH-01 is CLOSED / COMMITTED at `d3878081`.
 CORE-11 is CLOSED / COMMITTED at `8bda7eb` after Independent Re-review R2 PASS. Lifecycle remains IMPLEMENT -> INDEPENDENT
@@ -747,8 +770,8 @@ GOV-02 is CLOSED / COMMITTED at `e6dbe3f` after independent R5 PASS and owner cl
 All prior findings are CLOSED, with 0 critical / 0 major / 0 minor.
 See [closure evidence](governance/capability-governance/CLOSURE.md).
 ORCH-01 is CLOSED / COMMITTED at `d3878081`; `runtime/graph/` and
-`orchestrator/graph/` are CURRENT. MEM-01 is CLOSED / READY_TO_COMMIT,
-UNCOMMITTED; NEXT: MEM-02 / NOT STARTED, sequence only.
+`orchestrator/graph/` are CURRENT. MEM-01 is CLOSED / COMMITTED at
+`5e29cdb177838adb1682ab3b36728623d714c5e3`; NEXT: MEM-02 / NOT STARTED, sequence only.
 
 ### B. Graph Orchestration
 
@@ -785,8 +808,9 @@ dependency resolution.
 Knowledge is what the system knows. Memory is what happened or was learned.
 State is what is happening now. These remain separate.
 
-- MEM-01 — Knowledge / Memory Foundation: CLOSED / READY_TO_COMMIT,
-  UNCOMMITTED. CURRENT contract-only `runtime/memory/`: provider-neutral
+- MEM-01 — Knowledge / Memory Foundation: CLOSED / COMMITTED at
+  `5e29cdb177838adb1682ab3b36728623d714c5e3`. CURRENT / COMMITTED contract-only
+  `runtime/memory/`: provider-neutral
   `MemoryInterface`, project isolation, immutable source/capture/review provenance,
   confidence and claim-bound verification. A1-A7 and independent R03-M1 PASS
   are owner-supplied; see the closure evidence and limitations above.
@@ -1125,7 +1149,8 @@ local inference, and fine-tuning stay POST-V1; planned folders stay absent.
 - Phases 8F, 8G, and 8H are NOT STARTED.
 - GOV-01/GOV-02 and ORCH-01 are CLOSED / COMMITTED, not pending work; their
   historical review and closure evidence remains unchanged.
-- MEM-01 contracts are CURRENT / UNCOMMITTED, CLOSED / READY_TO_COMMIT.
+- MEM-01 contracts are CURRENT / COMMITTED, CLOSED / COMMITTED at
+  `5e29cdb177838adb1682ab3b36728623d714c5e3`.
 - MEM-02/02B/03, agents 11-14, CAP-SOC-01 and other specifically planned
   capability expansion, advanced Code Intelligence, Phase 9, Decision
   Engine/JEV, and Phase 10 remain planned and unimplemented as described above.

@@ -1,5 +1,30 @@
 # Agent Company Project State
 
+## MEM-01 Current Status - 2026-10-10
+
+MEM-01 Knowledge / Memory Foundation: **CLOSED / COMMITTED** at
+`5e29cdb177838adb1682ab3b36728623d714c5e3` (`feat: add memory foundation contracts`).
+Commit and GitHub push are owner-verified. Read-only filesystem checks corroborate
+local `master` and `origin/master` refs at that commit. All three MEM-01 source
+SHA-256 identities match the accepted closure evidence.
+ACTIVE: None. NEXT: MEM-02 Knowledge Lifecycle + Retrieval / RAG / NOT STARTED,
+by frozen sequence only.
+
+The dated closure and earlier snapshots below remain unchanged historical
+evidence; this current status supersedes their pre-commit status and next actions.
+A1-A7 PASS, independent R03-M1 PASS / CLOSED, reported 232/232 PASS and their
+limitations remain in the [closure record](PROJECT_STATE.md#mem-01-closure-reconciliation---2026-10-10).
+V1 freeze stays ACTIVE; CORE-01-11, GOV-01/02 and ORCH-01 stay CLOSED / COMMITTED.
+D1 optimization, measurements and formal closure remain unfinished; archived
+runner M2 remains OPEN. Phase 8E stays PAUSED / BLOCKED; Phase 8F-8H stay NOT STARTED.
+MEM-02 scope is unchanged. This task ends at documentation reconciliation.
+
+Physical ownership remains `runtime/memory/__init__.py`,
+`runtime/memory/contracts.py` and `runtime/tests/test_memory_foundation.py`.
+`shared/memory/` stays PLANNED / absent; production storage/providers,
+retrieval/RAG, lesson promotion and runtime integration remain unimplemented.
+No Git commands, remote check, test execution or new review occurred here.
+
 ## MEM-01 Closure Reconciliation - 2026-10-10
 
 MEM-01 Knowledge / Memory Foundation: **CLOSED / READY_TO_COMMIT**.
@@ -360,8 +385,9 @@ future directory is created. Dated prior checkpoints below remain historical.
 
 - ACTIVE: None.
 - NEXT: MEM-02 Knowledge Lifecycle + Retrieval / RAG / NOT STARTED; sequence only.
-- MEM-01: CLOSED / READY_TO_COMMIT; UNCOMMITTED. See the MEM-01 closure
-  reconciliation above for A1-A7, owner-supplied independent PASS and limitations.
+- MEM-01: CLOSED / COMMITTED at `5e29cdb177838adb1682ab3b36728623d714c5e3`.
+  See the current status and preserved closure above for A1-A7,
+  owner-supplied independent PASS and limitations.
 - ORCH-01: CLOSED / COMMITTED at `d3878081` after independent R4 refresh-02 PASS
   and owner closure PASS. Targeted 66, Adversarial 25, Graph integration 14,
   Affected 724, Focused 805 and Full 1408 all PASS on the accepted frozen source;
