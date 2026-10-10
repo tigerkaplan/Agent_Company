@@ -27,10 +27,26 @@ See [owner closure](orchestrator/graph/CLOSURE.md) and
   smallest separately authorized test-ID manifest/overlap-reporting change with
   before/after acceptance, risks, exact evidence binding and all mandatory gates.
   No speedup, benchmark, runner/test edit, or reopened ORCH-01 is claimed.
-- [ ] If separately authorized, implement and measure that one D1 reporting
-  change. Preserve required unique coverage, incomplete/failure history,
-  stateful/concurrency freshness and independent review; do not infer permission
-  from this documentation proposal.
+- [x] Record the present, uncommitted standalone D1 reporter and tests separately
+  from the historical runner proposal. Source hashes match the owner-supplied
+  identities. Owner-supplied independent current-source re-attestation: PASS,
+  58/58 tests, 37 assertions, Python 3.14.3. Historical review hash binding remains
+  UNAVAILABLE; the new re-attestation does not reconstruct it. See
+  [source/review status](PROJECT_STATE.md#d1-standalone-diagnostics-source-and-review-status---2026-10-10).
+- [ ] Runner optimization: implement the historical manifest/overlap-reporting
+  proposal only under separate authorization. Standalone diagnostics do not
+  complete this runner change. Preserve required unique coverage, incomplete/
+  failure history, stateful/concurrency freshness and independent review.
+- [ ] Runner M2 remains OPEN in archived experimental work, per owner instruction;
+  the committed `orchestrator/graph/run_validation.py` does not contain that change.
+- [ ] Obtain separately authorized before/after runtime measurements, runner
+  overhead, contention/cleanup telemetry and exact source/dependency/fixture/
+  configuration/command/environment/policy bindings. No speedup or broad
+  validation is established by the diagnostics review.
+  Overlap is OBSERVED; acceptance, compatibility, coverage, execution reuse,
+  test skipping and measured speedup remain UNKNOWN. D1 formal closure has not
+  been performed; this reconciliation grants no execution, reuse, skipping or
+  closure authority.
 - [ ] At their existing approved checkpoints, apply the mapped CAP-REV-01,
   MEM/DEC, source-read/delivery/recovery, provider-observation, and domain
   acceptance refinements. Do not treat source labels or scenarios as authority.

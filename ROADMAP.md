@@ -117,6 +117,38 @@ permission to skip a required fresh stateful/concurrency test. Implementation,
 benchmarking, policy change and any suite execution require separate approval;
 this documentation repair authorizes none of them.
 
+### D1 standalone diagnostics - current-source reconciliation - 2026-10-10
+
+The bounded runner proposal above is retained as historical planning. The present
+standalone [reporter](orchestrator/graph/run_validation_diagnostics.py) and
+[tests](orchestrator/graph/test_run_validation_diagnostics.py) are uncommitted
+files under the existing validation-tooling owner; they do not implement that
+runner proposal or reopen ORCH-01. They report explicitly supplied log/JSON
+observations, exact test-ID mentions, duplicate/conflicting/incomplete evidence,
+logged or claimed timings, input hashes and exact-ID overlap. They do not load
+or execute the validation runner/tests, discover suites, follow evidence
+references, establish run provenance, or infer per-test timing.
+
+Owner-supplied independent current-source re-attestation: PASS, 58/58 tests,
+37 assertions, Python 3.14.3. The reporter and test SHA-256 identities were
+verified against the owner-supplied values; see
+[the source/review record](PROJECT_STATE.md#d1-standalone-diagnostics-source-and-review-status---2026-10-10).
+Historical review hash binding remains UNAVAILABLE. This re-attestation is
+separate current-source evidence, not reconstructed historical review provenance.
+
+Overlap is OBSERVED (exact ID mentions only). Acceptance, compatibility,
+coverage, execution reuse, test skipping and measured speedup remain UNKNOWN.
+Byte-equal log hashes do not establish run association or compatible availability;
+parser support is bounded and unparsed/ambiguous evidence retains uncertainty.
+Runner optimization, source/dependency/fixture/configuration/command/environment/
+policy binding, resource-contention/process-cleanup telemetry and before/after
+runtime measurements remain unfinished. Per owner instruction, runner M2 remains
+OPEN in archived experimental work; the committed
+`orchestrator/graph/run_validation.py` does not contain that experimental change.
+No runtime speedup, broad validation or D1 closure is claimed. All applicable
+acceptance, independent-review and closure gates remain required; observations
+provide no reuse or skipping authority.
+
 ### Preserved capability and deferred boundaries
 
 - CORE-01 through CORE-11 retain their closed contracts and authority boundaries.

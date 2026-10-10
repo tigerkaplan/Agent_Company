@@ -38,6 +38,41 @@ code, policy, schema, skill, or runtime-instruction change is asserted. Phase 8E
 remains PAUSED / BLOCKED and Phase 8F-8H remain NOT STARTED with their existing
 prerequisites intact. The dated records below remain historical evidence.
 
+### D1 standalone diagnostics source and review status - 2026-10-10
+
+Source status: PRESENT / UNCOMMITTED, as supplied by the owner. Physical presence
+and both SHA-256 identities were verified in this checkout without Git commands:
+
+| Standalone source | Verified SHA-256 |
+| --- | --- |
+| [Reporter](orchestrator/graph/run_validation_diagnostics.py) | `c5eeef8834ec42f9e95329579444ab9ca22b72a0855136b088c0001080dd4c07` |
+| [Tests](orchestrator/graph/test_run_validation_diagnostics.py) | `c50ea303a668fffe74afba6a48d8340a48f66adcd23b8ad918f0b944cd631ae5` |
+
+Current-source review: owner-supplied independent re-attestation PASS, 58/58 tests,
+37 assertions, Python 3.14.3, for the identities above. This reconciliation records
+that attestation; it did not rerun the diagnostics tests or independently reproduce
+the review. Historical review hash binding remains UNAVAILABLE. Matching today's
+source hashes does not establish which bytes the historical reviewer inspected;
+the current-source re-attestation is recorded separately.
+
+The standalone reporter reads explicit evidence only and emits observations.
+Overlap is OBSERVED (exact ID mentions only); acceptance, compatibility, coverage,
+execution reuse, test skipping and measured speedup remain UNKNOWN. Parsing,
+logged/claimed timing and byte comparisons do not authenticate provenance, run
+association or a compatible completed run. The historical runner proposal remains
+unfinished, with runner optimization and runtime measurements still pending.
+Per owner instruction, runner M2 remains OPEN in archived experimental work;
+the committed `orchestrator/graph/run_validation.py` does not contain that change.
+D1 formal closure has NOT BEEN PERFORMED; no runtime speedup or broad validation
+is claimed, and no existing acceptance, review or closure gate is waived.
+
+This D1-only reconciliation changes the four authorized documents. README remains
+the physical DOC-TREE owner. CORE-01-11, GOV-01/02 and ORCH-01 remain CLOSED /
+COMMITTED; V1 freeze remains ACTIVE, the roster remains 10 with a 14-role target,
+and MEM-01 remains NEXT / NOT STARTED by sequence only. Phase 8E stays PAUSED /
+BLOCKED and Phase 8F-8H stay NOT STARTED with their existing dependencies intact.
+No formal closure or Git operation is performed.
+
 ## Historical ORCH-01 executor validation PASS - 2026-10-03
 
 ACTIVE: ORCH-01 / IMPLEMENTED / EXECUTOR VALIDATION PASS / UNCOMMITTED.

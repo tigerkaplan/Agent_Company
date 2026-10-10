@@ -370,6 +370,24 @@ active units; execution profiles do not add agents or authority stores.
 
 `orchestrator/graph/` contains committed `ACCEPTANCE.md`, `README.md`,
 `VALIDATION.md`, `run_validation.py`, `CLOSURE.md` and `CLOSURE_EVIDENCE.json`.
+
+The same physical directory also contains two PRESENT / UNCOMMITTED standalone
+D1 diagnostics files, with uncommitted status supplied by the owner:
+
+- [run_validation_diagnostics.py](orchestrator/graph/run_validation_diagnostics.py) — explicit-evidence observation reporter.
+- [test_run_validation_diagnostics.py](orchestrator/graph/test_run_validation_diagnostics.py) — standalone diagnostics tests.
+
+Both source hashes match the owner-supplied identities. Independent current-source
+PASS (58/58 tests, 37 assertions, Python 3.14.3) is owner-supplied re-attestation;
+historical review hash binding remains UNAVAILABLE. See
+[source/review status](PROJECT_STATE.md#d1-standalone-diagnostics-source-and-review-status---2026-10-10).
+These files remain under the existing validation-tooling and physical DOC-TREE
+ownership. Overlap is OBSERVED; acceptance, compatibility, coverage, execution
+reuse, test skipping and measured speedup remain UNKNOWN. Runner optimization
+and runtime measurements remain unfinished; runner M2 stays OPEN in archived
+experimental work per owner instruction, absent from the committed runner.
+D1 formal closure has not been performed; no broad validation or speedup is claimed.
+
 Only `reviews/ORCH-01-R1/probes.py` and `reviews/ORCH-01-R2/probes.py` are
 committed review test support, required by the F2/F3 regression modules.
 Other `reviews/` and `fixes/` artifacts, including final F3 validation and R4
