@@ -1,5 +1,19 @@
 # Agent Company Roadmap
 
+## Post-MEM-02 Commit Reconciliation - 2026-10-11
+
+`AC-POST-MEM02-RECONCILE-60` records owner-verified **MEM-02 CLOSED /
+COMMITTED / PUSHED**, HEAD `22c9d37b503d3eea242eb6cc35041efdaac0a4d5`.
+**ACTIVE: None. NEXT: MEM-02B / NOT STARTED — Learning Constraint Pipeline.**
+This follows the existing frozen sequence; it grants no implementation authority.
+MEM-03, DEC-01/02 and Finance & Pricing, Analytics, Content and Design remain
+PLANNED / NOT STARTED. No scope, checkpoint or dependency is added or reordered.
+See the [current post-commit record](PROJECT_STATE.md#post-mem-02-commit-reconciliation---2026-10-11).
+Earlier dated closure/evidence entries, including their pending commit actions,
+retain historical meaning. No Git, code, tests, reviews or implementation occur.
+One next action: obtain a separately scoped MEM-02B contract-definition work order.
+STOP before implementation.
+
 ## MEM-02 Formal Bounded Closure - 2026-10-11
 
 `AC-MEM-02-FORMAL-CLOSURE-58`: **formal bounded closure PASS; MEM-02 CLOSED /
@@ -401,9 +415,11 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
 - GOV-02 Capability Governance: CLOSED / COMMITTED at `e6dbe3f`.
 - ORCH-01 Graph Execution Runtime: CLOSED / COMMITTED at `d3878081`.
 - MEM-01 Knowledge / Memory Foundation: CLOSED / COMMITTED at `5e29cdb177838adb1682ab3b36728623d714c5e3`.
-- MEM-02 Knowledge Lifecycle + Retrieval / RAG: CLOSED / READY_TO_COMMIT;
-  formal bounded closure PASS; COMMITTED/PUSHED not asserted.
-- MEM-02B Learning Constraint Pipeline and MEM-03 Memory Providers: OPEN / NOT STARTED.
+- MEM-02 Knowledge Lifecycle + Retrieval / RAG: CLOSED / COMMITTED / PUSHED;
+  formal bounded closure PASS; owner-verified HEAD
+  `22c9d37b503d3eea242eb6cc35041efdaac0a4d5`.
+- MEM-02B Learning Constraint Pipeline: NEXT / NOT STARTED.
+- MEM-03 Memory Providers: PLANNED / NOT STARTED.
 - Phase 8E: PAUSED / BLOCKED; no VPS has been created or deployed. Hostinger is
   preferred, with paid procurement deferred until near V1 completion and still
   requiring separate approval.
@@ -430,8 +446,9 @@ NO -> POST-V1 / LATER / REFERENCE. Later ideas must not interrupt the checkpoint
 sequence or expand the existing Canonical V1 Definition below.
 
 One ACTIVE and one NEXT checkpoint slot: ACTIVE = None;
-NEXT = MEM-02 commit, pending owner PowerShell Git inspection.
-MEM-02 is CLOSED / READY_TO_COMMIT under Prompt 58; MEM-02B/MEM-03 remain OPEN.
+NEXT = MEM-02B / NOT STARTED — Learning Constraint Pipeline, sequence only.
+MEM-02 is CLOSED / COMMITTED / PUSHED under the owner-verified post-commit
+record; MEM-03 remains PLANNED / NOT STARTED. No next implementation is authorized.
 MEM-01 is CLOSED / COMMITTED at `5e29cdb177838adb1682ab3b36728623d714c5e3`.
 GOV-01 remains CLOSED / COMMITTED at `852ec01`; GOV-02 is CLOSED / COMMITTED
 at `e6dbe3f`; ORCH-01 is CLOSED / COMMITTED at `d3878081`.
@@ -837,7 +854,7 @@ State is what is happening now. These remain separate.
   `MemoryInterface`, project isolation, immutable source/capture/review provenance,
   confidence and claim-bound verification. A1-A7 and independent R03-M1 PASS
   are owner-supplied; see the closure evidence and limitations above.
-- MEM-02 — Knowledge Lifecycle + Retrieval / RAG: CLOSED / READY_TO_COMMIT;
+- MEM-02 — Knowledge Lifecycle + Retrieval / RAG: CLOSED / COMMITTED / PUSHED;
   formal bounded closure PASS under Prompt 58. Accepted scope: capture, normalize,
   deduplicate, classify, connect, store, retrieve, rerank, build context packs,
   selectively retain relevant context, act, verify, and learn from run traces.
@@ -847,11 +864,12 @@ State is what is happening now. These remain separate.
   supersession. This is bounded source reuse and explicit supplied-view linkage,
   supported foreground action verification and untrusted trace candidates;
   truth/authenticity/unsupported freshness remain UNKNOWN, non-null mutation
-  `diff_ref` remains unsupported and fails closed. No commit or push is asserted.
-- MEM-02B — Learning Constraint Pipeline: OPEN / NOT STARTED; observation -> candidate lesson ->
+  `diff_ref` remains unsupported and fails closed. Commit/push and HEAD
+  `22c9d37b503d3eea242eb6cc35041efdaac0a4d5` are owner-verified.
+- MEM-02B — Learning Constraint Pipeline: NEXT / NOT STARTED; observation -> candidate lesson ->
   evidence -> deduplication -> scope -> validation/review -> promotion -> active
   planning constraint. A PASS does not automatically become a permanent rule.
-- MEM-03 — Memory Providers: OPEN / NOT STARTED; local provider first. Hindsight is only a future
+- MEM-03 — Memory Providers: PLANNED / NOT STARTED; local provider first. Hindsight is only a future
   prototype provider behind `MemoryInterface`; SwarmVault and Vault Curate are
   reference patterns, not core dependencies.
 
@@ -1178,7 +1196,8 @@ local inference, and fine-tuning stay POST-V1; planned folders stay absent.
   historical review and closure evidence remains unchanged.
 - MEM-01 contracts are CURRENT / COMMITTED, CLOSED / COMMITTED at
   `5e29cdb177838adb1682ab3b36728623d714c5e3`.
-- MEM-02/02B/03, agents 11-14, CAP-SOC-01 and other specifically planned
+- MEM-02 is CLOSED / COMMITTED / PUSHED at the owner-verified HEAD above.
+- MEM-02B/03, agents 11-14, CAP-SOC-01 and other specifically planned
   capability expansion, advanced Code Intelligence, Phase 9, Decision
   Engine/JEV, and Phase 10 remain planned and unimplemented as described above.
 - The SYNC-06 R4/R2 refinements are documentation mappings, not implemented

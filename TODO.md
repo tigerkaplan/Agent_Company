@@ -1,5 +1,22 @@
 # Agent Company TODO
 
+## Post-MEM-02 Commit Reconciliation - 2026-10-11
+
+- [x] Record owner-verified MEM-02 CLOSED / COMMITTED / PUSHED, HEAD
+  `22c9d37b503d3eea242eb6cc35041efdaac0a4d5`; the previous MEM-02 commit
+  action is resolved by owner evidence, without agent Git commands.
+- [x] Reconcile current canonical status: ACTIVE: None; NEXT: MEM-02B / NOT STARTED.
+- [x] Preserve dated closure, acceptance, review and preflight evidence,
+  frozen V1 scope/dependencies, immutable archives and unrelated files.
+- [ ] Obtain a separately scoped MEM-02B work order for its bounded contract,
+  acceptance criteria and exact file allowlist; stop before implementation.
+- [ ] MEM-03, DEC-01/02 and agents 11-14 remain PLANNED / NOT STARTED.
+
+See the [current canonical post-commit record](PROJECT_STATE.md#post-mem-02-commit-reconciliation---2026-10-11).
+Earlier dated pending Git actions below remain historical snapshots. This
+documentation-only work starts no implementation and supplies no new test,
+review or independent Git evidence. STOP.
+
 ## MEM-02 Formal Bounded Closure - 2026-10-11
 
 - [x] Record owner-authorized Prompt 58 formal bounded closure PASS after
@@ -483,18 +500,19 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
   Owner-supplied A1-A7 / independent R03-M1 PASS and 232/232; current source
   hashes match. Limitations are recorded in PROJECT_STATE; commit and GitHub push
   are owner-verified, and the previous commit action is resolved.
-- [x] MEM-02 Knowledge Lifecycle + Retrieval / RAG — CLOSED / READY_TO_COMMIT;
+- [x] MEM-02 Knowledge Lifecycle + Retrieval / RAG — CLOSED / COMMITTED / PUSHED;
   formal bounded closure PASS under Prompt 58:
   normalized, deduplicated,
   classified, connected, evidence-backed retrieval/RAG, reranking, context
   packs, anchored/evidence-backed memory, trace-derived lessons, learning
   candidates, selective context retention, supported action verification, and
   learning from traces. Promotion to active constraints stays separate in MEM-02B.
-  See the canonical closure limitations; no commit or push is asserted.
-- [ ] MEM-02B Learning Constraint Pipeline — OPEN / NOT STARTED: promote observations to planning
+  See the canonical closure limitations; owner-verified HEAD
+  `22c9d37b503d3eea242eb6cc35041efdaac0a4d5` resolves the previous commit action.
+- [ ] MEM-02B Learning Constraint Pipeline — NEXT / NOT STARTED: promote observations to planning
   constraints only after evidence, deduplication, scoping, and review; PASS is
   not automatically a permanent rule.
-- [ ] MEM-03 Memory Providers — OPEN / NOT STARTED: local provider first; Hindsight only as a future
+- [ ] MEM-03 Memory Providers — PLANNED / NOT STARTED: local provider first; Hindsight only as a future
   provider behind MemoryInterface; SwarmVault/Vault Curate are references, not
   core dependencies.
 - [ ] Add canonical Agent 11 Finance & Pricing.

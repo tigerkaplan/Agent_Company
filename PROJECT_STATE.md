@@ -1,5 +1,34 @@
 # Agent Company Project State
 
+## Post-MEM-02 Commit Reconciliation - 2026-10-11
+
+Authority: `AC-POST-MEM02-RECONCILE-60`, owner work order for
+`F:\Software\Agent_Company`. **MEM-02: CLOSED / COMMITTED / PUSHED.**
+Owner-verified HEAD: `22c9d37b503d3eea242eb6cc35041efdaac0a4d5`.
+Commit/push and HEAD are recorded from the owner's explicit evidence; this
+documentation task runs no Git commands and supplies no independent Git result.
+
+**ACTIVE: None. NEXT: MEM-02B / NOT STARTED — Learning Constraint Pipeline.**
+Its accepted scope remains observation -> candidate lesson -> evidence ->
+deduplication -> scope -> validation/review -> promotion -> active planning
+constraint. MEM-03 storage/providers, DEC-01/02 and agents 11-14 remain PLANNED /
+NOT STARTED. Frozen V1 scope, sequence and dependencies are unchanged; no
+MEM-02B implementation, promotion, new storage authority or deployment begins.
+
+The Prompt 58 closure and all earlier dated acceptance, review, source-binding,
+Git-preflight and next-action records below remain historical evidence. Their
+READY_TO_COMMIT and pending MEM-02 commit statements describe the earlier
+checkpoint; this entry and Current Checkpoint provide current status. Same-
+provider disclosures, unsupported non-null mutation diff denial, unknown truth/
+freshness limits and the immutable archive remain intact. Canonical ownership
+stays with [ROADMAP](ROADMAP.md), [TODO](TODO.md) and [README DOC-TREE](README.md#repository-tree-reconciliation-policy---doc-gov-01).
+Only these four existing documents are reconciled; no code, policy, new files,
+tests, reviews or Git actions occur.
+
+**One next action:** obtain a separately scoped MEM-02B work order to define its
+bounded implementation contract, acceptance criteria and exact file allowlist.
+STOP before implementation.
+
 ## MEM-02 Formal Bounded Closure - 2026-10-11
 
 Authority: `AC-MEM-02-FORMAL-CLOSURE-58` and the owner's continuation supplying
@@ -939,10 +968,11 @@ future directory is created. Dated prior checkpoints below remain historical.
 ## Current Checkpoint
 
 - ACTIVE: None.
-- NEXT: MEM-02 commit; pending owner PowerShell Git inspection, with no staging
-  or commit performed by this task.
-- MEM-02: CLOSED / READY_TO_COMMIT after formal bounded closure PASS under
-  Prompt 58; COMMITTED/PUSHED not asserted. MEM-02B/MEM-03 remain OPEN / NOT STARTED.
+- NEXT: MEM-02B / NOT STARTED — Learning Constraint Pipeline; sequence only,
+  no implementation authority.
+- MEM-02: CLOSED / COMMITTED / PUSHED after Prompt 58 formal bounded closure
+  PASS; owner-verified HEAD `22c9d37b503d3eea242eb6cc35041efdaac0a4d5`.
+- MEM-03, DEC-01/02 and agents 11-14 remain PLANNED / NOT STARTED.
 - MEM-01: CLOSED / COMMITTED at `5e29cdb177838adb1682ab3b36728623d714c5e3`.
   See the current status and preserved closure above for A1-A7,
   owner-supplied independent PASS and limitations.

@@ -1,5 +1,18 @@
 # Agent Company
 
+## Post-MEM-02 Commit Reconciliation - 2026-10-11
+
+`AC-POST-MEM02-RECONCILE-60` records **MEM-02 CLOSED / COMMITTED / PUSHED**
+from owner verification, HEAD `22c9d37b503d3eea242eb6cc35041efdaac0a4d5`.
+**ACTIVE: None. NEXT: MEM-02B / NOT STARTED — Learning Constraint Pipeline.**
+See the [current state and evidence attribution](PROJECT_STATE.md#post-mem-02-commit-reconciliation---2026-10-11).
+The existing DOC-TREE ownership and frozen V1 scope/dependencies remain unchanged.
+MEM-03, DEC-01/02 and agents 11-14 stay PLANNED / NOT STARTED. Earlier dated
+closure, acceptance and pending Git actions remain historical snapshots.
+No agent Git command, code edit, new file, test, review, MEM-02B implementation
+or deployment occurs. The next action is a separately scoped MEM-02B
+contract-definition work order. STOP before implementation.
+
 ## MEM-02 Formal Bounded Closure - 2026-10-11
 
 `AC-MEM-02-FORMAL-CLOSURE-58` records **formal bounded closure PASS; MEM-02
@@ -389,18 +402,20 @@ GOV-01 is CLOSED / COMMITTED at `852ec01`; GOV-02 Capability Governance is
 CLOSED / COMMITTED at `e6dbe3f`. ORCH-01 is CLOSED / COMMITTED at `d3878081`
 after independent R4 PASS and owner closure PASS. MEM-01 is CLOSED / COMMITTED
 at `5e29cdb177838adb1682ab3b36728623d714c5e3`; MEM-02 is CLOSED /
-READY_TO_COMMIT after Prompt 58 bounded closure PASS, with no commit/push asserted.
-MEM-02B promotion and MEM-03 production durability remain OPEN / NOT STARTED.
+COMMITTED / PUSHED after Prompt 58 bounded closure PASS and owner verification
+of HEAD `22c9d37b503d3eea242eb6cc35041efdaac0a4d5`.
+ACTIVE: None; NEXT: MEM-02B / NOT STARTED. MEM-03, DEC-01/02 and agents 11-14
+remain PLANNED / NOT STARTED.
 
 ## Current Repository Structure
 
 CURRENT: physically observed structure in the authoritative F: checkout.
-Owner-supplied Git preflight: `master`, HEAD
-`36d48137f601dd36a89415f343e7fb2b6cfc5820`, no staged changes, 13 tracked
-modified files and a DIRTY worktree. Physical presence and bounded closure do
-not attest per-path commit membership. MEM-01's recorded committed contract
-foundation remains intact; MEM-02 commit/push is not asserted. Generated
-contents and ignored local configuration are intentionally not expanded.
+Owner-verified MEM-02 HEAD: `22c9d37b503d3eea242eb6cc35041efdaac0a4d5`;
+MEM-02 is CLOSED / COMMITTED / PUSHED. This task records owner Git evidence
+without running Git commands or attesting a current clean worktree. The earlier
+branch/index/dirty-worktree preflight remains in the dated closure record.
+MEM-01's recorded committed foundation and the existing physical paths remain
+intact. Generated contents and ignored local configuration are not expanded.
 
 - `agents/` — 10 canonical roles: communications, knowledge-manager, marketing,
   operations, project-manager, research, reviewer, sales, social-media, and
@@ -421,14 +436,14 @@ contents and ignored local configuration are intentionally not expanded.
   `knowledge_adapter.py`, `validity.py`, `action_trace.py` and `integration.py`.
   MEM-01's recorded committed foundation is `__init__.py`, `contracts.py` and
   `runtime/tests/test_memory_foundation.py`, CLOSED / COMMITTED at
-  `5e29cdb177838adb1682ab3b36728623d714c5e3`. MEM-02 is CLOSED / READY_TO_COMMIT;
-  no per-path MEM-02 commit/push membership is asserted. CURRENT test support:
+  `5e29cdb177838adb1682ab3b36728623d714c5e3`. MEM-02 is CLOSED / COMMITTED /
+  PUSHED at the owner-verified HEAD above. CURRENT test support:
   `test_memory_lifecycle.py`, `test_memory_knowledge_adapter.py`,
   `test_memory_validity.py`, `test_memory_readonly_inspection.py`,
   `test_memory_action_trace.py` and `test_memory_integration.py` under
   `runtime/tests/`. Foreground composition lives in existing provider context
   and CLI files; accepted Inspection lives in existing canonical owner stores.
-  No production Memory provider or durability is established; MEM-03 stays OPEN.
+  No production Memory provider or durability is established; MEM-03 stays PLANNED / NOT STARTED.
   `shared/memory/` stays absent / PLANNED.
   `runtime/progress/` is the CURRENT CORE-07 implementation, CLOSED / COMMITTED
   at `6bcffa4` after CORE-07R3 PASS; it contains typed/schema-validated, bounded,
@@ -665,8 +680,8 @@ and SYNC-04A. The exception gate and accepted refinements live in
 LATER / REFERENCE; only critical implementation, security, data-loss, authority,
 architectural-consistency, or completion-correctness blockers may be evaluated
 for V1. They do not interrupt the checkpoint sequence or grant implementation
-authority. ACTIVE: None; NEXT: MEM-02 commit, pending owner PowerShell Git work.
-MEM-02 is CLOSED / READY_TO_COMMIT; MEM-02B/MEM-03 remain OPEN / NOT STARTED.
+authority. ACTIVE: None; NEXT: MEM-02B / NOT STARTED, sequence only.
+MEM-02 is CLOSED / COMMITTED / PUSHED; MEM-03 remains PLANNED / NOT STARTED.
 MEM-01 is CLOSED / COMMITTED at `5e29cdb177838adb1682ab3b36728623d714c5e3`.
 ORCH-01 is CLOSED / COMMITTED at `d3878081`; GOV-02 remains CLOSED / COMMITTED at `e6dbe3f`.
 GOV-01 remains CLOSED / COMMITTED at `852ec01`.
