@@ -87,12 +87,19 @@ class FileReviewStore:
             "description": "Normalized review decision and bounded evidence package",
         }
 
-    def load(self, review_id: str, *, require_authority=False) -> dict[str, Any]:
+    def load(self, review_id: str, *, require_authority=False, inspection=False) -> dict[str, Any]:
+        if type(inspection) is not bool:
+            raise ReviewStoreError("Inspection flag must be a boolean")
+        if inspection:
+            from runtime.progress.store import readonly_inspection
+            with readonly_inspection():
+                return self.load(review_id, require_authority=require_authority)
         path = self._path(review_id)
         if not path.is_file():
             raise ReviewStoreError(f"Review artifact not found: {review_id}")
         try:
-            value = json.loads(path.read_text(encoding="utf-8"))
+            from runtime.progress.store import inspection_active, inspection_read
+            value = json.loads(inspection_read(path)) if inspection_active() else json.loads(path.read_text(encoding="utf-8"))
         except (OSError, ValueError, RecursionError) as error:
             raise ReviewStoreError(
                 f"Could not read review artifact {review_id}: {error}"

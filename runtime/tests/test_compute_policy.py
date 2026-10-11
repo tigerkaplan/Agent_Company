@@ -10,7 +10,10 @@ from runtime.compute_policy import ComputeError, ComputeInputs, ComputePolicy, P
 from runtime.compute_policy.canonical import bind_project_context, canonical_inputs
 from runtime.budget.models import BudgetDecision
 from runtime.providers.adapters import CliProviderAdapter
-from runtime.tests.contract_fixtures import ToolFreeCliFixture, declare_fixture_contract
+from runtime.tests.contract_fixtures import (
+    ToolFreeCliFixture, bounded_context_repository, declare_fixture_contract,
+)
+from runtime.providers.context import ExecutionContextBuilder
 from runtime.providers.config import CliProviderConfig
 from runtime.tests.test_providers import CliAdapterTests
 from types import SimpleNamespace
@@ -383,9 +386,13 @@ class ComputeIntegrationTests(unittest.TestCase):
         from runtime.cli.__main__ import build_worker
         runtime = JobRuntime(Path(self.tmp.name) / 'jobs')
         execution_root = Path(self.tmp.name) / 'executions'
-        with patch('runtime.cli.__main__.build_provider_router', return_value=self.router):
+        context_root = self.enterContext(bounded_context_repository())
+        builder = ExecutionContextBuilder(context_root)
+        with patch('runtime.cli.__main__.build_provider_router', return_value=self.router), \
+                patch('runtime.cli.__main__.ExecutionContextBuilder', lambda _root: builder):
             worker = build_worker('provider', runtime, FileExecutionStore(execution_root),
                                   Mock(), execution_root)
+        self.assertIs(worker.executor.context_builder, builder)
         payload = {'task': 'Prepare a bounded review artifact', 'task_class': 'software',
                    'agent': 'software', 'workflow': 'software',
                    'capability': 'software_implementation', 'provider': 'codex',

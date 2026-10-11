@@ -7,9 +7,12 @@ access can replace the database; hashes are not signatures.
 """
 
 from contextlib import contextmanager
+from contextvars import ContextVar
 from pathlib import Path
 import json
+import hashlib
 import os
+import stat
 import tempfile
 import re
 import sqlite3
@@ -22,6 +25,7 @@ MAX_EVENTS = 4096
 MAX_JOB_EVENTS = 128
 MAX_EVENT_BYTES = 4096
 MAX_DATABASE_BYTES = 32 * 1024 * 1024
+_INSPECTION = ContextVar("readonly_trace_inspection", default=None)
 _ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,199}\Z")
 
 
@@ -34,6 +38,72 @@ _SCHEMA = {
     ("table", "recovery"): "CREATE TABLE recovery (job_id TEXT PRIMARY KEY NOT NULL, ready INTEGER NOT NULL CHECK(ready IN (0,1)), payload TEXT NOT NULL)",
 }
 _TERMINAL = {"job_completed": "completed", "job_failed": "failed", "job_cancelled": "cancelled"}
+
+
+def inspection_active():
+    return _INSPECTION.get() is not None
+
+
+def _require_quiescent(path):
+    sidecars = (Path(str(path) + suffix) for suffix in ("-journal", "-wal", "-shm"))
+    if any(p.exists() or p.is_symlink() for p in sidecars):
+        raise ProgressError("Inspection requires a journal without SQLite sidecars")
+
+
+@contextmanager
+def readonly_inspection():
+    """Nested evidence checks share a bounded, transient read-only IO mode."""
+    token = _INSPECTION.set({"bytes_read": 0, "observed": {}, "journals": set()}) if not inspection_active() else None
+    try:
+        yield
+        if token is not None:
+            state = _INSPECTION.get()
+            for path in state["journals"]:
+                _require_quiescent(path)
+            # Re-read complete bytes, rather than trusting a stat-only check or
+            # returning cached evidence after another nested verifier ran.
+            for path, (_, _, limit) in tuple(state["observed"].items()):
+                inspection_read(path, limit=limit)
+            for path in state["journals"]:
+                _require_quiescent(path)
+    finally:
+        if token is not None:
+            _INSPECTION.reset(token)
+
+
+def inspection_read(path, *, limit=512 * 1024):
+    """Read complete bounded bytes; reject links and replacement during a read."""
+    state = _INSPECTION.get()
+    if state is None:
+        raise ProgressError("Inspection read requires an active inspection")
+    path = Path(path)
+    try:
+        if any(p.is_symlink() or (hasattr(p, "is_junction") and p.is_junction())
+               for p in (path, *path.parents)):
+            raise ProgressError("Inspection cannot follow evidence links")
+        before = path.stat()
+        if not stat.S_ISREG(before.st_mode):
+            raise ProgressError("Inspection requires regular evidence files")
+        identity = lambda value: (value.st_dev, value.st_ino, value.st_size, value.st_mtime_ns)
+        ceiling = min(limit, MAX_DATABASE_BYTES - state["bytes_read"])
+        if before.st_size > ceiling:
+            raise ProgressError("Inspection read budget exceeded")
+        with path.open("rb") as stream:
+            if identity(os.fstat(stream.fileno())) != identity(before):
+                raise ProgressError("Inspection evidence changed before read")
+            raw = stream.read(ceiling + 1)
+            state["bytes_read"] += len(raw)
+            if (len(raw) > ceiling or len(raw) != before.st_size
+                    or identity(os.fstat(stream.fileno())) != identity(before)
+                    or identity(path.stat()) != identity(before)):
+                raise ProgressError("Inspection evidence changed or exceeded its read bound")
+        observed = (identity(before), hashlib.sha256(raw).digest(), limit)
+        previous = state["observed"].setdefault(path, observed)
+        if previous[:2] != observed[:2]:
+            raise ProgressError("Inspection evidence changed between nested reads")
+        return raw
+    except (OSError, ValueError) as error:
+        raise ProgressError("Inspection evidence unavailable or changed") from error
 
 
 def _check_terminals(events):
@@ -63,6 +133,8 @@ class ProgressStore:
 
     @contextmanager
     def _connect(self, logical_job_id):
+        if inspection_active():
+            raise ProgressError("Inspection cannot lock, migrate or mutate a journal")
         # Match the existing cross-process file-store lock for first creation.
         try:
             with FileJobStore(self.root).claim_transaction():
@@ -110,19 +182,19 @@ class ProgressStore:
                 temporary.unlink()
 
     @staticmethod
-    def _validate_schema(connection):
+    def _validate_schema(connection, *, inspection=False):
         objects = {(kind, name): sql for kind, name, sql in connection.execute(
             "SELECT type,name,sql FROM sqlite_master WHERE sql IS NOT NULL")}
         version = connection.execute("PRAGMA user_version").fetchone()[0]
         v1 = {key: value for key, value in _SCHEMA.items() if key != ("table", "recovery")}
         legacy = {key: value for key, value in v1.items() if key != ("table", "pending")}
-        if version == 0 and objects == legacy:
+        if not inspection and version == 0 and objects == legacy:
             # Bounded migration of intact R1 journals. Never repair altered DDL.
             connection.execute(_SCHEMA[("table", "pending")])
             connection.execute("PRAGMA user_version=1")
             objects[("table", "pending")] = _SCHEMA[("table", "pending")]
             version = 1
-        if version == 1 and objects == v1:
+        if not inspection and version == 1 and objects == v1:
             connection.execute(_SCHEMA[("table", "recovery")])
             connection.execute("PRAGMA user_version=2")
             objects[("table", "recovery")] = _SCHEMA[("table", "recovery")]
@@ -217,11 +289,48 @@ class ProgressStore:
         self._capacity(result, pending, recovery=self._recoveries(connection, logical_job_id))
         return result, previous
 
-    def read(self, logical_job_id):
+    def read(self, logical_job_id, *, inspection=False):
+        if type(inspection) is not bool:
+            raise ProgressError("Inspection flag must be a boolean")
+        if inspection:
+            with readonly_inspection():
+                return self.read(logical_job_id)
+        if inspection_active():
+            return self._inspect(logical_job_id)
         if not self.path(logical_job_id).exists():
             return []
         with self._connect(logical_job_id) as connection:
             return self._read(connection, logical_job_id)[0]
+
+    def _inspect(self, logical_job_id):
+        """Validate a rollback-journal snapshot entirely in memory; no SQLite IO."""
+        path = self.path(logical_job_id)
+        _INSPECTION.get()["journals"].add(path)
+        _require_quiescent(path)
+        raw = inspection_read(path, limit=MAX_DATABASE_BYTES)
+        # WAL snapshots require external state/recovery; they are unsupported.
+        if raw[:16] != b"SQLite format 3\x00" or raw[18:20] != b"\x01\x01":
+            raise ProgressError("Inspection requires a standalone rollback-journal database")
+        connection = None
+        try:
+            connection = sqlite3.connect(":memory:")
+            if not callable(getattr(connection, "deserialize", None)):
+                raise ProgressError("Safe in-memory journal inspection is unavailable")
+            connection.execute("PRAGMA temp_store=MEMORY")
+            connection.deserialize(raw)
+            connection.execute("PRAGMA query_only=ON")
+            self._validate_schema(connection, inspection=True)
+            result = self._read(connection, logical_job_id)[0]
+        except (sqlite3.Error, ValueError, TypeError, RecursionError) as error:
+            raise ProgressError("Progress inspection is unavailable or malformed") from error
+        finally:
+            if connection is not None:
+                connection.close()
+        _require_quiescent(path)
+        after_raw = inspection_read(path, limit=MAX_DATABASE_BYTES)
+        if after_raw != raw:
+            raise ProgressError("Progress journal changed during inspection")
+        return result
 
     @staticmethod
     def _insert(connection, history, previous, events):

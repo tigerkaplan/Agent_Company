@@ -44,6 +44,7 @@ class ExecutionContextBuilder:
         max_total_bytes: int = 512 * 1024,
         repository_roots: tuple[str, ...] = (),
         knowledge=None,
+        knowledge_factory=None,
         ranker=None,
         capability_requests: tuple = (),
         missing: tuple = (),
@@ -64,7 +65,10 @@ class ExecutionContextBuilder:
             raise ContextBuildError(str(error)) from error
         # Validate bounds/primitive shapes before copying external input.
         self.external_content = tuple(dict(record) for record in external_content)
+        if knowledge_factory is not None and (knowledge is not None or not callable(knowledge_factory)):
+            raise ContextBuildError('Conflicting or invalid knowledge factory installation')
         self.knowledge = knowledge
+        self.knowledge_factory = knowledge_factory
         self.ranker = ranker
         self.capability_requests = capability_requests
         self.missing = missing
@@ -82,6 +86,20 @@ class ExecutionContextBuilder:
         self.last_cache_result = None
         try:
             limits = Limits(file_bytes=self.max_file_bytes, pack_bytes=self.max_total_bytes)
+            if self.knowledge_factory is not None and self.knowledge is not None:
+                raise DiscoveryError('Conflicting static/factory knowledge installation')
+            knowledge = (self.knowledge_factory(request, self.repository_root, limits)
+                         if self.knowledge_factory is not None else self.knowledge)
+            if self.knowledge_factory is not None and not callable(getattr(knowledge, 'assert_request', None)):
+                raise DiscoveryError('Factory must return a request-bound discovery adapter')
+            assert_context = getattr(knowledge, 'assert_context', None)
+            if assert_context is not None:
+                assert_context(request, self.repository_root, limits)
+            # Request-bound adapters must validate the consumer before discovery
+            # or cache reuse; legacy query-only adapters have no binding hook.
+            assert_request = getattr(knowledge, 'assert_request', None)
+            if assert_request is not None:
+                assert_request(request)
             required = [('project/state', 'CONSTITUTION.md'), ('project/state', 'AGENTS.md'),
                         ('project/state', 'PROJECT_STATE.md')]
             for reference in request.context_refs:
@@ -106,7 +124,7 @@ class ExecutionContextBuilder:
             pack = ContextDiscovery(self.repository_root, limits).discover(
                 request.task, required=tuple(required), files=files,
                 selected_skills=(request.skill,) if request.skill else (),
-                roots=self.repository_roots, knowledge=self.knowledge, ranker=self.ranker,
+                roots=self.repository_roots, knowledge=knowledge, ranker=self.ranker,
                 capability_requests=self.capability_requests, missing=self.missing,
                 external=self.external_content, canonical_refs=tuple(canonical_refs),
             )

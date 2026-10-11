@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from runtime.tests.contract_fixtures import ToolFreeCliFixture
 
-from runtime.tests.contract_fixtures import declare_fixture_contract
+from runtime.tests.contract_fixtures import bounded_context_repository, declare_fixture_contract
 
 import io
 import json
@@ -27,7 +27,7 @@ from runtime.providers.config import (
     ProviderConfigError,
     ProviderConfiguration,
 )
-from runtime.providers.context import ExecutionContextBuilder
+from runtime.providers.context import ContextBuildError, ExecutionContextBuilder
 from runtime.tests.contract_fixtures import CertifiedProviderFixture as ProviderExecutor
 from runtime.providers.models import (
     ProviderAvailability,
@@ -214,7 +214,120 @@ class SandboxMetadataParserTests(unittest.TestCase):
         )
 
 
+class BoundedContextFixtureTests(unittest.TestCase):
+    def test_real_builder_preserves_current_excerpt_and_full_source_digest(self):
+        from runtime.context.contracts import digest
+        with bounded_context_repository() as root:
+            execution_request = request()
+            package = ExecutionContextBuilder(root).build(execution_request)
+            state = next(m for m in package.context_pack.materials if m.ref == "PROJECT_STATE.md")
+            original = (root / "PROJECT_STATE.md").read_text(encoding="utf-8")
+            self.assertIn("Synthetic current checkpoint.", state.content)
+            self.assertNotIn("Synthetic historical checkpoint.", state.content)
+            self.assertEqual(state.source_digest, digest(original))
+            self.assertEqual((state.start_line, state.retention), (1, "excerpt"))
+            self.assertEqual(package.approval_status, execution_request.approval_status)
+            self.assertEqual(package.execution_scope, execution_request.execution_scope)
+            self.assertEqual(package.context_pack.payload()["authority"], "none")
+            self.assertIn("agents/software/ROLE.md", {entry.ref for entry in package.context})
+
+    def test_oversized_project_state_rejects_before_provider_even_with_warm_cache(self):
+        with bounded_context_repository() as root:
+            execution_request = request(provider="codex")
+            builder = ExecutionContextBuilder(root)
+            builder.build(execution_request)
+            state = root / "PROJECT_STATE.md"
+            original = state.read_bytes()
+            state.write_bytes(original + b"x" * (builder.max_file_bytes + 1 - len(original)))
+            self.assertEqual(builder.max_file_bytes, 131072)
+            self.assertEqual(state.stat().st_size, 131073)
+            adapters = {p: FakeAdapter(p, available=True) for p in ("claude", "codex")}
+            executor = ProviderExecutor(
+                ProviderRouter(ProviderConfiguration(REPOSITORY_ROOT), adapters), builder,
+                FileProviderArtifactStore(root / "provider-output"),
+            )
+            with patch.object(builder.cache, "reuse", wraps=builder.cache.reuse) as reuse:
+                with self.assertRaisesRegex(ContextBuildError, "Discovery read budget exceeded"):
+                    executor.execute(execution_request)
+            reuse.assert_not_called()
+            self.assertTrue(all(not adapter.calls for adapter in adapters.values()))
+            self.assertFalse((root / "provider-output").exists())
+            self.assertIsNone(builder.last_cache_result)
+
+    def test_provider_review_profile_resolves_context_and_loads_registered_skill(self):
+        from runtime.context.contracts import digest
+        with bounded_context_repository(profile="provider-review") as root:
+            registered = next(entry for entry in json.loads(
+                (REPOSITORY_ROOT / "skills/catalog.json").read_text(encoding="utf-8")
+            ) if entry["name"] == "review")
+            self.assertEqual(json.loads((root / "skills/catalog.json").read_text(encoding="utf-8")),
+                             [registered])
+            resolver = CanonicalReferenceResolver(root)
+            for agent, workflow, capability, project in (
+                ("software", "software", "software_implementation", None),
+                ("reviewer", "review", "independent_review", None),
+                ("project-manager", "project-continuation", "planning", "brightshore"),
+            ):
+                with self.subTest(agent=agent):
+                    job = dict(agent=agent, workflow=workflow, capability=capability,
+                               project_id=project, skill=None if project else "review")
+                    refs = resolver.resolve(job)
+                    self.assertEqual(refs, CanonicalReferenceResolver(REPOSITORY_ROOT).resolve(job))
+                    package = ExecutionContextBuilder(root).build(request(
+                        **job, context_refs=refs))
+                    materials = {m.ref: m for m in package.context_pack.materials}
+                    self.assertIn(f"agents/{agent}/ROLE.md", materials)
+                    self.assertEqual(package.context_pack.payload()["authority"], "none")
+                    if project:
+                        project_refs = [ref["ref"] for ref in refs if ref["ref_type"] == "project_state"]
+                        self.assertEqual(project_refs, [f"shared/projects/brightshore/{name}" for name in (
+                            "PROJECT_STATE.md", "HANDOFF.md", "DECISIONS.md", "TODO.md",
+                            "ACTIVE_FILE_MAP.md", "BLOCKERS.md", "RISKS.md", "metadata.yaml")])
+                        self.assertTrue(set(project_refs) <= materials.keys())
+                        self.assertNotIn("agents/software/ROLE.md", materials)
+                    else:
+                        skill = materials[registered["instructions"]]
+                        self.assertEqual((skill.source, skill.trust), ("skills", "canonical"))
+                        self.assertEqual(digest(skill.content.replace("\r\n", "\n")), registered["sha256"])
+
+    def test_provider_review_profile_rejects_stale_registered_skill_digest(self):
+        with bounded_context_repository(profile="provider-review") as root:
+            instruction = root / "skills/shared/review/SKILL.md"
+            instruction.write_text(instruction.read_text(encoding="utf-8") + "\nChanged fixture.\n",
+                                   encoding="utf-8")
+            job = dict(agent="reviewer", skill="review", workflow="review",
+                       capability="independent_review", project_id=None)
+            refs = CanonicalReferenceResolver(root).resolve(job)
+            builder = ExecutionContextBuilder(root)
+            with self.assertRaisesRegex(ContextBuildError, "Selected skill metadata is stale: review"):
+                builder.build(request(**job, context_refs=refs))
+            self.assertIsNone(builder.last_cache_result)
+
+    def test_provider_review_profile_oversized_state_denies_before_reviewer_execution(self):
+        from runtime.tests.test_review import ReviewRuntimeTests, FakeReviewer
+        from runtime.review.runtime import ReviewRuntimeError
+        harness = ReviewRuntimeTests("test_a_deterministic_pass_precedes_reviewer")
+        self.addCleanup(harness.doCleanups)
+        harness.setUp()
+        self.addCleanup(harness.tearDown)
+        job, execution_request, result = harness.prepare_execution()
+        reviewer = FakeReviewer("PASS")
+        runtime = harness.reviewer_runtime(reviewer)
+        state = harness.context_root / "PROJECT_STATE.md"
+        state.write_bytes(b"x" * 131073)
+        self.assertEqual(state.stat().st_size, 131073)
+        with self.assertRaises(ReviewRuntimeError) as caught:
+            runtime.run(job, execution_request, result)
+        self.assertIsInstance(caught.exception.__cause__, ContextBuildError)
+        self.assertEqual(str(caught.exception.__cause__), "Discovery read budget exceeded")
+        self.assertEqual(reviewer.calls, [])
+        self.assertFalse((harness.execution_root / "reviews" / "review-fixed-001.review.json").exists())
+
+
 class CliAdapterTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.context_root = self.enterContext(bounded_context_repository())
+
     @staticmethod
     def config(**overrides: object) -> CliProviderConfig:
         values: dict[str, object] = {
@@ -247,7 +360,7 @@ class CliAdapterTests(unittest.TestCase):
             which=lambda _: "C:/fake/codex.exe",
         )
         result = adapter.execute(
-            request(), ExecutionContextBuilder(REPOSITORY_ROOT).build(request())
+            request(), ExecutionContextBuilder(self.context_root).build(request())
         )
         self.assertEqual(result.error_category, "provider_timeout")
         self.assertEqual(result.stdout, "partial")
@@ -267,7 +380,7 @@ class CliAdapterTests(unittest.TestCase):
             which=lambda _: "C:/fake/codex.exe",
         )
         result = adapter.execute(
-            request(), ExecutionContextBuilder(REPOSITORY_ROOT).build(request())
+            request(), ExecutionContextBuilder(self.context_root).build(request())
         )
         self.assertEqual(result.error_category, "provider_execution_failed")
         self.assertEqual(result.exit_code, 7)
@@ -296,7 +409,7 @@ class CliAdapterTests(unittest.TestCase):
         )
         result = adapter.execute(
             execution_request,
-            ExecutionContextBuilder(REPOSITORY_ROOT).build(execution_request),
+            ExecutionContextBuilder(self.context_root).build(execution_request),
         )
         self.assertEqual(result.status, "succeeded")
         self.assertFalse(captured["shell"])
@@ -355,7 +468,7 @@ class CliAdapterTests(unittest.TestCase):
                 environment=parent_environment,
             )
             result = adapter.execute(
-                request(), ExecutionContextBuilder(REPOSITORY_ROOT).build(request())
+                request(), ExecutionContextBuilder(self.context_root).build(request())
             )
 
             self.assertEqual(result.status, "succeeded")
@@ -425,7 +538,7 @@ class CliAdapterTests(unittest.TestCase):
                     which=lambda _: "C:/fake/codex.exe",
                 )
                 result = adapter.execute(
-                    request(), ExecutionContextBuilder(REPOSITORY_ROOT).build(request())
+                    request(), ExecutionContextBuilder(self.context_root).build(request())
                 )
                 self.assertEqual(result.error_category, "provider_sandbox_mismatch")
                 self.assertEqual(result.requested_sandbox_mode, "read-only")
@@ -441,7 +554,7 @@ class CliAdapterTests(unittest.TestCase):
             which=lambda _: "C:/fake/codex.exe",
         )
         result = adapter.execute(
-            request(), ExecutionContextBuilder(REPOSITORY_ROOT).build(request())
+            request(), ExecutionContextBuilder(self.context_root).build(request())
         )
         self.assertEqual(result.error_category, "provider_sandbox_unverified")
         self.assertEqual(result.requested_sandbox_mode, "read-only")
@@ -499,6 +612,7 @@ class ProviderExecutorTests(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory()
         self.root = Path(self.temporary.name)
         self.configuration = ProviderConfiguration(REPOSITORY_ROOT)
+        self.context_root = self.enterContext(bounded_context_repository(profile="provider-review"))
 
     def tearDown(self) -> None:
         self.temporary.cleanup()
@@ -511,7 +625,7 @@ class ProviderExecutorTests(unittest.TestCase):
                 self.configuration,
                 {"claude": claude, "codex": codex},
             ),
-            ExecutionContextBuilder(REPOSITORY_ROOT),
+            ExecutionContextBuilder(self.context_root),
             FileProviderArtifactStore(self.root / "provider-output"),
         )
 
@@ -594,7 +708,7 @@ class ProviderExecutorTests(unittest.TestCase):
         self.assertEqual(result.fallback_reason, "no_provider_available")
 
     def test_m_context_builder_loads_only_resolved_project_context(self) -> None:
-        resolver = CanonicalReferenceResolver(REPOSITORY_ROOT)
+        resolver = CanonicalReferenceResolver(self.context_root)
         job = {
             "agent": "project-manager",
             "skill": None,
@@ -610,7 +724,7 @@ class ProviderExecutorTests(unittest.TestCase):
             capability="planning",
             context_refs=resolver.resolve(job),
         )
-        package = ExecutionContextBuilder(REPOSITORY_ROOT).build(execution_request)
+        package = ExecutionContextBuilder(self.context_root).build(execution_request)
         refs = {entry.ref for entry in package.context}
         self.assertIn("CONSTITUTION.md", refs)
         self.assertIn("agents/project-manager/ROLE.md", refs)
@@ -645,7 +759,7 @@ class ProviderExecutorTests(unittest.TestCase):
         runtime.enqueue(created["job_id"])
         outcome = Worker(
             runtime,
-            CanonicalReferenceResolver(REPOSITORY_ROOT),
+            CanonicalReferenceResolver(self.context_root),
             executor,
             FileExecutionStore(execution_root),
         ).run_once()
@@ -670,7 +784,7 @@ class ProviderExecutorTests(unittest.TestCase):
         calls_before = len(codex.calls)
         no_work = Worker(
             runtime,
-            CanonicalReferenceResolver(REPOSITORY_ROOT),
+            CanonicalReferenceResolver(self.context_root),
             executor,
             FileExecutionStore(execution_root),
         ).run_once()

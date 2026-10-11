@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from runtime.tests.contract_fixtures import declare_fixture_contract
+from runtime.tests.contract_fixtures import bounded_context_repository, declare_fixture_contract
 
 import io
 import json
 import subprocess
 import tempfile
 import unittest
-from contextlib import redirect_stdout
+from contextlib import ExitStack, redirect_stdout
 from pathlib import Path
 
 from runtime.approvals.runtime import ApprovalRuntime
@@ -101,6 +101,11 @@ class FakeAdapter:
 
 class ReviewTestHarness:
     def setUp(self) -> None:
+        self.context_stack = ExitStack()
+        self.addCleanup(self.context_stack.close)
+        self.context_root = self.context_stack.enter_context(
+            bounded_context_repository(profile="provider-review")
+        )
         self.temporary = tempfile.TemporaryDirectory()
         self.root = Path(self.temporary.name)
         self.job_root = self.root / "jobs"
@@ -115,7 +120,10 @@ class ReviewTestHarness:
         self.runtime.review_store = self.review_store
 
     def tearDown(self) -> None:
-        self.temporary.cleanup()
+        try:
+            self.context_stack.close()
+        finally:
+            self.temporary.cleanup()
 
     @staticmethod
     def payload(**overrides: object) -> dict[str, object]:
@@ -150,7 +158,7 @@ class ReviewTestHarness:
         running = self.runtime.claim()
         assert running is not None
         execution_id = f"execution-{created['job_id']}"
-        refs = CanonicalReferenceResolver(REPOSITORY_ROOT).resolve(running)
+        refs = CanonicalReferenceResolver(self.context_root).resolve(running)
         request = ExecutionRequest(
                       task_contract=running["task_contract"],
             execution_id=execution_id,
@@ -216,7 +224,7 @@ class ReviewTestHarness:
         return ReviewerRuntime(
             DeterministicVerifier(self.execution_store, self.provider_store),
             ReviewContextBuilder(
-                REPOSITORY_ROOT, self.execution_store, self.provider_store
+                self.context_root, self.execution_store, self.provider_store
             ),
             reviewer,  # type: ignore[arg-type]
             self.review_store,
@@ -526,7 +534,7 @@ class WorkerReviewTests(ReviewTestHarness, unittest.TestCase):
         reviewer = FakeReviewer(decision)
         worker = Worker(
             self.runtime,
-            CanonicalReferenceResolver(REPOSITORY_ROOT),
+            CanonicalReferenceResolver(self.context_root),
             LocalExecutor("success", clock=lambda: "2026-09-22T12:00:01Z"),
             self.execution_store,
             reviewer_runtime=self.reviewer_runtime(reviewer),

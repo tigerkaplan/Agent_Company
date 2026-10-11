@@ -1,5 +1,540 @@
 # Agent Company Project State
 
+## MEM-02 Formal Bounded Closure - 2026-10-11
+
+Authority: `AC-MEM-02-FORMAL-CLOSURE-58` and the owner's continuation supplying
+the current PowerShell Git preflight. **Formal bounded closure assessment: PASS.
+MEM-02: CLOSED / READY_TO_COMMIT. COMMITTED and PUSHED are not asserted.**
+ACTIVE: None. NEXT: MEM-02 commit, pending the owner's PowerShell Git step.
+MEM-02B promotion and MEM-03 production storage/durability remain OPEN / NOT
+STARTED; no next implementation is authorized by this closure.
+
+### Owner Git evidence and canonical record ownership
+
+Owner-supplied preflight: branch `master`; HEAD
+`36d48137f601dd36a89415f343e7fb2b6cfc5820`; no staged changes; 13 tracked
+modified files; working tree DIRTY. The owner requires preservation of all
+existing changes and both untracked fixture/temp directories. These are
+owner-supplied Git observations, not results of Git commands run by this task.
+The individual 13-path list and a raw command transcript are not reproduced
+in the supplied summary; no per-path commit membership or reviewed staging
+allowlist is inferred from it. This does not prevent bounded source closure:
+accepted bytes are checked directly, and closure authorizes no staging or
+commit. A clean worktree is not an applicable checkpoint gate.
+
+The existing canonical Master Context consists of current status here, accepted
+scope/sequencing in [ROADMAP](ROADMAP.md), remaining work in [TODO](TODO.md), and
+physical CURRENT/PLANNED DOC-TREE in [README](README.md). Inspected governance
+does not mandate a separate MEM-02 closure artifact. This dated entry is the
+closure record on the existing operational audit surface; no new documentation
+owner, directory, JSON receipt or policy is introduced.
+
+### Closure gates and accepted evidence
+
+The [Prompt 57 acceptance matrix](#mem-02-full-foreground-integration-acceptance---2026-10-11)
+remains intact and binds every bounded MEM-02 lifecycle/retrieval/context/
+verification/trace obligation to existing source, coverage and retained evidence.
+Its four accepted integration SHA-256 identities match current bytes again.
+The lifecycle, validity, adapter, repaired Action Trace and repaired trace-test
+identities also match; the immutable state archive retains its accepted digest.
+
+| Applicable gate | Closure disposition |
+| --- | --- |
+| Full bounded requirement and source mapping | SATISFIED: Prompt 57 matrix, approved GAP-CONTRACT-40 scope and assessment 56; all four integration hashes MATCH. Bounded validity and explicit supersession remain ACCEPTABLE within supplied-view semantics. |
+| Scoped human acceptance | SATISFIED: Prompt 38 Action Trace, Prompt 45 P2, Prompt 47 Validity/Inspection dispositions, Prompt 53 repaired M1, and Prompt 57 full foreground GAP-40 ACCEPT retain their exact scopes. This Prompt 58 authorizes formal bounded checkpoint closure. |
+| Independent technical validation | SATISFIED by retained separate-reviewer evidence: Review 42's historical FAIL/176-regression PASS/P2 finding; REREVIEW-44 final P2 technical PASS with 8/8 probes and exact patch binding; REREVIEW-52 repaired-M1 technical PASS with 3/3 probes, raw results and exact two-file repair binding. Accepted A1-A6 and recovered Navigation evidence remain mapped by Prompt 57. No fresh technical review verdict is created here. |
+| Same-provider escalation and human disposition | SATISFIED at the manual checkpoint level by the recorded scoped decisions and owner closure authority. Same-provider review remains disclosed; alternate-provider availability and automatic routing compliance remain unverified. No cross-provider PASS is invented, and historical FIX/FAIL/NEEDS_HUMAN/BLOCKED records are unchanged. |
+| Applicable regression and context compatibility | SATISFIED within retained scopes; no named mandatory repeat suite was identified. Prompt 55's execution/review/cache smoke is reused only for its original documentation identity. No combined current-source regression or post-edit builder PASS is claimed; current state byte size is checked against the unchanged CORE-08 limit. |
+| Formal owner checkpoint disposition | SATISFIED: authorized Prompt 58 closure follows READY bounded acceptance and the supplied compatible dirty-worktree preflight. Earlier missing-preflight stops remain historical; this record resolves that documentation prerequisite. |
+| Runtime completion and Git lifecycle | NOT_APPLICABLE to manual checkpoint closure: runtime approval ID NOT_APPLICABLE; no job/review/approval/receipt state is resolved. COMMITTED/PUSHED remain unasserted; owner Git inspection/staging/commit is separate pending work. |
+
+No outstanding acceptance, implementation or mandatory validation gate was
+identified inside the approved bounded MEM-02 scope. Retained source and review
+bindings are reused without turning historical hashes into current run evidence.
+Missing historical repository-wide manifests and executor/provider provenance
+limits remain limitations; they are not silently repaired or treated as new
+mandatory broad reviews. No fresh test results are claimed.
+
+### Preserved limitations and exact stop
+
+Non-null mutation `diff_ref` remains **UNSUPPORTED and must fail closed before
+candidate preparation**; linked-diff inspection is not implemented. Truth,
+publisher authenticity, unsupported freshness and global completeness remain
+UNKNOWN; material factual claims still need their applicable task/evidence
+verification. Memory, context and stored candidates grant no execution, review,
+retry, continuation, storage, promotion or completion authority. Operational
+storage still requires its separate exact sink/project/pin authority; partial
+writes remain honest and no rollback guarantee is added. MEM-02B validated
+promotion and MEM-03 production durability remain OPEN and separate.
+
+Only `PROJECT_STATE.md`, `ROADMAP.md`, `TODO.md` and `README.md` are reconciled.
+Earlier dated decisions and statuses remain historical observations. The
+immutable archives, existing production/test/policy files, unrelated changes,
+`agent-company-context-fixture-j33fnmg8/` and `tmp33qej88u/` remain intact.
+No files are deleted, ignored, staged or relocated; no Git command, new file,
+implementation, broad test, repeat review or deployment occurs.
+
+**Next owner PowerShell Git step:** inspect `git status --short --untracked-files=all`,
+`git diff --check` and `git diff --stat` in the authoritative F: checkout, then
+review the exact MEM-02/documentation change set before any explicit-path staging.
+STOP before that owner step; closure is distinct from commit and push.
+
+## MEM-02 Full Foreground Integration Acceptance - 2026-10-11
+
+Authority: `AC-MEM-02-GAP40-ACCEPT-57` ("Record Full Integration
+Acceptance"), Build & Review / MEM-02, for `F:\Software\Agent_Company`.
+**Owner decision: GAP-40 ACCEPT, current four-file foreground integration.
+Bounded MEM-02 acceptance package: READY. MEM-02 remains OPEN / NOT CLOSED.**
+This is scoped human acceptance and disposition of the disclosed same-provider
+escalation at the manual audit level. It grants no operational storage,
+execution, runtime completion, Git or deployment authority.
+
+### Exact accepted integration identities
+
+All four SHA-256 identities were measured in the authoritative F: checkout
+and matched the supplied identities before recording this decision.
+
+| Existing source | Owner-accepted SHA-256 | Filesystem verification on 2026-10-11 |
+| --- | --- | --- |
+| [Foreground integration](runtime/memory/integration.py) | `13f0d6c6c50b949363d2832741afdc9eb43025d4e469656f200ae4b951cb42ad` | MATCH |
+| [Provider context](runtime/providers/context.py) | `be264db7e3c537dde3f068cb33eab4bfbe5ae54b80ff9d4bb5e90c7514dc8b3b` | MATCH |
+| [Foreground CLI](runtime/cli/__main__.py) | `b1458064bd5d400ba21fb3245d6251cf7db3323ae67e80a1da132832c6fefa4d` | MATCH |
+| [Integration tests](runtime/tests/test_memory_integration.py) | `c867a62b828f5e6459254cbd6c10da6775c5686e0192b9f22e8aac4bf9705c7e` | MATCH |
+
+Accepted scope follows GAP-CONTRACT-40: explicitly installed project-bound
+memory, fresh exact-request adapters, foreground capture after Worker returns,
+separately authorized storage with confirmed read-back and honest partial
+failure, later selected-only retrieval, bounded validity/supersession views,
+and canonical action verification. Default memory remains disabled. Storage
+requires a trusted checker of actual authority for the sink, project and exact
+pins; source acceptance, execution approval and opt-in are insufficient.
+
+### Retained evidence and historical source binding
+
+The following audit records were read under
+`C:\Users\DELL\.codex\sessions\2026\10\11\`; no tests or reviews were repeated.
+
+| Retained record | Evidence reused and precise limit |
+| --- | --- |
+| Review 42: `rollout-2026-10-11T10-58-00-01a12a65-d4a1-7ea3-a12a-16a557c235ab.jsonl`, line 108 | Historical verdict FAIL: 176/176 regression PASS, replayed as 175 plus one CLI test; fresh probes 4 PASS / 2 ERROR exposed P2. Integration/context hashes equal the accepted hashes above; CLI/test hashes were the pre-P2 `735422148431066fe0757d7310349b665e5a0f976f04b2215ee618836f74f024` / `290b49093e5f0a82b2412ff38c712b29a3210facd7768f19bbe23f5dac746b50`. The historical 201-file comparison was not independently established. |
+| FIX-43 in that session, line 201; REREVIEW-44: `rollout-2026-10-11T11-10-09-01a12a70-f626-7282-830c-4ce3b4ef3985.jsonl`, lines 62, 111 and 120 | Executor 2 ERROR before repair, 23/23 PASS afterward; independent P2 probes 8/8 PASS, 17.781s, exit 0. Retained patch reversal/forward application binds both current CLI/test hashes to the pre-P2 bytes. Final technical PASS and historical routing NEEDS_HUMAN remain intact; Prompt 45 accepted P2 only. The 206-file comparison remains executor evidence without retained full manifests. |
+| Repaired M1 REREVIEW-52: `rollout-2026-10-11T12-28-15-01a12ab8-7797-7330-8ffd-f73dd51ab4bc.jsonl`, raw result line 68, verdict line 79 | Independent technical PASS, 3/3 probes, 17.280s; exact two-file repair reversal, 16 non-null diff vetoes, six substitution vetoes and two actual Worker/P2 runs. Capture performed zero writes/storage/authority calls. Executor 33/33 and 13/13 remain separate evidence. Historical formal NEEDS_HUMAN / BLOCKED is preserved; Prompt 53 accepted repaired M1. |
+| FINAL-EVIDENCE-54 / CLOSURE-EVIDENCE-55: `rollout-2026-10-11T12-43-40-01a12ac6-9727-7300-824c-9acc095e1b65.jsonl`, lines 95 and 163 | Recovered repaired-M1 reviewer/raw-log/source binding and final historical navigation PASS. Pre-documentation smoke: execution READY, review BUILT, cache MISS -> HIT; oversized archive denied, authority none, missing execution evidence FAIL, 27 guarded hashes unchanged. No provider/Worker ran in that smoke. |
+| REMAINING-ACCEPTANCE-56: `rollout-2026-10-11T12-58-39-01a12ad4-4d20-7f53-95ed-056b53496880.jsonl`, line 105 | Bounded validity/invalidation and explicit supersession/conflicts ACCEPTABLE. Full GAP-40 behavior and retained coverage exist; the remaining FIX REQUIRED concerned full integration acceptance/routing disposition, with no new code defect or mandatory suite rerun identified. This owner decision supplies that disposition. |
+
+Current repaired-M1 source/test hashes also match
+`5a0ab2200a51fab6ca2ffc806462bd783c09c1053b463c8f026190799780a460` /
+`86e091f5969dfcb149097c615e74d939c02c9ffadf32e05e1fff69a72a53d5ed`.
+Retained Prompt 52 evidence resolves the previously missing reviewer/artifact,
+raw-log and within-two-file repair binding; it does not establish full historical
+repository scope or independently corroborate executor identity/provider routing.
+Earlier pre-repair FIX/PASS, Prompt 38, Validity/Inspection dispositions under
+Prompt 47, P2 ACCEPT and repaired-M1 ACCEPT remain unchanged with their scopes.
+
+**Same-provider review is disclosed; no cross-provider PASS is established.**
+Separate reviewer roles and retained observations are reused. Alternate-provider
+availability and automatic routing-compliance PASS remain unverified. Historical
+NEEDS_HUMAN/BLOCKED verdicts are not rewritten by this manual human disposition.
+**Runtime approval ID: NOT_APPLICABLE.** No pending runtime gate is inferred;
+any later actual runtime-bound completion must satisfy its exact persisted
+job/contract/execution/review/approval and receipt bindings under existing policy.
+
+**No fresh combined regression coverage is claimed.** Review 42 predates P2
+and repaired M1; the later results cover their explicit repairs. Matching
+current hashes does not turn those runs into a combined current-source run.
+Missing historical manifests remain limitations, not automatic repeat-review
+or full-suite gates. This task adds no technical review verdict.
+
+### Full bounded MEM-02 requirement reconciliation
+
+The [canonical roadmap](ROADMAP.md#c-knowledge--memory--rag), retained A1-A6,
+GAP-CONTRACT-40 and assessment 56 define the bounded obligations. Test names
+below are existing coverage anchors; their presence is not a fresh PASS.
+Integration IDs are in `runtime.tests.test_memory_integration.MemoryIntegrationTests`.
+
+| Requirement | Accepted evidence and coverage anchor | Remaining gate within approved bounded scope |
+| --- | --- | --- |
+| Capture, normalize, deduplicate, classify, connect | Accepted lifecycle A1/A5 preserves originals, digests, conflicts, declared classifications and project-scoped links; GAP-40 `test_explicit_capture_store_readback_and_later_selected_retrieval` connects trace candidates. | None. Autonomous classification or inferred link authority is not claimed. |
+| Store | Accepted A2 and GAP-40 `test_storage_requires_separate_scope_and_reports_partial_failure`: exact scoped authority, pins, read-back, uncertain/unattempted writes. | None for the injected-interface contract. Real storage operations still require separate scoped authority. Durability is MEM-03. |
+| Retrieve, rank/rerank, build context packs, selectively retain | Accepted A3/A4, CORE-08/09, A6 and GAP-40 `test_composed_builder_installs_fresh_adapter_for_each_exact_request`; `test_foreign_request_manifest_or_project_root_fails_before_memory_io`. | None for explicit manifests, selected-only reads and bounded relevance ordering. Memory never authorizes action. |
+| Provenance, confidence, verification and anchored evidence | MEM-01/A5, accepted Inspection/Action Trace, pinned originals and retained counterevidence. | None for preservation and exact bindings. Confidence is not independently calibrated; factual entailment remains UNKNOWN. |
+| Bounded validity, invalidation and freshness | Accepted Validity M1/M2, Review 27, repaired Review 29 (9/9 regressions and 16 mixed cases), assessment 56 ACCEPTABLE; GAP-40 `test_runtime_validity_refresh_preserves_unknown_truth_and_invalidates_cache`. Existing validity IDs cover matching/changed bytes, denied/partial reads and observation-driven cache invalidation. | None for supplied-view local reuse semantics. Truth, publisher authenticity, unsupported freshness and global completeness remain UNKNOWN. A materially relied-on factual claim still needs its applicable task/evidence verification. |
+| Explicit supersession and conflicts | Assessment 56 ACCEPTABLE binds unchanged Review 27 coverage through retained patch reversal; GAP-40 `test_stored_supersession_closure_preserves_originals_conflicts_and_scope`. Existing validity IDs cover linear chains, branches/merges, cycles, missing pins and no inherited validity/reactivation. | None for exact pinned originals and supplied closure. No automatic replacement, timestamp winner or global latest-state resolution is claimed. |
+| Act with memory and verify outcomes | Review 42 plus accepted P2/M1 repairs and this full GAP-40 ACCEPT; `test_capture_preserves_failed_pending_dry_run_and_verified_completion`. Existing GOV owners/receipts distinguish verified completion from executor/model success and review PASS. | None within supported foreground action inspection. Non-null mutation `diff_ref` is UNSUPPORTED and must fail closed before candidate preparation; no linked-diff inspection support is claimed. |
+| Learn from run traces | Accepted trace bridge/M1 and GAP-40 capture -> separately authorized store -> later retrieval; `test_later_human_completion_requires_explicit_recapture`. | None for deterministic untrusted candidates. No watcher, backfill or automatic lesson promotion; MEM-02B remains separate. |
+| Default behavior, Worker/P2 isolation and authority | `test_default_runtime_has_no_memory_reads_writes_or_capture`, `test_memory_cannot_authorize_execution_review_retry_or_promotion`; retained P2 8/8 and M1 3/3, including actual Worker runs. | None within accepted scope. Worker/composition and process-control errors still propagate. |
+| Applicable regression and state-layout compatibility | Retained A6/Review 42/P2/M1 results; recovered Navigation PASS and Prompt 55 live execution/review/cache smoke. | No named mandatory rerun remains. Smoke binds pre-edit documentation; post-edit builder behavior is not freshly attested. Historical navigation/source bindings and unchanged archive remain separate. |
+| Full scoped acceptance and human routing disposition | Prompt 57 GAP-40 ACCEPT closes assessment 56's missing manual disposition; previous component decisions remain accepted. | None at the manual bounded acceptance level; no cross-provider or runtime routing PASS is inferred. |
+| Formal MEM-02 checkpoint closure | This requirement/evidence package is READY for the owner's separate closure consideration. | OPEN: explicit formal checkpoint closure decision has not been supplied and is outside this task. |
+
+Current lifecycle, validity and adapter hashes were observed as
+`ca2f32dad4e42fd1e69e67332b8abf233beea1bb5c47068ed325afd024c7f9b8`,
+`0b66be6771b7a2ed660c8f90312e0dcd5241ee1473e652a7866f44cdeb7b45e0` and
+`ffd687b33076e6517b98370622b347ed695fe77c51bacc27fd02ad2b75cbe7cf`.
+The retained smoke's live state was 91,845 bytes, SHA-256
+`97242903385636ba6b890017810b61100342a7f10d31bc1c5833b748c71ebb14`.
+This documentation changes that identity; only its resulting byte size is
+checked here against the unchanged 131,072-byte limit. No builder smoke is
+repeated or attributed to the new documentation bytes. The immutable archive
+still matches `553c2ef7ed2019defcc064f82086b4ab1df41d4fa69816c975cf6b8696595da6`.
+
+No unresolved implementation or mandatory validation gate is identified for
+the approved bounded package. Unknown factual claims remain unknown and cannot
+satisfy task-specific verification. MEM-02B validated promotion and MEM-03
+production durability remain excluded; their absence is not a MEM-02 defect.
+Earlier status/gate/next-action entries below are historical snapshots; this
+entry supplies the current reconciliation without deleting or rewriting them.
+UD-01-05, MEM-01 and unrelated closed checkpoints remain intact. Only the three
+permitted existing documents change; no new files, production edits, tests,
+reviews, Git, deployment or formal closure occur.
+
+**One next permitted action:** obtain the owner's separately scoped formal
+MEM-02 closure disposition against this reconciled bounded acceptance package.
+STOP; MEM-02 is not declared CLOSED by this record.
+
+## MEM-02 Repaired Action Trace M1 Acceptance - 2026-10-11
+
+Authority: `AC-MEM-02-TRACE-M1-ACCEPT-53` ("Record Repaired Action Trace
+Acceptance"), Build & Review / MEM-02, for `F:\Software\Agent_Company`.
+**Owner decision: ACCEPT repaired M1 only. Owner-supplied independent technical
+review: PASS, 3/3 probes. MEM-02 remains BLOCKED / OPEN / NOT CLOSED.**
+
+### Accepted source identities and bounded behavior
+
+Both SHA-256 hashes were measured in the authoritative F: checkout and matched
+the owner-supplied accepted identities before this decision was recorded.
+
+| Existing source | Owner-accepted SHA-256 | Filesystem verification on 2026-10-11 |
+| --- | --- | --- |
+| [Action Trace](runtime/memory/action_trace.py) | `5a0ab2200a51fab6ca2ffc806462bd783c09c1053b463c8f026190799780a460` | MATCH |
+| [Action Trace tests](runtime/tests/test_memory_action_trace.py) | `86e091f5969dfcb149097c615e74d939c02c9ffadf32e05e1fff69a72a53d5ed` | MATCH |
+
+The accepted M1 boundary records **linked mutation diff as UNSUPPORTED:
+non-null `diff_ref` must fail closed**. A linked diff cannot be treated as
+verified action evidence or produce a trusted learning claim. This records
+the accepted limitation, not a fresh behavioral verification. Acceptance
+does not extend to dependencies, the entire two-file implementation, wider
+GAP-40 integration, end-to-end action verification or full MEM-02 scope.
+
+### Historical evidence, review disclosure and approval applicability
+
+Historical FIX, subsequent technical PASS and prior owner ACCEPT remain
+preserved with their original scopes and limitations. The Prompt 38 acceptance
+and Prompt 47 hash observations below concern the earlier Action Trace bytes;
+their MATCH statements are historical observations, not current matches after
+repair. This entry supplies the current M1 source identities without rewriting
+those records. Existing Validity M1/M2, Read-Only Inspection and P2 scoped
+acceptances remain intact.
+
+**Same-provider review is disclosed; no cross-provider PASS is established.**
+The independent technical PASS and 3/3 probe count are owner-supplied evidence,
+not results rerun or independently validated by this documentation task.
+Reviewer identity/session, retained review artifact, raw probe logs, observed
+provider availability/routing, historical reviewer/source binding and exact
+before/after repair-scope provenance remain UNKNOWN / UNVERIFIED. Matching
+current hashes identifies the accepted bytes; it does not reconstruct what a
+reviewer inspected or prove that only M1 changed. The supplied independence
+claim is retained without inventing corroborating role-separation evidence.
+
+**Runtime approval ID: NOT_APPLICABLE for this ad-hoc review**, as specified by
+the owner. No missing runtime approval ID is a blocker for recording this M1
+acceptance; no pending runtime gate is inferred or resolved. Canonical
+[fallback](orchestrator/routing/fallback.yaml),
+[escalation](orchestrator/routing/escalation.yaml),
+[runtime approval](orchestrator/approvals/APPROVAL_POLICY.md#runtime-authority)
+and [completion](governance/completion/README.md) contracts remain unchanged.
+If an actual runtime-bound completion is later claimed, its applicable exact
+job/contract/execution/review/approval evidence remains required. This manual
+decision grants no runtime execution, continuation or completion authority.
+
+### Reconciled remaining closure blockers
+
+| Requirement and existing owner | Current disposition after repaired M1 acceptance |
+| --- | --- |
+| Repaired Action Trace M1 - owner / Reviewer | SCOPED HUMAN ACCEPTANCE RECORDED; current hashes MATCH; owner-supplied technical PASS, 3/3 retained. Linked mutation diff remains unsupported and non-null `diff_ref` must fail closed. |
+| Prior bounded decisions - owner / Validity / Inspection / CLI | Prompt 38 Action Trace, Prompt 45 P2 and Prompt 47 Validity/Inspection dispositions remain accepted only within their recorded scopes. No repeat owner ACCEPT is required for those same scopes. |
+| Review and source provenance - Reviewer | OPEN: unknown reviewer/artifact/raw-log, role-separation, routing and historical exact-source/repair-scope bindings remain unresolved; no cross-provider or full scope proof. Ad-hoc M1 runtime approval ID is NOT_APPLICABLE. |
+| Wider validity, authentication, claim/evidence entailment and freshness - MEM-02 / Knowledge Manager / Reviewer | OPEN: bounded Validity M1/M2 acceptance does not establish independent factual truth, publisher authentication or global freshness/completeness. Wider requirement scope and exact-source acceptance evidence need disposition. |
+| Supersession and conflict handling - MEM-02 / Knowledge Manager | OPEN: complete scope and accepted evidence for the wider obligation remain unverified. |
+| Broader action verification and trace-derived learning candidates - MEM-02 / canonical task, execution, eval, review and progress owners | OPEN: end-to-end mapping to actual canonical outcomes/receipts and full trace coverage is unverified. GOV receipt verification stays separate from executor/model success; candidates remain untrusted. |
+| Full lifecycle/retrieval/context and applicable regression - MEM-02 / CORE-08/09 / Reviewer | OPEN: capture, normalize, deduplicate, classify, connect, store, retrieve, rerank, context-pack construction/retention, act, verify and trace learning retain their approved requirements. Complete exact-current requirement/evidence and acceptance mapping is missing or unverified; nearby PASS is not full scope proof. |
+| State-layout independent review and live-checkout compatibility - state-layout / CORE-08 owners | OPEN: retained reviewer/source binding and exact-current live-checkout evidence remain unverified; historical bounded fixtures do not establish live acceptance. |
+| Formal MEM-02 owner closure | OPEN: no full-checkpoint closure decision or complete acceptance package is supplied; MEM-02 must not be declared CLOSED. |
+
+All other MEM-02 requirements, UD-01-05, MEM-01 closure and existing closed
+checkpoints remain intact. MEM-02B validated promotion and MEM-03 production
+storage remain separate and excluded. Only the three existing audit documents
+are updated; no new files, code edits, Git, tests, reviews or deployment occur.
+Earlier dated statuses and next actions below remain historical snapshots;
+this entry is the current repaired-M1 disposition.
+
+**One next action:** reconcile the retained exact-source acceptance/evidence
+mapping for the remaining MEM-02 blockers, including unknown Action Trace
+review provenance and state-layout/live-checkout evidence, under a separately
+scoped documentation task. STOP.
+
+## MEM-02 Scoped Human Security Dispositions - 2026-10-11
+
+Authority: `AC-MEM-02-ROUTING-DISPOSITION-47` ("Reconcile Human Security
+Decisions"), Build & Review / MEM-02, for `F:\Software\Agent_Company`.
+The owner attests the existing decisions dated 2026-10-11: **Validity M1/M2
+scoped ACCEPT; Read-Only Inspection scoped ACCEPT; Action Trace ACCEPT under
+Prompt 38; P2 ACCEPT under Prompt 45.** These decisions are recorded without
+requesting the same approval again. No earlier decision or review is rewritten.
+
+**Disposition: scoped human source acceptance and manual escalation decisions
+RECORDED; formal runtime gate resolution UNVERIFIED / BLOCKED if claimed.
+MEM-02 remains BLOCKED / OPEN / NOT CLOSED.**
+
+### Verified source scope and retained review evidence
+
+All twelve current source/test hashes below match the retained review or prior
+owner-accepted identities. This filesystem verification precedes recording;
+it is not a fresh technical PASS or a repeated review.
+
+| Scoped owner decision | Source | Accepted/reviewed SHA-256, current MATCH |
+| --- | --- | --- |
+| Validity M1/M2 ACCEPT | [Validity](runtime/memory/validity.py) | `0b66be6771b7a2ed660c8f90312e0dcd5241ee1473e652a7866f44cdeb7b45e0` |
+| Validity M1/M2 ACCEPT | [Knowledge adapter](runtime/memory/knowledge_adapter.py) | `ffd687b33076e6517b98370622b347ed695fe77c51bacc27fd02ad2b75cbe7cf` |
+| Validity M1/M2 ACCEPT | [Validity tests](runtime/tests/test_memory_validity.py) | `1655f6dc992787aba7e137af6762464041e00691ff76fc0cae269eeccce6aa5a` |
+| Read-Only Inspection ACCEPT | [Progress store](runtime/progress/store.py) | `aeb8f8b20fb9aac2a9f3de340f9cd4e6f20f49edcf123e35db439701bb143c65` |
+| Read-Only Inspection ACCEPT | [Execution store](runtime/storage/execution_store.py) | `e533c9f4184649e943c29c4b6ed1c4553fb1b630bce7fc25015adb4d6208cc88` |
+| Read-Only Inspection ACCEPT | [Review store](runtime/review/store.py) | `f4d5c25578d6791adddcb101f4afe7bf0126e7639545015f917e35172c442013` |
+| Read-Only Inspection ACCEPT | [Task contract](runtime/core/task_contract.py) | `fe5f621571a9fffe3385e41d9ef5ba5e487385c66ce2b19149be7ba6e95163fe` |
+| Read-Only Inspection ACCEPT | [Inspection tests](runtime/tests/test_memory_readonly_inspection.py) | `bcceef180336585a9d76eeaf82bb5f5d3529cbe64b0f417d467043fb7e6d2a96` |
+| Action Trace ACCEPT - Prompt 38 | [Action Trace](runtime/memory/action_trace.py) | `79e9710d42a61192d9eadb94fa927036631786afb0e01cf94976f0475e7e9596` |
+| Action Trace ACCEPT - Prompt 38 | [Action Trace tests](runtime/tests/test_memory_action_trace.py) | `b65b33bbf9e886084c343cf8e1ad3cd9be16362eace16002837b8b414c94c11a` |
+| P2 ACCEPT - Prompt 45 | [Foreground CLI](runtime/cli/__main__.py) | `b1458064bd5d400ba21fb3245d6251cf7db3323ae67e80a1da132832c6fefa4d` |
+| P2 ACCEPT - Prompt 45 | [Integration tests](runtime/tests/test_memory_integration.py) | `c867a62b828f5e6459254cbd6c10da6775c5686e0192b9f22e8aac4bf9705c7e` |
+
+Validity and Inspection evidence is retained at
+`C:\Users\DELL\.codex\sessions\2026\10\11\rollout-2026-10-11T07-00-43-01a1298c-9931-7ea2-82ec-bf57b11edc20.jsonl`:
+
+- Line 209: a separate same-provider reviewer found no remaining Validity
+  M1/M2 defect; 9/9 new regressions and 16 mixed retrieval cases passed.
+  Historical formal verdict: BLOCKED for independent security acceptance.
+- Line 649: a separate same-provider reviewer found no required Inspection
+  technical fix; two independent temporary-fixture probes checked nested
+  inspection, zero persistent writes, mutation detection and exact bindings.
+  Historical canonical outcome: NEEDS_HUMAN / BLOCKED.
+
+P2 evidence remains the retained separate-session REREVIEW-44 technical PASS
+in `rollout-2026-10-11T11-10-09-01a12a70-f626-7282-830c-4ce3b4ef3985.jsonl`
+under the same session directory: 8/8 probes (line 62), exact patch binding
+(line 111), final technical PASS with formal NEEDS_HUMAN (line 120). Prompt 45's
+acceptance remains P2-only. Action Trace's Prompt 38 acceptance is preserved;
+its exact independent review artifact/session remains unknown. Executor tests
+and the 206-file historical comparison limitation keep their prior attribution.
+
+### Policy applicability and human escalation disposition
+
+`CONSTITUTION.md` and `AGENTS.md` recognize the owner's immediate scope and
+approval decisions, subject to non-negotiable rules. The existing audit surface
+may therefore record these manual source-acceptance decisions and the owner's
+disposition of the disclosed same-provider escalation. Separate reviewer roles
+and their technical observations remain separately evidenced. **No
+cross-provider PASS or automatic routing-compliance PASS is claimed.**
+
+The [fallback policy](orchestrator/routing/fallback.yaml) says high-risk review
+without a different provider must escalate; the [escalation policy](orchestrator/routing/escalation.yaml)
+preserves separate-role review and human approval. The supplied owner decisions
+are recognized at this manual audit level. They do not change provider-availability
+history, rewrite reviewer outcomes or establish an APPROVED runtime boundary.
+
+The [approval policy](orchestrator/approvals/APPROVAL_POLICY.md#runtime-authority)
+and [Approval Runtime](runtime/approvals/README.md#human-authority-boundary)
+accept runtime resolution only through the explicit human-facing approval path
+for an existing persisted exact boundary. The [completion contract](governance/completion/README.md)
+requires persisted independent review bound to the same request/contract and,
+where required, COMPLETE_REVIEWED_JOB approval. `FileApprovalStore.completion_evidence`
+checks the canonical artifact, exact job/action/authorization fingerprint,
+execution/review links, operator decision and receipt bindings. Unbound manual
+annotations cannot satisfy those runtime contracts.
+
+**Exact missing requirement for any claimed formal runtime resolution:** the
+applicable canonical job/task boundary, persisted execution and review references,
+and its canonical approved human-decision artifact with matching action,
+authorization fingerprint and evidence links. None is supplied or verified for
+these review sessions. Whether they correspond to any runtime-bound gate is
+UNKNOWN; no pending runtime job or approval is inferred. If a runtime gate
+applies, this documentation alone cannot resolve it. The missing item is binding
+and applicability evidence, not another owner ACCEPT decision. No runtime
+approval ID is invented, and no approval/job/review/receipt store is changed.
+
+### Remaining gates and bounded stop
+
+The four scoped human decisions are no longer missing at the manual audit
+level. Every wider MEM-02 acceptance gap remains OPEN: full approved lifecycle,
+retrieval/context and exact-current requirement/evidence mapping; wider
+supersession/conflict and action-verification/trace-candidate acceptance;
+Action Trace independent-review provenance; state-layout reviewer/source
+binding and live-checkout compatibility evidence; and formal owner closure.
+Bounded validity is separate from factual entailment, publisher authentication
+and global freshness/completeness. Broader obligation scope needs explicit
+disposition, not an invented new test or implementation requirement.
+
+Earlier NEEDS_HUMAN/BLOCKED records, owner decisions and historical snapshots
+remain unchanged. MEM-02B validated promotion and MEM-03 production storage
+remain excluded. Only `PROJECT_STATE.md`, `TODO.md` and `README.md` are changed;
+no production edits, tests, repeat reviews, Git, deployment or closure occur.
+
+**One next action:** identify the existing canonical boundary and retained
+binding evidence, if any, for the claimed formal security gates, including
+whether those manually conducted reviews have a runtime gate at all. STOP.
+
+## MEM-02 P2 Human Acceptance and Gate Reconciliation - 2026-10-11
+
+**Owner decision: ACCEPT P2 repair only. Technical result: PASS for the
+evidenced P2 repair. MEM-02 acceptance readiness: BLOCKED / OPEN / NOT CLOSED.**
+Authority: `AC-MEM-02-P2-ACCEPT-45` ("Record P2 Human Acceptance"),
+Build & Review / MEM-02, dated 2026-10-11, for `F:\Software\Agent_Company`.
+Executor session: `01a12a65-d4a1-7ea3-a12a-16a557c235ab` (`FIX-43`).
+This is a scoped human documentation decision on the existing canonical audit
+surface, not a runtime approval. No runtime approval ID was supplied or verified
+for P2; none is created or assigned by this record.
+
+### Accepted P2 source identities
+
+Both hashes were measured in the authoritative F: checkout before recording.
+
+| Existing source | Owner-accepted SHA-256 | Filesystem verification on 2026-10-11 |
+| --- | --- | --- |
+| [Foreground CLI composition](runtime/cli/__main__.py) | `b1458064bd5d400ba21fb3245d6251cf7db3323ae67e80a1da132832c6fefa4d` | MATCH |
+| [Memory integration tests](runtime/tests/test_memory_integration.py) | `c867a62b828f5e6459254cbd6c10da6775c5686e0192b9f22e8aac4bf9705c7e` | MATCH |
+
+Accepted behavior is limited to the evidenced P2 repair: ordinary exceptions
+inside optional post-Worker capture preserve the original canonical Worker
+outcome, report capture as unavailable with no candidates, and leave persisted
+job state unchanged. Worker/composition errors and process-control exceptions
+still propagate; successful and disabled capture retain their behavior. The
+repair changes the local CLI exception handler/comment and adds a test import,
+helper and five tests. These file identities do not extend this decision to all
+GAP-40 behavior, dependencies, other MEM-02 requirements or checkpoint closure.
+
+### Retained technical evidence and review limitations
+
+Evidence was read from the local session audit records under
+`C:\Users\DELL\.codex\sessions\2026\10\11\`; no tests or reviews were repeated.
+
+| Record | Retained evidence and disposition |
+| --- | --- |
+| `rollout-2026-10-11T10-58-00-01a12a65-d4a1-7ea3-a12a-16a557c235ab.jsonl` - FIX-43 executor | Before repair: 2 ERROR, 4.589s, exit 1. After repair: 23/23 PASS, 79.084s, exit 0; AST checks PASS. These remain executor validation, not independent acceptance. |
+| `rollout-2026-10-11T11-10-09-01a12a70-f626-7282-830c-4ce3b4ef3985.jsonl` - REREVIEW-44, separate reviewer session/role | Final P2 technical verdict PASS. Fresh `python -B -` probes: 8/8 PASS, 17.781s, exit 0 (session line 62); no 23- or 176-test aggregate replay. |
+| REREVIEW-44 patch verification (session line 111) | Reversing actual FIX-43 patches in memory reproduced both pre-fix hashes; forward application reproduced accepted post-fix bytes. Exact repair scope within the two files was verified by that reviewer. |
+| FIX-43 wider scope claim | Two changed files out of 206 inspected remains executor evidence. Full historical before/after manifests were not retained for independent comparison; this limitation remains UNVERIFIED. |
+
+The executor command for the retained 23-test result was
+`python -B -m unittest runtime.tests.test_memory_integration runtime.tests.test_runtime.CliTests runtime.tests.test_scheduler_cli.SchedulerCliTests`
+with `PYTHONDONTWRITEBYTECODE=1`. The earlier original GAP-40 FAIL and the initial
+REREVIEW-44 evidence-BLOCKED verdict remain historical evidence. REREVIEW-44's
+final PASS resolves its P2 hash/patch gaps only; it does not erase those records
+or establish broader GAP-40 acceptance.
+
+**Same-provider review is disclosed:** REREVIEW-44 identifies the P2 executor
+as OpenAI `gpt-6.1-sol` in VS Code and records a separate session and reviewer
+role on the same provider. No cross-provider PASS is established. Its formal
+routing verdict remains **NEEDS_HUMAN**: alternate-provider availability and
+the applicable fallback/escalation disposition remain unverified. The owner's
+P2-only ACCEPT records human acceptance of this repair; it does not attest
+routing compliance or resolve runtime approval/job/review state. The current
+hash check corroborates identity, while historical source/review binding rests
+on the retained REREVIEW-44 evidence, not on this check alone.
+
+### Remaining MEM-02 acceptance gates after P2 acceptance
+
+| Requirement and existing owner | Current disposition and precise missing evidence |
+| --- | --- |
+| P2 repair - owner / CLI / Reviewer | SCOPED HUMAN ACCEPTANCE RECORDED; retained technical PASS and both current source identities verified. |
+| Prompt 35 Action Trace Bridge - prior owner decision | Earlier `AC-MEM-02-HUMAN-ACCEPT-38` acceptance and its limitations below remain intact; no wider acceptance follows from P2. |
+| Validity, claim/evidence entailment and freshness - MEM-02 / Knowledge Manager / Reviewer | OPEN: retained exact-source requirement/acceptance evidence for validity, factual entailment and freshness is not verified. Bounded tests do not establish independent truth or freshness. |
+| Supersession and conflict handling - MEM-02 / Knowledge Manager | OPEN: exact-scope accepted evidence for the wider supersession/conflict obligation is not verified; nearby fixture PASS does not close it. |
+| Broader action verification and trace-derived learning candidates - MEM-02 / canonical task, execution, eval, review and progress owners | OPEN: end-to-end exact-source evidence mapping actual action verification and trace capture to canonical outcomes/receipts is not verified. Candidates remain untrusted; MEM-02B promotion remains separate. |
+| Full lifecycle/retrieval/context acceptance and applicable regression - MEM-02 / CORE-08/09 / Reviewer | OPEN: complete approved scope, source identities, requirement-to-evidence mapping and applicable retained validation are missing or unverified. P2 does not accept the wider four-file GAP-40 integration or its dependencies. |
+| Review provenance and formal routing - Reviewer under canonical routing | P2 separate-role technical PASS is retained; P2 alternate-provider availability and applicable fallback/escalation disposition remain OPEN / NEEDS_HUMAN. Prompt 35 reviewer identity/artifact, role independence, routing and raw test evidence remain unverified as recorded below. |
+| State-layout independent review / live-checkout acceptance - state-layout / CORE-08 owners | Existing OPEN gate retained: bounded independent layout-review result and exact-current live-checkout compatibility evidence are not verified. Historical bounded-fixture PASS does not establish live acceptance. |
+| Formal MEM-02 owner closure | OPEN: no full-checkpoint closure decision is supplied; closure is outside this task. |
+
+Existing owner decisions, UD-01-05, MEM-01 closure and historical sequence/status
+snapshots are preserved. This entry is the current P2 decision and gate
+reconciliation; it leaves all wider open requirements intact. Only
+`PROJECT_STATE.md`, `TODO.md` and `README.md` are edited. No production edits,
+Git commands, tests, repeat reviews, deployment, MEM-02 closure or MEM-02B work
+are performed.
+
+**One next action:** supply the retained exact-source evidence package mapping
+the remaining MEM-02 gates to acceptance/validation records, including the
+unresolved routing disposition and state-layout/live-checkout evidence, for
+bounded documentation reconciliation. STOP.
+
+## MEM-02 Scoped Human Acceptance - 2026-10-11
+
+**Owner decision: ACCEPT - Action Trace Bridge, Prompt 35 only.**
+Authority: the owner's explicit selection in `AC-MEM-02-HUMAN-ACCEPT-38`
+("Record Scoped Human Acceptance"), dated 2026-10-11, Build & Review / MEM-02
+Governance, for `F:\Software\Agent_Company`.
+Executor session: `01a129f1-c944-7b82-b293-7677d7745dc5`.
+
+This decision is recorded on the existing canonical operational audit surface,
+`PROJECT_STATE.md`, as identified by README DOC-TREE. No dedicated MEM-02
+acceptance/decision artifact was located in the checkout. Existing owner
+closure decisions, UD-01-05, and earlier state records are preserved.
+
+### Exact accepted source scope
+
+| Existing source | Owner-accepted SHA-256 | Current filesystem check on 2026-10-11 |
+| --- | --- | --- |
+| [Action Trace Bridge](runtime/memory/action_trace.py) | `79e9710d42a61192d9eadb94fa927036631786afb0e01cf94976f0475e7e9596` | MATCH - verified before recording. |
+| [Bridge tests](runtime/tests/test_memory_action_trace.py) | `b65b33bbf9e886084c343cf8e1ad3cd9be16362eace16002837b8b414c94c11a` | MATCH - verified before recording. |
+
+Acceptance is limited to Prompt 35's Action Trace Bridge at these two source
+identities. The source describes selected, read-only action evidence converted
+into untrusted MEM-02 candidates, keeping GOV receipt verification separate
+from executor/model success. This description identifies the accepted component;
+it is not a fresh technical review or proof of its behavior. Acceptance does
+not extend to dependencies, other MEM-02 work, checkpoint closure, lesson
+promotion, MEM-02B/MEM-03, or production/runtime execution authority.
+
+### Review provenance and limitations
+
+Same-provider review is disclosed for this acceptance; **cross-provider PASS is
+not established or claimed**. The supplied executor session identifies execution,
+not a reviewer. A reviewer session identity, actual review artifact, role
+independence, provider availability/routing evidence, and raw test logs for
+Prompt 35 have not been verified in this recording. No review outcome or test
+count is inferred from the owner's ACCEPT selection or matching current hashes.
+Current hash identity does not retrospectively prove the source a reviewer saw.
+
+**No runtime approval ID exists for this review**, as explicitly stated by the
+owner. This record is the scoped human documentation decision; no approval ID
+is assigned or fabricated, and no Approval Runtime/job/review state is resolved.
+Canonical fallback/escalation rules remain intact: separate reviewer role is
+required; lower-risk same-provider fallback must be disclosed; high-risk review
+without a different provider escalates. This human acceptance does not establish
+that a provider-routing or independent-review gate passed.
+
+### Remaining MEM-02 closure requirements
+
+| Requirement and existing owner | Disposition after this decision |
+| --- | --- |
+| Prompt 35 Action Trace Bridge, the two hashes above | SCOPED HUMAN ACCEPTANCE RECORDED; current identities verified. |
+| Validity, claim/evidence entailment and freshness - MEM-02 / Knowledge Manager / Reviewer | OPEN: exact-scope acceptance and supporting evidence are not verified here. |
+| Supersession and conflict handling - MEM-02 / Knowledge Manager | OPEN: supporting acceptance evidence is not verified here. |
+| Broader action verification and trace-derived learning candidates - MEM-02 with canonical task/execution/eval/review/progress owners | OPEN: two-file bridge acceptance does not prove end-to-end coverage or close the wider obligation. Candidates remain untrusted; MEM-02B promotion and MEM-03 providers remain separate. |
+| Full accepted lifecycle/retrieval/context scope and applicable regression evidence - MEM-02 / CORE-08/09 / Reviewer | OPEN: no complete exact-source requirement/evidence mapping is verified here. Nearby or historical PASS reports do not establish closure. |
+| Prompt 35 review provenance and checkpoint independent validation - Reviewer under canonical routing | OPEN / UNVERIFIED as described above; same-provider disclosure is retained, with no cross-provider PASS. |
+| State-layout independent review / live-checkout evidence - existing state-layout and CORE-08 owners | Existing OPEN gate retained; the previous layout record awaits bounded independent review. This recording supplies no compatibility or review verdict. |
+| Formal MEM-02 owner closure | OPEN: no closure decision is supplied or recorded. |
+
+MEM-02 remains **OPEN / NOT CLOSED**. The earlier NEXT / NOT STARTED sequence
+labels remain recorded snapshots; they do not negate this bounded source
+acceptance or establish a reconciled full-checkpoint implementation status.
+No production code, policy, accepted scope, or existing decision is changed.
+No new files, Git commands, tests, repeat reviews, or deployment occurred.
+
+**One next action:** supply the retained exact-source review and acceptance
+evidence for the remaining MEM-02 requirements for bounded documentation
+reconciliation. Stop before implementation, repeat validation, or closure.
+
 ## MEM-01 Current Status - 2026-10-10
 
 MEM-01 Knowledge / Memory Foundation: **CLOSED / COMMITTED** at
@@ -24,6 +559,26 @@ Physical ownership remains `runtime/memory/__init__.py`,
 `shared/memory/` stays PLANNED / absent; production storage/providers,
 retrieval/RAG, lesson promotion and runtime integration remain unimplemented.
 No Git commands, remote check, test execution or new review occurred here.
+
+### State-layout provenance - 2026-10-11
+
+This bounded layout repair preserves the recorded facts, status values and scope.
+The complete pre-repair `PROJECT_STATE.md` is retained byte-for-byte at
+[docs/history/PROJECT_STATE-2026-10-11.md](docs/history/PROJECT_STATE-2026-10-11.md):
+133,601 bytes; SHA-256
+`553c2ef7ed2019defcc064f82086b4ab1df41d4fa69816c975cf6b8696595da6`.
+Detailed CORE-01 through CORE-07 checkpoint history is reached through the
+original headings below. Other state content remains in this live document.
+The historical copy is an immutable snapshot retaining the original link text.
+After relocation to `docs/history/`, its 16 relative link occurrences do not
+resolve. Use the working repository links retained in this live document.
+It is not a new current-status owner or a default context input.
+
+MEM-02 validity, supersession, action verification and trace-derived learning
+candidate obligations remain OPEN. This repair does not close MEM-02, begin
+MEM-02B/MEM-03, change the recorded MEM-02 status, or grant execution authority.
+CORE-08 read limits remain unchanged. This layout awaits bounded independent
+review; no review PASS or formal closure is asserted here.
 
 ## MEM-01 Closure Reconciliation - 2026-10-10
 
@@ -384,7 +939,10 @@ future directory is created. Dated prior checkpoints below remain historical.
 ## Current Checkpoint
 
 - ACTIVE: None.
-- NEXT: MEM-02 Knowledge Lifecycle + Retrieval / RAG / NOT STARTED; sequence only.
+- NEXT: MEM-02 commit; pending owner PowerShell Git inspection, with no staging
+  or commit performed by this task.
+- MEM-02: CLOSED / READY_TO_COMMIT after formal bounded closure PASS under
+  Prompt 58; COMMITTED/PUSHED not asserted. MEM-02B/MEM-03 remain OPEN / NOT STARTED.
 - MEM-01: CLOSED / COMMITTED at `5e29cdb177838adb1682ab3b36728623d714c5e3`.
   See the current status and preserved closure above for A1-A7,
   owner-supplied independent PASS and limitations.
@@ -736,1139 +1294,75 @@ These are executor results, not independent review closure.
 
 ## CORE-01 Canonical Execution Result — COMPLETED / CLOSED
 
-CORE-01 is a separate local core-runtime enhancement implemented on 2026-09-26
-and is not a Phase 8 deployment stage. It extends the existing provider-neutral
-`ExecutionResult` instead of creating a competing abstraction. The canonical
-contract now records bounded status, structured evidence, artifact references,
-concrete blockers, inert machine-readable next actions, explicit retryability,
-existing execution/provider/timestamp/error metadata, and optional usage
-metadata. Claude, Codex, future adapters, and local deterministic executors do
-not own the format.
-
-The execution-result status vocabulary is `succeeded`, `failed`, `blocked`,
-`needs_review`, and `needs_human`; retryability remains separate descriptive
-metadata and does not authorize Scheduler retry creation. `needs_review` enters
-the existing independent Reviewer gate. `blocked` and `needs_human` remain
-fail-closed without fabricating technical success or approval authority, and
-`next_actions` never execute automatically. `artifacts` is the single canonical
-artifact-reference field; `output_refs` is a derived compatibility alias and
-conflicting inputs fail closed.
-
-The initial independent CORE-01 review returned FIX with no Critical findings.
-CORE-01F repaired its Major findings: canonical nested values are deeply
-immutable, status invariants are exclusive, result retryability is separated
-from job retry authority, actual schema bounds are enforced, error details and
-secret handling are bounded, and persisted execution loading now returns a
-validated typed `ExecutionResult`. Historical reads supply safe defaults and
-bounded sanitization without rewriting source records.
-
-The final independent re-review also returned FIX with no Critical findings and
-five remaining Major findings. CORE-01F2 replaced the dict-subclass mapping with
-a true immutable `Mapping`, added quoted JSON/config credential redaction,
-bounded canonical integers to the signed 64-bit range while rejecting non-finite
-floats, moved artifact-alias normalization before schema validation, and removed
-the clean-import cycle through lazy package exports. JSON persistence now also
-converts unexpected serialization failures into a controlled store error.
-
-CORE-01R3 returned FIX with no Critical findings and four remaining Major
-findings. CORE-01F3 now prevents ordinary backing-slot replacement or deletion,
-normalizes only the artifact compatibility alias before strict new-record schema
-validation, applies one signed-64 magnitude policy to integers and finite floats,
-and converts serialization `OverflowError` into a sanitized atomic store error.
-Historical defaulting remains confined to the explicit compatibility load path.
-
-The final independent CORE-01 closure review returned PASS with no Critical or
-Major findings. Final validation passed: 30 result-contract/adversarial tests,
-131 focused execution/Worker/Reviewer/provider/Scheduler tests, 142 approval/
-controlled-write/Git/remote-Git regression tests, the full 547-test runtime
-regression, and 11 separate Reviewer adversarial probes. All 104 runtime Python
-files compiled, 34 repository JSON files parsed, fresh-process import probes
-passed, the production AST scan found zero `shell=True` calls, the production
-credential-literal scan found zero findings, and `git diff --check` passed with
-line-ending notices only. No live provider, network, or deployment call was
-made. CORE-01 is COMPLETED / CLOSED and committed at `3f6acb6`.
+[Preserved full record](docs/history/PROJECT_STATE-2026-10-11.md#core-01-canonical-execution-result--completed--closed).
 
 ## CORE-02 Continuation Policy — COMPLETED / CLOSED
 
-CORE-02 is a provider-independent deterministic continuation layer for explicit
-pre-authorized job plans. Continuation means CONTINUE AUTHORIZED UNFINISHED
-WORK; retry remains REPEAT FAILED WORK. The policy never derives authority from
-provider prose, provider JSON, artifacts, retryability, or `next_actions`.
-
-Bounded checkpoints are persisted atomically inside canonical job records and
-retain the logical job ID, plan ID, immutable plan digest, continuation sequence, current step,
-completed and remaining step IDs, latest execution/review references, and gate
-state. Successful non-terminal steps reserve one deterministic child job through
-the existing queue and Scheduler. Child identity binds logical job, plan digest,
-sequence, and step. Exact-work fingerprints bind task, task class, canonical
-agent, skill, workflow, material input references, review requirement, mode,
-dry-run, risk, scope, logical root, plan identity and digest, continuation
-sequence, current step, attempt, and the existing execution authority; they are
-revalidated at approval, enqueue, claim, and execution boundaries. Reviewer and
-human gates remain authoritative, including the distinct resolvable
-direct-execution `RESOLVE_HUMAN_CONDITION` boundary; no recursive provider loop
-was introduced.
-
-Persisted execution results are reconciled before expired-lease retry recovery,
-so an interrupted job/checkpoint update does not repeat an already-recorded
-external execution. Reconciliation now requires a canonical request whose full
-serialized identity matches the current job, resolved context, result, and
-continuation checkpoint; missing or mismatched evidence blocks same-cycle
-expired-lease retry. Ordered prefix/suffix and ancestry validation rejects
-duplicates, reordering, skipped steps, task mismatch, unrelated roots,
-self-parented retry, invalid attempt progression, lifecycle-inconsistent
-parents, and sequence rollback. Scheduler status derives one authoritative
-logical head with its latest attempt, current step, continuation sequence,
-completed and remaining work, gate state, terminality, and final execution
-reference where applicable, while retaining every ancestor step record as
-historical evidence. Competing authoritative heads fail closed rather than
-being resolved by tie-breaking.
-
-The second independent CORE-02 re-review returned FIX with one Critical and
-four Major findings. CORE-02F2 repaired only those findings: the five omitted
-execution-material authorization fields are now bound; persisted request/result
-identity is exact and requestless success cannot reconcile; the logical view
-reports its latest attempt; retry and continuation ancestry/lifecycle rules fail
-closed; and a resolved human condition retains and revalidates its exact
-execution ID through resumed execution. That repair checkpoint did not close
-CORE-02; another independent re-review was required.
-
-The third independent CORE-02 re-review returned FIX with two Critical and
-three Major findings. CORE-02F3 repaired only those findings: current-step
-approval, review, execution-mode, dry-run, risk, and write-scope policy is
-monotonic; persisted execution requests require every canonical serialized
-field; competing continuation children fail closed; ordinary and continuation
-retry ancestry rejects invalid lifecycle, progression, provenance, forks, and
-cycles; and resumed human-condition execution requires matching authoritative
-approval and execution-store artifacts. That repair checkpoint did not close
-CORE-02; another independent re-review was required.
-
-The fourth independent CORE-02 re-review returned FIX with one Critical
-finding: a coordinated rewrite of the mutable embedded plan, its digest, and
-the matching job-local policy could replace the originally authorized work.
-CORE-02F4 repaired only that finding. Each logical continuation root now has
-one write-once canonical authorized-plan record outside the mutable job record.
-It retains the full ordered plan snapshot and its digest; every planned-job
-load requires the current plan and checkpoint identity to match that snapshot.
-Continuation children and retries reuse the root record, while missing,
-changed, or recomputed authority fails closed without automatic refresh or
-rebinding. That repair checkpoint did not close CORE-02; another independent
-re-review was required.
-
-The fifth independent CORE-02 re-review returned FIX with one Critical and one
-Major finding. Deleting the authorized-plan anchor erased the store's only
-write-once evidence, so ordinary creation could rebind downgraded work; the
-store's handwritten validation also accepted plans rejected by canonical
-schemas. CORE-02F5 repaired only those findings. Initial authority creation now
-persists an independent full-record creation-evidence manifest before the
-anchor. Evidence with a missing anchor is a durable recovery hold across
-restart, and ordinary creation rejects both identical and modified replacement
-plans. Anchor and evidence records are validated against the canonical
-authorized-plan schema and shared job-plan definitions on creation and load,
-with duplicate step IDs rejected by the same runtime semantic rule. That repair
-checkpoint did not close CORE-02; another independent re-review was required.
-
-CORE-02F3 validation passed: 53 focused CORE-02 tests, 81 CORE-02/Scheduler-loop
-targeted tests, 333 focused CORE-02/CORE-01/Worker/Scheduler/Reviewer/approval/
-controlled-write/Git/provider tests, and a clean full 602-test runtime-suite
-rerun. The first full-suite run had one isolated Phase 8C host-process timing
-failure; that test then passed four consecutive isolated reruns and the clean
-full rerun. Python compilation passed. All 17 JSON schemas and the
-JSON-compatible canonical lifecycle parsed; runtime configuration loader
-coverage passed. The production AST scan found zero `shell=True` calls, the
-changed-scope high-confidence secret scan found zero findings, and
-`git diff --check` passed with line-ending notices only. No live provider,
-network, commit, push, deployment, VPS, Phase 8F, CORE-03, or retry/stop-policy
-work was performed.
-
-CORE-02F4 validation passed: 57 focused CORE-02 tests, 107 CORE-02/Scheduler
-targeted tests, 337 focused CORE-02/CORE-01/Worker/Scheduler/Reviewer/approval/
-controlled-write/Git/provider tests, and the full 606-test runtime suite. The
-exact coordinated R4 rewrite failed before executor delegation with zero
-executor calls; individual approval, review, mode, dry-run, risk, scope, task,
-input, step-ID, step-order, and digest mutations also failed closed. Python
-compilation passed. All 18 JSON schemas and the JSON-compatible canonical
-lifecycle parsed; runtime configuration loader coverage passed. The production
-AST scan found zero `shell=True` calls, the changed-scope high-confidence secret
-scan found zero findings, and `git diff --check` passed with line-ending notices
-only. The known Phase 8C timing failure did not recur. No live provider,
-network, commit, push, deployment, VPS, Phase 8F, CORE-03, retry/stop-policy, or
-closure-reconciliation work was performed.
-
-CORE-02F5 validation passed: 61 focused CORE-02 tests, 112 CORE-02/Scheduler
-targeted tests, 342 focused CORE-02/CORE-01/Worker/Scheduler/Reviewer/approval/
-controlled-write/Git/provider tests, and the full 611-test runtime suite.
-Deletion followed by identical or modified ordinary creation remained in
-recovery hold with zero executor calls; an actual Scheduler cycle claimed and
-executed nothing. Malformed authority create/load matrices rejected missing,
-empty, unexpected, duplicate, overlength, invalid-policy, invalid-digest,
-timestamp, input, and scope cases, while valid restart/child/retry paths passed.
-Python compilation passed. All 18 JSON schemas and the JSON-compatible
-canonical lifecycle parsed; runtime configuration loader coverage passed. The
-production AST scan found zero `shell=True` calls, the changed-scope
-high-confidence secret scan found zero findings, and `git diff --check` passed
-with line-ending notices only. No live provider, network, commit, push,
-deployment, VPS, Phase 8F, CORE-03, retry/stop-policy, operator authority-
-restoration flow, or closure-reconciliation work was performed.
-
-CORE-02R6 independently re-ran the authority-loss, rebinding, store-validation,
-Scheduler/Worker/gate, R5/R4, and CORE-01 regression checks and returned PASS
-with no Critical, Major, or Minor findings. Validation passed: 61/61 CORE-02
-tests, 112/112 CORE-02/Scheduler tests, 342/342 focused regression tests, and the
-full 611/611 runtime suite. Python compilation, all 18 JSON schemas, the
-JSON-compatible lifecycle, 19/19 runtime-loader tests, production `shell=True`
-scanning, changed-scope high-confidence secret scanning, and `git diff --check`
-also passed; the diff check emitted line-ending notices only.
-
-CORE-02 closure reconciliation is complete. CORE-02 is COMPLETED / CLOSED and
-committed at `9d5ead1`. The aggregate serialized-result byte ceiling remains
-FUTURE HARDENING / NON-BLOCKING.
-
-Phase 8E remains PAUSED / BLOCKED; deployment has not started. Phase 8F remains
-NOT STARTED.
-CORE-01 performed no VPS, deployment,
-service-installation, public-exposure, Hermes, Phase 8F, continuation-policy,
-retry-policy, or Eval Framework work.
+[Preserved full record](docs/history/PROJECT_STATE-2026-10-11.md#core-02-continuation-policy--completed--closed).
 
 ## CORE-03 Eval Framework — COMPLETED / CLOSED / COMMITTED
 
-CORE-03 is the first canonical provider-independent evaluation layer. It adds a
-separate `EvalSpec`, `EvalResult`, and structured check-result contract without
-changing `ExecutionResult.status` or creating an Eval Agent. A spec binds one
-exact execution/job pair to a canonical evaluator identity/version and an
-ordered set of bounded checks. A result distinguishes `pass`, `fail`, and
-`error`, retains machine-readable checks and evidence references, and leaves
-numeric score null for the deterministic milestone.
-
-The explicit registry implements the CORE-01 contract check, expected status,
-required evidence, required artifacts, forbidden conditions, and allowlisted
-structured field matching. Contract evaluation reuses the canonical CORE-01
-schema/model validator. Unregistered evaluator names, malformed configuration,
-malformed execution input, and invalid persisted evals fail closed; no dynamic
-import, arbitrary code, shell command, file execution, or provider invocation is
-available from EvalSpec input.
-
-Logical eval identity retains SHA-256 digests of the exact EvalSpec, exact
-supplied ExecutionResult payload, and deterministic semantic result content.
-The `eval-<32 hex>` ID is derived from that compact identity material;
-`created_at` is excluded. Model, validation, persistence-create, and load
-boundaries all verify the result digest and claimed ID. Typed atomic JSON
-persistence lives under `executions/evals/`, safely deduplicates the same
-semantic result, rejects identity collisions or tampering, and never overwrites
-a different historical result. The runtime CLI supports `eval run`, `eval
-list`, and `eval show` against persisted execution evidence.
-
-CORE-03 shares CORE-01's canonical secret-key and credential-shape detection.
-Structured field matching distinguishes missing fields from present nulls, and
-its comparisons remain allowlisted and type-strict. Aggregate result evidence
-is a deterministic ordered summary capped at 100 unique references while every
-check retains its complete bounded local evidence.
-
-Eval remains descriptive measurement evidence only. PASS cannot approve work,
-complete Reviewer workflow, authorize continuation or retry, clear a CORE-02
-recovery hold, mutate a job or authorized plan, invoke Git, deploy, or convert
-provider prose into authority. CORE-03 is COMPLETED / CLOSED / COMMITTED at
-`80ead22` after CORE-03R5 PASS. At that closure checkpoint, CORE-04 had not
-started.
-
-CORE-03 initial implementation validation passed: 24/24 targeted eval tests, 30/30
-CORE-01 result-contract tests, 61/61 CORE-02 continuation tests, 359/359 focused
-Worker/Scheduler/Reviewer/approval/controlled-write/Git/provider regressions,
-and a clean full 635/635 runtime-suite rerun. One earlier full rerun and one of
-three immediate isolated repeats hit the already documented Phase 8C timing
-test `test_i4_stop_after_start_publication_targets_new_owner`; two isolated
-repeats and the clean full rerun passed, and no CORE-03 path touches that host
-process code. All 116 runtime Python files compiled; all
-20 JSON schemas and the JSON-compatible lifecycle parsed; 68/68 host
-configuration/lifecycle loader tests and a fresh eval/CLI import probe passed.
-The production AST scan found zero `shell=True` calls, the changed-scope
-high-confidence credential-pattern scan found zero findings, stale current-state
-CORE-02/CORE-03 markers were absent, and `git diff --check` passed with
-line-ending notices only. No live provider, external network, deployment, push,
-PR, commit, external-system mutation, or CORE-04 work was performed.
-
-CORE-03R1 returned FIX with four Major findings and no Critical findings.
-CORE-03F repaired only those findings: persisted identity now verifies exact
-input digests and deterministic result semantics; CORE-01 and CORE-03 share one
-secret-detection policy; field matching distinguishes missing from null; and
-aggregate evidence is a bounded summary without dropping check-local evidence.
-Repair validation passed: 33/33 targeted eval tests, including 9/9 dedicated
-repair tests; 30/30 CORE-01 tests; 61/61 CORE-02 tests; 359/359 focused runtime
-regressions; and the full 644/644 runtime suite. All 117 runtime Python files
-compiled, all 20 JSON schemas and the JSON-compatible lifecycle parsed, 68/68
-host configuration/lifecycle loader tests passed, and fresh eval/CLI imports
-succeeded. Production `shell=True` scanning found zero findings. CORE-03 remains
-IMPLEMENTED / pending independent re-review; it is not closed. No live provider,
-external network, deployment, push, PR, commit, external-system mutation, or
-CORE-04 work was performed.
-
-CORE-03R2 returned FIX with one remaining Major finding: a typed result from an
-injected evaluator was not structurally bound to its originating check. The
-CORE-03F2 bounded repair treats evaluator output as untrusted structured data,
-revalidates every typed check result, and binds `check_id`, `evaluator_type`,
-and `severity` to the originating `EvalCheckSpec` before aggregation. Any
-malformed or identity-substituted output becomes a deterministic canonical
-`error` for the original check, so only normalized output reaches semantic
-identity and persistence. CORE-03 remains IMPLEMENTED / pending independent
-re-review; it is not closed. CORE-04 remains NOT STARTED.
-
-CORE-03F2 validation passed: 8/8 dedicated repair test methods covering all 12
-required adversarial cases, 41/41 CORE-03 tests, 30/30 CORE-01 tests, 61/61
-CORE-02 tests, 292/292 focused runtime regressions, and the full 652/652 runtime
-suite. Host configuration/lifecycle validation passed 68/68; all 117 runtime
-Python files compiled; all 20 JSON schemas and the JSON-compatible lifecycle
-parsed; eval/CLI imports succeeded; and production `shell=True` and
-high-confidence credential scans found zero findings. No live provider,
-external network, deployment, push, PR, commit, external-system mutation, or
-CORE-04 work was performed.
-
-CORE-03R3 returned FIX with one remaining Major finding: an injected evaluator
-could directly raise the runner's private output-validation exception and make
-untrusted exception text cross the canonical error boundary. CORE-03F3
-structurally separates evaluator invocation from runner-owned post-return
-validation. Every evaluator-originated exception now maps to a fixed canonical
-error for the original check, while the private validation exception is trusted
-only when runner validation creates it after evaluator return. Raw exception
-text is excluded from semantic identity and persistence. CORE-03 remains
-IMPLEMENTED / pending independent re-review; it is not closed. CORE-04 remains
-NOT STARTED.
-
-CORE-03F3 validation passed: 4/4 dedicated evaluator-exception repair tests,
-44/44 CORE-03 tests, 30/30 CORE-01 tests, 61/61 CORE-02 tests, 292/292 focused
-runtime regressions, and the full 655/655 runtime suite. Explicit normalized
-error persistence and Eval CLI tests passed 2/2; host configuration/lifecycle
-validation passed 68/68; all 117 runtime Python files compiled; all 20 JSON
-schemas and the JSON-compatible lifecycle parsed; and eval/CLI imports
-succeeded. Production `shell=True`, high-confidence credential, and Eval
-dangerous-API scans found zero findings. No live provider, external network,
-deployment, push, PR, commit, external-system mutation, or CORE-04 work was
-performed.
-
-CORE-03R4 returned FIX with one remaining Major finding: the runner passed
-canonical check and context objects directly to injected evaluator code, then
-reused those evaluator-visible objects as trusted error, identity, and evidence
-inputs. CORE-03F4 canonicalizes typed specs into new runner-owned models and
-gives every evaluator invocation a disposable reconstructed check and isolated
-context. Error construction, returned-output identity checks, later evaluators,
-semantic identity, and persistence now use only untouched runner-owned values.
-Evaluator-side mutation of check identity, execution references, payloads, or
-canonical results cannot mutate caller input or cross the normalized error
-boundary. CORE-03 remains IMPLEMENTED / pending independent re-review; it is
-not closed. CORE-04 remains NOT STARTED.
-
-CORE-03F4 validation passed: 5/5 dedicated mutable-input trust-boundary tests,
-49/49 CORE-03 tests, 30/30 CORE-01 tests, 61/61 CORE-02 tests, 292/292 focused
-runtime regressions, and the full 660/660 runtime suite. Explicit normalized
-error persistence and Eval CLI tests passed 2/2; host configuration/lifecycle
-validation passed 68/68; all 117 runtime Python files compiled; all 20 JSON
-schemas and the JSON-compatible lifecycle parsed; and eval/CLI imports
-succeeded. Production `shell=True`, high-confidence credential, and Eval
-dangerous-API scans found zero findings. No live provider, external network,
-deployment, push, PR, commit, external-system mutation, or CORE-04 work was
-performed.
-
-CORE-03R5 independently re-reviewed the CORE-03F4 trusted-snapshot isolation
-repair and returned PASS with no Critical, Major, or Minor findings. It verified
-that evaluator-side mutation cannot alter runner-owned check identity, execution
-references, payloads, later evaluator inputs, normalized errors, semantic
-identity, persistence identity, or caller-owned input. Independent validation
-passed: 5/5 dedicated mutation probes, 49/49 CORE-03 tests, 30/30 CORE-01 tests,
-61/61 CORE-02 tests, 292/292 focused runtime regressions, the full 660/660
-runtime suite, 2/2 normalized-error persistence and Eval CLI tests, and 68/68
-host configuration/lifecycle tests. All 117 runtime Python files compiled; all
-20 JSON schemas and the JSON-compatible lifecycle parsed; eval/CLI imports and
-production `shell=True`, high-confidence credential, and Eval dangerous-API
-scans passed.
-
-CORE-03 closure reconciliation changed canonical status documentation only. No
-runtime behavior, tests, schemas, live provider, external network, deployment,
-push, PR, commit, external-system mutation, or CORE-04 work was performed.
-At that pre-commit checkpoint, CORE-03 was CLOSED / READY TO COMMIT and CORE-04
-remained NOT STARTED. CORE-03 was subsequently committed at `80ead22`; CORE-04
-was then the next allowed checkpoint.
+[Preserved full record](docs/history/PROJECT_STATE-2026-10-11.md#core-03-eval-framework--completed--closed--committed).
 
 ## CORE-04 Tool Discovery — CLOSED / COMMITTED
 
-CORE-04 adds a provider-independent runtime capability under `runtime/tools/`;
-it does not create a Tool Discovery Agent or alter agent, skill, workflow, or
-provider routing. Immutable `ToolDescriptor` metadata records stable identity,
-exact capabilities, authority/risk requirements, compatibility, availability,
-status, tags, preference, and trusted-root-relative definition/schema
-references. `ToolDiscoveryRequest` applies bounded capability and policy
-constraints. `ToolDiscoveryResult` records deterministic candidates,
-match/ineligibility evidence, bounded rejections, an immutable registry digest,
-and registered/considered/matched/selected/loaded counts.
-
-`ToolRegistry` performs explicit registration only. It validates compact
-descriptor schemas, rejects duplicate IDs and conflicting versions, and stores
-canonical serialized records as immutable tuple content detached from
-caller/public descriptor objects. Every authoritative boundary revalidates that
-content and derives the registry digest from it; separately replaceable trusted
-record/digest slots do not exist. Public snapshots reconstruct disposable
-descriptor views. Ordering is deterministic: selectable state, least additional
-capability exposure, preference rank, fixed tool-class order, stable tool ID,
-then version. A canonical `no_match` result never invents a tool or falls back
-to shell access. Selection is separate and recomputes discovery against the
-canonical state, so callers and providers cannot promote hidden, unavailable,
-ineligible, or mutated tools. Selection validates each iterable item immediately
-and stops at the first unknown or duplicate ID or at the request bound plus one.
-Required-capability schema and runtime bounds are both 20, and shared canonical
-secret detection rejects credential-shaped serializable tool text.
-
-`ToolDefinitionLoader` loads only selected JSON definitions and schemas. It
-enforces normalized resolved-path containment beneath one trusted root, bounded
-files, fixed definition-schema validation, a bounded local JSON Schema subset,
-and exact descriptor/load identity. Non-selected definitions are not read and
-non-selected schemas are not parsed. Loaded definitions are inert immutable
-data with an opaque adapter ID; there is no dynamic import, callable, execution,
-network discovery, filesystem scan, shell fallback, or provider-created tool.
-
-Candidate, selected, loaded, and authorized remain distinct. Discovery/loading
-cannot approve work, complete Reviewer decisions, continue or retry jobs, clear
-recovery hold, authorize controlled write, invoke Git, deploy, or change CORE-01,
-CORE-02, or CORE-03 semantics. Evidence remains ephemeral in immutable result
-objects because it changes no job or authority state; no CORE-09 cache or new
-persistence store was introduced.
-
-CORE-04R1 returned FIX for exposed-descriptor mutation, missing shared secret
-detection, a 100-versus-20 required-capability bound mismatch, and eager
-selection-iterable materialization. CORE-04F repaired only those findings:
-private canonical serialized records now anchor registry state and digest,
-public descriptors are disposable reconstructions, serializable tool strings
-reuse shared credential detection, schema/runtime required-capability bounds
-are both 20, and selection rejects overflow after at most the bound plus one
-item.
-
-CORE-04F validation passed: 28/28 CORE-04 deterministic/adversarial tests,
-including five focused repair probes and the 100-registered/one-selected
-deferred-loading proof; 30/30 CORE-01,
-61/61 CORE-02, and 49/49 CORE-03 regression tests; 287/287 focused Worker,
-Scheduler, Reviewer, Approval, controlled-write, Git, remote-Git, provider, and
-job-runtime regressions; and the full 688/688 runtime suite. The separate host
-configuration/lifecycle set passed 68/68. All 130 runtime/integration Python
-files compiled; 23 JSON schemas and the JSON-compatible lifecycle parsed; fresh
-tool/CLI/provider/Worker imports passed; and production `shell=True`, high-
-confidence credential, and dangerous dynamic-import/tool-loading scans found
-zero findings. Final `git diff --check` passed with line-ending notices only.
-No live provider, external network, deployment, push, PR, commit, external-
-system mutation, or CORE-05 work was performed. At that repair checkpoint,
-CORE-04 was IMPLEMENTED / pending independent re-review and CORE-05 was NOT
-STARTED.
-
-CORE-04R2 returned FIX for coordinated replacement of former registry
-record/digest/snapshot slots, descriptor-reference schema/runtime disagreement,
-and delayed rejection of unknown streamed selection IDs. CORE-04F2 repaired only
-those findings: registry and snapshot canonical records are now structurally
-immutable tuple content whose digest is derived at every authoritative boundary;
-selection and loading fail closed on malformed or stale state; descriptor schema
-and runtime reference validation agree for normal, traversal, absolute, URL,
-mixed-separator, empty, and overlength cases; and selection rejects unknown and
-duplicate IDs at the exact streamed item where encountered. Python privacy,
-frozen dataclasses, and slotted attributes are explicitly not claimed as an
-integrity boundary.
-
-CORE-04F2 validation passed: 31/31 complete CORE-04 tests, including all three
-bounded-repair adversarial tests and the retained deferred-loading proof; 30/30
-CORE-01, 61/61 CORE-02, and 49/49 CORE-03 regression tests; 287/287 focused
-Worker, Scheduler, Reviewer, Approval, controlled-write, Git, remote-Git,
-provider, and job-runtime regressions; and the full 691/691 runtime suite. The
-separate host configuration/lifecycle set passed 68/68. All 130
-runtime/integration Python files compiled; 23 JSON schemas and the
-JSON-compatible lifecycle parsed; runtime-loader initialization and fresh
-tool/CLI/provider/Worker imports passed; and production `shell=True`,
-high-confidence credential, dangerous dynamic-import/tool-loading, and
-executable network-use scans found zero findings. The broad network-text scan's
-only match was the inert fixed JSON Schema dialect URI. Final `git diff --check`
-passed with line-ending notices only. No live provider, external network,
-deployment, push, PR, commit, external-system mutation, or CORE-05 work was
-performed. At that repair checkpoint, CORE-04 was IMPLEMENTED / pending
-independent re-review and CORE-05 remained NOT STARTED.
-
-CORE-04R3 returned FIX with one Minor schema/model/runtime parity finding: the
-descriptor JSON Schema accepted 29 prohibited C0 control characters in deferred
-definition/schema references that the runtime model rejected. CORE-04F3 changed
-only the shared descriptor reference schema pattern and its parity coverage.
-Both reference fields now reject U+0000-U+0008, U+000B-U+000C, and
-U+000E-U+001F at schema and runtime layers, including after an explicitly
-permitted newline; ordinary nested references and the existing tab, newline,
-and carriage-return semantics remain accepted.
-
-CORE-04F3 validation passed: the dedicated exhaustive F3 test and existing path
-matrix passed; an independent 126-check parity probe passed; 32/32 complete
-CORE-04 tests, 30/30 CORE-01, 61/61 CORE-02, 49/49 CORE-03, 287/287 focused, and
-692/692 full runtime tests passed. The host configuration/lifecycle set passed
-68/68. All 130 runtime/integration Python files compiled; 23 JSON schemas and
-the JSON-compatible lifecycle parsed; runtime-loader initialization and fresh
-tool/CLI/provider/Worker imports passed; and production `shell=True`,
-high-confidence credential, dangerous dynamic-import/tool-loading, and
-executable network-use scans found zero findings. The only broad network-text
-match remained the inert fixed JSON Schema dialect URI. `git diff --check`
-passed with line-ending notices only. No live provider, external network,
-deployment, push, PR, commit, external-system mutation, or CORE-05 work was
-performed. At that repair checkpoint, CORE-04 was IMPLEMENTED / pending
-independent re-review and CORE-05 remained NOT STARTED.
-
-CORE-04R4 returned FIX with one Minor LF-boundary parity finding: the remaining
-backslash, colon, and traversal schema lookaheads used dot scans that stopped at
-LF, while `$` treated a final LF differently from runtime path segmentation.
-CORE-04F4 changed only the shared descriptor reference pattern and parity tests.
-All relevant lookaheads now scan the entire string with an all-character class,
-and terminal dot segments use an explicit no-character-remains assertion. The
-runtime's existing TAB, LF, CR, relative-directory, and dot-in-filename policy
-was not changed.
-
-CORE-04F4 validation passed: the dedicated table-driven LF test and retained
-reference/control tests passed; an independent sweep compared 16,195 reference
-values across both fields (32,390 schema/runtime checks) with zero mismatches;
-33/33 complete CORE-04 tests, 30/30 CORE-01, 61/61 CORE-02, 49/49 CORE-03,
-287/287 focused, and 693/693 full runtime tests passed. The host
-configuration/lifecycle set passed 68/68. All 130 runtime/integration Python
-files compiled; 23 JSON schemas and the JSON-compatible lifecycle parsed;
-runtime-loader initialization and fresh tool/CLI/provider/Worker imports passed;
-and production `shell=True`, high-confidence credential, dangerous
-dynamic-import/tool-loading, and executable network-use scans found zero
-findings. The only broad network-text match remained the inert fixed JSON Schema
-dialect URI. `git diff --check` passed with line-ending notices only. No live
-provider, external network, deployment, push, PR, commit, external-system
-mutation, or CORE-05 work was performed. At that repair checkpoint, CORE-04 was
-IMPLEMENTED / pending independent re-review and CORE-05 remained NOT STARTED.
-
-CORE-04R5 independently re-reviewed the final LF-boundary repair and returned
-PASS with no Critical, Major, or Minor findings. It confirmed zero mismatches
-across 100,000 independently generated schema/runtime reference comparisons,
-all 29 prohibited C0 controls, aligned TAB/LF/CR and exact dot-segment
-semantics, trusted-root resolved-path containment, canonical registry/digest
-integrity, exact-item streaming rejection, shared secret handling, genuine
-selected-only deferred loading, six-field descriptor/load identity binding,
-inert loaded definitions, provider neutrality, and unchanged authority
-boundaries. R5 independently passed 33/33 CORE-04 tests, 30/30 CORE-01 tests,
-61/61 CORE-02 tests, 49/49 CORE-03 tests, 287/287 focused regressions, 693/693
-full runtime tests, and 68/68 host/lifecycle tests. It compiled 130 Python
-files, parsed 23 JSON schemas and the JSON-compatible lifecycle, passed loader
-and import probes, found zero production `shell=True`, credential/private-key,
-dynamic-import, or executable tool-layer network findings, and passed
-`git diff --check` with line-ending notices only.
-
-CORE-04 closure reconciliation changed canonical status documentation only; it
-did not change runtime behavior, tests, or schemas and did not rerun or replace
-the R5 full-regression evidence above. At that pre-commit checkpoint, CORE-04
-was CLOSED / READY TO COMMIT and CORE-05 was NOT STARTED. No live provider,
-external network, deployment, push, PR, commit, or external-system mutation was
-performed during closure.
-
-CORE-04 implementation, repairs, tests, schemas, and closure documentation were
-subsequently committed at `35f03f8` (`feat: add tool discovery and deferred
-loading`). At that committed CORE-04 closure checkpoint, CORE-04 was CLOSED /
-COMMITTED and CORE-05 was NEXT / NOT STARTED; CORE-05 could not become active
-until the post-commit state reconciliation was committed and the working tree
-was verified clean.
-
-CORE-05 subsequently began only after that reconciliation was committed and
-the clean working tree was verified at `6d681d3`.
+[Preserved full record](docs/history/PROJECT_STATE-2026-10-11.md#core-04-tool-discovery--closed--committed).
 
 ## CORE-05 Time / Execution Budget — CLOSED / COMMITTED
 
-CORE-05 adds a small provider-independent runtime capability under
-`runtime/budget/`. An optional immutable policy bounds active elapsed
-milliseconds and/or Worker-to-Executor execution units for one logical job.
-Unset dimensions are distinct from a configured zero. Runtime/model/schema
-bounds reject booleans, negative values, unknown dimensions, oversized values,
-malformed identity, and noncanonical persisted state.
-
-Policy creation writes independent durable creation evidence before the policy
-anchor and binds both to a deterministic logical-job budget ID and SHA-256
-digest. Usage persists separately through atomic replacement under a local
-budget lock. Admission and reservation are one serialized operation, so two
-workers cannot spend the last unit. Reservation consumes the unit before
-reference resolution or Executor delegation; duplicate execution identities do
-not charge twice and cannot authorize a second call.
-
-Active time begins after exact job authority validation and successful
-reservation, immediately before reference resolution, and ends immediately
-after the Executor returns or raises. In-process measurement uses a monotonic
-clock. Raw monotonic values are never persisted. Queue, schedule, approval,
-Reviewer, human, continuation-pause, and post-execution lifecycle time do not
-count. Restart recovery conservatively charges any active reservation through
-the trusted persisted wall-clock recovery observation. Persisted usage never
-decreases, and detected clock rollback latches a fail-closed fault rather than
-increasing remaining capacity. CORE-05 denies new starts after exhaustion but
-does not forecast duration or force-kill in-flight work.
-
-The initial job, ordinary retry children, and CORE-02 continuation children
-retain one exact budget binding and accumulate usage without reset. Budget
-availability is never sufficient authority: it cannot approve, complete
-Reviewer work, create continuation or retry authority, clear recovery hold,
-authorize controlled write or Git, or deploy. Provider requests to increase,
-reset, or reinterpret budget have zero canonical effect. Exhaustion fails the
-claimed job with structured evidence and zero Executor calls; it fabricates no
-successful `ExecutionResult`, retry, or continuation.
-
-CORE-05 intentionally defines no token/cost accounting, monetary policy,
-provider-rate limiting, retry/stop decision semantics, progress events, effort
-routing, dashboard, unsafe force-kill, operator budget mutation, or separate
-tool-call dimension. CORE-04 discovery/loading consumes no unit, and a future
-tool-call counter requires a canonical tool-invocation boundary that does not
-exist in the current runtime.
-
-Initial implementation validation passed 24/24 CORE-05 deterministic and
-adversarial tests, including exact-limit concurrency, duplicate identity,
-crash/restart, continuation/retry inheritance, rollback, malformed state,
-provider mutation, and authority-boundary cases. CORE-01 passed 30/30, CORE-02
-61/61, CORE-03 49/49, and CORE-04 33/33 within the clean 717/717 full runtime
-suite. The focused Worker, Scheduler, Reviewer, Approval, controlled-write,
-Git, remote-Git, provider, and job-runtime set passed 484/484. All 135
-runtime/integration Python files compiled; 25 JSON schemas and the
-JSON-compatible lifecycle parsed; lifecycle/runtime-loader and fresh import
-probes passed; production `shell=True` and high-confidence credential scans
-found zero findings; and `git diff --check` passed with line-ending notices
-only.
-
-CORE-05R1 subsequently returned FIX for two bounded defects: a coherent rewrite
-of the single mutable usage-state file could restore consumed capacity, and
-ordinary lock-path/open `OSError` cases could escape the canonical error
-boundary. CORE-05F repaired only those findings. Usage state now advances under
-the budget lock through a store-managed sequence, append-only digest-chained
-evidence, an independent high-water head, and then the current state. Evidence
-binds the immutable policy, unit and elapsed high-water values, complete
-reservation-history digest, and complete state digest. Old-state replay,
-coherent zero/reset, partial decrement, removed charged identities, evidence
-tampering, and interrupted evidence/head/state ordering fail closed. Expected
-lock initialization/open/acquisition failures now become deterministic
-canonical budget errors without raw OS detail, unlocked fallback, budget
-mutation, or Executor/provider calls.
-
-Bounded-repair validation passed 36/36 CORE-05 tests, including 12 repair tests,
-496/496 focused regressions, and 729/729 full runtime tests. The preserved
-CORE-01/02/03/04 groups passed 30/30, 61/61, 49/49, and 33/33. All 135 Python
-files compiled; 26 JSON schemas and the JSON-compatible lifecycle parsed;
-runtime-loader/import probes passed; production `shell=True`, credential, and
-budget path/traversal scans found no issue; and `git diff --check` passed with
-line-ending notices only.
-
-CORE-05R2 then returned FIX for two remaining bounded defects: authoritative
-loads checked only the current event and its immediate predecessor rather than
-the complete chain to genesis, and a coordinated rewrite of mutable state,
-head, and current event with recomputed public digests could restore capacity.
-CORE-05F2 repairs only those defects. Each transition now persists a
-content-addressed immutable event and an independent write-once sequence claim.
-Every load deterministically validates the bounded, linear claim/event history
-from exact policy-bound genesis through the derived current event, rejecting
-missing or unexpected artifacts, gaps, duplicate sequences, branches, broken
-links, content-address mismatch, historical corruption, and state/head drift.
-Write-once first-use evidence also prevents a previously used budget from being
-accepted as fresh genesis after later ledger loss. Mutable head and state are
-verified caches, not historical authority.
-
-Second bounded-repair validation passed all 23 F2-specific tests and 59/59
-CORE-05 tests, including the exact coherent zero-unit, zero-elapsed, combined,
-current-event redigest, old-snapshot, genesis-rebind, full-chain tamper, crash,
-restart, idempotency, and concurrency cases. The named focused regression set
-passed 524/524 and the full runtime suite passed 752/752. The preserved
-CORE-01/02/03/04 groups remained 30/30, 61/61, 49/49, and 33/33 within those
-runs. All 135 Python files compiled; 27 JSON schemas and the JSON-compatible
-lifecycle parsed; runtime-loader/import probes passed; production `shell=True`,
-high-confidence credential, and budget path/traversal scans found no issue;
-and `git diff --check` passed with line-ending notices only.
-
-CORE-05R3 independently returned `PASS — READY FOR CORE-05 CLOSURE
-RECONCILIATION` with no Critical, Major, or Minor findings. It verified the
-59/59 CORE-05 target, the protected CORE-01 through CORE-04 suites (30/30,
-61/61, 49/49, and 33/33), all 524 focused logical tests, all 228 complementary
-tests, all 752 current cases, compilation of 135 Python files, parsing of 27
-schemas and lifecycle manifests, zero forbidden-pattern scan hits, and exact
-cross-process `ALLOW` / `DENY` behavior. Two transient local Git subprocess
-timeouts in the aggregate run passed on isolated rerun.
-
-CORE-05 closure reconciliation is complete. CORE-05 is CLOSED / READY TO COMMIT
-and remains uncommitted. CORE-06 is NOT STARTED. No live provider, external
-network, deployment, push, PR, commit, or external-system mutation was
-performed.
-
-CORE-05 implementation, repairs, review evidence, and closure documentation
-were subsequently committed at `63813b5` (`feat: add time and execution
-budget`). At this post-commit checkpoint, CORE-05 is CLOSED / COMMITTED;
-CORE-06 is NEXT / NOT STARTED; CORE-07 through CORE-11 are NOT STARTED.
+[Preserved full record](docs/history/PROJECT_STATE-2026-10-11.md#core-05-time--execution-budget--closed--committed).
 
 ## Historical Post-CORE-05 Documentation / Roadmap / Repository Tree Checkpoint
 
-The post-commit repository tree contains the committed CORE-05 implementation
-at `runtime/budget/`; the repository uses that singular path. No CORE-06 through
-CORE-11 implementation directory exists. The current canonical agent count is
-10, and the accepted V1 target is 14 after later addition of Finance & Pricing,
-Analytics, Content, and Design.
-
-`ROADMAP.md` now records the accepted V1 sequence after CORE-01 through CORE-11:
-GOV-01 and GOV-02, ORCH-01 Graph Execution Runtime, MEM-01 through MEM-03,
-agent and capability expansion, Phase 9A through 9C, DEC-01 and the bounded
-DEC-02 JEV pilot, Phase 8E through 8H completion, and Brightshore as the first
-Phase 10 production Project Pack. These are planned, not implemented. JEV,
-SEO/AEO/GEO, Memory, and named tools or patterns are not canonical agents.
-
-`README.md` is the canonical repository-tree summary. It separates current
-physical paths from absent future target paths and records the DOC-TREE policy:
-structural implementation is followed by validation, review, closure, commit,
-repository-tree audit, and documentation reconciliation. This checkpoint
-created no future directories and changed no runtime behavior.
+[Preserved full record](docs/history/PROJECT_STATE-2026-10-11.md#historical-post-core-05-documentation--roadmap--repository-tree-checkpoint).
 
 ## Historical Post-CORE-07 Documentation / Master Context Sync
 
-Implementation HEAD is `6bcffa4` (`feat: add progress events`). This documentation
-sync extends the earlier post-commit reconciliation; only Markdown status/tree
-files are modified. CORE-01–07 are CLOSED
-/ COMMITTED; CORE-08 is NEXT / NOT STARTED; CORE-09–11 are NOT STARTED.
-
-The physical CURRENT tree includes `runtime/progress/`, its schema, three test
-modules, and existing runtime integration paths documented in `README.md`.
-Future paths remain PLANNED; no future directories are created. The canonical
-agent count remains 10, with 14 planned for V1.
-
-`ROADMAP.md` owns the accepted V1 scope. This sync adds missing CORE-08
-connector/file/manual fallback, provider-neutral skill metadata and capability-
-requesting connector architecture; GOV-02 profiles; outcome-first ORCH-01;
-expanded CAP-REV-01; retrieval, trace-derived lessons, and selective retention;
-Phase 9A replay/regression/provider comparison; Phase 9B natural-language Owner
-Home; expanded DEC-01 selectors and bounded DEC-02 pilot/later candidates; and
-Phase 10 pack references.
-JEV judges. Policy authorizes. Executor acts. Later JEV / Beacon experiments
-remain outside the bounded V1 pilot. All these future capabilities remain
-PLANNED / NOT STARTED. Existing governance, graph, memory, capability,
-Phase 9C, Decision Engine, and Brightshore-first Project Pack scope is retained.
-Phase 8E remains PAUSED / BLOCKED; Phase 8F–8H remain NOT STARTED and required.
-Historical validation below is preserved; this sync does not rerun runtime tests.
+[Preserved full record](docs/history/PROJECT_STATE-2026-10-11.md#historical-post-core-07-documentation--master-context-sync).
 
 ## Historical CORE-07 Closure Reconciliation — Before Implementation Commit
 
-CORE-07R3 final decision: PASS — READY FOR CORE-07 CLOSURE. Recovery durability,
-capacity safety, and replay/idempotency passed with no Critical, Major, or Minor
-findings. A separate reviewer independently inspected the F2 repair and reproduced
-the R2 failure cases. This was same-provider separate-reviewer validation, not a
-cross-provider audit.
-
-R3 validation passed 14/14 recovery/adversarial tests, the full 75/75 CORE-07
-targeted suite, 650/650 existing regressions, and 989/989 full regression in
-472.019 seconds. All 145 Python files and 31 JSON schemas parsed successfully;
-`git diff --check` passed. This records R3 evidence, not a closure-time full-suite
-rerun.
-
-Closed scope: structured, schema-validated, non-authoritative progress events;
-bounded append-only, tamper-evident hash-chain persistence; consistent terminal
-outcomes; restart/replay idempotency; and durable, capacity-reserved terminal and
-recovery evidence. Interrupted recovery delivery remains reachable after terminal
-state and replays exactly once without inventing a worker exit. The exact 124/128
-case fails closed before completion; 123/128 completes with required evidence.
-`progress != completion`: events grant no approval, review completion, execution,
-retry, continuation, budget mutation, write, Git, or deployment authority.
-
-CORE-07C reconciles documentation only. CORE-01–06 remain CLOSED / COMMITTED;
-CORE-07 is CLOSED / READY TO COMMIT and remains uncommitted at HEAD `28ab085`.
-CORE-08 is NOT STARTED. Runtime behavior is unchanged; no commit or next-phase
-work is performed. CORE-07C fresh targeted validation passed 75/75 tests in
-52.074 seconds; `git diff --check` passed. R3's full-regression evidence above
-is retained without claiming a closure-time full-regression rerun.
+[Preserved full record](docs/history/PROJECT_STATE-2026-10-11.md#historical-core-07-closure-reconciliation--before-implementation-commit).
 
 ## Historical CORE-07F2 Bounded R2 Repair - Before CORE-07R3
 
-CORE-07R2 returned FIX for one remaining Major finding: recovery could commit
-canonical state before delivering its recovery outcome, then permanently miss
-that evidence because later recovery scanned only running jobs.
-
-CORE-07F2 adds a bounded durable recovery delivery record to the existing SQLite
-journal. It reserves one outcome slot before recovery lifecycle mutation, persists
-the actual returned outcome before append, and atomically inserts the event and
-removes its delivery record. Reconciliation includes ready evidence for terminal
-jobs. A separate recovery lock serializes attempts; an interrupted attempt without
-a durably returned outcome records worker_error rather than inferred success.
-No worker exit is invented, and recovery metadata grants no execution authority.
-
-Validation: all 14 new F2 durability tests passed as part of the full CORE-07
-suite (75/75). Coverage includes the exact R2 append-interruption/restart and
-124/128 capacity cases, exact-fit 123/128 delivery, process exit, transaction
-rollback, repeated reconciliation, concurrent recovery, review-wait neutrality,
-logical capacity, schema migration, and missing/altered protection definitions.
-CORE-01-06 regressions passed 394/394; focused integration regressions passed
-256/256; full regression passed 989/989 in 633.023 seconds. Syntax parsing passed
-for 145 Python files and all 31 JSON schemas; `git diff --check` passed. Journal
-and recovery-lock paths remain covered by the existing jobs ignore boundary.
-
-The repair remains uncommitted at base HEAD `28ab085`; independent re-review
-remains pending. CORE-08 is NOT STARTED. No commit, deployment, graph runtime,
-dashboard, or next-phase work was performed.
+[Preserved full record](docs/history/PROJECT_STATE-2026-10-11.md#historical-core-07f2-bounded-r2-repair---before-core-07r3).
 
 ## Historical CORE-07F1 Bounded R1 Repair - Before CORE-07R2
 
-CORE-07R1 returned FIX. CORE-07F1 repairs only its four findings, remains
-uncommitted at base HEAD `28ab085`, and does not begin CORE-08.
-
-- Lifecycle saves and reconciliation share a cross-process transition lock.
-  Validation reloads current canonical state under that lock, rejects changed
-  source status and terminal rewrites, and serializes state persistence with
-  progress observation. Journal validation rejects contradictory terminal states
-  and duplicate terminal identities; invalid historical evidence is not rewritten.
-- Complete event bundles reserve bounded capacity in a durable SQLite pending
-  row before canonical writes. Before/after job digests and exact generated events
-  bind delivery to actual canonical state. Delivery commits events/head and pending
-  removal together; a pre-write interruption cancels the reservation without
-  changing the job. Pending capacity cannot be stolen by concurrent appends.
-- Execution-result recovery records its actual returned outcome using
-  `recovery_completed`, without inventing an interrupted worker's exit.
-- Journal access verifies full SQLite table/constraint and trigger definitions.
-  Only intact R1 schema can migrate to the reservation-aware schema; altered or
-  missing protection definitions fail closed.
-
-F1 targeted validation passed 23/23 tests; the complete CORE-07 suite passed
-61/61. Coverage includes controlled completion/failure and duplicate-completion
-races, cross-process stale transitions, capacity rejection/exact fit, reservations
-across real process exits before/during event delivery, tamper, and recovery outcomes.
-CORE-01-06 regressions passed 394/394 and focused regressions passed 292/292.
-Full regression passed 975/975 in 559.364 seconds. Syntax parsing passed for
-144 Python files and all 31 JSON schemas; `git diff --check` passed. The journal
-and transition-lock paths remain covered by the existing jobs ignore boundary.
-
-Progress remains evidence only. Reservations cannot approve or perform job state
-changes, retry, continuation, budget mutation, plan changes, controlled writes,
-Git, or deployment. CORE-01-06 authority rules remain in their existing modules.
-Independent re-review has not occurred. No commit, deployment, graph runtime,
-dashboard, or CORE-08 work was performed.
+[Preserved full record](docs/history/PROJECT_STATE-2026-10-11.md#historical-core-07f1-bounded-r1-repair---before-core-07r2).
 
 ## Historical CORE-07 Initial Implementation Checkpoint - Before CORE-07R1
 
-CORE-07 is IMPLEMENTED / pending independent review, uncommitted at base HEAD
-`28ab085`. The new `runtime/progress/` package and
-`schemas/progress-event.schema.json` define deterministic, typed, bounded,
-non-authoritative observations. `progress != completion`.
-
-Integration covers canonical job persistence, Worker execution/result and exit
-boundaries, actual host provider calls (including controlled-write staging),
-Scheduler reconciliation, continuation steps, retry/repair, Reviewer/human gates,
-CORE-05 budget denial, and CORE-06 stop/replan decisions. Tool events describe
-host calls; hidden provider-internal tool activity is not fabricated.
-
-Each logical job has an append-only SQLite journal under the configured jobs
-root's `.progress/` directory. Standard-library SQLite FULL synchronous
-transactions atomically commit each event and its hash-chain head; initial
-creation uses atomic replacement. SQL update/delete guards, complete read-time
-schema/identity/chain validation, existing cross-process file-store locking,
-deterministic deduplication, and canonical-state reconciliation provide local
-integrity and restart behavior. Bounds are 128 events per physical job, 4,096 per
-logical job, 4,096 bytes per event, and a 32 MiB database read ceiling. Full or
-malformed history fails closed without eviction. Arbitrary owner replacement of
-the entire database is outside this local evidence store's integrity boundary.
-
-Progress grants no Approval, Reviewer completion, retry/continuation, budget,
-plan mutation, write, Git, or deployment authority. Journals are not policy inputs.
-An unavailable journal returns an error; successful evidence delivery is never
-claimed when persistence failed. Only canonical terminal continuation state with
-no remaining steps produces logical completion evidence.
-
-Validation: CORE-07 targeted tests passed 38/38; CORE-01-06 regressions passed
-394/394; focused Worker/Scheduler/Reviewer/Approval/actions/Git/provider/runtime
-regressions passed 292/292. The final full runtime regression passed 952/952
-in 541.546 seconds. `git diff --check` passed.
-Python syntax parsing passed for 143 runtime files; all 31 JSON schemas parsed;
-the journal path is covered by the existing jobs ignore rule. No live provider,
-deployment, commit, CORE-08, graph runtime, or dashboard work was performed.
-Independent review has not been performed; this is implementation evidence only.
+[Preserved full record](docs/history/PROJECT_STATE-2026-10-11.md#historical-core-07-initial-implementation-checkpoint---before-core-07r1).
 
 ## Historical Post-CORE-06 Documentation / Roadmap / Repository Tree Checkpoint
 
-CORE-06 implementation, validation, R6 PASS evidence, and closure documentation
-are committed at `4a6e5c4` (`feat: add retry and stop policy`). The working tree
-was clean before this reconciliation. CORE-01 through CORE-06 are CLOSED /
-COMMITTED; CORE-07 Progress Events is NEXT / NOT STARTED. ORCH-01 remains
-NOT STARTED. Phase 8E remains PAUSED / BLOCKED with deployment not started;
-Phases 8F through 8H remain NOT STARTED.
-
-Physical-tree audit confirmed the CURRENT implementation at `runtime/retry/`
-with `__init__.py`, `models.py`, `runtime.py`, `store.py`, and `README.md`;
-`runtime/execution/failures.py`; the retry policy/state and execution-artifact
-schemas under `schemas/`; and the five `runtime/tests/test_retry*.py` modules.
-The canonical implementation path is `runtime/retry/`, not a planned alias.
-All 26 future paths listed in README remain absent, including CORE-07's
-`runtime/progress/`. No directories were created. The current canonical agent
-count remains 10 and the accepted V1 target remains 14.
-
-`README.md` remains the canonical DOC-TREE summary. The accepted V1 master
-roadmap/backlog and its future paths are preserved. This checkpoint follows
-implementation -> validation -> review -> closure -> commit -> physical-tree
-audit -> DOC-TREE reconciliation. Only documentation changed; historical review,
-repair, and pre-commit closure evidence below retains its original context.
+[Preserved full record](docs/history/PROJECT_STATE-2026-10-11.md#historical-post-core-06-documentation--roadmap--repository-tree-checkpoint).
 
 ## Historical CORE-06 Closure Reconciliation - Before Implementation Commit
 
-CORE-06R6 final decision: PASS - READY FOR CORE-06 CLOSURE. The human supplied
-this authoritative external independent-review report during CORE-06C on
-2026-09-29; the report was produced in the preceding review step and had not
-previously been reconciled into repository documentation. R6 changed no
-repository files and retained HEAD `065b3e9`.
-
-External R6 evidence (reported review results, not rerun by this closure):
-
-- Schema version validation: PASS; corrupted artifact retry: PASS.
-- Execution store: 31/31; CORE-06: 161/161; full regression: 914/914.
-- CORE-01-05: 233/233; focused regression: 268/268.
-- 30 schema JSON files parsed; `git diff --check`: PASS.
-- Critical: NONE; Major: NONE; Minor: NONE.
-
-The final Retry / Stop Policy provides bounded retry, no-progress/stuck/cycle
-detection, and repair scoped to the failed unit. `REPLAN_REQUIRED` stops local
-retry without invoking a Planner or changing a plan. Exact-work identity,
-original approval requirements, review gates, and authorized repair scope are
-preserved. Atomic reservations and independent persisted evidence prevent
-restart/concurrent delivery from reopening consumed attempts; terminal policy
-history revokes stale retry authority. Canonical corruption, including invalid
-artifact schema versions, fails closed rather than authorizing provider retry.
-Retry remains separate from CORE-02 continuation and retains the same CORE-05
-logical budget and consumed usage without reset, refund, or extension.
-
-CORE-06C fresh closure validation: `python -m unittest discover -s runtime/tests
--p 'test_retry*.py'` passed 161/161 tests. `git diff --check` passed. Final
-status/diff inspection confirmed an empty index, unchanged HEAD `065b3e9`,
-and documentation-only closure edits with existing implementation preserved.
-
-CORE-06C changes canonical documentation only. CORE-01-05 remain CLOSED /
-COMMITTED; CORE-06 is CLOSED / READY TO COMMIT and remains uncommitted at HEAD
-`065b3e9`. CORE-07 and ORCH-01 remain NOT STARTED. Phase 8E remains PAUSED /
-BLOCKED with deployment not started; Phases 8F-8H remain NOT STARTED.
-Historical implementation and FIX/repair checkpoints below preserve their
-then-current review status and do not supersede this closure.
+[Preserved full record](docs/history/PROJECT_STATE-2026-10-11.md#historical-core-06-closure-reconciliation---before-implementation-commit).
 
 ## CORE-06 Initial Implementation Checkpoint — Before CORE-06R1
 
-CORE-06 adds a provider-independent retry policy, typed decisions, immutable
-logical-job policy binding, bounded restart-safe decision history, deterministic
-attempt identity, exact-work authorization, and unit-scoped repair enforcement
-under `runtime/retry/`. Total attempts include the initial attempt. Retry never
-resets its count, continuation lineage, logical CORE-05 budget, consumed usage,
-approval, review, recovery-hold, controlled-write, Git, or deployment state.
-
-Scheduler retry and expired-lease recovery now ask canonical policy rather than
-treating `retryable` as authority. Trusted failure class, exact work, policy,
-attempt history, accepted progress-evidence digests, approval/recovery state,
-and CORE-05 exhaustion drive deterministic `RETRY`, `STOP`,
-`REPLAN_REQUIRED`, `NEEDS_HUMAN`, or `ERROR` decisions. Provider prose,
-provider error labels, `next_actions`, Eval results, available budget,
-continuation eligibility, and tool loading cannot authorize retry.
-
-No-progress, stuck, and self/two-state/longer-cycle detection use bounded
-canonical signatures and persist across restart. Retry reservation precedes
-deterministic child creation; duplicate delivery and concurrent reservation
-converge on one attempt. Existing execution-result reconciliation and CORE-05
-reservation accounting preserve crash consistency without duplicating recorded
-success or refunding uncertain work.
-
-Implementation validation passed 51/51 CORE-06 tests, 30/30 CORE-01, 61/61
-CORE-02, 49/49 CORE-03, 33/33 CORE-04, 59/59 CORE-05, 268/268 focused
-Worker/Scheduler/Reviewer/Approval/controlled-write/Git/remote-Git/provider
-regressions, and the full 803/803 runtime suite. A Windows claim-lock
-initialization race exposed by the first aggregate concurrency run was repaired;
-the dedicated same-attempt concurrency case then passed 20 consecutive stress
-runs and the final aggregate suite. All 140 repository Python files compiled,
-29 JSON schemas and the JSON-compatible lifecycle parsed, 56/56 runtime/host
-loader tests and fresh import probes passed, production `shell=True` and
-changed-scope credential scans found zero findings, retry path/traversal and
-bounded-directory tests passed, and `git diff --check` passed with line-ending
-notices only.
-
-`REPLAN_REQUIRED` is only a stop/control boundary. It does not modify a plan,
-call a Planner, create a graph, or grant new authority. CORE-07 and ORCH-01
-remain NOT STARTED. At this initial checkpoint, before CORE-06R1, CORE-06 had
-not yet been independently reviewed, closed, or committed. No live provider,
-network, deployment, push, PR, or external-system
-mutation was performed.
+[Preserved full record](docs/history/PROJECT_STATE-2026-10-11.md#core-06-initial-implementation-checkpoint--before-core-06r1).
 
 ## Historical CORE-06F1 Bounded R1 Repair — IMPLEMENTED / Pending Independent Re-Review
 
-CORE-06R1 returned FIX. CORE-06F1 repairs only its eight concrete findings;
-implementation validation is not independent acceptance or closure.
-
-- F1: consume a write-once retry execution reservation atomically before budget
-  admission or Executor delegation. Duplicate delivery reuses canonical state
-  or result; crash/restart cannot reopen the consumed attempt. Request admission
-  anchors are execution-scoped so ordinary CORE-02 human resume remains distinct.
-- F2: carry failed-unit repair constraints into controlled-write validation and
-  intersect them with existing approved scope. Unallocated multi-unit parent
-  scopes fail closed. Canonical path normalization rejects traversal/escape;
-  provider mutation of request constraints cannot broaden the validation snapshot.
-- F3: verify bounded content-addressed decision events against chained write-once
-  sequence claims, first-use evidence, and the high-water cache. Failure,
-  materialization, and execution anchors prevent count/identity rollback or
-  recreation of deleted consumed children.
-- F4: exclude provider error labels, wording, metadata, and actions from detection
-  signatures; trusted failure class, work, and accepted progress remain identity.
-- F5: classify independently observed controlled-write scope/authority/policy
-  denials as non-retryable, not from provider labels or free-text matching.
-- F6: anchor work and complete request digest before delegation and immutable
-  canonical failure evidence before failure persistence; first retry authenticates
-  the persisted request and rejects material source/request changes.
-- F7: Reviewer retry uses structured `retry_or_stop`, retaining
-  `REPLAN_REQUIRED` through Worker outcomes instead of generic lifecycle errors.
-- F8: reject boolean/non-integer policy versions consistently in model, schema,
-  and store; repair paths retain bounded canonical model/runtime checks.
-
-Final validation: 78/78 CORE-06 (51 original plus 27 new repair tests), 232/232
-CORE-01–05, 268/268 focused, and 830/830 full runtime regression passed. Direct
-duplicate-delivery stress covered 15 eight-thread rounds and a two-process
-race; each retry delegated once. Crash-before-delegation, post-reservation,
-post-budget-reservation, and persisted-success reconciliation tests passed.
-Controlled-write sibling, mixed A+B, traversal, unrelated-path, valid repair,
-and constraint-tampering tests passed. All 141 Python files compiled, 29 schemas
-parsed, 107 runtime imports loaded, 56/56 runtime/host loader tests passed,
-policy-version parity passed, production `shell=True` and credential-literal
-scans found zero findings, and tracked/new-file whitespace checks passed.
-
-HEAD remains `065b3e9`; CORE-06 is uncommitted and pending independent re-review.
-No Planner invocation, plan mutation, ORCH-01 runtime, budget reset/refund,
-authority expansion, or CORE-07 work was introduced. CORE-07 and ORCH-01 remain
-NOT STARTED. No live provider, network, deployment, push, PR, or external-system
-mutation was performed.
+[Preserved full record](docs/history/PROJECT_STATE-2026-10-11.md#historical-core-06f1-bounded-r1-repair--implemented--pending-independent-re-review).
 
 ## Historical CORE-06F2A Bounded R2 Repair — IMPLEMENTED / Pending Independent Re-Review
 
-CORE-06R2 returned FIX. The 2026-09-29 CORE-06F2A checkpoint repairs only its
-five remaining concrete findings; implementation validation is not independent
-acceptance, closure, or permission to begin CORE-07.
-
-- Execution identity: independent write-once attempt-admission evidence is
-  persisted before Executor delegation. Losing both reservation files after
-  admission is a recovery hold, not an unused attempt. The unchanged R2
-  reproduction and new concurrent/restart probes keep Executor call count at 1.
-- History rollback: independent bounded append-only revision witnesses precede
-  events, decision claims, head, and state. Deleting STOP/REPLAN event/claim
-  suffixes and replaying older head/state, or replaying genesis and deleting the
-  exhausted child, cannot restore retry authority. Interrupted/missing witness
-  evidence also fails closed; caches are not the sole rollback anchor.
-- Trusted failures: Worker-observed typed mode, result-contract, schema,
-  integrity, policy, and authority failures are non-retryable. Provider wrappers
-  preserve canonical exceptions instead of flattening them into transient
-  failures. Durable provenance survives crash/result reconciliation; missing
-  provenance cannot authorize retry. Provider wording and metadata are excluded.
-- Approval policy: immutable original request/admission and failure evidence
-  preserve the original requirement. Mutable `approved -> not_required` on the
-  source or child fails closed before retry decision/enqueue/delegation. Intact
-  gated work still needs fresh canonical approval, with the same logical budget.
-- Repair scope: effective paths are the hierarchical intersection of parent
-  authorized scope and failed-unit allocation, never the wider unit scope.
-  Sibling, mixed, unrelated, forbidden, traversal, and capability-expanded
-  repairs are denied; valid narrow repair still enters the Reviewer boundary.
-
-Validation passed: 26/26 new bounded adversarial tests; the five unchanged R2
-evidence-loss/denial/scope reproductions; 104/104 full CORE-06 tests; 232/232
-CORE-01–05; 268/268 focused; and 856/856 full runtime regression. The unchanged
-10-round eight-thread retry stress test also passed independently, and the
-CORE-06 suite includes two-process delivery and crash/restart cases. An initial
-oversubscribed four-suite run hit that fixture's 10-second startup timeout;
-final aggregate runs were serialized and passed without changing its timeout.
-Approval/controlled-write/runtime-host validation passed 117/117. All 142
-Python files compiled, 29 schemas parsed with 167 references resolved, 114
-production imports and canonical runtime loaders passed, version-type parity
-passed, and production `shell=True`/credential-literal scans found zero
-findings. Tracked diff and new-file whitespace checks passed.
-
-HEAD remains `065b3e9`; the index is empty and CORE-06 is uncommitted. CORE-06
-remains IMPLEMENTED / pending independent re-review. CORE-07 and ORCH-01 remain
-NOT STARTED. No Planner call, plan mutation, authority expansion, budget
-reset/refund/extension, live provider, network, deployment, push, PR, or
-external-system mutation was introduced. Missing new integrity evidence is
-not silently migrated or reconstructed; these are application-integrity
-guarantees, not protection against an OS actor erasing every independent
-canonical authority/evidence file.
+[Preserved full record](docs/history/PROJECT_STATE-2026-10-11.md#historical-core-06f2a-bounded-r2-repair--implemented--pending-independent-re-review).
 
 ## Historical CORE-06F3 Bounded R3 Repair — IMPLEMENTED / Pending Independent Re-Review
 
-CORE-06R3 returned FIX. This 2026-09-29 checkpoint repairs only its four Major
-findings; implementation validation is not independent acceptance or closure.
-The unchanged R3 attacks were reproduced before repair: Executor call count 2
-without a budget after reservation/attempt-admission loss, accepted history
-revision 2 -> 1 with REPLAN_REQUIRED removed, canonical schema-load failure
-classified transient, and an actual Unicode sibling write.
-
-- Consumption: an independent write-once consumed-attempt anchor precedes
-  reservation. Missing reservation/admission evidence cannot reopen it.
-  Surviving per-execution admission, including either half, or a persisted
-  execution result also holds redelivery if all attempt indexes are lost.
-  The exact no-budget R3 attack now keeps Executor call count at 1.
-- History: a separate bounded accepted-revision ledger and its creation
-  evidence anchor genesis and every accepted revision. An independent immutable
-  terminal tombstone retains STOP/REPLAN_REQUIRED. Removing event, claim, and
-  revision witness plus older head/state replay fails closed; removing accepted
-  suffix evidence while retaining the terminal anchor also fails closed.
-- Integrity: Worker and ProviderExecutor share typed canonical integrity,
-  authority, and policy exceptions. Real ExecutionStoreError from invalid result
-  schema and result-save failures are non-retryable, with durable trusted
-  provenance and no provider-text classification.
-- Paths: parent scope, unit intersection, plan-scope comparison, and staged
-  write validation share the filesystem-aware matcher. Windows uses ordinal
-  comparison and proven identity for positive case aliases, not linguistic
-  Unicode casefolding; POSIX preserves exact case. Distinct straße/strasse
-  directories remain disjoint. Sibling, mixed, unrelated, and normalized
-  traversal writes fail before target application; valid case handling and
-  negative scope for not-yet-created files remain protected.
-
-Final validation passed: 34/34 new F3 adversarial tests within 138/138 CORE-06;
-all 14 unchanged R3 probes and the unchanged actual Unicode-write probe;
-232/232 CORE-01–05; 268/268 focused; 61/61 Approval/controlled-write; and
-890/890 full runtime regression. CORE-06 includes crash/restart, eight-thread
-stress, and two-process same-attempt delivery. The prior Phase 8C timing failure
-did not reproduce in the isolated test or full regression; Phase 8C code was
-not changed. All 144 Python files compiled, 29 schemas parsed with 167 references
-resolved, 115 production imports and the canonical runtime loaders passed,
-fresh integrity/provider/Worker-first imports passed, and production shell=True
-and credential-literal scans found zero matches. These scans are not a live
-credential audit. Tracked diff and new-file whitespace checks passed.
-
-HEAD remains 065b3e9; the index is empty and CORE-06 remains uncommitted,
-IMPLEMENTED / pending independent re-review. Approval-policy preservation,
-exact-work binding, provider-resistant detection, structured REPLAN_REQUIRED,
-retry limits, scope intersection, the same CORE-05 budget, Reviewer, and recovery
-hold remain intact. No Planner call, plan mutation, budget refund/reset/extension,
-deployment, live-provider action, or next-phase implementation was introduced.
-CORE-07 and ORCH-01 remain NOT STARTED. Missing integrity evidence is not silently
-migrated or reconstructed; these application-integrity guarantees do not cover
-an OS actor erasing or replacing every independent canonical evidence file.
+[Preserved full record](docs/history/PROJECT_STATE-2026-10-11.md#historical-core-06f3-bounded-r3-repair--implemented--pending-independent-re-review).
 
 ## Historical CORE-06F4 Bounded R4 Repair — IMPLEMENTED / Pending Independent Re-Review
 
-CORE-06R4 returned FIX with three Major findings. The exact attacks were
-reproduced before repair: a consumed attempt delegated twice despite intact
-failure/runtime evidence; replaying an old running child executed after
-STOP/REPLAN_REQUIRED; invalid UTF-8 became transient RETRY.
-
-CORE-06F4 repairs only those findings:
-
-- Missing reservation/admission/result indexes cannot hide canonical failed
-  attempts or either surviving half of Worker-observed runtime-failure evidence.
-  The exact no-budget R4 attack now preserves Executor call count 1, including
-  concurrent restart/redelivery.
-- Execution authorization verifies the current complete retry history before
-  reservation and at request admission. Persisted STOP/REPLAN_REQUIRED revokes
-  earlier RETRY execution and repair authority. Historical reads remain
-  explicitly separate and preserve structured terminal reporting.
-- Canonical store readers normalize UTF-8/JSON decoding failures into existing
-  typed trusted storage errors. Schema/integrity failures remain non-retryable
-  through Worker and ProviderExecutor. Corrupt canonical context causes STOP
-  without invoking a provider adapter.
-
-Validation passed 22/22 new F4 adversarial tests within 160/160 CORE-06,
-232/232 CORE-01–05, 268/268 focused regression, 7/7 explicit crash/concurrency,
-61/61 Approval/controlled-write, all 13 unchanged R4 and 14 unchanged R3 probes,
-and the unchanged Unicode-write attack. Python compilation passed 145/145;
-29 schemas and 167 references parsed/resolved, 115 production imports and
-runtime-loader checks passed. Production shell=True and credential-literal
-scans found zero matches; these are not live credential checks.
-Full runtime regression passed 912/912 on an unchanged-code rerun. The first
-full run recorded one failure in Phase 8C's
-`test_i4_stop_after_start_publication_targets_new_owner`; that case passed
-independently (1/1), the complete Phase 8C suite passed 31/31, and the full
-rerun passed without Phase 8C code or timeout changes.
-
-HEAD remains 065b3e9, the index is empty, and CORE-06 is uncommitted and pending
-independent re-review, not closed. This is implementation evidence, not
-independent acceptance. Unicode/path-scope matching, original Approval policy,
-exact-work binding, provider-resistant detection, history integrity, shared
-CORE-05 budget, Reviewer, and recovery hold remain preserved. Phase 8C code is
-unchanged. No Planner, plan mutation, deployment, live provider action, budget
-refund/reset/extension, or next-phase implementation was introduced. CORE-07
-and ORCH-01 remain NOT STARTED.
+[Preserved full record](docs/history/PROJECT_STATE-2026-10-11.md#historical-core-06f4-bounded-r4-repair--implemented--pending-independent-re-review).
 
 ## Phase 8A Architecture Design Checkpoint
 

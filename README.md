@@ -1,5 +1,134 @@
 # Agent Company
 
+## MEM-02 Formal Bounded Closure - 2026-10-11
+
+`AC-MEM-02-FORMAL-CLOSURE-58` records **formal bounded closure PASS; MEM-02
+CLOSED / READY_TO_COMMIT**. COMMITTED/PUSHED are not asserted. ACTIVE: None.
+NEXT: MEM-02 commit, pending the owner's PowerShell Git step. See the
+[canonical closure gates, owner preflight and evidence](PROJECT_STATE.md#mem-02-formal-bounded-closure---2026-10-11)
+and [preserved bounded acceptance matrix](PROJECT_STATE.md#mem-02-full-foreground-integration-acceptance---2026-10-11).
+
+Accepted hashes and retained independent technical evidence remain bound to
+their scopes. Same-provider review, historical FIX/FAIL/NEEDS_HUMAN records,
+source-version limits and missing historical manifests are preserved. No
+cross-provider PASS or fresh combined regression is claimed. Runtime approval
+ID remains NOT_APPLICABLE; no runtime completion state is resolved. Non-null
+mutation `diff_ref` remains unsupported and fails closed; truth, publisher
+authenticity, unsupported freshness and global completeness remain UNKNOWN.
+MEM-02B promotion and MEM-03 storage/durability remain OPEN / NOT STARTED.
+
+The four existing canonical documents retain Master Context/status/scope/work
+ownership; this README retains physical DOC-TREE ownership. No separate MEM-02
+closure artifact is mandated by the inspected rules. All earlier dated records
+below remain historical snapshots. Unrelated changes, immutable archives and
+both fixture/temp directories are preserved. No Git, code/policy edit,
+implementation, new files, tests/reviews or deployment occurs.
+
+**Next owner PowerShell Git step:** inspect status, whitespace and diff scope,
+then review an exact MEM-02/documentation staging allowlist. STOP before Git work.
+
+## MEM-02 Full Foreground Integration Acceptance - 2026-10-11
+
+`AC-MEM-02-GAP40-ACCEPT-57` records **owner GAP-40 ACCEPT** for the current
+four-file foreground integration. All supplied SHA-256 identities MATCH.
+**The bounded MEM-02 acceptance package is READY; MEM-02 remains OPEN / NOT
+CLOSED.** Its sole remaining formal checkpoint gate is the separate owner
+closure disposition. See the [canonical acceptance, exact source identities,
+retained evidence and complete requirement matrix](PROJECT_STATE.md#mem-02-full-foreground-integration-acceptance---2026-10-11).
+
+Retained Review 42, accepted P2 and repaired M1 evidence are reused with their
+original source versions and outcomes. Same-provider review is disclosed;
+no cross-provider PASS or fresh combined regression coverage is claimed.
+Runtime approval ID is **NOT_APPLICABLE**; this manual acceptance resolves no
+runtime job/approval/completion state. Recovered navigation and pre-edit live
+context smoke remain historical evidence; post-edit builder behavior is not
+freshly attested. Missing historical manifests remain provenance limitations.
+
+Linked mutation diff is **UNSUPPORTED: non-null `diff_ref` must fail closed**.
+Truth, publisher authenticity, unsupported freshness and global completeness
+remain UNKNOWN. Operational candidate storage requires separate scoped
+authority. Candidates remain untrusted; MEM-02B promotion and MEM-03 production
+durability stay separate. Earlier decisions and dated documentation below remain
+intact as historical snapshots; this entry supplies the current reconciliation.
+No production edits, new files, tests/reviews, Git, deployment or formal closure
+occur in this documentation task.
+
+**One next permitted action:** obtain the owner's separately scoped formal
+MEM-02 closure disposition against the reconciled bounded acceptance package.
+STOP.
+
+## MEM-02 Repaired Action Trace M1 Acceptance Audit Pointer - 2026-10-11
+
+`AC-MEM-02-TRACE-M1-ACCEPT-53` records **owner ACCEPT repaired M1 only**.
+Both current Action Trace source/test hashes match the accepted identities.
+Owner-supplied independent technical review: **PASS, 3/3 probes**; same-provider
+review is disclosed and review/source/repair-scope provenance remains unknown
+or unverified. No cross-provider PASS or full scope proof is claimed.
+
+Linked mutation diff is **UNSUPPORTED: non-null `diff_ref` must fail closed**.
+Runtime approval ID is **NOT_APPLICABLE for this ad-hoc review**; the decision
+resolves no runtime approval/completion state. See the
+[current scoped acceptance, hashes, evidence limitations and remaining blockers](PROJECT_STATE.md#mem-02-repaired-action-trace-m1-acceptance---2026-10-11).
+Historical FIX, PASS and prior ACCEPT remain intact; earlier Action Trace hash
+matches below describe the bytes observed at those prior recording steps.
+
+**MEM-02 remains BLOCKED / OPEN / NOT CLOSED.** All other MEM-02 requirements
+and MEM-02B/MEM-03 boundaries remain intact. This adds no files and grants no
+code, Git, test/review, deployment or closure authority.
+**One next action:** reconcile the retained exact-source acceptance/evidence
+mapping for remaining blockers, including unknown Action Trace review provenance
+and state-layout/live-checkout evidence, in a separately scoped documentation
+task. STOP.
+
+## MEM-02 Human Security Disposition Audit Pointer - 2026-10-11
+
+`AC-MEM-02-ROUTING-DISPOSITION-47` records the owner's existing scoped ACCEPT
+decisions for Validity M1/M2, Read-Only Inspection, Action Trace (Prompt 38)
+and P2 (Prompt 45). All twelve reviewed/accepted source hashes match current
+files. Same-provider technical evidence and historical NEEDS_HUMAN/BLOCKED
+outcomes remain intact; no cross-provider PASS is claimed.
+
+The manual human dispositions are recorded on the canonical audit surface.
+Unbound annotations cannot resolve a runtime approval/completion boundary:
+applicable canonical job, execution, review and approval bindings remain
+unverified, and no pending runtime gate or approval ID is invented. See the
+[scoped decisions, retained evidence and policy applicability](PROJECT_STATE.md#mem-02-scoped-human-security-dispositions---2026-10-11).
+**MEM-02 remains BLOCKED / OPEN / NOT CLOSED.** All other acceptance gaps and
+MEM-02B/MEM-03 exclusions remain intact. This reconciliation changes only the
+three existing audit documents and grants no Git, deployment or closure authority.
+
+## MEM-02 P2 Acceptance Audit Pointer - 2026-10-11
+
+The owner selected **ACCEPT P2 repair only** under `AC-MEM-02-P2-ACCEPT-45`.
+Both accepted hashes for `runtime/cli/__main__.py` and
+`runtime/tests/test_memory_integration.py` match current files. Retained
+REREVIEW-44 records **technical PASS**, 8/8 fresh probes and exact patch binding;
+review used a separate session/role on the same provider. Formal routing remains
+NEEDS_HUMAN because alternate-provider availability and applicable disposition
+are unverified. The historical 206-file manifests remain unavailable.
+
+See the [canonical P2 decision, source identities, retained evidence and
+remaining gates](PROJECT_STATE.md#mem-02-p2-human-acceptance-and-gate-reconciliation---2026-10-11).
+**MEM-02 readiness remains BLOCKED / OPEN / NOT CLOSED.** No runtime approval
+ID is created. Earlier Prompt 35 acceptance, owner decisions and open
+requirements remain intact. This P2 decision does not accept wider GAP-40
+scope or authorize MEM-02 closure, deployment or MEM-02B work.
+
+## MEM-02 Scoped Acceptance Audit Pointer - 2026-10-11
+
+The owner selected **ACCEPT for Action Trace Bridge, Prompt 35 only** under
+`AC-MEM-02-HUMAN-ACCEPT-38`. Both accepted source hashes match the current files.
+See the [scoped decision, source identities, same-provider disclosure and open
+gates](PROJECT_STATE.md#mem-02-scoped-human-acceptance---2026-10-11) on the existing
+canonical audit surface. MEM-02 remains OPEN / NOT CLOSED; no runtime approval
+ID exists for this review and no cross-provider PASS is claimed.
+
+Physical scope is the existing `runtime/memory/action_trace.py` and
+`runtime/tests/test_memory_action_trace.py`; this pointer adds no files or paths
+and establishes no Git/commit status. Earlier DOC-TREE and decision records
+remain intact; broader MEM-02 implementation and closure are not established
+by this two-file acceptance.
+
 ## MEM-01 Current Status - 2026-10-10
 
 MEM-01 Knowledge / Memory Foundation: **CLOSED / COMMITTED** at
@@ -259,15 +388,19 @@ the canonical capability roadmap.
 GOV-01 is CLOSED / COMMITTED at `852ec01`; GOV-02 Capability Governance is
 CLOSED / COMMITTED at `e6dbe3f`. ORCH-01 is CLOSED / COMMITTED at `d3878081`
 after independent R4 PASS and owner closure PASS. MEM-01 is CLOSED / COMMITTED
-at `5e29cdb177838adb1682ab3b36728623d714c5e3`; MEM-02 is NEXT / NOT STARTED.
+at `5e29cdb177838adb1682ab3b36728623d714c5e3`; MEM-02 is CLOSED /
+READY_TO_COMMIT after Prompt 58 bounded closure PASS, with no commit/push asserted.
+MEM-02B promotion and MEM-03 production durability remain OPEN / NOT STARTED.
 
 ## Current Repository Structure
 
-CURRENT: existing committed structure at HEAD
-`5e29cdb177838adb1682ab3b36728623d714c5e3` on `master`, including the three
-committed MEM-01 contract/test files verified against the accepted closure hashes.
-This is the physical structure in the current checkout; generated contents and
-ignored local configuration are intentionally not expanded.
+CURRENT: physically observed structure in the authoritative F: checkout.
+Owner-supplied Git preflight: `master`, HEAD
+`36d48137f601dd36a89415f343e7fb2b6cfc5820`, no staged changes, 13 tracked
+modified files and a DIRTY worktree. Physical presence and bounded closure do
+not attest per-path commit membership. MEM-01's recorded committed contract
+foundation remains intact; MEM-02 commit/push is not asserted. Generated
+contents and ignored local configuration are intentionally not expanded.
 
 - `agents/` — 10 canonical roles: communications, knowledge-manager, marketing,
   operations, project-manager, research, reviewer, sales, social-media, and
@@ -284,10 +417,18 @@ ignored local configuration are intentionally not expanded.
   `core/`, `evals/`, `execution/`, `executors/`, `git/`, `graph/`, `host/`, `jobs/`, `memory/`,
   `notifications/`, `progress/`, `providers/`, `queue/`, `remote/`, `review/`, `retry/`,
   `scheduler/`, `storage/`, `tests/`, `tools/`, `webhooks/`, and `workers/`.
-  `runtime/memory/` is CURRENT / COMMITTED, containing `__init__.py` and
-  `contracts.py`; `runtime/tests/test_memory_foundation.py` is CURRENT / COMMITTED
-  test support. MEM-01 is CLOSED / COMMITTED at
-  `5e29cdb177838adb1682ab3b36728623d714c5e3`; no production provider or storage exists.
+  `runtime/memory/` is CURRENT: `__init__.py`, `contracts.py`, `lifecycle.py`,
+  `knowledge_adapter.py`, `validity.py`, `action_trace.py` and `integration.py`.
+  MEM-01's recorded committed foundation is `__init__.py`, `contracts.py` and
+  `runtime/tests/test_memory_foundation.py`, CLOSED / COMMITTED at
+  `5e29cdb177838adb1682ab3b36728623d714c5e3`. MEM-02 is CLOSED / READY_TO_COMMIT;
+  no per-path MEM-02 commit/push membership is asserted. CURRENT test support:
+  `test_memory_lifecycle.py`, `test_memory_knowledge_adapter.py`,
+  `test_memory_validity.py`, `test_memory_readonly_inspection.py`,
+  `test_memory_action_trace.py` and `test_memory_integration.py` under
+  `runtime/tests/`. Foreground composition lives in existing provider context
+  and CLI files; accepted Inspection lives in existing canonical owner stores.
+  No production Memory provider or durability is established; MEM-03 stays OPEN.
   `shared/memory/` stays absent / PLANNED.
   `runtime/progress/` is the CURRENT CORE-07 implementation, CLOSED / COMMITTED
   at `6bcffa4` after CORE-07R3 PASS; it contains typed/schema-validated, bounded,
@@ -330,8 +471,22 @@ ignored local configuration are intentionally not expanded.
   tokens, real IDs, and secret values are not documentation inputs.
 - `.agents/` and `.claude/` — provider-specific adapters that defer to the
   canonical agents and skills; `agent-generation/` documents adapter generation.
-- `docs/` and top-level `tests/` — physically present but empty; this audit
-  created no files or hierarchy in either directory.
+- `docs/history/PROJECT_STATE-2026-10-11.md` — byte-preserved historical state
+  snapshot added by the bounded 2026-10-11 state-layout repair; current per-path
+  commit membership is not re-attested by this task.
+  Its original source is repository-root `PROJECT_STATE.md`, 133,601 bytes,
+  SHA-256 `553c2ef7ed2019defcc064f82086b4ab1df41d4fa69816c975cf6b8696595da6`.
+  The live `PROJECT_STATE.md` remains the current-status owner; detailed
+  CORE-01–07 history is accessible through its preserved headings and archive
+  links. The immutable snapshot retains the original link text, but its 16
+  relative link occurrences do not resolve after relocation to `docs/history/`.
+  Use the working repository links in [live PROJECT_STATE.md](PROJECT_STATE.md).
+  History is not a default context input. Historical Navigation PASS and the
+  pre-edit live builder smoke are retained in Prompt 57's evidence mapping;
+  post-edit builder behavior is not freshly attested. Runtime limits and
+  historical reviewer/source bindings remain unchanged.
+- Top-level `tests/` — physically present but empty; this repair created no files
+  there.
 
 Agent = WHO. Skill = HOW. Workflow = ORDER. Provider = execution engine.
 Execution Result = WHAT HAPPENED. Eval = HOW THE RESULT / BEHAVIOR MET DECLARED
@@ -458,9 +613,9 @@ The proposed paths in the list below are PLANNED and absent from the current
 physical tree. This list records structural ownership only; implementation
 checkpoints create paths when real content exists.
 
-- MEM-02 through MEM-03: future additions under CURRENT `runtime/memory/`;
-  `shared/memory/` stays PLANNED and absent. Implemented MEM-01 files appear
-  in Current Repository Structure, not as absent target paths.
+- MEM-02B and MEM-03: future promotion/provider additions under CURRENT
+  `runtime/memory/`; `shared/memory/` stays PLANNED and absent. Implemented
+  MEM-01/MEM-02 files appear in Current Repository Structure.
 - Agents 11-14: `agents/finance-pricing/`, `agents/analytics/`,
   `agents/content/`, and `agents/design/`.
 - CAP-SEARCH-GROWTH-01: `skills/search-growth/` and
@@ -510,7 +665,8 @@ and SYNC-04A. The exception gate and accepted refinements live in
 LATER / REFERENCE; only critical implementation, security, data-loss, authority,
 architectural-consistency, or completion-correctness blockers may be evaluated
 for V1. They do not interrupt the checkpoint sequence or grant implementation
-authority. ACTIVE: None; NEXT: MEM-02 / NOT STARTED, sequence only.
+authority. ACTIVE: None; NEXT: MEM-02 commit, pending owner PowerShell Git work.
+MEM-02 is CLOSED / READY_TO_COMMIT; MEM-02B/MEM-03 remain OPEN / NOT STARTED.
 MEM-01 is CLOSED / COMMITTED at `5e29cdb177838adb1682ab3b36728623d714c5e3`.
 ORCH-01 is CLOSED / COMMITTED at `d3878081`; GOV-02 remains CLOSED / COMMITTED at `e6dbe3f`.
 GOV-01 remains CLOSED / COMMITTED at `852ec01`.

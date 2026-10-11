@@ -283,7 +283,13 @@ class TaskContractStore:
         except (OSError, ValueError, TypeError, KeyError) as error:
             raise TaskContractError("Task gate authority unavailable; recovery required") from error
 
-    def verify(self, job):
+    def verify(self, job, *, inspection=False):
+        if type(inspection) is not bool:
+            raise TaskContractError("Inspection flag must be a boolean")
+        if inspection:
+            from runtime.progress.store import readonly_inspection
+            with readonly_inspection():
+                return self.verify(job)
         initial = self._verify_creation(job)
         effective = self._gates(job, initial)
         if (self._history_gate(job, initial) != effective
@@ -374,6 +380,9 @@ class TaskContractStore:
 
     @staticmethod
     def _read(path):
+        from runtime.progress.store import inspection_active, inspection_read
+        if inspection_active():
+            return inspection_read(path)
         with path.open("rb") as handle:
             raw = handle.read(512 * 1024 + 1)
         if len(raw) > 512 * 1024:
@@ -453,12 +462,61 @@ def require_provider_tool_confinement(request, adapter):
         raise TaskContractError("Provider native tool confinement is unavailable for this task contract")
 
 
+def inspection_load(store, identity, **kwargs):
+    """Keep canonical load validation while supplying bounded immutable bytes.
+
+    Only the audited pure-read owners below are supported. A transient copy
+    receives a read-only snapshot path; the live owner and filesystem are never
+    patched. Unsupported owners require a separately scoped inspection path.
+    """
+    from copy import copy
+    from io import StringIO
+    from runtime.progress.store import inspection_active, inspection_read
+    if not inspection_active():
+        return store.load(identity, **kwargs)
+    from runtime.evals.store import FileEvalStore
+    from runtime.approvals.store import FileApprovalStore
+    from runtime.providers.artifacts import FileProviderArtifactStore
+    from runtime.actions.store import FileMutationArtifactStore
+    if type(store) not in {FileEvalStore, FileApprovalStore, FileProviderArtifactStore,
+                           FileMutationArtifactStore}:
+        raise TaskContractError("Safe inspection is unavailable for this evidence owner")
+    raw = inspection_read(store._path(identity))
+
+    class Snapshot:
+        def is_file(self):
+            return True
+
+        def read_bytes(self):
+            return raw
+
+        def read_text(self, encoding="utf-8"):
+            return raw.decode(encoding)
+
+        def open(self, mode="r", *, encoding="utf-8"):
+            if mode != "r":
+                raise TaskContractError("Evidence inspection cannot open a writable snapshot")
+            return StringIO(raw.decode(encoding))
+
+    def snapshot_path(selected):
+        if selected != identity:
+            raise TaskContractError("Evidence inspection identity changed")
+        return Snapshot()
+
+    reader = copy(store)
+    reader._path = snapshot_path
+    return reader.load(identity, **kwargs)
+
+
 def completion(runtime, job, *, verify_only=False):
     """Re-evaluate actual persisted evidence; completion itself grants nothing."""
     from runtime.actions.authorization import authorization_fingerprint
     from runtime.evals.models import EvalSpec, eval_input_digests
     from runtime.evals.runner import EvalRunner
     from runtime.evals.store import FileEvalStore
+    from runtime.progress.store import inspection_active
+    if inspection_active() and not verify_only:
+        raise TaskContractError("Inspection cannot run or persist completion evaluations")
     c = validate_binding(job)
     if not c["acceptance_criteria"]:
         raise TaskContractError("DONE requires declared task acceptance criteria")
@@ -497,7 +555,7 @@ def completion(runtime, job, *, verify_only=False):
     eval_store = FileEvalStore(runtime.store.root.parent / "evals")
     if verify_only:
         proof = job["task_completion"]
-        evaluated = eval_store.load(proof["eval_id"])
+        evaluated = inspection_load(eval_store, proof["eval_id"])
         spec_digest, execution_digest = eval_input_digests(spec, record.result.to_dict())
         if (evaluated.identity.spec_digest != spec_digest or evaluated.identity.execution_digest != execution_digest
                 or evaluated.job_id != job["job_id"] or evaluated.execution_id != record.result.execution_id
@@ -521,7 +579,7 @@ def completion(runtime, job, *, verify_only=False):
             identity = ref.split(":", 1)[1]
             if store is None or identity != record.result.execution_id:
                 raise TaskContractError("Provider deliverable is missing or belongs to another execution")
-            artifact = store.load(identity)
+            artifact = inspection_load(store, identity)
             artifact_digests[ref] = digest(artifact)
             if (type(artifact) is not dict or artifact.get("execution_id") != identity
                     or type(artifact.get("process")) is not dict
@@ -532,7 +590,7 @@ def completion(runtime, job, *, verify_only=False):
             identity = ref.split(":", 1)[1]
             if store is None or identity != record.result.execution_id:
                 raise TaskContractError("Mutation deliverable is missing or belongs to another execution")
-            artifact = store.load(identity)
+            artifact = inspection_load(store, identity)
             artifact_digests[ref] = digest(artifact)
             if type(artifact) is not dict or artifact.get("execution_id") != identity or artifact.get("job_id") != job["job_id"]:
                 raise TaskContractError("Mutation deliverable is not bound to this task")
@@ -576,6 +634,14 @@ def completion(runtime, job, *, verify_only=False):
         store = getattr(runtime, "approval_store", None)
         if store is None:
             raise TaskContractError("DONE requires the canonical approval evidence store")
+        if inspection_active():
+            from copy import copy
+            from runtime.approvals.store import FileApprovalStore
+            if type(store) is not FileApprovalStore:
+                raise TaskContractError("Safe inspection requires the canonical approval owner")
+            owner = store
+            store = copy(owner)
+            store.load = lambda identity, **kwargs: inspection_load(owner, identity, **kwargs)
         try:
             records = store.completion_evidence(job, record.result.execution_id,
                 review_ref.split(":", 1)[1] if review_ref else None,
@@ -604,7 +670,7 @@ def completion(runtime, job, *, verify_only=False):
     return eval_ref, proof
 
 
-def verify_completion(runtime, job):
+def verify_completion(runtime, job, *, inspection=False):
     """DONE is backed by immutable observations, not mutable source files.
 
     Recheck persisted execution/eval/review evidence after restart. A file may
@@ -616,6 +682,14 @@ def verify_completion(runtime, job):
     from runtime.providers.artifacts import FileProviderArtifactStore
     from runtime.actions.store import FileMutationArtifactStore
     from runtime.approvals.store import FileApprovalStore
+    from runtime.progress.store import readonly_inspection, inspection_active
+    if type(inspection) is not bool:
+        raise TaskContractError("Inspection flag must be a boolean")
+    if inspection:
+        with readonly_inspection():
+            return verify_completion(runtime, job)
+    if inspection_active() and ("graph_binding" in job or "graph_plan" in job):
+        raise TaskContractError("Graph-bound completion inspection requires outside owners")
     proof = job.get("task_completion")
     if not isinstance(proof, dict):
         raise TaskContractError("DONE has no persisted completion proof")

@@ -308,6 +308,7 @@ class FileExecutionStore:
         from runtime.execution.models import ExecutionRequest
         from runtime.core.task_contract import digest
         from runtime.progress.store import ProgressStore
+        from runtime.progress.store import inspection_active, inspection_read
         from runtime.approvals.store import FileApprovalStore
         try:
             request = ExecutionRequest.from_persisted_dict(intent["request"])
@@ -316,15 +317,23 @@ class FileExecutionStore:
             if intent != expected:
                 raise ExecutionStoreError("Decision certification/policy provenance changed")
             source = intent["authority_source"]
-            from runtime.core.task_contract import TaskContractStore
+            from runtime.core.task_contract import TaskContractStore, inspection_load
             from runtime.progress.runtime import ProgressRuntime
             from runtime.storage.file_store import FileJobStore
-            current_job = FileJobStore(Path(source["job_store_root"])).load(request.job_id)
+            job_store = FileJobStore(Path(source["job_store_root"]))
+            if inspection_active():
+                current_job = json.loads(inspection_read(job_store._path(request.job_id)))
+                if type(current_job) is not dict:
+                    raise ExecutionStoreError("Inspection job record is not an object")
+            else:
+                current_job = job_store.load(request.job_id)
             JobValidator().validate(current_job)
             tasks = TaskContractStore(Path(source["task_store_root"]),
                 progress=ProgressRuntime(Path(source["progress_store_root"])))
             tasks.verify(current_job)
             if current_job.get("graph_binding") is not None:
+                if inspection_active():
+                    raise ExecutionStoreError("Graph-bound authority inspection requires outside owners")
                 from runtime.core.jobs import JobRuntime
                 from runtime.graph.runtime import validate_graph_job
                 jobs = JobRuntime(Path(source["job_store_root"]))
@@ -350,7 +359,7 @@ class FileExecutionStore:
                 raise ExecutionStoreError("Decision job-attempt consumption is missing or tampered")
             approvals = FileApprovalStore(Path(source["approval_store_root"]))
             for ref, record in intent["approval_received"].items():
-                if approvals.load(ref.split(":", 1)[1]).to_dict() != record:
+                if inspection_load(approvals, ref.split(":", 1)[1]).to_dict() != record:
                     raise ExecutionStoreError("Decision approval evidence changed")
         except (ValueError, OSError, KeyError, TypeError) as error:
             raise ExecutionStoreError("Decision intent provenance unavailable or tampered") from error
@@ -449,7 +458,13 @@ class FileExecutionStore:
         self._write(path, record)
         return path
 
-    def load(self, execution_id: str, *, require_authority=False) -> ExecutionRecord:
+    def load(self, execution_id: str, *, require_authority=False, inspection=False) -> ExecutionRecord:
+        if type(inspection) is not bool:
+            raise ExecutionStoreError("Inspection flag must be a boolean")
+        if inspection:
+            from runtime.progress.store import readonly_inspection
+            with readonly_inspection():
+                return self.load(execution_id, require_authority=require_authority)
         value = self.load_raw(execution_id)
         if set(value) - {"schema_version", "request", "result"}:
             raise ExecutionStoreError(
@@ -504,8 +519,12 @@ class FileExecutionStore:
         if not path.is_file():
             raise ExecutionStoreError(f"Execution artifact not found: {execution_id}")
         try:
-            with path.open("r", encoding="utf-8") as handle:
-                value = json.load(handle)
+            from runtime.progress.store import inspection_active, inspection_read
+            if inspection_active():
+                value = json.loads(inspection_read(path))
+            else:
+                with path.open("r", encoding="utf-8") as handle:
+                    value = json.load(handle)
         except (OSError, ValueError, RecursionError) as error:
             raise ExecutionStoreError(
                 f"Could not read execution artifact {execution_id}: {error}"

@@ -10,6 +10,7 @@ import re
 import sys
 import threading
 from datetime import timedelta
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -29,6 +30,9 @@ from runtime.core.references import CanonicalReferenceResolver
 from runtime.evals.runner import EvalRunner, EvalRuntimeError
 from runtime.evals.store import EvalStoreError, FileEvalStore
 from runtime.executors.local import LocalExecutor
+from runtime.memory.integration import ForegroundMemoryIntegration, MemoryIntegrationError
+from runtime.memory.contracts import MemoryContractError
+from runtime.memory.action_trace import ActionTraceRequest
 from runtime.git.runtime import GitRuntime, GitRuntimeError
 from runtime.git.forge import ForgeError, GitHubCliPullRequestAdapter
 from runtime.git.remote_runtime import RemoteGitRuntime, RemoteGitRuntimeError
@@ -669,14 +673,20 @@ def build_worker(
     *,
     lease_seconds: int = 300,
     provider_environment: Mapping[str, str] | None = None,
+    memory_integration: ForegroundMemoryIntegration | None = None,
 ) -> Worker:
+    if memory_integration is not None:
+        if type(memory_integration) is not ForegroundMemoryIntegration:
+            raise MemoryIntegrationError("Trusted foreground memory composition required")
+        memory_integration.assert_root(repository_root())
     if executor_name == "provider":
         router = build_provider_router(
             repository_root(), environment=provider_environment
         )
         executor = ProviderExecutor(
             router=router,
-            context_builder=ExecutionContextBuilder(repository_root()),
+            context_builder=ExecutionContextBuilder(repository_root(), knowledge_factory=(
+                memory_integration.request_adapter if memory_integration is not None else None)),
             artifact_store=FileProviderArtifactStore(
                 execution_root / "provider-output"
             ),
@@ -701,6 +711,35 @@ def build_worker(
         approval_runtime=approvals,
         lease_seconds=lease_seconds,
     )
+
+
+def run_foreground_worker(worker, *, memory_integration=None, memory_capture=None):
+    """Optional explicit capture after run_once and its outcome journal return.
+
+    Only trusted host code supplies the selector; no CLI flag, job declaration,
+    scheduler or recovery loop can install it. Capture failure retains the real
+    worker outcome and cannot retroactively mark it failed or completed.
+    """
+    if memory_capture is not None and (type(memory_integration) is not ForegroundMemoryIntegration
+                                       or not callable(memory_capture)):
+        raise MemoryIntegrationError("Explicit foreground capture composition required")
+    outcome = worker.run_once()
+    result = outcome.to_dict()
+    if memory_capture is not None:
+        try:
+            selected = memory_capture(outcome)
+            if (type(selected) is not ActionTraceRequest or selected.job_id != outcome.job_id
+                    or selected.execution.identity != outcome.execution_id):
+                raise MemoryIntegrationError("Capture must select the returned foreground action")
+            candidates = memory_integration.capture(selected)
+            result["memory_capture"] = {"status": "captured", "candidates": [
+                asdict(candidate.to_memory_record()) for candidate in candidates]}
+        except Exception:
+            # Optional capture must not discard the returned Worker outcome.
+            # Process-control BaseExceptions still propagate; Worker execution
+            # and composition validation remain outside this local boundary.
+            result["memory_capture"] = {"status": "unavailable", "candidates": []}
+    return result
 
 
 def build_scheduler_loop(
@@ -876,9 +915,15 @@ def notification_test_event(args: argparse.Namespace, created_at: str) -> Notifi
     )
 
 
-def run(arguments: list[str] | None = None) -> int:
+def run(arguments: list[str] | None = None, *, memory_integration=None, memory_capture=None) -> int:
     args = build_parser().parse_args(arguments)
     try:
+        if memory_integration is not None or memory_capture is not None:
+            if args.resource != "worker" or type(memory_integration) is not ForegroundMemoryIntegration:
+                raise MemoryIntegrationError("Memory is available only through explicit foreground composition")
+            memory_integration.assert_root(repository_root())
+            if memory_capture is not None and not callable(memory_capture):
+                raise MemoryIntegrationError("Trusted foreground capture selector required")
         config_path = getattr(args, "command_host_config", None) or args.host_config
         host_config = load_host_config(config_path)
         if (
@@ -1399,8 +1444,10 @@ def run(arguments: list[str] | None = None) -> int:
                 approvals,
                 args.execution_root,
                 provider_environment=provider_environment,
+                memory_integration=memory_integration,
             )
-            result = worker.run_once().to_dict()
+            result = run_foreground_worker(worker, memory_integration=memory_integration,
+                                           memory_capture=memory_capture)
         elif args.command == "create":
             payload = read_json_object(args.input_path)
             if args.dry_run:
@@ -1455,6 +1502,7 @@ def run(arguments: list[str] | None = None) -> int:
             raise RuntimeError(f"Unsupported command: {args.command}")
     except (
         GraphError,
+        MemoryContractError,
         RuntimeError,
         ScheduleRuntimeError,
         ProviderConfigError,

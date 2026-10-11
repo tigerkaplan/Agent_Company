@@ -1,5 +1,172 @@
 # Agent Company TODO
 
+## MEM-02 Formal Bounded Closure - 2026-10-11
+
+- [x] Record owner-authorized Prompt 58 formal bounded closure PASS after
+  Prompt 57 READY acceptance and compatible owner-supplied dirty-worktree
+  preflight on `master`, HEAD `36d48137f601dd36a89415f343e7fb2b6cfc5820`.
+- [x] Verify accepted integration/supporting hashes and retained review/patch/
+  raw-probe references; reuse accepted evidence with original source bindings.
+- [x] Reconcile canonical current status, roadmap, backlog and physical
+  CURRENT/PLANNED DOC-TREE; preserve all historical decisions/outcomes.
+- [x] Retain same-provider disclosure, unsupported non-null mutation diff,
+  unknown truth/freshness, separate storage authority and untrusted candidates.
+- [ ] Owner PowerShell Git inspection and exact-path change-set review, followed
+  by separately authorized staging/commit. Preserve both fixture/temp directories
+  and every unrelated change. No commit or push is claimed by this closure.
+- [ ] MEM-02B promotion and MEM-03 production storage/durability remain OPEN /
+  NOT STARTED; no implementation begins here.
+
+**MEM-02: CLOSED / READY_TO_COMMIT; formal bounded closure PASS.** See the
+[closure record, applicable gates and evidence limits](PROJECT_STATE.md#mem-02-formal-bounded-closure---2026-10-11).
+ACTIVE: None. NEXT: MEM-02 commit, pending owner Git work. Earlier dated open
+items below remain historical snapshots, including the pre-closure Prompt 57
+disposition. No new test/review result, runtime approval or Git action is created.
+STOP before the owner's PowerShell Git step.
+
+## MEM-02 Full Foreground Integration Acceptance - 2026-10-11
+
+- [x] Record `AC-MEM-02-GAP40-ACCEPT-57`: owner GAP-40 ACCEPT for the current
+  four-file foreground integration; all four supplied SHA-256 identities MATCH.
+- [x] Reuse retained Review 42 (historical FAIL with 176/176 PASS and P2),
+  P2 re-review 8/8 PASS/Prompt 45 ACCEPT and repaired-M1 3/3 PASS/Prompt 53
+  ACCEPT, preserving source versions, patch bindings and historical outcomes.
+- [x] Reconcile every bounded lifecycle/retrieval/context/verification/trace
+  obligation using accepted A1-A6, assessment 56 and this full GAP-40 disposition.
+  Bounded validity and explicit supersession are ACCEPTABLE; no implementation
+  defect or named mandatory repeat validation gate remains in that scope.
+- [x] Record the manual human routing disposition with same-provider disclosure;
+  no cross-provider or automatic routing PASS. Runtime approval ID:
+  NOT_APPLICABLE. No runtime gate is inferred or resolved.
+- [x] Recover retained M1 reviewer/raw-log/within-two-file binding and historical
+  Navigation PASS; reuse Prompt 55's pre-edit live builder/cache smoke. The new
+  documentation bytes are not freshly smoke-tested; no fresh combined regression
+  coverage or repository-wide historical-manifest verification is claimed.
+- [x] Preserve unsupported non-null mutation `diff_ref` fail-closed behavior,
+  unknown truth/publisher authenticity/unsupported freshness/global completeness,
+  separate operational storage authority and untrusted candidate status.
+- [ ] Obtain the separate formal MEM-02 checkpoint closure disposition; no
+  closure is authorized here. MEM-02B promotion and MEM-03 durability remain
+  separate and excluded from this bounded acceptance package.
+
+**Bounded MEM-02 acceptance package: READY. MEM-02: OPEN / NOT CLOSED.**
+See the [current decision, exact hashes, retained evidence and full requirement
+matrix](PROJECT_STATE.md#mem-02-full-foreground-integration-acceptance---2026-10-11).
+Earlier blockers, decisions, matches and next actions below are historical
+snapshots, superseded only where this reconciliation provides evidence and
+disposition. No code edits, new files, tests/reviews, Git or deployment occur.
+
+**One next permitted action:** obtain the owner's separately scoped formal
+MEM-02 closure disposition against the reconciled bounded acceptance package.
+STOP.
+
+## MEM-02 Repaired Action Trace M1 Acceptance and Remaining Gates - 2026-10-11
+
+- [x] Record `AC-MEM-02-TRACE-M1-ACCEPT-53`: owner ACCEPT repaired M1 only;
+  both current source/test SHA-256 hashes match the accepted identities.
+- [x] Retain owner-supplied independent technical PASS, 3/3 probes, with
+  same-provider disclosure and UNKNOWN / UNVERIFIED review/scope provenance.
+  Preserve historical FIX, PASS and prior ACCEPT; no cross-provider PASS or
+  full scope proof is established.
+- [x] Record linked mutation diff as UNSUPPORTED: non-null `diff_ref` must
+  fail closed. Runtime approval ID is NOT_APPLICABLE for this ad-hoc review;
+  no runtime gate is inferred or resolved.
+- [ ] Reconcile unknown Action Trace reviewer/artifact/raw-log, role-separation,
+  routing and historical source/repair-scope provenance from retained evidence.
+- [ ] Retain wider validity/authentication/entailment/freshness,
+  supersession/conflicts, action verification/trace candidates and full approved
+  lifecycle/retrieval/context acceptance and applicable regression obligations.
+  Earlier scoped Validity/Inspection/P2/Action Trace decisions remain intact;
+  nearby PASS does not close the wider requirements.
+- [ ] Resolve existing state-layout reviewer/source and exact-current
+  live-checkout compatibility evidence gaps.
+- [ ] Formal MEM-02 owner closure remains OPEN; MEM-02B promotion and MEM-03
+  storage remain separate and excluded.
+
+**MEM-02: BLOCKED / OPEN / NOT CLOSED.** See the
+[current M1 acceptance, source hashes, limitations and reconciled blockers](PROJECT_STATE.md#mem-02-repaired-action-trace-m1-acceptance---2026-10-11).
+Earlier hash matches, gate dispositions and next actions below are historical
+snapshots; this entry supplies the current M1 disposition. No new files,
+code edits, Git, tests, reviews or deployment occur.
+
+**One next action:** reconcile retained exact-source acceptance/evidence for
+the remaining MEM-02 blockers, including unknown Action Trace review provenance
+and state-layout/live-checkout evidence, under a separately scoped documentation
+task. STOP.
+
+## MEM-02 Human Security Dispositions and Binding Gate - 2026-10-11
+
+- [x] Record the existing 2026-10-11 owner decisions confirmed by
+  `AC-MEM-02-ROUTING-DISPOSITION-47`: Validity M1/M2 scoped ACCEPT,
+  Read-Only Inspection scoped ACCEPT, Action Trace ACCEPT (Prompt 38), and
+  P2 ACCEPT (Prompt 45). Do not request the same approval again.
+- [x] Verify all twelve current source/test hashes against retained review or
+  previously accepted identities; retain same-provider technical findings and
+  historical NEEDS_HUMAN/BLOCKED outcomes without rewriting them.
+- [ ] Establish applicability and exact canonical binding for any claimed
+  formal runtime security-gate resolution. Missing: applicable job/task,
+  persisted execution/review references and canonical approved human-decision
+  artifact with exact action/fingerprint/evidence links. No runtime approval
+  ID is supplied or invented; existence of a pending runtime gate is UNKNOWN.
+- [ ] Preserve remaining full-scope acceptance, factual-entailment/freshness
+  scope, supersession/conflict, action/trace, Action Trace review provenance,
+  state-layout/live-checkout and formal closure gaps.
+
+**Scoped human decisions: RECORDED. Formal runtime resolution: UNVERIFIED /
+BLOCKED if claimed. MEM-02: BLOCKED / OPEN / NOT CLOSED.** Unbound manual
+audit decisions do not resolve runtime approval or completion state. See the
+[canonical dispositions, hashes and exact policy boundary](PROJECT_STATE.md#mem-02-scoped-human-security-dispositions---2026-10-11).
+Earlier audit records remain historical; no cross-provider PASS is claimed.
+
+**One next action:** identify existing canonical boundary/binding evidence and
+runtime-gate applicability for the claimed formal security gates. STOP.
+
+## MEM-02 P2 Acceptance and Current Remaining Gates - 2026-10-11
+
+- [x] Record `AC-MEM-02-P2-ACCEPT-45`: owner ACCEPT P2 repair only;
+  executor session `01a12a65-d4a1-7ea3-a12a-16a557c235ab`. Both accepted
+  CLI/integration-test SHA-256 identities match current files.
+- [x] Record retained REREVIEW-44 technical PASS, separate reviewer session
+  `01a12a70-f626-7282-830c-4ce3b4ef3985`: 8/8 fresh probes PASS and exact
+  two-file patch binding verified. Retain executor 2 ERROR / 23/23 PASS history.
+- [ ] Resolve P2 formal routing NEEDS_HUMAN with observed alternate-provider
+  availability and applicable fallback/escalation disposition. Same-provider
+  review is disclosed; the 206-file historical manifests remain unavailable.
+- [ ] Supply exact-source acceptance/validation mappings for validity,
+  entailment/freshness, supersession/conflicts, broader action verification,
+  trace candidates and the full lifecycle/retrieval/context scope.
+- [ ] Resolve remaining Prompt 35 review provenance and existing independent
+  state-layout/live-checkout evidence gates.
+- [ ] Formal MEM-02 owner closure remains OPEN and is outside this task.
+
+**MEM-02 readiness: BLOCKED / OPEN / NOT CLOSED.** See the
+[current P2 acceptance, hashes and precise evidence gaps](PROJECT_STATE.md#mem-02-p2-human-acceptance-and-gate-reconciliation---2026-10-11).
+Earlier acceptance and decisions remain intact. No runtime approval ID is
+created; no tests or reviews are repeated.
+**One next action:** supply the retained exact-source evidence package for the
+remaining gates, including routing and state-layout/live-checkout evidence,
+for bounded documentation reconciliation. STOP.
+
+## MEM-02 Scoped Acceptance and Remaining Gates - 2026-10-11
+
+- [x] Record the owner's ACCEPT for Action Trace Bridge, Prompt 35 only
+  (`AC-MEM-02-HUMAN-ACCEPT-38`); both supplied source hashes match current files.
+- [ ] Reconcile exact-scope evidence for validity/entailment/freshness,
+  supersession/conflicts, broader action verification and trace-derived
+  candidates, and the full lifecycle/retrieval/context acceptance scope.
+- [ ] Establish retained review provenance, role independence and applicable
+  routing/validation evidence. Same-provider review is disclosed; no
+  cross-provider PASS is established. No runtime approval ID exists for this
+  review; this documentation decision creates none.
+- [ ] Preserve the existing state-layout independent-review/live-checkout gate.
+- [ ] Formal MEM-02 owner closure remains OPEN; do not close MEM-02.
+
+See the [canonical scoped acceptance and evidence limitations](PROJECT_STATE.md#mem-02-scoped-human-acceptance---2026-10-11).
+Existing decisions and earlier checkpoint snapshots remain unchanged.
+**One next action:** supply the retained exact-source review and acceptance
+evidence for the remaining MEM-02 requirements for bounded documentation
+reconciliation. Stop before implementation, repeat validation, or closure.
+
 ## MEM-01 Current Status - 2026-10-10
 
 MEM-01 Knowledge / Memory Foundation: **CLOSED / COMMITTED** at
@@ -316,15 +483,18 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
   Owner-supplied A1-A7 / independent R03-M1 PASS and 232/232; current source
   hashes match. Limitations are recorded in PROJECT_STATE; commit and GitHub push
   are owner-verified, and the previous commit action is resolved.
-- [ ] MEM-02 Knowledge Lifecycle + Retrieval / RAG — NEXT / NOT STARTED:
+- [x] MEM-02 Knowledge Lifecycle + Retrieval / RAG — CLOSED / READY_TO_COMMIT;
+  formal bounded closure PASS under Prompt 58:
   normalized, deduplicated,
   classified, connected, evidence-backed retrieval/RAG, reranking, context
   packs, anchored/evidence-backed memory, trace-derived lessons, learning
-  constraints, selective context retention, action verification, and learning.
-- [ ] MEM-02B Learning Constraint Pipeline: promote observations to planning
+  candidates, selective context retention, supported action verification, and
+  learning from traces. Promotion to active constraints stays separate in MEM-02B.
+  See the canonical closure limitations; no commit or push is asserted.
+- [ ] MEM-02B Learning Constraint Pipeline — OPEN / NOT STARTED: promote observations to planning
   constraints only after evidence, deduplication, scoping, and review; PASS is
   not automatically a permanent rule.
-- [ ] MEM-03 Memory Providers: local provider first; Hindsight only as a future
+- [ ] MEM-03 Memory Providers — OPEN / NOT STARTED: local provider first; Hindsight only as a future
   provider behind MemoryInterface; SwarmVault/Vault Curate are references, not
   core dependencies.
 - [ ] Add canonical Agent 11 Finance & Pricing.

@@ -8,6 +8,77 @@ from contextlib import contextmanager
 from runtime.core.task_contract import default_contract
 
 
+@contextmanager
+def bounded_context_repository(*, profile="software"):
+    """Synthetic context for software fixtures, independent of checkout history.
+
+    The real resolver and builder read these explicit paths with their default
+    limits. This fixture does not certify the live checkout's operational state.
+    """
+    import tempfile
+    import json
+    from pathlib import Path
+
+    if profile not in ("software", "provider-review"):
+        raise ValueError("Unknown bounded context fixture profile")
+    files = {
+        "CONSTITUTION.md": "# Fixture Constitution\nSynthetic rules; approvals remain required.\n",
+        "AGENTS.md": "# Fixture Agents\nSynthetic operating instructions.\n",
+        "INTENT.md": "# Fixture Intent\nExercise deterministic provider behavior.\n",
+        "PROJECT_STATE.md": (
+            "# Fixture Project State\n## Current\nSynthetic current checkpoint.\n"
+            "## History\nSynthetic historical checkpoint.\n"
+        ),
+        "agents/software/ROLE.md": "# Fixture Software Role\nInspect the supplied task.\n",
+        "agents/software/GUARDRAILS.md": "# Fixture Guardrails\nPreserve scope and approvals.\n",
+        "orchestrator/workflows/software.yaml": "workflow: software\n",
+        "orchestrator/routing/agents.yaml": (
+            "canonical_agents:\n  software:\n"
+            "    role: ../../agents/software/ROLE.md\n"
+            "    guardrails: ../../agents/software/GUARDRAILS.md\n"
+        ),
+        "orchestrator/routing/capabilities.yaml": (
+            "capabilities:\n  software_implementation:\n    agent: software\n"
+        ),
+        "skills/catalog.json": "[]\n",
+    }
+    if profile == "provider-review":
+        repository = Path(__file__).resolve().parents[2]
+        # Explicit canonical assets only; operational root state stays synthetic.
+        references = (
+            "agents/software/ROLE.md", "agents/software/GUARDRAILS.md",
+            "agents/reviewer/ROLE.md", "agents/reviewer/GUARDRAILS.md",
+            "agents/project-manager/ROLE.md", "agents/project-manager/GUARDRAILS.md",
+            "orchestrator/routing/agents.yaml", "orchestrator/routing/capabilities.yaml",
+            "orchestrator/workflows/software.yaml", "orchestrator/workflows/review.yaml",
+            "orchestrator/workflows/project-continuation.yaml",
+            "skills/shared/review/SKILL.md",
+            "shared/projects/brightshore/PROJECT_STATE.md",
+            "shared/projects/brightshore/HANDOFF.md",
+            "shared/projects/brightshore/DECISIONS.md",
+            "shared/projects/brightshore/TODO.md",
+            "shared/projects/brightshore/ACTIVE_FILE_MAP.md",
+            "shared/projects/brightshore/BLOCKERS.md",
+            "shared/projects/brightshore/RISKS.md",
+            "shared/projects/brightshore/metadata.yaml",
+        )
+        for ref in references:
+            files[ref] = (repository / ref).read_text(encoding="utf-8")
+        catalog = json.loads((repository / "skills/catalog.json").read_text(encoding="utf-8"))
+        review = [entry for entry in catalog if entry["name"] == "review"]
+        if len(review) != 1 or review[0]["instructions"] != "skills/shared/review/SKILL.md":
+            raise ValueError("Expected one registered canonical review skill")
+        # Retain the registered digest; the real builder must validate it.
+        files["skills/catalog.json"] = json.dumps(review) + "\n"
+    with tempfile.TemporaryDirectory(prefix="agent-company-context-fixture-") as temporary:
+        root = Path(temporary)
+        for ref, content in files.items():
+            path = root / ref
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(content, encoding="utf-8", newline="")
+        yield root
+
+
 def declare_fixture_contract(payload):
     value = deepcopy(payload)
     if not isinstance(value, dict) or not {"task", "capability", "risk_level", "review_required"} <= set(value):
