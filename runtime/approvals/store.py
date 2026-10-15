@@ -54,6 +54,7 @@ class FileApprovalStore:
             "commit_scope",
             "remote_scope",
             "dry_run",
+            "learning_scope",
         )
         if any(
             getattr(existing, field) != getattr(request, field)
@@ -69,7 +70,15 @@ class FileApprovalStore:
         if not path.is_file():
             raise ApprovalStoreError(f"Approval request not found: {approval_id}")
         try:
-            raw = path.read_bytes()
+            from runtime.memory.learning import _BUDGET, charge
+            if _BUDGET.get() is not None:
+                from runtime.progress.store import inspection_read
+                # GOV-01 inspection_load supplies its private immutable Snapshot;
+                # use its already bounded bytes without treating it as a path.
+                raw = inspection_read(path, limit=128 * 1024) if isinstance(path, Path) else path.read_bytes()
+                charge(raw, path=path if isinstance(path, Path) else None)
+            else:
+                raw = path.read_bytes()
             value = json.loads(raw.decode("utf-8"))
         except (OSError, ValueError, RecursionError) as error:
             raise ApprovalStoreError(
@@ -187,6 +196,46 @@ class FileApprovalStore:
             )
         return self.root / f"{approval_id}.approval.json"
 
+    def _learning_path(self, project_id, name):
+        """Private operational namespace of this approval owner; never a backend."""
+        import hashlib
+        from runtime.memory.contracts import validate_memory_key
+        from runtime.memory.learning import LearningError
+        validate_memory_key(project_id, "learning")
+        if (name not in {"genesis", "index", "reservation"}
+                and re.fullmatch(r"transition-[1-9][0-9]?", name) is None):
+            raise LearningError("Invalid learning artifact name")
+        path = self.root / ".learning" / hashlib.sha256(project_id.encode()).hexdigest() / (name + ".json")
+        if any(p.is_symlink() or (hasattr(p, "is_junction") and p.is_junction()) for p in (path, *path.parents)):
+            raise LearningError("Learning owner cannot follow links")
+        return path
+
+    def _read_learning(self, project_id, name):
+        from runtime.memory.learning import read_record
+        return read_record(self._learning_path(project_id, name))
+
+    def _write_learning(self, project_id, name, value, *, replace=False):
+        from runtime.memory.learning import encoded, LearningError
+        from runtime.progress.store import inspection_active
+        if inspection_active():
+            raise LearningError("Read-only learning inspection cannot write")
+        path = self._learning_path(project_id, name)
+        raw = encoded(value)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        if not replace:
+            with path.open("xb") as handle:
+                handle.write(raw); handle.flush(); os.fsync(handle.fileno())
+            return
+        temporary_path = None
+        try:
+            with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as handle:
+                temporary_path = Path(handle.name)
+                handle.write(raw); handle.flush(); os.fsync(handle.fileno())
+            os.replace(temporary_path, path)
+        finally:
+            if temporary_path is not None and temporary_path.exists():
+                temporary_path.unlink()
+
     def _write(self, path: Path, request: ApprovalRequest) -> None:
         self.root.mkdir(parents=True, exist_ok=True)
         temporary_path: Path | None = None
@@ -215,4 +264,7 @@ class FileApprovalStore:
 
     @staticmethod
     def _encoded(request: ApprovalRequest) -> str:
-        return json.dumps(request.to_dict(), indent=2, sort_keys=True, ensure_ascii=True) + "\n"
+        result = json.dumps(request.to_dict(), indent=2, sort_keys=True, ensure_ascii=True) + "\n"
+        if request.requested_action == "SET_LEARNING_DISPOSITION" and len(result.encode("utf-8")) > 128 * 1024:
+            raise ApprovalStoreError("Learning approval record exceeds 128 KiB")
+        return result

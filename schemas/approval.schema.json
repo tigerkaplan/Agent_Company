@@ -27,53 +27,93 @@
   ],
   "allOf": [
     {
-      "if": {"properties": {"status": {"const": "PENDING"}}},
+      "if": {
+        "properties": {
+          "status": {
+            "const": "PENDING"
+          }
+        }
+      },
       "then": {
         "properties": {
-          "resolved_at": {"type": "null"},
-          "decision_reason": {"type": "null"},
-          "decided_by": {"type": "null"},
-          "decision_actor_type": {"type": "null"}
+          "resolved_at": {
+            "type": "null"
+          },
+          "decision_reason": {
+            "type": "null"
+          },
+          "decided_by": {
+            "type": "null"
+          },
+          "decision_actor_type": {
+            "type": "null"
+          }
         }
       },
       "else": {
         "properties": {
-          "resolved_at": {"type": "string", "format": "date-time"},
-          "decided_by": {"type": "string", "minLength": 1},
-          "decision_actor_type": {"const": "local_operator"}
+          "resolved_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "decided_by": {
+            "type": "string",
+            "minLength": 1
+          },
+          "decision_actor_type": {
+            "const": "local_operator"
+          }
         }
       }
     },
     {
-      "if": {"properties": {"requested_action": {"const": "EXECUTE_JOB"}}},
+      "if": {
+        "properties": {
+          "requested_action": {
+            "const": "EXECUTE_JOB"
+          }
+        }
+      },
       "then": {
         "properties": {
-          "execution_id": {"type": "null"},
-          "review_id": {"type": "null"}
+          "execution_id": {
+            "type": "null"
+          },
+          "review_id": {
+            "type": "null"
+          }
         }
       },
       "else": {
-        "if": {"properties": {"requested_action": {"const": "RESOLVE_HUMAN_CONDITION"}}},
+        "if": {
+          "properties": {
+            "requested_action": {
+              "const": "RESOLVE_HUMAN_CONDITION"
+            }
+          }
+        },
         "then": {
           "properties": {
-            "execution_id": {"type": "string", "minLength": 1},
-            "review_id": {"type": "null"}
+            "execution_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "review_id": {
+              "type": "null"
+            }
           }
         },
         "else": {
           "properties": {
-            "execution_id": {"type": "string", "minLength": 1},
-            "review_id": {"type": "string", "minLength": 1}
+            "execution_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "review_id": {
+              "type": "string",
+              "minLength": 1
+            }
           }
-        }
-      }
-    },
-    {
-      "if": {"properties": {"requested_action": {"const": "COMMIT_CHANGE_SET"}}},
-      "then": {
-        "properties": {
-          "commit_scope": {"type": "object"},
-          "remote_scope": {"type": "null"}
         }
       }
     },
@@ -81,13 +121,18 @@
       "if": {
         "properties": {
           "requested_action": {
-            "enum": ["PUSH_GIT_COMMIT", "CREATE_PULL_REQUEST"]
+            "const": "COMMIT_CHANGE_SET"
           }
         }
       },
       "then": {
         "properties": {
-          "commit_scope": {"type": "null"}
+          "commit_scope": {
+            "type": "object"
+          },
+          "remote_scope": {
+            "type": "null"
+          }
         }
       }
     },
@@ -95,54 +140,167 @@
       "if": {
         "properties": {
           "requested_action": {
-            "enum": ["EXECUTE_JOB", "COMPLETE_REVIEWED_JOB", "RESOLVE_HUMAN_CONDITION"]
+            "enum": [
+              "PUSH_GIT_COMMIT",
+              "CREATE_PULL_REQUEST"
+            ]
           }
         }
       },
       "then": {
         "properties": {
-          "commit_scope": {"type": "null"},
-          "remote_scope": {"type": "null"}
-        }
-      }
-    },
-    {
-      "if": {"properties": {"requested_action": {"const": "PUSH_GIT_COMMIT"}}},
-      "then": {
-        "properties": {
-          "remote_scope": {
-            "type": "object",
-            "required": ["push_plan_id"]
+          "commit_scope": {
+            "type": "null"
           }
         }
       }
     },
     {
-      "if": {"properties": {"requested_action": {"const": "CREATE_PULL_REQUEST"}}},
+      "if": {
+        "properties": {
+          "requested_action": {
+            "enum": [
+              "EXECUTE_JOB",
+              "COMPLETE_REVIEWED_JOB",
+              "RESOLVE_HUMAN_CONDITION"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "commit_scope": {
+            "type": "null"
+          },
+          "remote_scope": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "requested_action": {
+            "const": "PUSH_GIT_COMMIT"
+          }
+        }
+      },
       "then": {
         "properties": {
           "remote_scope": {
             "type": "object",
-            "required": ["pull_request_plan_id"]
+            "required": [
+              "push_plan_id"
+            ]
           }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "requested_action": {
+            "const": "CREATE_PULL_REQUEST"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "remote_scope": {
+            "type": "object",
+            "required": [
+              "pull_request_plan_id"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "requested_action": {
+            "const": "SET_LEARNING_DISPOSITION"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "learning_scope"
+        ],
+        "properties": {
+          "execution_mode": {
+            "const": "READ_ONLY"
+          },
+          "execution_scope": {
+            "type": "null"
+          },
+          "commit_scope": {
+            "type": "null"
+          },
+          "remote_scope": {
+            "type": "null"
+          },
+          "dry_run": {
+            "const": false
+          }
+        }
+      },
+      "else": {
+        "not": {
+          "required": [
+            "learning_scope"
+          ]
         }
       }
     }
   ],
   "properties": {
-    "schema_version": {"type": "integer", "const": 1},
-    "approval_id": {"type": "string", "minLength": 1},
-    "job_id": {"type": "string", "minLength": 1},
-    "execution_id": {"type": ["string", "null"]},
-    "review_id": {"type": ["string", "null"]},
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "approval_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "job_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "execution_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "review_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
     "status": {
       "type": "string",
-      "enum": ["PENDING", "APPROVED", "REJECTED"]
+      "enum": [
+        "PENDING",
+        "APPROVED",
+        "REJECTED"
+      ]
     },
-    "reason": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
     "risk_level": {
       "type": "string",
-      "enum": ["low", "medium", "high", "approval_required"]
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "approval_required"
+      ]
     },
     "requested_action": {
       "type": "string",
@@ -152,24 +310,40 @@
         "RESOLVE_HUMAN_CONDITION",
         "COMMIT_CHANGE_SET",
         "PUSH_GIT_COMMIT",
-        "CREATE_PULL_REQUEST"
+        "CREATE_PULL_REQUEST",
+        "SET_LEARNING_DISPOSITION"
       ]
     },
     "evidence_refs": {
       "type": "array",
       "maxItems": 64,
-      "items": {"$ref": "job.schema.json#/$defs/ref"}
+      "items": {
+        "$ref": "job.schema.json#/$defs/ref"
+      }
     },
-    "requested_at": {"type": "string", "format": "date-time"},
+    "requested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
     "execution_mode": {
       "type": "string",
-      "enum": ["READ_ONLY", "CONTROLLED_WRITE"]
+      "enum": [
+        "READ_ONLY",
+        "CONTROLLED_WRITE"
+      ]
     },
-    "dry_run": {"type": "boolean", "default": false},
+    "dry_run": {
+      "type": "boolean",
+      "default": false
+    },
     "execution_scope": {
       "oneOf": [
-        {"type": "null"},
-        {"$ref": "job.schema.json#/$defs/execution_scope"}
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "job.schema.json#/$defs/execution_scope"
+        }
       ]
     },
     "authorization_fingerprint": {
@@ -178,7 +352,9 @@
     },
     "commit_scope": {
       "oneOf": [
-        {"type": "null"},
+        {
+          "type": "null"
+        },
         {
           "type": "object",
           "additionalProperties": false,
@@ -191,43 +367,98 @@
             "commit_message"
           ],
           "properties": {
-            "change_set_id": {"type": "string", "minLength": 1},
-            "repository_root": {"type": "string", "minLength": 1},
-            "base_head": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+            "change_set_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "repository_root": {
+              "type": "string",
+              "minLength": 1
+            },
+            "base_head": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{40}$"
+            },
             "changed_files": {
               "type": "array",
               "minItems": 1,
               "maxItems": 100,
-              "items": {"type": "string", "minLength": 1}
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
             },
-            "diff_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
-            "commit_message": {"type": "string", "minLength": 1, "maxLength": 200}
+            "diff_fingerprint": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "commit_message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
           }
         }
       ]
     },
     "remote_scope": {
       "oneOf": [
-        {"type": "null"},
+        {
+          "type": "null"
+        },
         {
           "type": "object",
           "additionalProperties": false,
           "required": [
-            "push_plan_id", "change_set_id", "repository_root", "commit_hash",
-            "remote_name", "remote_url_display", "remote_url_fingerprint", "remote_branch",
+            "push_plan_id",
+            "change_set_id",
+            "repository_root",
+            "commit_hash",
+            "remote_name",
+            "remote_url_display",
+            "remote_url_fingerprint",
+            "remote_branch",
             "expected_remote_head"
           ],
           "properties": {
-            "push_plan_id": {"type": "string", "minLength": 1},
-            "change_set_id": {"type": "string", "minLength": 1},
-            "repository_root": {"type": "string", "minLength": 1},
-            "commit_hash": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
-            "remote_name": {"type": "string", "minLength": 1},
-            "remote_url_display": {"type": "string", "minLength": 1},
-            "remote_url_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
-            "remote_branch": {"type": "string", "minLength": 1, "maxLength": 200},
+            "push_plan_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "change_set_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "repository_root": {
+              "type": "string",
+              "minLength": 1
+            },
+            "commit_hash": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{40}$"
+            },
+            "remote_name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "remote_url_display": {
+              "type": "string",
+              "minLength": 1
+            },
+            "remote_url_fingerprint": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "remote_branch": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
             "expected_remote_head": {
-              "type": ["string", "null"],
+              "type": [
+                "string",
+                "null"
+              ],
               "pattern": "^[a-f0-9]{40}$"
             }
           }
@@ -236,31 +467,89 @@
           "type": "object",
           "additionalProperties": false,
           "required": [
-            "pull_request_plan_id", "push_evidence_id", "repository_slug",
-            "head_branch", "base_branch", "head_commit", "title",
+            "pull_request_plan_id",
+            "push_evidence_id",
+            "repository_slug",
+            "head_branch",
+            "base_branch",
+            "head_commit",
+            "title",
             "body_fingerprint"
           ],
           "properties": {
-            "pull_request_plan_id": {"type": "string", "minLength": 1},
-            "push_evidence_id": {"type": "string", "minLength": 1},
-            "repository_slug": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
-            "head_branch": {"type": "string", "minLength": 1, "maxLength": 200},
-            "base_branch": {"type": "string", "minLength": 1, "maxLength": 200},
-            "head_commit": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
-            "title": {"type": "string", "minLength": 1, "maxLength": 256},
-            "body_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+            "pull_request_plan_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "push_evidence_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "repository_slug": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+            },
+            "head_branch": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "base_branch": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "head_commit": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{40}$"
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "body_fingerprint": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
           }
         }
       ]
     },
-    "resolved_at": {"type": ["string", "null"], "format": "date-time"},
-    "decision_reason": {"type": ["string", "null"], "maxLength": 2000},
-    "decided_by": {"type": ["string", "null"], "maxLength": 200},
+    "resolved_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "decision_reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 2000
+    },
+    "decided_by": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200
+    },
     "decision_actor_type": {
       "oneOf": [
-        {"type": "string", "const": "local_operator"},
-        {"type": "null"}
+        {
+          "type": "string",
+          "const": "local_operator"
+        },
+        {
+          "type": "null"
+        }
       ]
+    },
+    "learning_scope": {
+      "$ref": "learning-disposition.schema.json"
     }
   }
 }

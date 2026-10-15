@@ -1,5 +1,54 @@
 # Agent Company TODO
 
+## MEM-02B Formal Acceptance - 2026-10-15
+
+- [x] Verify the six retained Package 107 PASS gates and current source/run bindings.
+- [x] Retain separate-session REVIEW-113, owner routing disposition ROUTING-115,
+  and explicit owner formal acceptance recorded in ACCEPTANCE-116.
+- [x] Reconcile acceptance across the existing four-document Master Context while
+  preserving historical failures, ROOT_CAUSE_UNKNOWN and same-provider disclosure;
+  alternate-provider availability remains UNKNOWN.
+- [x] Record owner-authorized bounded MEM-02B closure under CLOSURE-119 after
+  independent REVIEW-118 CLOSURE_READY; preserve all acceptance boundaries.
+- [ ] Review the exact change set for any separately authorized staging/commit;
+  no commit or push is approved by acceptance or documentation reconciliation.
+
+Evidence: `E:\Software\Agent_Company_Handoff\MEM-02B\ACCEPTANCE-116-20261015`.
+Closure evidence: `E:\Software\Agent_Company_Handoff\MEM-02B\CLOSURE-119-20261015\CLOSURE-119.md`.
+MEM-02B is FORMALLY ACCEPTED / CLOSED / UNCOMMITTED. Earlier dated tasks
+below retain historical meaning; Git requires separate authorization.
+MEM-03 and later work remain planned; DESIGN-99 remains DEFERRED.
+
+## MEM-02B FIX-69-R2 - 2026-10-12
+
+- [x] Recover the original independent REVIEW-68 findings; verify accepted
+  contracts and all 370 R1 final-source entries without Git or unexplained drift.
+- [x] Retain R1 failures and repair JSON-encoding credential redaction; preserve
+  bounded evidence/counterevidence packaging and Manager's fail-closed denial.
+- Read the fresh FIX-69-R2 source/run manifest for actual executor results and
+  remaining gates; prior failures are not erased by later validation.
+- [ ] Obtain fresh owner PowerShell Git-dependent report-runner and diff evidence
+  bound to final source; preserve all original GATES-67 and GOV-02 histories.
+- [ ] Commission independent re-review through a separately authorized work order.
+- [ ] Owner acceptance/closure and any Git lifecycle remain separate and OPEN.
+
+No independent re-review, closure, cleanup, staging, commit or push follows R2.
+
+## MEM-02B BUILD-64 - 2026-10-11
+
+- [x] Complete bounded executor learning 33/33, affected 191/191, focused 428/428,
+  compatibility 5/5 and native schema/static validation; see PROJECT_STATE evidence.
+- [x] Retain actual results, earlier failures/interruption, tested source hashes
+  and mandatory unrun gates separately; no full-suite or independent PASS claimed.
+- Obtain owner-run Git-dependent affected/focused/complete full GOV-02 regression
+  and whitespace evidence; the agent must execute no Git, including fixtures.
+- Commission separate independent source/evidence review and adversarial probes.
+- Leave owner closure, staging, commit, push and later phases pending separate work.
+
+All next actions are manual. Preserve both untracked evidence directories and
+dated closure records. BUILD-64 stops before independent review; no real learning
+disposition operation is performed.
+
 ## Post-MEM-02 Commit Reconciliation - 2026-10-11
 
 - [x] Record owner-verified MEM-02 CLOSED / COMMITTED / PUSHED, HEAD
@@ -509,7 +558,9 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
   learning from traces. Promotion to active constraints stays separate in MEM-02B.
   See the canonical closure limitations; owner-verified HEAD
   `22c9d37b503d3eea242eb6cc35041efdaac0a4d5` resolves the previous commit action.
-- [ ] MEM-02B Learning Constraint Pipeline — NEXT / NOT STARTED: promote observations to planning
+- [x] MEM-02B Learning Constraint Pipeline — CLOSED / UNCOMMITTED under CLOSURE-119;
+  exact-change-set review and Git lifecycle remain separately authorized:
+  promote observations to planning
   constraints only after evidence, deduplication, scoping, and review; PASS is
   not automatically a permanent rule.
 - [ ] MEM-03 Memory Providers — PLANNED / NOT STARTED: local provider first; Hindsight only as a future

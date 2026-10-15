@@ -1,5 +1,22 @@
 # Approval Policy
 
+## MEM-02B learning and planning
+
+Only exact canonical local-operator SET_LEARNING_DISPOSITION resolution authorizes
+PROMOTE, REVOKE or SUPERSEDE. Complete proposal/evidence/review/preparation/scope/
+policy/genesis/index bindings are fingerprinted. Completion, provider text, memory
+metadata and callbacks returning True do not approve dispositions. Operator labels
+remain self-asserted. Existing approval and job completion rules are unchanged.
+
+Manager must explicitly install the canonical foreground learning interface,
+select for an exact project/root/task/workflow/agent/capability/conditions request,
+then revalidate immediately before plan acceptance and every dependent reuse.
+Changed/uncertain bindings hold affected use for Manager reassessment. Constraints
+restrict or inform existing authority; they cannot widen permissions, override
+human instructions, change acceptance criteria, cancel jobs, or authorize
+execution/writes/Git/retries/continuation/recovery. No automatic promotion, repair,
+replay or predecessor reactivation is permitted.
+
 This policy identifies actions that must stop for human approval before execution. It relies on the shared governance in `../../CONSTITUTION.md` and `../../AGENTS.md`.
 
 ## Human Approval Required

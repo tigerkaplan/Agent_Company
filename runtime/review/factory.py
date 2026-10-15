@@ -22,18 +22,20 @@ def build_reviewer_runtime(
     execution_root: Path,
     router: ProviderRouter,
     compute_policy: ComputePolicy | None = None,
+    *, learning=None,
 ) -> ReviewerRuntime:
     execution_store = FileExecutionStore(execution_root)
     provider_store = FileProviderArtifactStore(execution_root / "provider-output")
     mutation_store = FileMutationArtifactStore(execution_root / "mutations")
     return ReviewerRuntime(
-        verifier=DeterministicVerifier(execution_store, provider_store, mutation_store),
+        verifier=DeterministicVerifier(execution_store, provider_store, mutation_store, learning=learning),
         context_builder=ReviewContextBuilder(
             repository_root,
             execution_store,
             provider_store,
             mutation_store,
             FileRemoteGitArtifactStore(execution_root / "git"),
+            learning=learning,
         ),
         reviewer=ProviderBackedReviewer(router),
         store=FileReviewStore(execution_root / "reviews"),

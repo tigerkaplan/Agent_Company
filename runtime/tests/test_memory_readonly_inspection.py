@@ -26,6 +26,20 @@ from runtime.tests import test_task_contract as task_fixtures
 from runtime.tests import test_task_contract_f1 as approval_fixtures
 
 
+class LearningArtifactReadBoundaryTests(unittest.TestCase):
+    def test_oversized_learning_artifact_is_denied_before_any_mutation(self):
+        from runtime.approvals.store import FileApprovalStore
+        from runtime.memory.learning import learning_inspection
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            store = FileApprovalStore(root / "approvals")
+            path = store._learning_path("alpha", "genesis")
+            path.parent.mkdir(parents=True)
+            path.write_bytes(b"x" * (128 * 1024 + 1))
+            with no_persistent_mutations(self, root), learning_inspection(), self.assertRaises(ValueError):
+                store._read_learning("alpha", "genesis")
+
+
 def filesystem_snapshot(root):
     """Include names, bytes, identities and modification times, including dirs.
 

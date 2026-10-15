@@ -9,7 +9,7 @@ import unittest
 from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, Mock, patch
 
 from runtime.actions.runtime import ControlledWriteRuntime
 from runtime.actions.store import FileMutationArtifactStore
@@ -84,9 +84,9 @@ class RetryRepairTests(RetryHarness, unittest.TestCase):
                 executor = ResultExecutor(hold=True)
                 first = self.worker(executor)
                 with ThreadPoolExecutor(max_workers=8) as pool:
-                    active = pool.submit(first.run_claimed, claimed["job_id"])
-                    self.assertTrue(executor.entered.wait(10))
                     try:
+                        active = pool.submit(first.run_claimed, claimed["job_id"])
+                        self.assertTrue(executor.entered.wait(10))
                         duplicates = list(pool.map(lambda _: self.worker(executor).run_claimed(claimed["job_id"]), range(7)))
                         self.assertTrue(all(outcome.status == "execution_reserved" for outcome in duplicates))
                     finally:
@@ -524,6 +524,77 @@ print(json.dumps(worker.run_claimed(job_id).to_dict()))
                 changed = deepcopy(request)
                 changed["retry_repair_scope"][field] = value
                 ExecutionRequest.from_persisted_dict(changed)
+
+
+class RetryCleanupTests(unittest.TestCase):
+    """Inject failures into the real stress method without starting worker threads."""
+
+    def check_failure_cleanup(self, phase, *, duplicate_assertion=False):
+        case = RetryRepairTests("test_f1_concurrent_direct_delivery_stress_calls_executor_once")
+        executor = ResultExecutor(hold=True)
+        pool, active = MagicMock(), Mock()
+        pool.__enter__.return_value = pool
+        pool.submit.return_value = active
+        pool.map.return_value = [Mock(status="execution_reserved") for _ in range(7)]
+        release_at_shutdown = []
+
+        def shutdown(*exc):
+            release_at_shutdown.append(executor.release.is_set())
+            return False
+
+        pool.__exit__.side_effect = shutdown
+        failure = TimeoutError("Injected result timeout") if phase == "timeout" else RuntimeError("Injected delivery failure")
+        expected = AssertionError if phase == "entry" or duplicate_assertion else type(failure)
+        if phase == "submission":
+            pool.submit.side_effect = failure
+        elif phase == "duplicates":
+            if duplicate_assertion:
+                pool.map.return_value = [Mock(status="worker_error") for _ in range(7)]
+            else:
+                pool.map.side_effect = failure
+        elif phase == "timeout":
+            active.result.side_effect = failure
+
+        with patch.object(case, "retry_claim", return_value=(None, {"job_id": "cleanup-retry"})), \
+                patch.object(case, "worker", return_value=Mock()), \
+                patch(f"{__name__}.ResultExecutor", return_value=executor), \
+                patch(f"{__name__}.ThreadPoolExecutor", return_value=pool) as factory, \
+                patch.object(executor.entered, "wait", return_value=phase != "entry") as entered:
+            with self.assertRaises(expected) as caught:
+                case.test_f1_concurrent_direct_delivery_stress_calls_executor_once()
+
+        factory.assert_called_once_with(max_workers=8)
+        self.assertEqual(release_at_shutdown, [True])
+        self.assertTrue(executor.release.is_set())
+        if expected is not AssertionError:
+            self.assertIs(caught.exception, failure)
+        if phase == "submission":
+            entered.assert_not_called()
+        else:
+            entered.assert_called_once_with(10)
+        if phase in {"entry", "submission"}:
+            pool.map.assert_not_called()
+        else:
+            pool.map.assert_called_once()
+            self.assertEqual(list(pool.map.call_args.args[1]), list(range(7)))
+        if phase == "timeout":
+            active.result.assert_called_once_with(timeout=10)
+        else:
+            active.result.assert_not_called()
+
+    def test_entry_failure_signals_release_before_shutdown(self):
+        self.check_failure_cleanup("entry")
+
+    def test_submission_failure_signals_release_before_shutdown(self):
+        self.check_failure_cleanup("submission")
+
+    def test_duplicate_failure_signals_release_before_shutdown(self):
+        for assertion in (False, True):
+            with self.subTest(assertion=assertion):
+                self.check_failure_cleanup("duplicates", duplicate_assertion=assertion)
+
+    def test_result_timeout_preserves_error_and_signals_release(self):
+        self.check_failure_cleanup("timeout")
 
 
 if __name__ == "__main__":

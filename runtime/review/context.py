@@ -26,12 +26,14 @@ class ReviewContextBuilder:
         provider_artifact_store: FileProviderArtifactStore,
         mutation_artifact_store: FileMutationArtifactStore | None = None,
         git_artifact_store: FileGitArtifactStore | None = None,
+        learning=None,
     ) -> None:
         self.repository_root = Path(repository_root).resolve()
         self.execution_store = execution_store
         self.provider_artifact_store = provider_artifact_store
         self.mutation_artifact_store = mutation_artifact_store
         self.git_artifact_store = git_artifact_store
+        self.learning = learning
 
     def build(
         self,
@@ -75,6 +77,16 @@ class ReviewContextBuilder:
         ).build(context_request).context
 
         evidence: list[ReviewEvidence] = []
+        if self.learning is not None:
+            from runtime.memory.learning import LearningReviewInterface, coverage_name, package_coverage_name
+            if type(self.learning) is not LearningReviewInterface:
+                raise ValueError("Canonical learning review port required")
+            value, ref, content = self.learning.evidence(job, request)
+            if (not any(c.name == coverage_name(value) and c.status == "PASS" for c in verification.checks)
+                    or not any(c.name == package_coverage_name(value, content) and c.status == "PASS"
+                               for c in verification.checks)):
+                raise ValueError("Learning review package lacks complete deterministic coverage")
+            evidence.append(ReviewEvidence(ref=ref, content=content))
         try:
             execution_record = self.execution_store.load(result.execution_id, require_authority=True)
         except ExecutionStoreError:

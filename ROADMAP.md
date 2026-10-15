@@ -1,5 +1,59 @@
 # Agent Company Roadmap
 
+## MEM-02B Formal Acceptance - 2026-10-15
+
+AC-MEM-02B-CLOSURE-PREP-116 records explicit owner formal acceptance of the
+bounded MEM-02B implementation, FIX-80 credential correction and FIX-101 cleanup.
+Status: **FORMALLY ACCEPTED / RECONCILIATION RECORDED / CLOSED / UNCOMMITTED**.
+Bounded closure recorded under owner-authorized AC-MEM-02B-CLOSURE-119 after
+REVIEW-118 CLOSURE_READY. Closure evidence: `E:\Software\Agent_Company_Handoff\MEM-02B\CLOSURE-119-20261015\CLOSURE-119.md`.
+Closure grants no staging, commit, push or next-checkpoint authority.
+The separate-session REVIEW-113 product finding and owner routing disposition
+ROUTING-115 support acceptance. Same-provider review is OpenAI / Codex;
+alternate-provider availability remains UNKNOWN. Historical REVIEW-113 BLOCKED
+and REVIEW-114 NEEDS_HUMAN verdicts remain unchanged.
+
+All six retained Package 107 owner gates PASS: targeted 100/100, affected 158/158,
+focused 845 observations/835 distinct IDs, Full 1729/1719, schema/static
+202 Python/36 schemas/17 certificates, and Diff exit 0 with 20 permitted warnings.
+Package manifest SHA-256: `ca90aed32075b2e78b4c14fb87076dc6f1ebf587b5c66652770c3ec4bbe2e1a7`.
+Owner ledger SHA-256: `a017435b19ee9f99ba801d1e85e2317612ba8691e753913f3978608dd796e192`.
+Evidence: `E:\Software\Agent_Company_Handoff\MEM-02B\ACCEPTANCE-116-20261015\ACCEPTANCE-116.md`.
+No tests were rerun for acceptance recording or this documentation reconciliation.
+
+Historical 1725-test Full failure, FIX-101 repetition-8 timeout, credential and
+cleanup reproduction failures, all warning/duplicate evidence and diagnostic
+limitations remain retained. ROOT_CAUSE_UNKNOWN; DESIGN-99 remains DEFERRED.
+Same-provider blind spots, absence of fresh REVIEW-113 runtime probes, worker
+shutdown waits and trusted-filesystem/durability limits remain disclosed.
+Acceptance does not authorize a learning disposition, automatic promotion,
+execution, retry, Git action, deployment or later-phase implementation.
+Earlier dated entries below retain historical meaning. The accepted source is
+the working tree on master at baseline HEAD
+`92460248344906e5388fbe02e06b6e793187bcb5`; it is not committed at that HEAD.
+Only these four documentation files differ from the accepted 757-pin snapshot;
+the old sealed run evidence remains unchanged and the other 753 pins were
+verified unchanged for CLOSURE-119. Gates remain bound to their historical source.
+
+## MEM-02B FIX-69-R2 - 2026-10-12
+
+MEM-02B remains ACTIVE / ACCEPTANCE FIX / CLOSURE OPEN. Bounded review-body,
+coverage, planning-hold and credential-redaction repairs use the accepted 33-path
+scope. See [current repair and evidence boundary](PROJECT_STATE.md#mem-02b-fix-69-r2---2026-10-12).
+Fresh source-bound executor results do not replace independent REVIEW-68, owner
+Git-dependent gates or closure. Prior dated entries remain historical; no later
+phase or automatic action is authorized.
+
+## MEM-02B BUILD-64 - 2026-10-11
+
+MEM-02B is ACTIVE / IMPLEMENTED / BOUNDED EXECUTOR VALIDATION PASS / MANDATORY GATES PENDING / UNCOMMITTED
+under owner-approved Authority-62, Scope-63 and BUILD-64. Exact 33-path scope and
+bounded capacities apply. See [current evidence and stop boundary](PROJECT_STATE.md#mem-02b-build-64---2026-10-11).
+Independent review, complete GOV-02 gates and owner closure remain pending.
+Existing completion/execution/storage/graph contracts, V1 freeze and dependencies
+remain unchanged. MEM-03, Obsidian, DEC-01/02 and agents 11-14 remain planned.
+No automatic next action, independent review or Git lifecycle follows BUILD-64.
+
 ## Post-MEM-02 Commit Reconciliation - 2026-10-11
 
 `AC-POST-MEM02-RECONCILE-60` records owner-verified **MEM-02 CLOSED /
@@ -418,7 +472,9 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
 - MEM-02 Knowledge Lifecycle + Retrieval / RAG: CLOSED / COMMITTED / PUSHED;
   formal bounded closure PASS; owner-verified HEAD
   `22c9d37b503d3eea242eb6cc35041efdaac0a4d5`.
-- MEM-02B Learning Constraint Pipeline: NEXT / NOT STARTED.
+- MEM-02B Learning Constraint Pipeline: CLOSED / UNCOMMITTED under CLOSURE-119;
+  formal ACCEPTANCE-116, retained owner gates PASS and separate-session
+  review/routing evidence preserved. Git remains separately authorized.
 - MEM-03 Memory Providers: PLANNED / NOT STARTED.
 - Phase 8E: PAUSED / BLOCKED; no VPS has been created or deployed. Hostinger is
   preferred, with paid procurement deferred until near V1 completion and still
@@ -445,17 +501,17 @@ serious inconsistency / completion correctness issue? YES -> evaluate for V1;
 NO -> POST-V1 / LATER / REFERENCE. Later ideas must not interrupt the checkpoint
 sequence or expand the existing Canonical V1 Definition below.
 
-One ACTIVE and one NEXT checkpoint slot: ACTIVE = None;
-NEXT = MEM-02B / NOT STARTED — Learning Constraint Pipeline, sequence only.
+One ACTIVE and one NEXT checkpoint slot: ACTIVE = None; MEM-02B CLOSED / UNCOMMITTED.
+NEXT = separately authorized MEM-02B exact-change-set review and commit.
 MEM-02 is CLOSED / COMMITTED / PUSHED under the owner-verified post-commit
-record; MEM-03 remains PLANNED / NOT STARTED. No next implementation is authorized.
+record; MEM-03 remains PLANNED / NOT STARTED. No later implementation is authorized.
 MEM-01 is CLOSED / COMMITTED at `5e29cdb177838adb1682ab3b36728623d714c5e3`.
 GOV-01 remains CLOSED / COMMITTED at `852ec01`; GOV-02 is CLOSED / COMMITTED
 at `e6dbe3f`; ORCH-01 is CLOSED / COMMITTED at `d3878081`.
 CORE-11 is CLOSED / COMMITTED at `8bda7eb` after Independent Re-review R2 PASS. Lifecycle remains IMPLEMENT -> INDEPENDENT
 REVIEW -> BOUNDED FIX if required -> RE-REVIEW -> CLOSURE -> COMMIT -> NEXT.
 Core Runtime Foundation = COMPLETE. GOV-01 is CLOSED / COMMITTED at `852ec01`;
-no next implementation is authorized or started by this reconciliation.
+no later implementation is authorized by BUILD-64.
 
 ### Durable Instruction And Learning Ownership
 
@@ -866,7 +922,9 @@ State is what is happening now. These remain separate.
   truth/authenticity/unsupported freshness remain UNKNOWN, non-null mutation
   `diff_ref` remains unsupported and fails closed. Commit/push and HEAD
   `22c9d37b503d3eea242eb6cc35041efdaac0a4d5` are owner-verified.
-- MEM-02B — Learning Constraint Pipeline: NEXT / NOT STARTED; observation -> candidate lesson ->
+- MEM-02B — Learning Constraint Pipeline: CLOSED / UNCOMMITTED under CLOSURE-119;
+  retained validation, independent review, owner acceptance and closure remain distinct.
+  observation -> candidate lesson ->
   evidence -> deduplication -> scope -> validation/review -> promotion -> active
   planning constraint. A PASS does not automatically become a permanent rule.
 - MEM-03 — Memory Providers: PLANNED / NOT STARTED; local provider first. Hindsight is only a future
@@ -1197,7 +1255,10 @@ local inference, and fine-tuning stay POST-V1; planned folders stay absent.
 - MEM-01 contracts are CURRENT / COMMITTED, CLOSED / COMMITTED at
   `5e29cdb177838adb1682ab3b36728623d714c5e3`.
 - MEM-02 is CLOSED / COMMITTED / PUSHED at the owner-verified HEAD above.
-- MEM-02B/03, agents 11-14, CAP-SOC-01 and other specifically planned
+- MEM-02B is formally accepted within the bounded Authority-62 / Scope-63 scope,
+  with six owner PASS gates, separate-session REVIEW-113, ROUTING-115 and explicit
+  ACCEPTANCE-116. CLOSURE-119 records bounded closure; work is UNCOMMITTED. MEM-03, agents 11-14,
+  CAP-SOC-01 and other specifically planned
   capability expansion, advanced Code Intelligence, Phase 9, Decision
   Engine/JEV, and Phase 10 remain planned and unimplemented as described above.
 - The SYNC-06 R4/R2 refinements are documentation mappings, not implemented

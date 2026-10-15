@@ -34,6 +34,12 @@ from runtime.tests.test_continuation import Reviewer
 from runtime.workers.worker import Worker
 
 
+class LearningForegroundInstallationTests(unittest.TestCase):
+    def test_memory_opt_in_cannot_install_a_caller_selected_learning_owner(self):
+        from runtime.memory.integration import install_learning_planning
+        with self.assertRaises(ValueError): install_learning_planning(lambda *args: True)
+
+
 class MemoryIntegrationTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()

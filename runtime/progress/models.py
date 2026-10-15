@@ -46,7 +46,7 @@ class ProgressEvent:
                 or self.evidence_id is None or len(self.evidence_id) != 64
                 or any(character not in "0123456789abcdef" for character in self.evidence_id)):
             raise ProgressError("Task gate observations require bounded canonical evidence")
-        if self.event_type in {"decision_intent_observed", "decision_result_observed", "decision_review_observed", "decision_consumption_observed"} and (
+        if (self.event_type.startswith("learning_") or self.event_type in {"decision_intent_observed", "decision_result_observed", "decision_review_observed", "decision_consumption_observed"}) and (
                 self.execution_id is None or self.evidence_id is None
                 or len(self.evidence_id) != 64
                 or any(c not in "0123456789abcdef" for c in self.evidence_id)

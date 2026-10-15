@@ -33,6 +33,24 @@ from runtime.workers.worker import Worker
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
 
+class LearningLegacyApprovalBytesTests(unittest.TestCase):
+    def test_legacy_serialization_excludes_learning_and_rejects_even_null_scope(self):
+        expected = {"schema_version": 1, "approval_id": "approval-legacy", "job_id": "job-legacy",
+            "execution_id": None, "review_id": None, "status": "PENDING", "reason": "Legacy exact execution",
+            "risk_level": "low", "requested_action": "EXECUTE_JOB", "evidence_refs": [],
+            "requested_at": "2026-10-11T00:00:00Z", "execution_mode": "READ_ONLY", "execution_scope": None,
+            "authorization_fingerprint": "0" * 64, "commit_scope": None, "remote_scope": None,
+            "dry_run": False, "resolved_at": None, "decision_reason": None, "decided_by": None,
+            "decision_actor_type": None}
+        request = ApprovalRequest.from_dict(expected)
+        self.assertEqual(FileApprovalStore._encoded(request), json.dumps(expected, indent=2, sort_keys=True, ensure_ascii=True) + "\n")
+        with self.assertRaises(ValueError): ApprovalRequest.from_dict({**expected, "learning_scope": None})
+        from runtime.core.validation import JobValidator
+        validator = JobValidator(REPOSITORY_ROOT / "schemas/approval.schema.json")
+        validator.validate(expected)
+        with self.assertRaises(ValueError): validator.validate({**expected, "learning_scope": None})
+
+
 class DeterministicClock:
     def __init__(self) -> None:
         self.current = datetime(2026, 9, 22, 12, 0, tzinfo=timezone.utc)

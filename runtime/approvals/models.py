@@ -14,6 +14,7 @@ from runtime.git.remote_models import REMOTE_ACTIONS, remote_authorization_finge
 
 APPROVAL_STATUSES = {"PENDING", "APPROVED", "REJECTED"}
 REQUESTED_ACTIONS = {
+    "SET_LEARNING_DISPOSITION",
     "EXECUTE_JOB",
     "COMPLETE_REVIEWED_JOB",
     "RESOLVE_HUMAN_CONDITION",
@@ -85,8 +86,11 @@ class ApprovalRequest:
     decision_reason: str | None = None
     decided_by: str | None = None
     decision_actor_type: str | None = None
+    learning_scope: dict[str, Any] | None = None
 
     def __post_init__(self) -> None:
+        if self.requested_action != "SET_LEARNING_DISPOSITION" and self.learning_scope is not None:
+            raise ApprovalContractError("Existing approval actions cannot contain learning scope")
         if not self.approval_id or not self.job_id or not self.requested_at:
             raise ApprovalContractError("Approval request IDs and timestamp are required")
         if self.status not in APPROVAL_STATUSES:
@@ -158,6 +162,22 @@ class ApprovalRequest:
                 raise ApprovalContractError(
                     "Human-condition resolution cannot contain Git authority"
                 )
+        elif self.requested_action == "SET_LEARNING_DISPOSITION":
+            from runtime.memory.learning import LearningScope, learning_fingerprint
+            try:
+                scope = LearningScope.from_dict(self.learning_scope).to_dict()
+                if (not self.execution_id or not self.review_id or self.execution_mode != "READ_ONLY"
+                        or self.execution_scope is not None or self.dry_run
+                        or self.commit_scope is not None or self.remote_scope is not None
+                        or scope["preparation"]["job_id"] != self.job_id
+                        or scope["preparation"]["execution_id"] != self.execution_id
+                        or scope["review"]["review_id"] != self.review_id
+                        or learning_fingerprint(scope) != self.authorization_fingerprint
+                        or self.approval_id != approval_boundary_id(self.job_id, self.execution_id,
+                            self.review_id, self.requested_action, self.authorization_fingerprint)):
+                    raise ApprovalContractError("Learning approval bindings are invalid")
+            except (ValueError, TypeError, KeyError) as error:
+                raise ApprovalContractError("Invalid exact learning scope") from error
         elif not self.execution_id or not self.review_id:
             raise ApprovalContractError(
                 "Post-completion approval requires execution and review IDs"
@@ -238,7 +258,9 @@ class ApprovalRequest:
         )
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        if self.requested_action == "SET_LEARNING_DISPOSITION":
+            self.__post_init__()
+        value = {
             "schema_version": 1,
             "approval_id": self.approval_id,
             "job_id": self.job_id,
@@ -261,9 +283,14 @@ class ApprovalRequest:
             "decided_by": self.decided_by,
             "decision_actor_type": self.decision_actor_type,
         }
+        if self.requested_action == "SET_LEARNING_DISPOSITION":
+            value["learning_scope"] = deepcopy(self.learning_scope)
+        return value
 
     def compact(self) -> dict[str, Any]:
         """Canonical projection embedded in a job; never standalone authority."""
+        if self.requested_action == "SET_LEARNING_DISPOSITION":
+            raise ApprovalContractError("Learning disposition cannot enter compact job approval")
         return {"approval_id": self.approval_id, "requested_action": self.requested_action,
                 "execution_id": self.execution_id, "review_id": self.review_id,
                 "status": self.status, "recorded_at": self.resolved_at,
@@ -293,6 +320,10 @@ class ApprovalRequest:
             "decision_actor_type",
         }
         optional = {"dry_run", "commit_scope", "remote_scope"}
+        if value.get("requested_action") == "SET_LEARNING_DISPOSITION":
+            expected.add("learning_scope")
+        elif "learning_scope" in value:
+            raise ApprovalContractError("Existing approval bytes cannot accept learning scope")
         if (
             not set(value).issubset(expected | optional)
             or not expected.issubset(value)
@@ -351,6 +382,7 @@ class ApprovalRequest:
             decision_reason=value["decision_reason"],
             decided_by=value["decided_by"],
             decision_actor_type=value["decision_actor_type"],
+            learning_scope=deepcopy(value.get("learning_scope")),
         )
 
 

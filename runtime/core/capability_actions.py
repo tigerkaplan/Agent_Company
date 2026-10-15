@@ -1,17 +1,20 @@
 """GOV-02 audit of existing, separately approved Git action transitions."""
 from pathlib import Path
 import hashlib
+from contextvars import ContextVar
 
 from runtime.core.capability_governance import evaluate, policy, _consume
 from runtime.core.task_contract import TaskContractError, digest
 from runtime.storage.execution_store import FileExecutionStore, ExecutionStoreError
 
 _IMPLEMENTATION_DIGEST = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+_LEARNING_BOUNDARY = ContextVar("canonical_learning_action_boundary", default=None)
 
 
 class ActionDecision:
     """Existing ApprovalRuntime owns authority; this class only constrains it."""
     ACTIONS = {
+        "SET_LEARNING_DISPOSITION": ("LOCAL_WRITE", "local", "reversible", "learning_scope"),
         "COMMIT_CHANGE_SET": ("LOCAL_WRITE", "local", "reversible", "commit_scope"),
         "PUSH_GIT_COMMIT": ("EXTERNAL_EXECUTE", "external", "irreversible", "remote_scope"),
         "CREATE_PULL_REQUEST": ("EXTERNAL_EXECUTE", "external", "irreversible", "remote_scope"),
@@ -21,6 +24,8 @@ class ActionDecision:
         if hashlib.sha256(Path(__file__).read_bytes()).hexdigest() != _IMPLEMENTATION_DIGEST:
             raise TaskContractError("Action governance implementation changed; restart required")
         action = approval["requested_action"]
+        if action == "SET_LEARNING_DISPOSITION" and _LEARNING_BOUNDARY.get() is None:
+            raise TaskContractError("Learning action requires its canonical lock-through-effect boundary")
         if action not in self.ACTIONS:
             raise TaskContractError("Uncertified action transition")
         profile, blast, reversibility, scope_field = self.ACTIONS[action]
@@ -38,6 +43,7 @@ class ActionDecision:
             raise TaskContractError("Uncertified capability/action profile")
         self.store = FileExecutionStore(artifacts.root)
         self.jobs, self.approvals = jobs, approvals
+        self._learning_runtime = _LEARNING_BOUNDARY.get() if action == "SET_LEARNING_DISPOSITION" else None
         self.identity = approval["approval_id"]
         self._attempted = False
         self.value = {
@@ -59,13 +65,24 @@ class ActionDecision:
             "approval_required": {"execution": True, "review": True},
             "approval_received": canonical, "executor": executor,
         }
+        if action == "SET_LEARNING_DISPOSITION":
+            runtime = self._learning_runtime
+            if (runtime.job_runtime is not jobs or runtime.store is not approvals
+                    or runtime.execution_store.root.resolve() != artifacts.root.resolve()):
+                raise TaskContractError("Foreign learning action owners")
+            runtime._validate_learning_scope(scope, reservation_id=self.identity)
+            self.value["authority_source"]["logical_job_id"] = scope["intent"]["genesis"]["logical_job_id"]
+            from runtime.memory.learning import encoded
+            encoded(self.value)  # Learning action artifacts keep the 128 KiB ceiling.
         paths = [self.store._decision_path(self.identity, "action-policy", s) for s in ("anchor", "witness")]
         if any(p.exists() for p in paths):
+            if action == "SET_LEARNING_DISPOSITION":
+                raise ExecutionStoreError("Learning action already attempted; read-only diagnosis, no replay")
             if self.store._decision_pair(self.identity, "action-policy") != self.value:
                 raise ExecutionStoreError("Action certification/provenance is stale or tampered")
             self.store._verify_observation(self.value, "decision_intent_observed", self.identity, digest(self.value))
         else:
-            history = jobs.progress.store.read(jobs.progress.logical_id(job))
+            history = self._history()
             consumed_identity = "consumed-" + digest({"execution_id": self.identity, "stage": "action-effect"})
             failure_identity = "action-failure-" + digest(self.identity)
             if (any(e.execution_id in {self.identity, consumed_identity, failure_identity}
@@ -79,13 +96,73 @@ class ActionDecision:
             self.store._decision_pair(self.identity, "action-policy", self.value)
 
     def consume(self):
+        if self._learning_runtime is not None:
+            raise TaskContractError("Learning consumption cannot escape canonical application")
         with self.jobs.progress.transition_lock():
-            self._validate_current()
-            consumed, terminal = self._retained_state()
-            if consumed or terminal:
-                raise ExecutionStoreError("Action work already attempted; no replay authority")
-            self._attempted = True
-            _consume(self.store, self.value, "action-effect", self._claim())
+            self._consume_locked()
+
+    def _consume_locked(self):
+        self._validate_current()
+        consumed, terminal = self._retained_state()
+        if consumed or terminal:
+            raise ExecutionStoreError("Action work already attempted; no replay authority")
+        self._attempted = True
+        _consume(self.store, self.value, "action-effect", self._claim())
+
+    @classmethod
+    def apply_learning(cls, runtime, approval_id):
+        """Dedicated owner boundary, without a callback or caller lock/approval flag."""
+        from runtime.approvals.runtime import ApprovalRuntime
+        from runtime.memory.learning import LearningError, learning_inspection
+        if cls is not ActionDecision or type(runtime) is not ApprovalRuntime:
+            raise LearningError("Canonical learning application owner required")
+        with runtime.job_runtime.progress.transition_lock():
+            request = runtime.store.load(approval_id, require_canonical=True)
+            if request.requested_action != "SET_LEARNING_DISPOSITION" or request.status != "APPROVED":
+                raise LearningError("Explicit approved learning disposition required")
+            before = runtime._validate_learning_scope(request.learning_scope, reservation_id=approval_id)
+            token = _LEARNING_BOUNDARY.set(runtime)
+            audit = None
+            try:
+                audit = cls(runtime.job_runtime, runtime.store, runtime.execution_store,
+                    request.to_dict(), request.learning_scope, "canonical-local-learning")
+                record = runtime._learning_transition(request, before, audit.value)
+                project = runtime.learning.project_id
+                revision = str(record["after"]["revision"])
+                # Persist immutable before/after evidence before consuming effect.
+                runtime.store._write_learning(project, "transition-" + revision, record)
+                runtime._validate_learning_scope(request.learning_scope, planning=True)
+                audit._consume_locked()
+                runtime._learning_observe("learning_transition_observed", revision, record, request.job_id)
+                if request.learning_scope["intent"]["initialize"]:
+                    g = request.learning_scope["intent"]["genesis"]
+                    runtime.store._write_learning(project, "genesis", g)
+                    runtime._learning_observe("learning_genesis_observed", "genesis", g, request.job_id)
+                runtime._validate_learning_scope(request.learning_scope, planning=True)
+                audit._validate_current()
+                runtime.store._write_learning(project, "index", record["after"], replace=True)
+                with learning_inspection():
+                    if runtime.store._read_learning(project, "index") != record["after"]:
+                        raise LearningError("Unconfirmed learning index replacement")
+                runtime._validate_learning_scope(request.learning_scope, planning=True)
+                result = audit.finish(record["application"])
+                runtime._learning_observe("learning_application_observed", revision, result, request.job_id)
+                reserved = {"approval_id": approval_id, "scope_digest": digest(request.learning_scope), "status": "APPLIED"}
+                runtime._learning_observe("learning_reservation_closed", approval_id, reserved, request.job_id)
+                runtime.store._write_learning(project, "reservation", reserved, replace=True)
+                # Readback is recognition, never an opportunity to repair/replay.
+                with learning_inspection():
+                    runtime._learning_state()
+                return result
+            except Exception as error:
+                if audit is not None:
+                    try:
+                        audit.fail("learning_application_interrupted")
+                    except (ValueError, OSError) as failure:
+                        raise LearningError("Learning failure evidence uncertain; explicit recovery required") from failure
+                raise
+            finally:
+                _LEARNING_BOUNDARY.reset(token)
 
     def before_mutation(self):
         """Recheck original authority and consumed evidence at every Git effect."""

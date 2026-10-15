@@ -19,10 +19,12 @@ class DeterministicVerifier:
         execution_store: FileExecutionStore,
         provider_artifact_store: FileProviderArtifactStore,
         mutation_artifact_store: FileMutationArtifactStore | None = None,
+        learning=None,
     ) -> None:
         self.execution_store = execution_store
         self.provider_artifact_store = provider_artifact_store
         self.mutation_artifact_store = mutation_artifact_store
+        self.learning = learning
 
     def verify(
         self,
@@ -258,6 +260,21 @@ class DeterministicVerifier:
                 )
             )
 
+        if self.learning is not None:
+            from runtime.memory.learning import LearningReviewInterface, coverage_name, package_coverage_name
+            try:
+                if type(self.learning) is not LearningReviewInterface:
+                    raise ValueError("Canonical learning review port required")
+                value, ref, content = self.learning.evidence(job, request)
+                checks.append(self._check(coverage_name(value), True,
+                    "Complete operation, proposal, evidence and scope pins checked",
+                    "Learning output coverage failed", (ref,)))
+                checks.append(self._check(package_coverage_name(value, content), True,
+                    "Exact bounded evidence and counterevidence bodies packaged",
+                    "Learning package coverage failed", (ref,)))
+            except (ValueError, OSError, KeyError, TypeError):
+                checks.append(self._check("learning_coverage_invalid", False,
+                    "Learning coverage checked", "Incomplete learning output coverage", ()))
         status = "FAIL" if any(check.status == "FAIL" for check in checks) else "PASS"
         return VerificationResult(status=status, checks=tuple(checks))
 

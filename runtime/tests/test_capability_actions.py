@@ -16,6 +16,14 @@ from runtime.tests import test_remote_git as remote_fixtures
 from runtime.tests import test_actions as write_fixtures
 
 
+class LearningActionIsolationTests(unittest.TestCase):
+    def test_foreign_owner_cannot_enter_learning_effect_boundary(self):
+        class FakeOwner:
+            def __getattr__(self, name):
+                raise AssertionError("Foreign owner must be rejected before any IO")
+        with self.assertRaises(ValueError): ActionDecision.apply_learning(FakeOwner(), "approval-forged")
+
+
 class CapabilityActionTests(unittest.TestCase):
     def local(self):
         case = git_fixtures.GitRuntimeTests()

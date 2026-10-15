@@ -1,5 +1,337 @@
 # Agent Company
 
+## MEM-02B Formal Acceptance - 2026-10-15
+
+AC-MEM-02B-CLOSURE-PREP-116 records explicit owner formal acceptance of the
+bounded MEM-02B implementation, FIX-80 credential correction and FIX-101 cleanup.
+Status: **FORMALLY ACCEPTED / RECONCILIATION RECORDED / CLOSED / UNCOMMITTED**.
+Bounded closure recorded under owner-authorized AC-MEM-02B-CLOSURE-119 after
+REVIEW-118 CLOSURE_READY. Closure evidence: `E:\Software\Agent_Company_Handoff\MEM-02B\CLOSURE-119-20261015\CLOSURE-119.md`.
+Closure grants no staging, commit, push or next-checkpoint authority.
+The separate-session REVIEW-113 product finding and owner routing disposition
+ROUTING-115 support acceptance. Same-provider review is OpenAI / Codex;
+alternate-provider availability remains UNKNOWN. Historical REVIEW-113 BLOCKED
+and REVIEW-114 NEEDS_HUMAN verdicts remain unchanged.
+
+All six retained Package 107 owner gates PASS: targeted 100/100, affected 158/158,
+focused 845 observations/835 distinct IDs, Full 1729/1719, schema/static
+202 Python/36 schemas/17 certificates, and Diff exit 0 with 20 permitted warnings.
+Package manifest SHA-256: `ca90aed32075b2e78b4c14fb87076dc6f1ebf587b5c66652770c3ec4bbe2e1a7`.
+Owner ledger SHA-256: `a017435b19ee9f99ba801d1e85e2317612ba8691e753913f3978608dd796e192`.
+Evidence: `E:\Software\Agent_Company_Handoff\MEM-02B\ACCEPTANCE-116-20261015\ACCEPTANCE-116.md`.
+No tests were rerun for acceptance recording or this documentation reconciliation.
+
+Historical 1725-test Full failure, FIX-101 repetition-8 timeout, credential and
+cleanup reproduction failures, all warning/duplicate evidence and diagnostic
+limitations remain retained. ROOT_CAUSE_UNKNOWN; DESIGN-99 remains DEFERRED.
+Same-provider blind spots, absence of fresh REVIEW-113 runtime probes, worker
+shutdown waits and trusted-filesystem/durability limits remain disclosed.
+Acceptance does not authorize a learning disposition, automatic promotion,
+execution, retry, Git action, deployment or later-phase implementation.
+Earlier dated entries below retain historical meaning. The accepted source is
+the working tree on master at baseline HEAD
+`92460248344906e5388fbe02e06b6e793187bcb5`; it is not committed at that HEAD.
+Only these four documentation files differ from the accepted 757-pin snapshot;
+the old sealed run evidence remains unchanged and the other 753 pins were
+verified unchanged for CLOSURE-119. Gates remain bound to their historical source.
+
+## MEM-02B FIX-69-R2 - 2026-10-12
+
+MEM-02B is ACTIVE / ACCEPTANCE FIX / BOUNDED REPAIR IMPLEMENTED / CLOSURE OPEN.
+See [current repair status](PROJECT_STATE.md#mem-02b-fix-69-r2---2026-10-12).
+Bounded evidence and counterevidence bodies now accompany the reviewed intent;
+coverage binds actual reviewer content. Credential-bearing string values are
+sanitized before JSON encoding. Original source hashes still bind unsanitized
+bytes, and incomplete/oversized packages fail without truncation. Reconciliation
+reports historical confirmation separately from current planning eligibility.
+
+Fresh executor source/run evidence and owner-only gate commands are retained at
+`E:\Software\Agent_Company_Handoff\MEM-02B\validation\FIX-69-R2-20261012`.
+Retained original REVIEW-68, R1 failures, GATES-67 and GOV-02 histories are not
+rewritten or retrospectively source-bound. Independent re-review and owner
+closure remain OPEN. The dated BUILD-64 evidence below remains historical.
+
+## MEM-02B BUILD-64 - 2026-10-11
+
+MEM-02B is ACTIVE / IMPLEMENTED / BOUNDED EXECUTOR VALIDATION PASS / MANDATORY GATES PENDING / UNCOMMITTED.
+See [current state and validation boundary](PROJECT_STATE.md#mem-02b-build-64---2026-10-11).
+The existing four-document Master Context and README DOC-TREE ownership remain
+unchanged. Earlier dated entries retain their original checkpoint meanings.
+
+New physical CURRENT paths are `runtime/memory/learning.py`,
+`schemas/learning-disposition.schema.json`, `runtime/tests/test_memory_learning.py`,
+`runtime/tests/test_learning_disposition.py`, and
+`runtime/tests/test_learning_disposition_recovery.py`. Existing approval, action,
+review, progress vocabulary, CLI and foreground workflow surfaces are extended
+within the exact 33-path allowlist. Default learning installation is disabled.
+No new backend/agent/provider, graph decision engine, MEM-03 or Obsidian is added.
+
+Executor validation is not independent acceptance. Mandatory complete GOV-02
+regression and Git-dependent checks await owner execution under the no-Git work
+order. No real disposition, cleanup, commit, push or deployment occurs.
+
+### Exact BUILD-64 edit manifest
+
+The accepted Scope-63 allowlist contains exactly 33 unique paths. Five paths
+are new (learning implementation/schema and three test modules); the other 28
+extend existing owners. This table is the complete executor edit manifest.
+
+| Path | Change |
+| --- | --- |
+| [runtime/memory/learning.py](runtime/memory/learning.py) | New closed proposal, scope, evidence and bounded planning contracts. |
+| [runtime/memory/integration.py](runtime/memory/integration.py) | Explicit host installation of Manager planning interface; default unchanged. |
+| [runtime/approvals/models.py](runtime/approvals/models.py) | Conditional learning scope; legacy serialization and fingerprints retained. |
+| [runtime/approvals/store.py](runtime/approvals/store.py) | Canonical bounded .learning genesis/index/transition/reservation ownership. |
+| [runtime/approvals/runtime.py](runtime/approvals/runtime.py) | Exact preparation and approval binding, transitions, diagnosis and planning checks. |
+| [runtime/approvals/factory.py](runtime/approvals/factory.py) | Opt-in installed learning composition. |
+| [runtime/core/capability_actions.py](runtime/core/capability_actions.py) | Single-use learning application under existing transition lock. |
+| [runtime/core/capability_governance.py](runtime/core/capability_governance.py) | Pins every authoritative learning implementation, schema and composition path. |
+| [runtime/progress/models.py](runtime/progress/models.py) | Nonauthoritative disposition observation vocabulary; no storage format change. |
+| [schemas/progress-event.schema.json](schemas/progress-event.schema.json) | Closed observation event schemas. |
+| [runtime/review/context.py](runtime/review/context.py) | Complete untrusted learning review packaging. |
+| [runtime/review/verification.py](runtime/review/verification.py) | Operation-specific deterministic coverage of full output and evidence. |
+| [runtime/review/factory.py](runtime/review/factory.py) | Explicit opt-in review composition. |
+| [runtime/cli/__main__.py](runtime/cli/__main__.py) | Disabled-by-default learning commands; existing completion commands retained. |
+| [schemas/approval.schema.json](schemas/approval.schema.json) | Conditional new action; legacy scopes forbidden. |
+| [schemas/learning-disposition.schema.json](schemas/learning-disposition.schema.json) | New closed learning action schema. |
+| [orchestrator/workflows/project-continuation.yaml](orchestrator/workflows/project-continuation.yaml) | Opt-in exact planning selection and revalidation requirements. |
+| [runtime/tests/test_memory_learning.py](runtime/tests/test_memory_learning.py) | New deterministic local fixtures and contract/capacity/source checks. |
+| [runtime/tests/test_learning_disposition.py](runtime/tests/test_learning_disposition.py) | New canonical approval/disposition/Manager integration and security tests. |
+| [runtime/tests/test_learning_disposition_recovery.py](runtime/tests/test_learning_disposition_recovery.py) | New crash, partial application, replay and read-only recovery tests. |
+| [runtime/tests/test_approval.py](runtime/tests/test_approval.py) | Legacy approval byte/schema compatibility test. |
+| [runtime/tests/test_capability_actions.py](runtime/tests/test_capability_actions.py) | Dedicated boundary and callback/foreign owner denial test. |
+| [runtime/tests/test_review.py](runtime/tests/test_review.py) | Default review installation compatibility test. |
+| [runtime/tests/test_memory_integration.py](runtime/tests/test_memory_integration.py) | Foreground installation compatibility test. |
+| [runtime/tests/test_memory_readonly_inspection.py](runtime/tests/test_memory_readonly_inspection.py) | Learning read limits and no-write compatibility test. |
+| [PROJECT_STATE.md](PROJECT_STATE.md) | Current bounded implementation state, executor evidence and manual gate status. |
+| [ROADMAP.md](ROADMAP.md) | Current implementation checkpoint without later-phase scope expansion. |
+| [TODO.md](TODO.md) | Pending owner gates, independent review and closure tasks. |
+| [README.md](README.md) | Physical DOC-TREE, complete edit manifest and reproducible bounded commands. |
+| [runtime/approvals/README.md](runtime/approvals/README.md) | Canonical manual learning action semantics and limits. |
+| [runtime/review/README.md](runtime/review/README.md) | Exact full learning evidence and operation review semantics. |
+| [orchestrator/approvals/APPROVAL_POLICY.md](orchestrator/approvals/APPROVAL_POLICY.md) | Human resolution semantics; completion approval kept separate. |
+| [governance/capability-governance/README.md](governance/capability-governance/README.md) | Governance action mapping, freshness and unchanged mandatory validation gates. |
+
+### BUILD-64 tested source manifest
+
+These SHA-256 identities cover all 50 governed source files and all eight
+edited test files. They were captured during the final executor runs and are
+checked again after recording results. The four Master Context documents are
+status/report artifacts, outside policy source pinning; their reporting changes
+do not re-attest historical work. This manifest does not include its own file
+hash and does not claim a Git diff or independent acceptance.
+
+| Governed source path | SHA-256 |
+| --- | --- |
+| `AGENTS.md` | `39349be67961e6ffcdefb3288c7228b419f7c14e880efbef69f86bb6ea3624ed` |
+| `CONSTITUTION.md` | `25273cdad156d808e5cff2e370287e40791070eefd8dc08460bebceaca74c407` |
+| `governance/capability-governance/README.md` | `524595ba7e562b645d7b7eb3da9d8b96f93ca8b6bc419f5bbbed913f6c7ffc8c` |
+| `orchestrator/approvals/APPROVAL_POLICY.md` | `1169152eadb909e0eaf488d94003c8d800bba64453f063de281edf769f4a95ac` |
+| `orchestrator/routing/capabilities.yaml` | `6dd8886901f64f2be1b7812e9f6fb9b6418bb4453824d4f925d5ea5bb84368cc` |
+| `orchestrator/workflows/project-continuation.yaml` | `74d9bfac73b0785a90b3026aead057a53b21d44a4b0a91975a0d58986e85ce79` |
+| `runtime/actions/authorization.py` | `e86131705548086db1f068f422ad6904ff4c003b70b3b4e4815bc4aae9f28710` |
+| `runtime/actions/runtime.py` | `4417353d0aee9584950a6492e39b5ff2dd4390182885024f0097315df87ab604` |
+| `runtime/approvals/README.md` | `bac3174dd1dd1c2b86deec9bacadb40bac082a42cf519fa925f28c15c9ac29c5` |
+| `runtime/approvals/factory.py` | `357b27bd8b79c7280fbc97ce7f7f926de4d1c1051e9388c697b145f081d4c86d` |
+| `runtime/approvals/models.py` | `067beb0282b8c9a0a0ac51469b5dc23d985f7c9a34822a934e6a55f447646fe6` |
+| `runtime/approvals/runtime.py` | `b01bd4ad1036444e604245e3bf6198a50c9ed01a3afd452eb0a5969bf18d3888` |
+| `runtime/approvals/store.py` | `d509110001b84e2a9f6ee3b7212e89b0cc3c39dd5dd20d1934b40274da10a5de` |
+| `runtime/budget/runtime.py` | `d0e4bc9a1a0fa77fd6e35292d4b8187b8dec473db456e0919a22de8544f40133` |
+| `runtime/cli/__main__.py` | `bacddbc38b4a40f6cb807f521c43268a986bdc6082214fe46e523a11023e5e87` |
+| `runtime/core/capability_actions.py` | `63f7a2abd8a9c5232bdb8ebe30cf6900a2909b3e8cd2b6fe3f68a483b9daab7f` |
+| `runtime/core/capability_governance.py` | `db289990dcdfafe74933b61abb76bb0f237de37ce99991fbd90b3e7b13a75384` |
+| `runtime/core/jobs.py` | `1e7b0beffcb22e9a8ca6c8cb2d03d5e6403c87a4aeb666584db45dadb8503a6f` |
+| `runtime/core/task_contract.py` | `fe5f621571a9fffe3385e41d9ef5ba5e487385c66ce2b19149be7ba6e95163fe` |
+| `runtime/execution/models.py` | `e1db247fd5480ff84b588a72ad94e19278459541098716a6458c7a0056ade76d` |
+| `runtime/git/remote_runtime.py` | `1f2e7a7d4cbf86f533bd5c42e04d0e7c0745fdd47dcb3f2bce2aaa90c4df4062` |
+| `runtime/git/runtime.py` | `65101894ed2dfa8d147421cc0a204b970ad4d34a6d83165efd780de054d5900a` |
+| `runtime/graph/executor.py` | `6a4ea8cd1a8e76d6acfe7aa8ca5b67e38abd5ad6d0a8aff37d5de8da776598e2` |
+| `runtime/graph/models.py` | `fea1cdada7350efa4476a5a6a8c5b31aaf5a63ba9af30671c1c07e28752db3f8` |
+| `runtime/graph/planner.py` | `7a93613872f496fcdce6fa52d21dd819318678c8bf2ce928e6202f285bbd9ce9` |
+| `runtime/graph/runtime.py` | `2250be3d15fd7f09e155b1ed1a6a7a4e78d93f23c16b7b12618c2f3049ef2551` |
+| `runtime/memory/integration.py` | `0934da8dfa207e65721cb1c0de709a19fdecddcc705efe352a159d464f0fc126` |
+| `runtime/memory/learning.py` | `9fa06e6c3c77f2fe4d2f9d42f6224e96f06ad2197d7e6c1f4d3b7ff3edcded0f` |
+| `runtime/progress/models.py` | `ae6b1a2604948d6bfa7df26e9e1a052249940f70dcc956521d5453776e43b5dd` |
+| `runtime/providers/context.py` | `be264db7e3c537dde3f068cb33eab4bfbe5ae54b80ff9d4bb5e90c7514dc8b3b` |
+| `runtime/providers/models.py` | `addd8656c67275786c1c9184341672a3c3cb8821b582927f9272194a0a264ae4` |
+| `runtime/retry/runtime.py` | `0a7aa2624d5e4df5e522e573a8d989367a9609f4827ccc087fd29dd8ea437e0d` |
+| `runtime/review/README.md` | `2947395cb38ddd2d87c80aceb2daba4449177000f2637031307231ee89547871` |
+| `runtime/review/context.py` | `2447ae3aa89276d9959f8a5adc76769153c575889ced4e2d771f431eb805d8d9` |
+| `runtime/review/factory.py` | `d5060d950114b2fb9e6e43e035cd282edfa75f7ff8764230e8ee99c8c4c3e479` |
+| `runtime/review/reviewers.py` | `e5ea926298b3d81b8e6ca2b40b081743ea016206845c2957a55bd444faaad15c` |
+| `runtime/review/runtime.py` | `d2c563244fd3c8386ad5a452fb6bd98c24ab5d06ee74703362b4e413d6b4900d` |
+| `runtime/review/store.py` | `f4d5c25578d6791adddcb101f4afe7bf0126e7639545015f917e35172c442013` |
+| `runtime/review/verification.py` | `082f9473bf4f41ba27cef738419557c7353faafc3ed6a241757b963cda72126f` |
+| `runtime/storage/execution_store.py` | `e533c9f4184649e943c29c4b6ed1c4553fb1b630bce7fc25015adb4d6208cc88` |
+| `runtime/storage/file_store.py` | `06ddec9394dba8ede6790b35db9a9c783e219160bab3e53377a5a0601423b474` |
+| `runtime/workers/worker.py` | `e9cc4a7e09229de93b097033460955f0ea8ddb7a4318ab8fc5c54ae33a5b5caf` |
+| `schemas/approval.schema.json` | `7376ba5bc7f8c3858f0eb93349fa70f72391b562477a9323c8df73d51d6c6fe8` |
+| `schemas/capability-certification.schema.json` | `1d5db70945e6ffe2ee78a61ee5ada21d57910b21c756531f759ae5f2c7d90bf5` |
+| `schemas/graph-binding.schema.json` | `41537acf2fb65711c1b76bce167a4fbe80a06ff4dc37314f35609847e681c1b3` |
+| `schemas/graph-plan.schema.json` | `e3274f02b520cdf235c7e658d06afbf5f8e62010697a4caf579435289e4af008` |
+| `schemas/job.schema.json` | `293b46f7dff607ddd290e91b958052eaaa6feaf2e67c3dc634df82e01aea5c4b` |
+| `schemas/learning-disposition.schema.json` | `5a98810b0482ac24ba368038f75dfaf7d5f82d43b85efea1c1e5c9f8c07af312` |
+| `schemas/progress-event.schema.json` | `9f08ffb299b08407e153940cce891f3f52d4af73c8c79235e613e4f794111fca` |
+| `schemas/task-contract.schema.json` | `301df8ca9fcd1bbbb27e2886caea0894123697e07d753314188d3c21c6a1f7b5` |
+
+| Edited test path | SHA-256 |
+| --- | --- |
+| `runtime/tests/test_approval.py` | `9b721b312895441d1e638e1d23a2b9fda7c5e554c857b1fa4019bd72eab18f91` |
+| `runtime/tests/test_capability_actions.py` | `c06d850412a787554face4fdf920a922c66dc3fd93b6bc104f8a65ff339664ad` |
+| `runtime/tests/test_learning_disposition.py` | `0f3c5045a9254cf8e4b221d6a133a7d3b909d4ad8cb22e2caf099668619f5c0e` |
+| `runtime/tests/test_learning_disposition_recovery.py` | `3e6a153bd60971d4abc34f25a5a51fc28472be35d6a54cdd1698d07c465f54e4` |
+| `runtime/tests/test_memory_integration.py` | `43f854f682cf028cf59cf62b22429c6f7012d4b317c99d9a447db8d72f17acf9` |
+| `runtime/tests/test_memory_learning.py` | `1810ad61e27c56aaf0365cc09b5e25222053ee73255826e89a44c4240601a418` |
+| `runtime/tests/test_memory_readonly_inspection.py` | `447e03bdf77caf62f36102f64115cdbf937d1fcdb85d39d17cf6708fc64e8430` |
+| `runtime/tests/test_review.py` | `83c00f22718d81b39da417ea3b5ebc5172ae6f511cc7efa66bfaaa2498241788` |
+
+Accepted handoff file SHA-256 values (files unchanged):
+
+- Authority-62: `4f32df273f976f51a098801ecdb61f2ce499b244d2ad290bf17a6a33dadbbeac`.
+- Scope-63: `ae436c3bf87f489301fbb1aa3f2c51a19e94e0661ba7d3bdacd9147fb4aa3b92`.
+
+### BUILD-64 reproducible executor validation
+
+Working directory: `F:\Software\Agent_Company`. Commands use `-B` to avoid
+bytecode artifacts. Learning fixtures use isolated TemporaryDirectory stores;
+their declared fixture reviewer does not independently accept this implementation.
+No real learning disposition is performed.
+
+```powershell
+python -B -m unittest runtime.tests.test_memory_learning runtime.tests.test_learning_disposition runtime.tests.test_learning_disposition_recovery -v
+python -B governance/capability-governance/validate.py
+```
+
+The affected integration batch excludes exactly the two Git-ignore tests named
+below. They remain **UNRUN / OWNER-RUN**, rather than reported passing or silently
+skipped. An audit hook denies a Git launch before execution. The focused batch
+uses the same hook and has no excluded tests. These commands do not create
+governance report files outside the 33-path allowlist.
+
+Affected integration command:
+
+```powershell
+@'
+import re, sys, unittest
+from pathlib import Path
+modules = ["test_approval","test_review","test_memory_integration","test_memory_readonly_inspection","test_task_contract","test_task_contract_f1","test_task_contract_f2","test_actions"]
+excluded = set(["runtime.tests.test_approval.ApprovalCliAndIgnoreTests.test_zzz_approval_artifacts_are_git_ignored","runtime.tests.test_review.ReviewCliAndIgnoreTests.test_x_review_artifacts_are_git_ignored"])
+attempts = []
+def guard(event, args):
+    if event not in {"subprocess.Popen", "os.system", "os.posix_spawn"}:
+        return
+    values = args[1] if event == "subprocess.Popen" else args[0]
+    words = list(values) if isinstance(values, (list, tuple)) else re.findall(r"[A-Za-z0-9_.:/\\-]+", str(values))
+    if any(Path(str(word)).name.lower() in {"git", "git.exe"} for word in words):
+        attempts.append(event)
+        raise RuntimeError("Git launch prohibited by BUILD-64")
+sys.addaudithook(guard)
+def flatten(suite):
+    for entry in suite:
+        if isinstance(entry, unittest.TestSuite):
+            yield from flatten(entry)
+        else:
+            yield entry
+tests = list(flatten(unittest.defaultTestLoader.loadTestsFromNames(["runtime.tests." + m for m in modules])))
+omitted = [t.id() for t in tests if t.id() in excluded]
+suite = unittest.TestSuite(t for t in tests if t.id() not in excluded)
+print("EXCLUDED_OWNER_RUN_UNRUN=" + repr(omitted), flush=True)
+result = unittest.TextTestRunner(verbosity=1).run(suite)
+print("GIT_LAUNCH_ATTEMPTS=" + str(len(attempts)), flush=True)
+print("RESULT tests=%s failures=%s errors=%s skipped=%s" % (result.testsRun, len(result.failures), len(result.errors), len(result.skipped)), flush=True)
+sys.exit(0 if result.wasSuccessful() and not attempts else 1)
+
+'@ | python -B -
+```
+
+Focused regression command:
+
+```powershell
+@'
+import re, sys, unittest
+from pathlib import Path
+modules = ["test_memory_foundation","test_memory_lifecycle","test_memory_validity","test_memory_knowledge_adapter","test_context_discovery","test_context_cache","test_external_content","test_capability_governance","test_progress","test_progress_f1","test_progress_f2"]
+excluded = set([])
+attempts = []
+def guard(event, args):
+    if event not in {"subprocess.Popen", "os.system", "os.posix_spawn"}:
+        return
+    values = args[1] if event == "subprocess.Popen" else args[0]
+    words = list(values) if isinstance(values, (list, tuple)) else re.findall(r"[A-Za-z0-9_.:/\\-]+", str(values))
+    if any(Path(str(word)).name.lower() in {"git", "git.exe"} for word in words):
+        attempts.append(event)
+        raise RuntimeError("Git launch prohibited by BUILD-64")
+sys.addaudithook(guard)
+def flatten(suite):
+    for entry in suite:
+        if isinstance(entry, unittest.TestSuite):
+            yield from flatten(entry)
+        else:
+            yield entry
+tests = list(flatten(unittest.defaultTestLoader.loadTestsFromNames(["runtime.tests." + m for m in modules])))
+omitted = [t.id() for t in tests if t.id() in excluded]
+suite = unittest.TestSuite(t for t in tests if t.id() not in excluded)
+print("EXCLUDED_OWNER_RUN_UNRUN=" + repr(omitted), flush=True)
+result = unittest.TextTestRunner(verbosity=1).run(suite)
+print("GIT_LAUNCH_ATTEMPTS=" + str(len(attempts)), flush=True)
+print("RESULT tests=%s failures=%s errors=%s skipped=%s" % (result.testsRun, len(result.failures), len(result.errors), len(result.skipped)), flush=True)
+sys.exit(0 if result.wasSuccessful() and not attempts else 1)
+
+'@ | python -B -
+```
+
+Mandatory owner-run gates remain: complete GOV-02 full regression (including
+Git-dependent fixtures), the two excluded Git-ignore tests, the native complete
+affected/targeted and focused gates where Git is required, and `git diff --check`.
+The GOV-02 report runner is unrun here because its suites execute Git and its
+retained report paths fall outside the edit allowlist. It is not replaced by the
+filtered executor batches. No full-suite PASS, independent acceptance or owner
+closure is claimed. Owner-run commands and evidence must bind the final source;
+historical tasks/receipts cannot be migrated or re-attested.
+
+### BUILD-64 compatibility and earlier targeted commands
+
+Final compatibility command: PASS 5/5, 0.042 s.
+
+```powershell
+python -B -m unittest runtime.tests.test_approval.LearningLegacyApprovalBytesTests runtime.tests.test_capability_actions.LearningActionIsolationTests runtime.tests.test_review.LearningReviewInstallationTests runtime.tests.test_memory_integration.LearningForegroundInstallationTests runtime.tests.test_memory_readonly_inspection.LearningArtifactReadBoundaryTests -v
+```
+
+Earlier two-test failure: two errors/2 in 25.964 s; corrected before final runs.
+The Snapshot adapter and fixture import errors are recorded in PROJECT_STATE.
+
+```powershell
+python -B -m unittest runtime.tests.test_learning_disposition.LearningDispositionTests.test_inspection_and_reconciliation_create_no_locks_or_persistent_writes runtime.tests.test_learning_disposition.LearningDispositionTests.test_completion_needs_human_cannot_substitute_for_pass_review -v
+```
+
+Corrected focused rerun: PASS 3/3, 31.590 s.
+
+```powershell
+python -B -m unittest runtime.tests.test_learning_disposition.LearningDispositionTests.test_inspection_and_reconciliation_create_no_locks_or_persistent_writes runtime.tests.test_learning_disposition.LearningDispositionTests.test_completion_needs_human_cannot_substitute_for_pass_review runtime.tests.test_learning_disposition.LearningDispositionTests.test_default_runtime_remains_uninstalled -v
+```
+
+Terminal-version request rerun after the shared-validator fix: PASS 1/1,
+78.781 s. This precedes final source-coverage hardening; the final 33-test run
+repeats it on final source.
+
+```powershell
+python -B -m unittest runtime.tests.test_learning_disposition.LearningDispositionTests.test_revoked_version_needs_new_version_and_fresh_approval -v
+```
+
+Initial contract command passed six tests in 15.790 s, and initial promotion
+integration passed one test in 19.085 s, at earlier implementation source.
+
+```powershell
+python -B -m unittest runtime.tests.test_memory_learning -v
+python -B -m unittest runtime.tests.test_learning_disposition.LearningDispositionTests.test_promote_requires_confirmation_and_does_not_change_completion -v
+```
+
+Interrupted aggregate attempts use the three-module learning command above.
+None establishes an aggregate PASS. The intermediate 187-test affected and
+428-test focused passes predate final hardening and are historical executor
+observations; final 191/191 and 428/428 reruns supersede their use for this
+implementation checkpoint without rewriting historical authority.
+
 ## Post-MEM-02 Commit Reconciliation - 2026-10-11
 
 `AC-POST-MEM02-RECONCILE-60` records **MEM-02 CLOSED / COMMITTED / PUSHED**
@@ -404,12 +736,20 @@ after independent R4 PASS and owner closure PASS. MEM-01 is CLOSED / COMMITTED
 at `5e29cdb177838adb1682ab3b36728623d714c5e3`; MEM-02 is CLOSED /
 COMMITTED / PUSHED after Prompt 58 bounded closure PASS and owner verification
 of HEAD `22c9d37b503d3eea242eb6cc35041efdaac0a4d5`.
-ACTIVE: None; NEXT: MEM-02B / NOT STARTED. MEM-03, DEC-01/02 and agents 11-14
+ACTIVE: None. MEM-02B is CLOSED / UNCOMMITTED under CLOSURE-119.
+NEXT: separately authorized MEM-02B exact-change-set review and commit.
+MEM-03, DEC-01/02 and agents 11-14
 remain PLANNED / NOT STARTED.
 
 ## Current Repository Structure
 
-CURRENT: physically observed structure in the authoritative F: checkout.
+CURRENT acceptance source is the E: checkout identified by ACCEPTANCE-116.
+The five BUILD-64 product paths remain physically present; FIX-80/FIX-101 add no
+product directory. External handoff evidence is not a repository DOC-TREE node.
+No new physical-tree audit or committed-source attestation is claimed here.
+The following F: tree provenance is retained as historical MEM-02 evidence:
+
+Historical physical observation: authoritative F: checkout at that checkpoint.
 Owner-verified MEM-02 HEAD: `22c9d37b503d3eea242eb6cc35041efdaac0a4d5`;
 MEM-02 is CLOSED / COMMITTED / PUSHED. This task records owner Git evidence
 without running Git commands or attesting a current clean worktree. The earlier
@@ -628,9 +968,9 @@ The proposed paths in the list below are PLANNED and absent from the current
 physical tree. This list records structural ownership only; implementation
 checkpoints create paths when real content exists.
 
-- MEM-02B and MEM-03: future promotion/provider additions under CURRENT
-  `runtime/memory/`; `shared/memory/` stays PLANNED and absent. Implemented
-  MEM-01/MEM-02 files appear in Current Repository Structure.
+- MEM-03: future provider additions under CURRENT `runtime/memory/`;
+  `shared/memory/` stays PLANNED and absent. MEM-02B learning implementation and
+  tests are CURRENT as recorded in the BUILD-64 physical-tree entry above.
 - Agents 11-14: `agents/finance-pricing/`, `agents/analytics/`,
   `agents/content/`, and `agents/design/`.
 - CAP-SEARCH-GROWTH-01: `skills/search-growth/` and
@@ -680,7 +1020,8 @@ and SYNC-04A. The exception gate and accepted refinements live in
 LATER / REFERENCE; only critical implementation, security, data-loss, authority,
 architectural-consistency, or completion-correctness blockers may be evaluated
 for V1. They do not interrupt the checkpoint sequence or grant implementation
-authority. ACTIVE: None; NEXT: MEM-02B / NOT STARTED, sequence only.
+authority. ACTIVE: None. MEM-02B is CLOSED / UNCOMMITTED under CLOSURE-119.
+NEXT: separately authorized MEM-02B exact-change-set review and commit.
 MEM-02 is CLOSED / COMMITTED / PUSHED; MEM-03 remains PLANNED / NOT STARTED.
 MEM-01 is CLOSED / COMMITTED at `5e29cdb177838adb1682ab3b36728623d714c5e3`.
 ORCH-01 is CLOSED / COMMITTED at `d3878081`; GOV-02 remains CLOSED / COMMITTED at `e6dbe3f`.

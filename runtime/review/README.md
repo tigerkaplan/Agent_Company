@@ -1,5 +1,27 @@
 # Reviewer Runtime
 
+## Opt-in MEM-02B preparation coverage
+
+An explicitly installed LearningReviewInterface reads one complete declared
+intent output inside its project. The ordinary Task Contract must declare the
+absolute output file and pin its bytes through existing GOV-01 FILE_DIGEST
+verification. The verifier checks the whole operation/proposal/scoped evidence
+and binds coverage to both the full intent digest and the exact packaged content.
+The package carries the complete untrusted intent, memory records, and bounded
+source bodies for evidence and counterevidence. Raw bodies and encoded content
+must each fit the existing 128 KiB record ceiling; incomplete content is rejected
+without truncation. Ambiguous duplicate JSON fields and excessive nesting fail
+closed rather than discarding evidence. String values are sanitized before JSON encoding so escaped
+newlines cannot conceal credentials. Source pins remain bound to original bytes.
+The disposition owner rechecks coverage and the actual persisted external-evidence
+envelope. Missing bodies, stale sources or substituted inputs fail closed.
+
+Learning disposition requires persisted independent PASS and passing required
+checks. NEEDS_HUMAN completion acceptance cannot bypass that gate. Review grants no
+authority; default review behavior remains unchanged without installation. Test
+fixture reviewers are deterministic validation, never independent acceptance of
+the implementation. BUILD-64 stops before independent review.
+
 Phase 6F separates provider execution from verified completion. A successful `ExecutionResult` is evidence to review; it is not authority to complete a review-required job.
 
 ## Flow

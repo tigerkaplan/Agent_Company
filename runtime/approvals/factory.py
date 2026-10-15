@@ -19,6 +19,7 @@ def build_approval_runtime(
     execution_store: FileExecutionStore | None = None,
     review_store: FileReviewStore | None = None,
     notification_emitter: Any | None = None,
+    learning=None,
 ) -> ApprovalRuntime:
     return ApprovalRuntime(
         job_runtime,
@@ -26,4 +27,5 @@ def build_approval_runtime(
         execution_store=execution_store,
         review_store=review_store,
         notification_emitter=notification_emitter,
+        learning=learning,
     )

@@ -54,7 +54,12 @@
         "decision_intent_observed",
         "decision_result_observed",
         "decision_review_observed",
-        "decision_consumption_observed"
+        "decision_consumption_observed",
+        "learning_reservation_observed",
+        "learning_reservation_closed",
+        "learning_genesis_observed",
+        "learning_transition_observed",
+        "learning_application_observed"
       ]
     },
     "logical_job_id": {

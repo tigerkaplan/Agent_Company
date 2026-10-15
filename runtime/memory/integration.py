@@ -25,6 +25,12 @@ class MemoryIntegrationError(MemoryContractError):
     """Missing or mismatched explicit foreground inputs/authority."""
 
 
+def install_learning_planning(approval_runtime):
+    """Explicit host composition; never installs learning into default memory."""
+    from runtime.memory.learning import ForegroundLearningInterface
+    return ForegroundLearningInterface(approval_runtime)
+
+
 @dataclass(frozen=True, slots=True)
 class StorageReport:
     """Only confirmed read-backs are stored; the failing write may have happened."""

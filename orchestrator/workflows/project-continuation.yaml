@@ -53,3 +53,12 @@ must_not_without_separate_approval:
   - deploy
   - send_external_communications
   - mutate_source_code
+learning_constraints:
+  default: disabled
+  interface: runtime.memory.learning.ForegroundLearningInterface
+  installation: explicit_foreground_canonical_approval_owner
+  selection: exact_project_root_task_workflow_agent_capability_and_conditions
+  before_plan_acceptance: revalidate_exact_request_and_projection
+  before_every_reuse: revalidate_exact_request_and_projection
+  changed_or_uncertain_binding: hold_affected_planning_and_require_manager_reassessment
+  authority: restrict_or_inform_only_never_widen_task_gates_or_permissions

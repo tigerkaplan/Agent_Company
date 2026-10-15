@@ -5,10 +5,18 @@ from runtime.tests.contract_fixtures import bounded_context_repository, declare_
 import io
 import json
 import subprocess
+
+
 import tempfile
 import unittest
 from contextlib import ExitStack, redirect_stdout
 from pathlib import Path
+
+
+class LearningReviewInstallationTests(unittest.TestCase):
+    def test_truthy_callback_cannot_install_disposition_review_authority(self):
+        from runtime.memory.learning import LearningReviewInterface
+        with self.assertRaises(ValueError): LearningReviewInterface(lambda *args: True, "proposal.json")
 
 from runtime.approvals.runtime import ApprovalRuntime
 from runtime.approvals.store import FileApprovalStore

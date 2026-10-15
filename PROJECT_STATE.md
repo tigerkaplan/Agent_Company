@@ -1,5 +1,172 @@
 # Agent Company Project State
 
+## MEM-02B Formal Acceptance - 2026-10-15
+
+AC-MEM-02B-CLOSURE-PREP-116 records explicit owner formal acceptance of the
+bounded MEM-02B implementation, FIX-80 credential correction and FIX-101 cleanup.
+Status: **FORMALLY ACCEPTED / RECONCILIATION RECORDED / CLOSED / UNCOMMITTED**.
+Bounded closure recorded under owner-authorized AC-MEM-02B-CLOSURE-119 after
+REVIEW-118 CLOSURE_READY. Closure evidence: `E:\Software\Agent_Company_Handoff\MEM-02B\CLOSURE-119-20261015\CLOSURE-119.md`.
+Closure grants no staging, commit, push or next-checkpoint authority.
+The separate-session REVIEW-113 product finding and owner routing disposition
+ROUTING-115 support acceptance. Same-provider review is OpenAI / Codex;
+alternate-provider availability remains UNKNOWN. Historical REVIEW-113 BLOCKED
+and REVIEW-114 NEEDS_HUMAN verdicts remain unchanged.
+
+All six retained Package 107 owner gates PASS: targeted 100/100, affected 158/158,
+focused 845 observations/835 distinct IDs, Full 1729/1719, schema/static
+202 Python/36 schemas/17 certificates, and Diff exit 0 with 20 permitted warnings.
+Package manifest SHA-256: `ca90aed32075b2e78b4c14fb87076dc6f1ebf587b5c66652770c3ec4bbe2e1a7`.
+Owner ledger SHA-256: `a017435b19ee9f99ba801d1e85e2317612ba8691e753913f3978608dd796e192`.
+Evidence: `E:\Software\Agent_Company_Handoff\MEM-02B\ACCEPTANCE-116-20261015\ACCEPTANCE-116.md`.
+No tests were rerun for acceptance recording or this documentation reconciliation.
+
+Historical 1725-test Full failure, FIX-101 repetition-8 timeout, credential and
+cleanup reproduction failures, all warning/duplicate evidence and diagnostic
+limitations remain retained. ROOT_CAUSE_UNKNOWN; DESIGN-99 remains DEFERRED.
+Same-provider blind spots, absence of fresh REVIEW-113 runtime probes, worker
+shutdown waits and trusted-filesystem/durability limits remain disclosed.
+Acceptance does not authorize a learning disposition, automatic promotion,
+execution, retry, Git action, deployment or later-phase implementation.
+Earlier dated entries below retain historical meaning. The accepted source is
+the working tree on master at baseline HEAD
+`92460248344906e5388fbe02e06b6e793187bcb5`; it is not committed at that HEAD.
+Only these four documentation files differ from the accepted 757-pin snapshot;
+the old sealed run evidence remains unchanged and the other 753 pins were
+verified unchanged for CLOSURE-119. Gates remain bound to their historical source.
+
+## MEM-02B FIX-69-R2 - 2026-10-12
+
+**ACTIVE: MEM-02B / ACCEPTANCE FIX / BOUNDED REPAIR IMPLEMENTED / CLOSURE OPEN.**
+Authority: AC-MEM-02B-FIX-69-R2, E:\Software\Agent_Company, accepted Authority-62
+and the exact 33-path Scope-63. No agent Git verification or Git commands.
+Independent REVIEW-68 remains FIX; this builder work does not change its verdict.
+The original review was recovered from its 2026-10-12 session message; its F:
+reviewed snapshot is historical, not retrospectively re-attested as current E:.
+
+R1 packages bounded positive and negative source bodies and binds deterministic
+coverage to actual persisted review content. Its check_learning repair separates
+historical confirmation from current eligibility: changed or unavailable evidence
+holds planning without fabricating revocation; Manager continues to deny reuse.
+R2 corrects credential redaction before JSON encoding, preserving original pins,
+the existing record/read ceilings and external evidence without authority.
+
+Fresh evidence lives in
+`E:\Software\Agent_Company_Handoff\MEM-02B\validation\FIX-69-R2-20261012`.
+The source/run manifest records actual commands, test IDs, duplicate observations,
+exclusions, exits, source hashes before/after each run, and retained log hashes.
+Consult its recorded results; this status entry does not claim independent PASS.
+R1's nine-test focused failure remains retained. R2 also retains the initial
+harness import failure and the subsequent ten-test run with one malformed new
+test fixture; neither is passing validation. That fixture is corrected before
+final validation. Original GATES-67, GOV-02 maps/logs, original full FAIL and
+existing untracked evidence remain untouched. No retrospective binding is added.
+An additional probe reproduced JSON-only credential leakage despite green
+pre-final regressions. That failure and those runs remain retained separately;
+final validation also covers credential-key redaction inside JSON source bodies.
+An integrity probe also caught duplicate JSON fields being collapsed. The final
+package rejects ambiguous fields and excessive JSON nesting before review; the
+probe failure and every earlier passing snapshot remain retained, not reused as
+final-source validation.
+
+Native Git-dependent targeted/affected/focused/full report-runner gates and
+git diff --check require owner PowerShell. Bounded no-Git checks cannot close those
+gates. Independent re-review, owner acceptance/closure, staging, commit and push
+remain OPEN and manual. STOP before independent re-review or closure.
+
+## MEM-02B BUILD-64 - 2026-10-11
+
+Authority: owner-authorized BUILD-64 and accepted Authority-62/Scope-63, read
+completely from `F:\Software\Agent_Company_Handoff\MEM-02B`. Handoff files are
+unchanged. Owner-supplied baseline HEAD is
+`92460248344906e5388fbe02e06b6e793187bcb5`; tracked worktree CLEAN, index EMPTY,
+both untracked evidence directories preserved. No agent Git verification.
+
+**ACTIVE: MEM-02B / IMPLEMENTED / BOUNDED EXECUTOR VALIDATION PASS / MANDATORY GATES PENDING / UNCOMMITTED.**
+Independent review and owner closure remain pending. Earlier dated status and
+closure entries remain historical; this entry neither re-attests their source
+bindings nor changes existing completion semantics.
+
+SET_LEARNING_DISPOSITION supports PROMOTE, REVOKE and SUPERSEDE through existing
+approval/action owners. Explicit genesis, retained index revisions, one separate
+pending reservation, consumed action, confirmed result and existing journal
+witnesses must agree before planning use. Partial application, stale bindings or
+uncertain recovery hold planning; no automatic repair, replay, refunded effect,
+synthetic result or predecessor reactivation is implemented. Original positive
+evidence can be unavailable during independently evidenced withdrawal.
+
+Manager planning is explicitly installed and requires exact project/root/task/
+workflow/agent/capability/conditions with fresh revalidation before acceptance and
+every reuse. Default memory remains unchanged. Memory stays untrusted and without
+authority. Job/Task Contract/execution/SQLite progress formats and V1 contracts
+remain unchanged. Limits: 32 lineages, 32 transitions, 32 evidence items per
+collection, 128 KiB per learning record, 1 MiB aggregate learning-artifact reads;
+stricter existing limits apply without pruning, archival or migration.
+
+No real disposition operations, new agent/provider/backend, MEM-03, Obsidian,
+evidence cleanup, Git, commit, push or deployment occur. Complete GOV-02 regression
+and Git-dependent checks remain mandatory and require owner-run evidence under
+the no-Git work order. Executor results cannot substitute for those gates or
+independent review. Next actions are manual (`automatic=false`). STOP before
+independent review; do not close MEM-02B from executor validation.
+
+### BUILD-64 executor evidence and remaining gates
+
+Final bounded executor validation is complete. This is **not** complete GOV-02
+acceptance, independent review or owner closure. Exact commands, the 33-file edit
+manifest and the tested source SHA-256 manifest are in
+[README BUILD-64 evidence](README.md#exact-build-64-edit-manifest).
+
+| Final executor check | Actual result |
+| --- | --- |
+| Learning contract, canonical integration, security and recovery modules | PASS: 33 tests, 727.283 s; all completed. Recovery includes eight injected persistence fault stages. |
+| Affected integration, with exactly two Git-ignore tests excluded | PASS: 191 tests, 445.323 s; 0 failures/errors/skips; 0 Git launch attempts. |
+| Focused memory/context/governance/progress regression | PASS: 428 tests, 282.187 s; 0 failures/errors/skips; 0 Git launch attempts; no exclusions. |
+| Five explicit legacy/default/isolation/read-limit compatibility checks | PASS: 5 tests, 0.042 s. Four also occur in the affected batch; counts are not unique-test totals. |
+| Native GOV-02 schema/static validator | PASS: 202 Python syntax files, 36 schema files, 17 certificates. Native repository validation, not external metaschema certification. |
+
+The final affected batch comprises test_approval, test_review,
+test_memory_integration, test_memory_readonly_inspection, test_task_contract,
+test_task_contract_f1, test_task_contract_f2 and test_actions. Exactly
+`runtime.tests.test_approval.ApprovalCliAndIgnoreTests.test_zzz_approval_artifacts_are_git_ignored`
+and
+`runtime.tests.test_review.ReviewCliAndIgnoreTests.test_x_review_artifacts_are_git_ignored`
+are UNRUN / OWNER-RUN, not passing or silently skipped.
+The focused batch comprises test_memory_foundation, test_memory_lifecycle,
+test_memory_validity, test_memory_knowledge_adapter, test_context_discovery,
+test_context_cache, test_external_content, test_capability_governance,
+test_progress, test_progress_f1 and test_progress_f2.
+
+Earlier evidence is retained separately: initial six contract tests and one
+promotion integration probe passed; an initial aggregate was interrupted after
+errors and has no aggregate PASS. The explicit read-only/NEEDS_HUMAN two-test
+command failed with two errors in 25.964 s (Snapshot path adapter and missing
+ApprovalRuntime import). The planning selector also used an incorrect capability
+key. These were corrected; the three focused reruns passed in 31.590 s.
+A later 31-test aggregate was interrupted after a terminal-version request check
+failed: the version was rejected at application but not request creation.
+Shared transition validation now enforces it before request/resolution/application;
+a focused rerun passed in 78.781 s, and the final 33-test run covers it again.
+An intermediate 33-test attempt was interrupted after the aggregate-budget test
+caught an inner exception while the outer inspection correctly remained failed;
+the test now expects failure of the whole inspection. No interrupted attempt is
+reported as PASS. Earlier 187/187 affected and 428/428 focused batches predate
+final hardening and are not substituted for the final-source reruns above.
+
+Mandatory UNRUN gates: native complete GOV-02 targeted/affected, focused and full
+report-runner gates (including Git fixtures), the two named Git-ignore tests,
+remaining Git-backed action regressions, and `git diff --check`. The agent did
+not run the report runner: it executes prohibited Git fixtures and writes
+retained evidence outside the 33-path edit allowlist. Filtered executor batches
+do not replace it. Owner-run evidence must bind this final source before
+acceptance. Separate independent source/evidence review and adversarial probes,
+then owner closure, remain pending. BUILD-64 stops before independent review.
+
+Review handoff readiness: bounded implementation and executor evidence are
+available; acceptance readiness is blocked by mandatory owner-run gates. No
+independent PASS, full-suite PASS, closure, staging, commit, push or deployment is
+claimed. All next actions require a human checkpoint and `automatic=false`.
+
 ## Post-MEM-02 Commit Reconciliation - 2026-10-11
 
 Authority: `AC-POST-MEM02-RECONCILE-60`, owner work order for
@@ -967,9 +1134,9 @@ future directory is created. Dated prior checkpoints below remain historical.
 
 ## Current Checkpoint
 
-- ACTIVE: None.
-- NEXT: MEM-02B / NOT STARTED — Learning Constraint Pipeline; sequence only,
-  no implementation authority.
+- ACTIVE: None. MEM-02B is CLOSED / UNCOMMITTED under CLOSURE-119.
+- NEXT: separately authorized MEM-02B exact-change-set review and commit.
+  No Git mutation, push, automatic continuation or later implementation is authorized.
 - MEM-02: CLOSED / COMMITTED / PUSHED after Prompt 58 formal bounded closure
   PASS; owner-verified HEAD `22c9d37b503d3eea242eb6cc35041efdaac0a4d5`.
 - MEM-03, DEC-01/02 and agents 11-14 remain PLANNED / NOT STARTED.

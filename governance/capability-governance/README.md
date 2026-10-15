@@ -1,5 +1,29 @@
 # GOV-02 Capability Governance
 
+## MEM-02B bounded action extension - BUILD-64
+
+SET_LEARNING_DISPOSITION is a separately approved LOCAL_WRITE action through
+existing approval/action/execution and CORE-07 owners. No certificate/profile,
+agent/provider/backend or independent authority store is introduced. Exact
+PROMOTE/REVOKE/SUPERSEDE scope binds preparation, independent PASS review, evidence,
+project applicability and current index. Existing completion and Git behavior stay
+unchanged. Action consumption, atomic index replacement and confirmation share
+the canonical transition lock through a dedicated boundary without a public
+already-approved/locked bypass. Uncertain evidence holds planning without repair
+or replay; journal observations are non-authoritative integrity witnesses.
+
+Source pinning includes the learning implementation/schema/composition paths and
+changed operational authority documentation. Stale source provenance denies
+authority; historical tasks/receipts are not migrated or re-attested. The existing
+trusted-filesystem limitation and frozen V1 boundaries remain explicit.
+
+Targeted/security/recovery and affected integration/static tests are executor
+evidence. Existing affected/focused/complete full regression and whitespace gates
+remain mandatory. BUILD-64 forbids all Git, including fixtures: Git-dependent
+tests and git diff --check require owner-run evidence. Filtered suites cannot be
+called complete full-suite PASS. Independent review and owner closure remain
+separate manual checkpoints; BUILD-64 stops before independent review.
+
 GOV-02 is CLOSED / COMMITTED at `e6dbe3f` (`feat: add capability governance`).
 Owner closure completed on 2026-10-03 at pre-commit HEAD `c5de474`; its dated
 record and integrity evidence are preserved. Independent R5 acceptance

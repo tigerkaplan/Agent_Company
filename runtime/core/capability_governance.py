@@ -32,6 +32,14 @@ _SOURCE_FILES = (
     "runtime/actions/authorization.py", "schemas/job.schema.json",
     "runtime/retry/runtime.py",
     "runtime/storage/file_store.py",
+    "runtime/memory/learning.py", "runtime/memory/integration.py",
+    "runtime/approvals/models.py", "runtime/approvals/factory.py",
+    "runtime/progress/models.py", "schemas/progress-event.schema.json",
+    "runtime/review/factory.py", "runtime/cli/__main__.py",
+    "schemas/approval.schema.json", "schemas/learning-disposition.schema.json",
+    "orchestrator/workflows/project-continuation.yaml",
+    "runtime/approvals/README.md", "runtime/review/README.md",
+    "orchestrator/approvals/APPROVAL_POLICY.md", "governance/capability-governance/README.md",
 )
 
 

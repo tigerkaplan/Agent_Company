@@ -461,6 +461,18 @@ def build_parser() -> argparse.ArgumentParser:
     eval_show.add_argument("eval_id")
 
     approval = top.add_parser("approval", help="Manage scoped human approvals")
+    learning = top.add_parser("learning", help="Explicit foreground learning disposition boundaries")
+    learning_commands = learning.add_subparsers(dest="command", required=True)
+    learning_prepare = learning_commands.add_parser("prepare", help="Inspect a completed learning preparation")
+    learning_prepare.add_argument("job_id")
+    learning_prepare.add_argument("--output", required=True)
+    learning_request = learning_commands.add_parser("request", help="Request one exact disposition; never approve it")
+    learning_request.add_argument("--scope", type=Path, required=True)
+    learning_request.add_argument("--reason", required=True)
+    for command in ("show", "apply", "check", "reconcile"):
+        entry = learning_commands.add_parser(command)
+        entry.add_argument("approval_id")
+    learning_commands.add_parser("inspect")
     approval_commands = approval.add_subparsers(dest="command", required=True)
     approval_list = approval_commands.add_parser(
         "list", help="List approval requests with pending requests first"
@@ -683,10 +695,15 @@ def build_worker(
         router = build_provider_router(
             repository_root(), environment=provider_environment
         )
+        if memory_integration is None:
+            context_builder = ExecutionContextBuilder(repository_root())
+        else:
+            context_builder = ExecutionContextBuilder(
+                repository_root(), knowledge_factory=memory_integration.request_adapter
+            )
         executor = ProviderExecutor(
             router=router,
-            context_builder=ExecutionContextBuilder(repository_root(), knowledge_factory=(
-                memory_integration.request_adapter if memory_integration is not None else None)),
+            context_builder=context_builder,
             artifact_store=FileProviderArtifactStore(
                 execution_root / "provider-output"
             ),
@@ -915,7 +932,8 @@ def notification_test_event(args: argparse.Namespace, created_at: str) -> Notifi
     )
 
 
-def run(arguments: list[str] | None = None, *, memory_integration=None, memory_capture=None) -> int:
+def run(arguments: list[str] | None = None, *, memory_integration=None, memory_capture=None,
+        learning_installation=None) -> int:
     args = build_parser().parse_args(arguments)
     try:
         if memory_integration is not None or memory_capture is not None:
@@ -1020,8 +1038,30 @@ def run(arguments: list[str] | None = None, *, memory_integration=None, memory_c
             execution_store=executions,
             review_store=reviews,
             notification_emitter=notification_emitter,
+            learning=learning_installation,
         )
-        if args.resource == "host":
+        if args.resource == "learning":
+            from runtime.memory.learning import learning_inspection, LearningError
+            if learning_installation is None:
+                raise LearningError("Learning is disabled; explicit foreground installation required")
+            if args.command == "prepare":
+                result = approvals.prepare_learning_scope(args.job_id, args.output)
+            elif args.command == "request":
+                result = approvals.request_learning_disposition(
+                    json.loads(read_bounded_text(args.scope, limit=128 * 1024)), reason=args.reason).request.to_dict()
+            elif args.command == "apply":
+                result = approvals.apply_learning(args.approval_id)
+            elif args.command in {"check", "reconcile"}:
+                result = approvals.check_learning(args.approval_id)
+            elif args.command == "show":
+                with learning_inspection():
+                    request = approvals.store.load(args.approval_id, require_canonical=True)
+                    if request.requested_action != "SET_LEARNING_DISPOSITION":
+                        raise LearningError("Not a learning disposition request")
+                    result = request.to_dict()
+            else:
+                result = approvals.inspect_learning()
+        elif args.resource == "host":
             if host_controller is None or args.command != "run":
                 raise HostProcessError("Unsupported host lifecycle command")
             process_type = ProcessType(args.process)
