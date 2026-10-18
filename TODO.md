@@ -1,5 +1,37 @@
 # Agent Company TODO
 
+## DEC-01 Architecture Acceptance And Remaining Decisions - 2026-10-18
+
+- [x] Record owner architecture-only acceptance under AC-DEC-01-008 of
+  AC-DEC-01-004 plus the AC-DEC-01-006 amendments.
+- [x] Record AC-DEC-01-005 / ENV-02 contract resolution of findings 1, 3 and 4,
+  and independent AC-DEC-01-007 RE_REVIEW_PASS closing finding 2's final Major.
+- [x] Preserve immutable conflict order and select ESCALATE's complete conflict
+  by original captured array index, with unchanged Error precedence and identity.
+- [ ] Obtain remaining technical owner dispositions, within later separately
+  authorized work: final schema/limits/interfaces; actual freshness values,
+  source-validity rules and requirement mappings; and material-unknown policy.
+- [ ] Resolve execution-storage API, quota and target-filesystem guarantees under
+  its existing owner; implementation/crash behavior remains unvalidated.
+- [ ] Resolve CORE-03's additive decision-subject interface before integration;
+  preserve existing execution-bound evaluation and `ExecutionResult` semantics.
+- [ ] Define versioned pilot cases, acceptable outcomes and expansion thresholds;
+  baseline agreement alone does not establish decision quality.
+- [ ] Validate actual dependencies in their existing roadmap order under separate
+  authorization; runtime compatibility, security-detector coverage and replay
+  confinement remain unvalidated. Phase 9A remains before DEC-01.
+
+The [accepted design](ROADMAP.md#dec-01-accepted-architecture-contract---2026-10-18)
+and [status record](PROJECT_STATE.md#dec-01-architecture-acceptance---2026-10-18)
+close contract review only. DEC-01 implementation is NOT STARTED; architecture
+acceptance does not authorize it or complete Phase 9A. P9A-1 through P9A-6 remain
+assessment/proposal labels, not six new mandatory checkpoints. No new agent,
+database or authority owner is introduced. `authority=none`; `automatic=false`.
+**MEM-03 remains BLOCKED; D1 remains PAUSED.** The remaining items above do not
+create a new workflow or advance the frozen sequence. No staging, commit, push,
+cleanup, installation or deployment is authorized. Earlier dated tasks retain
+their historical scope.
+
 ## MEM-02B Formal Acceptance - 2026-10-15
 
 - [x] Verify the six retained Package 107 PASS gates and current source/run bindings.

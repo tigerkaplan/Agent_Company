@@ -1,5 +1,30 @@
 # Agent Company
 
+## DEC-01 Architecture Acceptance And DOC-TREE - 2026-10-18
+
+AC-DEC-01-008 records owner architecture-only acceptance of AC-DEC-01-004 plus
+AC-DEC-01-006 after independent AC-DEC-01-007 RE_REVIEW_PASS. Contract review is
+closed; DEC-01 implementation is NOT STARTED. Scope and the accepted contract
+belong in [ROADMAP](ROADMAP.md#dec-01-accepted-architecture-contract---2026-10-18),
+status/review provenance in
+[PROJECT_STATE](PROJECT_STATE.md#dec-01-architecture-acceptance---2026-10-18), and
+remaining technical dispositions in
+[TODO](TODO.md#dec-01-architecture-acceptance-and-remaining-decisions---2026-10-18).
+
+Filesystem inspection confirms `observability/`, `orchestrator/decision-engine/`
+and `orchestrator/decision-engine/adapters/jev/` are absent and remain PLANNED
+targets. Existing CORE/GOV/evaluation/storage/progress files are supporting
+contracts, not a DEC-01 implementation. No runtime, schema, report artifact,
+directory, agent, database or authority owner is added by this reconciliation.
+The four existing Master Context documents retain their respective ownership.
+
+Phase 9A remains before DEC-01. P9A-1 through P9A-6 remain assessment/proposal
+labels, not six new mandatory checkpoints; Phase 9A acceptance is not claimed.
+`authority=none`, `automatic=false` and `ExecutionResult` remain unchanged.
+**MEM-03 remains BLOCKED; D1 remains PAUSED.** Earlier dated entries retain their
+historical scope. Architecture acceptance is not implementation, test, Git or
+deployment authorization; the documentation edits remain uncommitted.
+
 ## MEM-02B Formal Acceptance - 2026-10-15
 
 AC-MEM-02B-CLOSURE-PREP-116 records explicit owner formal acceptance of the
@@ -981,7 +1006,8 @@ checkpoints create paths when real content exists.
 - Phase 9B / CAP-SOC-01: `apps/control-room/social-media-hq/` for the HQ view.
 - Phase 9A: `observability/`.
 - Phase 9B: `apps/control-room/`.
-- DEC-01: `orchestrator/decision-engine/`.
+- DEC-01: `orchestrator/decision-engine/` remains absent / PLANNED; architecture
+  accepted under AC-DEC-01-008, implementation NOT STARTED.
 - DEC-02: `orchestrator/decision-engine/adapters/jev/`.
 - Phase 10: `project-packs/brightshore/` first. The existing
   `shared/projects/brightshore/` is current operational project state, not a

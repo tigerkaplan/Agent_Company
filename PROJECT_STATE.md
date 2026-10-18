@@ -1,5 +1,44 @@
 # Agent Company Project State
 
+## DEC-01 Architecture Acceptance - 2026-10-18
+
+AC-DEC-01-008 records the owner's explicit architecture-only acceptance in chat
+of AC-DEC-01-004 with the AC-DEC-01-006 amendments. Status:
+**ARCHITECTURE ACCEPTED / CONTRACT REVIEW CLOSED / IMPLEMENTATION NOT STARTED**.
+The accepted design direction and remaining technical dispositions are recorded
+in [ROADMAP](ROADMAP.md#dec-01-accepted-architecture-contract---2026-10-18);
+[TODO](TODO.md#dec-01-architecture-acceptance-and-remaining-decisions---2026-10-18)
+owns remaining work. This is acceptance of design, not runtime capability,
+Phase 9A acceptance, implementation authorization or DEC-01 product closure.
+
+Review provenance is the supplied chat record: AC-DEC-01-005 / ENV-02 returned
+FIX after resolving original Major findings 1, 3 and 4 at contract level;
+AC-DEC-01-007 returned independent RE_REVIEW_PASS for AC-DEC-01-006, closing the
+remaining Major in finding 2. Multiple validated conflicts now select the first
+by original captured array index, with immutable input order, the complete
+selected conflict and unchanged Error precedence. Runtime behavior was not
+tested by these reviews. The earlier AC-DEC-01-005 checkout-access BLOCKED result
+remains historical; ENV-02 established the authorized C: replacement for this
+bounded review. Review was a separate OpenAI / Codex role; provider-diverse
+review and alternate-provider availability remain unverified.
+
+Reconciliation preflight verified `C:\Users\DELL\Desktop\AgentCompany\Agent_Company`,
+branch `master`, HEAD and local `origin/master` both
+`4773acb4fd64cec0d8d84f600377d44142f00120`, with no staged changes. Nine existing
+tracked modifications and four untracked diagnostic files are outside the
+four-document edit boundary and must remain unchanged. The four canonical
+documents were clean before this reconciliation; these acceptance edits are
+uncommitted. No standalone repository DEC report artifact is assumed.
+
+Phase 9A remains before DEC-01 in the frozen roadmap. P9A-1 through P9A-6 remain
+assessment/proposal labels, not six new mandatory checkpoints. Existing owners,
+`authority=none`, `automatic=false` and `ExecutionResult` remain unchanged; no new
+agent, database or authority owner is introduced. **MEM-03 remains BLOCKED;
+D1 remains PAUSED.** Earlier dated status records retain their historical scope.
+The architecture acceptance leaves the technical decisions in ROADMAP/TODO open.
+This documentation-only reconciliation performs no implementation, runtime tests,
+installation, deployment, staging, commit, push or cleanup. `automatic=false`.
+
 ## MEM-02B Formal Acceptance - 2026-10-15
 
 AC-MEM-02B-CLOSURE-PREP-116 records explicit owner formal acceptance of the

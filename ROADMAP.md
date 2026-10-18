@@ -1,5 +1,18 @@
 # Agent Company Roadmap
 
+## DEC-01 Architecture Acceptance - 2026-10-18
+
+AC-DEC-01-008 records owner-approved architecture-only acceptance of
+AC-DEC-01-004 plus AC-DEC-01-006 after independent AC-DEC-01-007 RE_REVIEW_PASS.
+The [accepted architecture contract](#dec-01-accepted-architecture-contract---2026-10-18)
+closes the four original contract findings, not implementation or Phase 9A.
+DEC-01 implementation remains NOT STARTED; the frozen sequence is unchanged.
+Phase 9A remains before DEC-01. P9A-1 through P9A-6 are assessment/proposal
+labels, not six additional mandatory checkpoints. **MEM-03 remains BLOCKED;
+D1 remains PAUSED.** Existing dated records below retain their historical scope.
+Remaining technical dispositions are explicit in the contract entry and TODO.
+`authority=none`; `automatic=false`.
+
 ## MEM-02B Formal Acceptance - 2026-10-15
 
 AC-MEM-02B-CLOSURE-PREP-116 records explicit owner formal acceptance of the
@@ -1164,6 +1177,144 @@ Canonical JEV rule: **JEV judges. Policy authorizes. Executor acts.**
 
 JEV is a bounded semantic judging component: it does not authorize actions,
 serve as an agent or Reviewer, or act as a normal generation provider.
+
+#### DEC-01 Accepted Architecture Contract - 2026-10-18
+
+Acceptance authority: the owner's architecture-only approval recorded in chat
+and AC-DEC-01-008. Accepted baseline: the full external
+`AC-DEC-01-004_CONTRACT_REVISION.txt`, SHA-256
+`696db224e437da994f8530a0f6d3b10ca8b8d25eea9ac8fde76744730fc5cbee`,
+with the AC-DEC-01-006 amendments supplied in chat. This entry records the accepted
+design direction in the existing scope owner; it creates no separate report,
+Master Context, implementation path or authority record.
+
+AC-DEC-01-005 / ENV-02 resolved original Major findings 1, 3 and 4 at contract
+level and retained finding 2's multiple-conflict ESCALATE ambiguity. Independent
+AC-DEC-01-007 returned RE_REVIEW_PASS on the correction, closing that final
+contract finding. The reviews establish design closure only. Owner architecture
+acceptance is separate from technical interface disposition, implementation,
+runtime validation, Phase 9A acceptance and eventual DEC-01 product closure.
+
+Accepted first-slice direction:
+
+- Produce one provider-neutral advisory Skill Selection decision. Every outcome
+  has `authority=none` and `automatic=false`; `confidence=null`. Selection grants
+  no loading, execution, approval, retry, mutation or communication authority.
+  Subsequent authorized loading still uses `SkillCatalog.load`.
+- Preserve existing ownership: execution evidence owns retention; CORE-08 owns
+  catalog identities and instruction validation; GOV owns authority; CORE-03 owns
+  evaluation; CORE-07 keeps its observation/recovery boundaries. Add no agent,
+  orchestrator, database, authority ledger or authority owner. Preserve
+  `ExecutionResult` and existing GOV completion/approval consumers. DEC-02/JEV
+  remains deferred beyond this deterministic first slice.
+- Use the baseline's closed, versioned, bounded nested schema: reject extra or
+  missing fields, duplicate keys, wrong primitive types and unsupported versions;
+  required nullable fields remain present. Copy and recursively freeze values.
+  Existing reader limits still apply. The design ceilings include 256 candidates,
+  one selection, a 16,000-byte query, a 512 KiB decision, 48 input slots,
+  128 KiB individual inputs and a 2 MiB bundle; they are not proof that all
+  maximum-sized combinations fit or that runtime limits have been accepted.
+- Preserve the exact semantic/byte digest distinction. `C` is UTF-8 canonical
+  JSON with sorted keys, compact separators, ASCII escaping, no BOM or final
+  newline, and no Unicode/newline normalization. `P(T,body)` contains exactly
+  `schema_version:1`, `type:T`, `authority:"none"` and `body`. Semantic identity is
+  `SHA-256(ASCII("ac-dec-01/v1/") || ASCII(T) || 0x00 || C(P(T,body)))`, excluding
+  its own `id`. Raw identity is SHA-256 of exact bytes; instruction digests retain
+  CORE-08's decoded UTF-8 text rule with CRLF replaced by LF. Existing GOV/CORE
+  digests keep their algorithms. Retention time belongs in the receipt.
+- Retain the exact query, catalog, task/constraints, policies, configuration and
+  selector/baseline build identities with locally established source metadata.
+  The decision binds `as_of`, input-manifest identity, configuration, candidates
+  and outcome. A transformed input gets a new identity and cannot claim replay
+  of discarded original bytes. Instruction-body checks remain deferred until
+  independently authorized loading; captured metadata is not that validation.
+- Complete registration, capabilities, inputs, prerequisites, scope, security
+  and freshness checks before ranking. Unknown required evidence excludes a
+  candidate. Prerequisites use explicit mappings and type-strict equality;
+  freshness uses captured, explicitly accepted values at frozen `as_of`, source
+  validity and expiry. No free-text prerequisite becomes executable policy.
+- Rank only the verified menu using the exact CORE-08 rule: Python `str.lower()`,
+  `[a-z0-9]+` token sets, query intersection with name plus one space plus
+  description, positive counts descending then name ascending. Verify ranker
+  identities/order and baseline agreement; agreement is reproducibility, not
+  selection quality. Counterfactual overlap only determines material unknowns.
+- Preserve outcome precedence: Error, ESCALATE, material CLARIFY, material
+  insufficient-evidence ABSTAIN, SELECT of exactly the first verified positive
+  candidate, then no-candidate/no-positive-overlap ABSTAIN. Questions and fallback
+  inputs produce a new decision rather than silently resuming the old one.
+
+The accepted AC-DEC-01-006 correction is part of that contract:
+
+- Section 4: the captured conflicts array order is immutable semantic input.
+  No sorting, deduplication or reordering is permitted. Validation preserves
+  original indices.
+- Section 5: ESCALATE carries the complete selected conflict, including ordered
+  evidence references. The existing decision identity binds captured input order
+  and outcome. Identical replay inputs reproduce the same payload and identity.
+  Existing evidence-reference ordering requirements remain applicable.
+- Section 7: when ESCALATE applies, select the first validated conflict by its
+  original captured array index, not validation order. Error precedence remains
+  unchanged; this does not permit skipping invalid input to manufacture advice.
+
+Accepted persistence, security and evaluation direction:
+
+- Add advisory retention/read/current-consideration/explicit-recovery interfaces
+  under the execution-evidence owner, outside GOV's `.decisions` namespace. One
+  cross-process advisory lock serializes writers and recovery without nesting
+  canonical transition locks. Quotas count provisional/orphaned content; no
+  automatic deletion or eviction follows.
+- Publish validated input blobs, manifest and decision through synchronized
+  atomic files, read back the set, then atomically publish the final receipt as
+  the commit point and verify it before release. Identical writers return the
+  existing commitment without replacing its time. Incomplete/conflicting chains
+  hold. Reads never repair; explicitly authorized recovery may publish a new
+  recovered receipt with its actual new time, without refreshing `as_of` or
+  reconstructing historical bytes. Process-crash consistency requires later
+  target-filesystem validation; power-loss/network-filesystem durability and
+  coherent whole-store replacement detection are not claimed.
+- Validate every retained input/artifact, receipt, link, evaluation and failure
+  before persistence and on reads. Preserve CORE-11 origin/trust/authority
+  bindings; external content stays untrusted. Apply pinned canonical sensitive
+  key/credential checks, closed capture channels and safe bounded failures.
+  Hash identity does not establish authenticity or universal secret detection.
+- Replay uses committed captured inputs, versions and `as_of`, plus an explicitly
+  selected trusted installed build matching the manifest. It receives no provider,
+  connector, dispatch, approval, mutation or recovery interface, dynamically loads
+  no captured source, substitutes no current files and refreshes no historical
+  fact through live owners. Missing required versions or evidence is an error.
+- CORE-03's decision-subject schema/entry point is an additive interface proposal,
+  not support in current execution-bound APIs. Preserve execution checks and
+  identity/persistence patterns; supply no fabricated job, execution identity or
+  `ExecutionResult`. The eight proposed checks keep acceptable-outcome quality
+  separate from baseline reproducibility. Immutable GOV links cannot refund
+  consumed claims, recreate approval or redispatch.
+
+Phase 9A remains before DEC-01 under the existing frozen roadmap. The following
+labels describe dependencies of claims, not six new mandatory checkpoints or a
+new pre-implementation workflow; existing owner duties remain binding:
+
+| Label | Existing duty and proposed first-slice dependency |
+|---|---|
+| P9A-1 Capture | Execution evidence owns traceability; the advisory bundle/receipt interface remains proposed and must be accepted/validated before retained-replayable evidence is claimed. |
+| P9A-2 Unified trace | Existing owners retain their records; exact advisory identities and later-link semantics are needed, with later execution/review/approval links applicable when their records exist. Full telemetry is not an added prerequisite for writing selector code. |
+| P9A-3 Replay | Captured-version replay must prevent effects and authority reuse; the proposed captured-input boundary requires validation before replay is offered or claimed. |
+| P9A-4 Evaluation | CORE-03 retains evaluation ownership; additive decision-subject acceptance is needed before integration or decision-quality claims. |
+| P9A-5 Integrity/recovery | Existing storage and CORE-07 duties remain; the advisory publication/recovery protocol needs validation before downstream release. No implicit CORE-07 events are added. |
+| P9A-6 Acceptance | Existing human owner and independent Reviewer retain their roles; validate actual dependencies and obtain owner disposition without claiming Phase 9A closure or creating a new global checkpoint. |
+
+Remaining technical owner decisions are OPEN: final schema/limit and interface
+dispositions; actual freshness values, source-validity rules and requirement
+mappings; the conservative material-unknown policy; execution-storage API, quotas
+and target-filesystem guarantees; CORE-03's additive subject interface; and the
+pilot's versioned cases, acceptable outcomes and expansion thresholds. Runtime
+compatibility, crash behavior, detector coverage and replay confinement remain
+unvalidated. Full calibration, override trends, dashboards and detailed economics
+remain later measurements; unavailable timing/cost must not be invented.
+
+Architecture approval resolves none of those runtime acceptance obligations and
+authorizes no implementation or roadmap advancement. **MEM-03 remains BLOCKED;
+D1 remains PAUSED.** No staging, commit, push, installation or deployment is
+authorized by this record. `automatic=false`.
 
 ### H. Deployment
 
