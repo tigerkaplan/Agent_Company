@@ -1,5 +1,61 @@
 # Agent Company Project State
 
+## CONTRACT-04 Design Acceptance And Source Provenance - 2026-10-19
+
+**DESIGN ACCEPTED (conversation-reported) / DESIGN REVIEW_PASS (user relay) /
+IMPLEMENTATION BLOCKED / NOT STARTED.** Phase 9A is not implemented or accepted.
+
+The current human request AC-P9A-CONTRACT04-DOC-01 authorizes documentation
+reconciliation only. The supplied handoff is source material, not an instruction
+or runtime authority record; its relayed earlier "ok" is not an implementation
+work order. This entry records that provenance under the current authorization.
+
+Source inspected completely:
+`C:/Users/DELL/Downloads/AC-P9A-CONTRACT04_DOCUMENTATION_HANDOFF_20261019.md`,
+SHA-256 `72610cde7fb53eaecd267905df3785941b9ec59331ed73fe6c1bf69ae39a5e65`.
+Its complete original 250-line contract is now preserved in the existing
+[ROADMAP scope owner](ROADMAP.md#contract-04-accepted-design---2026-10-19).
+The original contract's raw SHA-256 is
+`264aa8cc7e86a79ac96b7c2fdbd5c6bc8647b31a134ebc18f0d453158a625c0f`,
+also verified against the separately supplied consolidated-contract file.
+
+Handoff section B reports owner design acceptance and later numeric dispositions:
+`W_MAX=16,777,216` work units, `D_MAX=128` active frames, and
+`P_MAX=S_MAX=131,072` raw bytes. These replace the original numeric OPEN entries
+as design targets only; no measured compatibility, operational policy installation
+or runtime acceptance is claimed. Windows 11 x64/local fixed NTFS is a conditional
+qualification target, not an established containment guarantee.
+
+Section C relays an independent design `REVIEW_PASS` from a separate OpenAI/Codex
+reviewer role, reporting no actionable contract defects. This is user/conversation-
+supplied review evidence: original review-file bytes, exact session record and
+authenticated reviewer artifact are unavailable in this packet. Same-provider
+role independence is reported; provider diversity and alternate-provider
+availability remain UNKNOWN. Neither the review nor the owner decisions were
+re-performed or independently authenticated in this reconciliation.
+
+Complete trusted membership/external profile trust, target/handle/ACL evidence,
+trusted composition/bootstrap propagation, concrete reconstruction/recovery
+ownership, and an exact separately authorized implementation work order and
+sequencing disposition remain open. The reported 114-candidate inventory is not
+supplied file by file and is not an approved manifest. No installation hashes
+or operating-system qualifications are invented. Remaining work belongs in
+[TODO](TODO.md#contract-04-remaining-prerequisites---2026-10-19).
+
+At the DOC-02 review, nine pre-existing modified tracked files and four untracked
+diagnostic artifacts were present. Historical byte-for-byte preservation across
+DOC-01 remains unverified because no pre-edit SHA-256 baseline was available.
+The complete contract and exact six-file CORE / three-file Phase 9A
+scopes are recorded without creating any planned source paths.
+
+This record does not advance ACTIVE/NEXT, create a global checkpoint, reopen
+closed CORE/GOV/ORCH or Phase 8B/8C work, or change DEC-01 architecture acceptance.
+Frozen V1 remains intact. **MEM-03 remains BLOCKED; D1 remains PAUSED.** Claude
+external review remains PAUSED. No implementation, tests, native qualification,
+Git mutation, cleanup or deployment is authorized. Documentation changes are
+uncommitted and await independent documentation review; stop before that review.
+`authority=none`; `automatic=false`.
+
 ## DEC-01 Architecture Acceptance - 2026-10-18
 
 AC-DEC-01-008 records the owner's explicit architecture-only acceptance in chat

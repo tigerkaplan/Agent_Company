@@ -1,5 +1,48 @@
 # Agent Company TODO
 
+## CONTRACT-04 Remaining Prerequisites - 2026-10-19
+
+- [x] Preserve the complete original 250-line consolidated contract in the
+  [existing ROADMAP scope owner](ROADMAP.md#contract-04-accepted-design---2026-10-19),
+  with verified source identity and later conversation-reported owner decisions.
+- [x] Record the user-relayed independent design REVIEW_PASS and its source
+  limitations in [PROJECT_STATE](PROJECT_STATE.md#contract-04-design-acceptance-and-source-provenance---2026-10-19).
+  No completed design or security review is repeated.
+- [x] Record owner design targets: `W_MAX=16,777,216`, `D_MAX=128`,
+  `P_MAX=S_MAX=131,072` raw bytes. These supersede the original OPEN numeric
+  entries without claiming implementation or compatibility acceptance.
+- [ ] Obtain independent review of this exact four-document reconciliation under
+  separate review authority; stop before performing it in AC-P9A-CONTRACT04-DOC-01.
+- [ ] Establish complete trusted installation membership, required/excluded import
+  disposition and an external trusted profile source. The reported 114 candidates
+  (112 existing plus two proposed trace modules) have no supplied file-by-file
+  list or installed hashes and do not constitute an approved manifest.
+- [ ] Establish the conditional Windows 11 x64/local fixed NTFS target's exact
+  build/volume, principal, safe root, component-handle access/sharing/reparse rules,
+  ACL enforcement and supported containment qualification evidence.
+- [ ] Establish the actual trusted composition/bootstrap entry and operation
+  context propagation before attributable constructor or cold-import reads.
+- [ ] Establish the concrete separately authorized reconstruction/restart/recovery
+  owner and procedure; retain no inspection-triggered repair, historic evidence
+  rewriting, automatic re-attestation or approval restoration.
+- [ ] Obtain an exact bounded implementation work order and sequencing disposition
+  under the existing lifecycle. The accepted six-file CORE candidate scope is
+  not edit authority; any scope amendment needs explicit authorization.
+- [ ] Before pinned operational admission, establish exact installed pins and
+  complete closure within 128 entries, target containment evidence, instrumented
+  byte/work accounting, compatibility/failure evidence, independent implementation
+  review and owner acceptance. None is supplied by documentation reconciliation.
+- [ ] Only after accepted CORE dependency evidence and separate authorization may
+  the original three-file Phase 9A slice rely on it.
+
+CONTRACT-04 design is accepted as conversation-reported; implementation remains
+BLOCKED / NOT STARTED. Phase 9A remains NOT STARTED and is not accepted. These
+remaining obligations do not replace ACTIVE/NEXT or create a new global gate.
+Frozen V1, closed checkpoints and DEC-01 architecture acceptance are preserved.
+**MEM-03 remains BLOCKED; D1 remains PAUSED.** Claude external review remains
+PAUSED. No tests, probes, code edits or Git mutation follow automatically.
+`authority=none`; `automatic=false`.
+
 ## DEC-01 Architecture Acceptance And Remaining Decisions - 2026-10-18
 
 - [x] Record owner architecture-only acceptance under AC-DEC-01-008 of

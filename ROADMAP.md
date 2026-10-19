@@ -1143,6 +1143,342 @@ Future document runtime ownership: `runtime/documents/` with `ingestion/`,
 - Phase 9C — Operating Layer: Morning Map, State Delta, Weekly Close / Weekly
   Compounding, Lessons Learned, Automation Opportunities, and Pre-flight Review.
 
+#### CONTRACT-04 Accepted Design - 2026-10-19
+
+**DESIGN ACCEPTED (conversation-reported); implementation BLOCKED / NOT STARTED.**
+AC-P9A-CONTRACT04-DOC-01 authorizes this documentation reconciliation only.
+This existing architecture/scope owner stores the complete original contract
+below, together with the later owner dispositions. Status and review provenance
+belong in [PROJECT_STATE](PROJECT_STATE.md#contract-04-design-acceptance-and-source-provenance---2026-10-19);
+[TODO](TODO.md#contract-04-remaining-prerequisites---2026-10-19) retains remaining work.
+No new document, directory, Master Context, runtime approval or authority owner
+is created.
+
+The supplied `AC-P9A-CONTRACT04_DOCUMENTATION_HANDOFF_20261019.md` has SHA-256
+`72610cde7fb53eaecd267905df3785941b9ec59331ed73fe6c1bf69ae39a5e65`.
+Its section A contains the full original 250-line contract, originally named
+`01_CONSOLIDATED_CONTRACT.md` in the conversation source packet. Its raw SHA-256 is
+`264aa8cc7e86a79ac96b7c2fdbd5c6bc8647b31a134ebc18f0d453158a625c0f`;
+the separately supplied `AC-P9A-CONTRACT04_CONSOLIDATED_CONTRACT.md` matches that
+identity, and its complete bytes are preserved between the source markers below.
+Local source links and line references inside that historical text are retained
+verbatim; they are not freshly verified current navigation or instructions to act.
+
+##### Later owner dispositions and remaining admission boundary
+
+Handoff section B relays owner acceptance in conversation; section C relays a
+separate OpenAI/Codex design `REVIEW_PASS`. These are recorded with their source
+limitations, not promoted into authenticated original approval/review artifacts.
+The reported review concerns the original contract; the later numeric decisions
+are owner design targets, not independently validated compatibility guarantees.
+
+| Parameter | Later owner-accepted design target |
+| --- | --- |
+| `W_MAX` | 16,777,216 operation-wide work units |
+| `D_MAX` | 128 active validation frames |
+| `P_MAX` | 131,072 raw bytes |
+| `S_MAX` | 131,072 raw bytes |
+
+These four dispositions supersede the original contract's numeric OPEN entries.
+Preserve 131,072 raw bytes per schema, 33,554,432 aggregate read bytes including
+final rereads, complete profiles of 1-128 entries, and the 512 UTF-8-byte path
+ceiling. Existing stricter owner limits remain effective. No new profile fields,
+runtime defaults or assurance that maximum-sized combinations fit are introduced.
+
+Windows 11 x64 on local fixed NTFS is a conditionally accepted first qualification
+target only. Exact OS build, volume, principal, safe root, component-handle
+access/sharing/reparse semantics, ACL enforcement and containment evidence remain
+unverified. No Windows mechanism or installed filesystem security is accepted.
+
+Trusted composition must supply complete installation membership, exact installed
+raw-byte pins and an external trusted profile identity; no artifact-selected
+subset or self-certifying profile is allowed. Historical 63-existing/65-candidate
+figures and the later user-reported 114 candidates (112 existing plus two proposed
+trace modules) are discovery context only. This handoff supplies neither the
+114-file list nor its hashes; neither count is an approved manifest.
+
+Shared CORE retains schema policy/provenance and CORE-07 retains accounting/final
+checks, without an early Progress import. Concrete trusted bootstrap entry and
+context propagation remain unestablished. Restart/reconstruction requires explicit
+owner authorization outside inspection; the concrete reconstruction/restart/recovery
+owner and procedure remain unestablished. Inspection never repairs caches,
+rewrites historical evidence, re-attests approvals or restores authority.
+
+The six-file CORE candidate scope and separate three-file Phase 9A slice in the
+original contract remain exact future edit boundaries, not permission to edit.
+A separately authorized CORE dependency work order, its required evidence,
+independent implementation review and owner acceptance must precede reliance by
+the three-file slice. Exact work order and sequencing disposition remain missing;
+recorded ACTIVE/NEXT slots and the frozen roadmap are not replaced.
+
+The reported design REVIEW_PASS supersedes only the original text's pending
+design-review status and request to commission that design review; do not repeat
+it. All other unresolved implementation and operational prerequisites remain
+open as recorded in TODO. This documentation reconciliation itself has not
+received independent review. Phase 9A remains NOT STARTED and is not accepted;
+MEM-03 remains BLOCKED; D1 and Claude external review remain PAUSED.
+`authority=none`; `automatic=false`.
+
+##### Original consolidated contract - complete preserved source
+
+The following is the original source, including its historical OPEN/pending-review
+wording. Interpret it with the later dispositions and limitations immediately
+above; its historical next-action statements do not authorize work.
+
+<!-- CONTRACT-04 ORIGINAL SOURCE BEGIN -->
+**CONSOLIDATED_CONTRACT_READY — design only; `automatic=false`.**
+
+The owner’s conditional design baseline is incorporated below. This contract is ready for independent review. It grants no implementation authority and makes no runtime-acceptance claim.
+
+Verified checkout: `master`, HEAD `7118c8ff080e8038a6aff99eae9267efdd359ca5`; index empty; nine tracked modifications and four untracked diagnostic files unchanged. All three source reports were read; their hashes remained unchanged: [FIX 1 revision]\(C:/Users/DELL/Downloads/AC-P9A-CONTRACT04_SOURCE_PACK/AC-P9A-CONTRACT04_FIX1_REVISION.md), [historical assessment]\(C:/Users/DELL/Downloads/AC-P9A-CONTRACT04_SOURCE_PACK/AC-P9A-CONTRACT04_HISTORICAL_CORE_ASSESSMENT.txt), [recovered FIX 2/3 evidence]\(C:/Users/DELL/Downloads/AC-P9A-CONTRACT04_SOURCE_PACK/AC-P9A-CONTRACT04_RECOVERED_FIX23_EVIDENCE.md).
+
+**1. Contract purpose, authority and ownership**
+
+This contract combines bounded schema acquisition and inspection accounting (**FIX 1**), exact identity and installation pins (**FIX 2**), and disclosure restrictions (**FIX 3**).
+
+`JobValidator` remains the validation implementation. Shared CORE owns schema acquisition and parsed-byte provenance. CORE-07 retains inspection accounting, final readback and journal restrictions. CORE-08 supplies canonical path rules. GOV and ORCH retain their existing authority, provenance and structural-proof responsibilities.
+
+No new validator, database, authority ledger, agent or canonical owner is introduced. Inspection grants no execution, approval, retry, recovery, mutation or communication authority.
+
+The stronger pinned-inspection policy is explicitly selected through trusted composition. Existing consumer APIs remain intact. Shared validator construction must not eagerly import Progress or create a circular initialization dependency.
+
+**2. Fixed ceilings and open numeric parameters**
+
+| Parameter                                                    | Contract value              |
+| ------------------------------------------------------------ | --------------------------- |
+| Initial or external schema document                          | **131,072 bytes**           |
+| Aggregate inspection payload reads, including final rereads  | **33,554,432 bytes**        |
+| Validation-profile entries                                   | **1–128**                   |
+| Installation-relative `FilePin.path`                         | **512 UTF-8 bytes maximum** |
+| Existing stricter owner limits                               | Preserved                   |
+| Operation-wide traversal-work limit, `W_MAX`                 | **OPEN**                    |
+| Validation-depth limit, `D_MAX`                              | **OPEN**                    |
+| Profile acquisition byte limit, `P_MAX`                      | **OPEN**                    |
+| Installation source/configuration acquisition limit, `S_MAX` | **OPEN**                    |
+
+The previously proposed 128 KiB profile/source limits remain proposals. They are not silently adopted as defaults.
+
+Open limits require finite, positive, owner-disposed values before pinned operational admission. They belong to the trusted operation policy; they do not add fields to the closed profile defined below. Maximum-sized combinations need not fit simultaneously.
+
+**3. Exact semantic identity**
+
+`D(value)` is the existing `runtime.core.task_contract.digest(value)`: SHA-256 over its existing canonical JSON encoding—sorted keys, compact separators, ASCII escaping, `allow_nan=False`, UTF-8 encoding and existing helper limits. No replacement serializer or normalization is introduced. [Canonical implementation (line 42)]\(C:/Users/DELL/Desktop/AgentCompany/Agent_Company/runtime/core/task_contract.py:42)
+
+`owner_binding = D(B)`, where `B` contains exactly:
+
+```
+{
+  schema_version: 1,
+  project_id: ID,
+  installation_root: Root,
+  project_root: Root,
+  owners: {
+    jobs: Root,
+    tasks: Root,
+    executions: Root,
+    progress: Root,
+    approvals: Root,
+    evaluations: Root,
+    reviews: Root|null,
+    provider_outputs: Root|null,
+    mutation_outputs: Root|null
+  }
+}
+```
+
+`ID` is the trusted configured project identifier, validated through the existing canonical owner rules. Each owner root comes from that exact `ActionTraceOwners` attribute’s configured `.root`. Only the three optional owners may be null; their fields remain present.
+
+For every `Root`:
+
+- Reject symlinks, junctions and non-directory roots, including unsafe components concealed by resolution.
+- Resolve using `Path(root).resolve(strict=True)`.
+- On Windows, apply `ntpath.normcase(str(resolved))`, then replace backslashes with `/`.
+- On POSIX, use `resolved.as_posix()` without case folding.
+- Apply no additional Unicode normalization or trailing-separator transformation. Reject unsupported path flavours.
+
+Trusted composition independently supplies the Agent Company installation root. Project or artifact data cannot substitute for it. Owner, project and installation bindings must agree at entry and exit.
+
+Existing semantic evidence pins remain `D(complete owner-returned JSON)`. The successful view ID remains `D(complete successful output with only id omitted)`. Raw-byte digests do not replace these semantic identities.
+
+Caller-supplied containers are copied and recursively frozen before use.
+
+**4. Closed validation profile and complete pin coverage**
+
+The profile retains the recovered FIX 2 identity:
+
+```
+{
+  contract: "AC-P9A-CONTRACT-20261018-04",
+  revision: 2,
+  files: List(FilePin,128)
+}
+```
+
+Each `FilePin` contains exactly:
+
+```
+{path: Path, sha256: Hex}
+```
+
+`path` must:
+
+- Be installation-relative, use `/` separators and fit 512 UTF-8 bytes.
+- Pass `RepositoryReader(installation_root)` validation and equal `canonical_ref(path)`.
+- Reject traversal, aliases, absolute paths, links and nonregular files.
+- Be unique both as a canonical path and as `RepositoryReader.identity(path)`.
+
+Entries are ordered by Unicode scalar-value order of the complete canonical path.
+
+`sha256` is lowercase SHA-256 of the complete raw file bytes, including any BOM and original line endings. Decoded/re-encoded text and parsed JSON are not substitutes.
+
+Trusted composition supplies the complete dependency set. It must cover:
+
+- The installed trace implementation and all validation-code dependencies.
+- Every initial schema and transitive external schema document.
+- GOV-02’s installed source set and certification policy.
+- The shared validator, inspection reader and containment implementation.
+- Every additional installation payload read by the supported operation.
+
+Requests and retained artifacts cannot reduce this set. Missing pins, undeclared installation reads, duplicates, aliases, incorrect ordering or more than 128 entries cause failure. No truncation or silent subset is permitted.
+
+The historical inventory of **63 existing files / 65 candidates** is discovery evidence, not a complete approved manifest.
+
+A file-backed profile requires an externally supplied trusted raw-byte identity. Its bounded acquisition is charged before parsing; it cannot authenticate itself through a self-referential pin.
+
+**5. Operation lifecycle and byte accounting**
+
+Create one operation context before the first attributable payload acquisition, constructor read or cold-import application read. Trusted bootstrap establishes the root bindings, policy and profile trust source. Unsupported containment or incomplete required policy denies entry before evidence inspection.
+
+Nested inspections join the same operation. They cannot replace its profile, reset counters or enlarge limits. Concurrent work belonging to the operation must share its reservations and observations; it cannot fall through to ordinary unpinned reads.
+
+One ledger covers all attributable application payload reads:
+
+- Evidence and journal bytes.
+- Profile acquisition and installation-pin verification.
+- Initial and external schemas.
+- GOV-02 implementation/source rehashes and certification reads.
+- ORCH schema fingerprints.
+- Nested construction and all required rereads.
+
+Reserve capacity before each physical read. Outstanding reservations count against the remaining aggregate allowance. Reconcile reservations with actual returned bytes; uncertain partial I/O retains its reservation and fails the operation.
+
+No read request may exceed its applicable acquisition limit or remaining aggregate capacity. The current `ceiling + 1` overshoot pattern cannot satisfy this contract.
+
+Verified file extent, bounded acquisition and stable-handle checks must establish completeness. If completeness cannot be established within the limits, fail closed.
+
+Reusing an immutable verified buffer incurs no fictional second physical-read charge. It cannot replace a fresh reread required by a canonical owner. Every actual reread is charged. Metadata checks and failed opens are recorded separately from payload-byte totals.
+
+Final complete-byte readback uses the same 32 MiB budget. A journal smaller than 32 MiB is not guaranteed to fit a complete inspection.
+
+**6. Schema acquisition and cached-validator provenance**
+
+Every initial and external schema document must be acquired as complete bounded raw bytes. During pinned inspection, verify its canonical installation identity and trusted raw pin **before parsing**. Then decode UTF-8 and apply existing JSON interpretation.
+
+Preserve fragment decoding, canonical schema-directory restrictions, required-field behavior and legitimate recursive schemas. Introduce no network resolution, captured-code loading or substitute validator.
+
+New validator construction records its initial document identity and raw-byte digest. Retained external-document caches require equivalent provenance.
+
+At pinned use, require agreement among:
+
+1. The trusted installation pin.
+2. A fresh stable byte observation.
+3. The validator’s recorded provenance.
+
+Use operation-local parsed data derived from verified bytes. Detect altered cached schema/path state. Parsed-object equality alone cannot establish raw-byte provenance.
+
+Stale or provenance-less validators fail closed. Explicit reconstruction or process restart occurs outside inspection; global caches are never silently refreshed. Previously unacquired external documents may be acquired locally under the active policy.
+
+**7. Traversal accounting and termination**
+
+Byte acquisition and traversal work are separate limits.
+
+The operation maintains one shared work counter and active-validation stack. The accounting events are:
+
+- Entry into a schema/instance evaluation.
+- A branch attempt.
+- A reference resolution.
+- A node visit during schema-reference discovery or instance traversal.
+
+Each event consumes one work unit; overlapping event categories are charged separately. Failed branches retain their charges. Nested validators and reference traversal cannot reset the counter.
+
+Before processing the next event or descending another validation frame, enforce `W_MAX` and `D_MAX`. Neither a host recursion limit nor a caught `RecursionError` substitutes for this policy.
+
+Track active evaluations by verified schema-document identity, schema location, instance location and evaluation phase. Re-entering the same active combination without progress is a termination failure. It must not become a schema nonmatch or permit partial success.
+
+Recursion that advances into a distinct child instance remains eligible within the declared limits. Reference discovery deduplicates documents and does not reject a schema merely because its document-reference graph contains a cycle.
+
+Work exhaustion, depth exhaustion and non-progressing recursion are sticky integrity failures. The numeric values remain **OPEN**.
+
+**8. Stable reads and containment**
+
+Apply canonical path validation before resolution can conceal links. Require regular files, stable opened-object identity, agreement between named and opened objects, verified extent, raw-byte digests and before/after observations.
+
+Pinned acquisition must maintain containment under the trusted root through concurrent directory replacement. `resolve()` and `stat()` alone are insufficient. Recheck observed content, relevant absence and bindings before releasing success.
+
+The target-specific handle acquisition, access, sharing and reparse-point rules remain admission prerequisites. No Windows mechanism is selected or claimed validated by this consolidation. Unsupported platforms/filesystems fail closed without a weaker fallback.
+
+These checks do not establish a simultaneous transaction across stores, detection of every change-and-restoration, protection against coherent replacement of the entire trusted installation, or power-loss durability.
+
+**9. Failure, disclosure and recovery**
+
+Acquisition, containment, pin, provenance, decoding, traversal and stability failures remain distinct internally from ordinary schema mismatches. Branch logic—including `if`, `oneOf`, `anyOf`, `not` and `contains`—cannot swallow them.
+
+Any integrity failure permanently marks the operation failed. Catching or translating its exception cannot permit successful outer completion. No success is released before final checks finish. Context exit clears transient state.
+
+The FIX 3 disclosure rule is retained:
+
+> The successful response may expose validated installation-relative paths only in `profile.files[].path`. These paths are permitted provenance metadata. Physical installation, project and owner roots remain concealed; only their `owner_binding` digest is returned. No other source paths, source bodies, summaries, stdout/stderr, commands, raw provider reasoning or environment dumps are exposed. Failure responses contain no paths or exception text.
+
+Profile paths remain inert data. They never direct imports, execution, fetching or artifact-selected filesystem access.
+
+Inspection performs no migration, reconciliation, journal recovery, cache repair, persistent lock creation or write. Changed installations, stale loaded implementations, interrupted canonical state and unavailable evidence hold the operation.
+
+Existing owners retain separately authorized reconstruction, restart and recovery. Historical receipts, approvals and evidence are not rewritten or automatically re-attested.
+
+**10. Compatibility and exact scope**
+
+Preserve execution-result aliases, typed-load compatibility, GOV provenance/authority checks, completion semantics, CORE-07 journal restrictions and ORCH structural-proof freshness. Accounting graph schema reads does not enable graph-bound inspection.
+
+CORE-03’s proposed decision-subject interface remains separate. No evaluation adapter or fabricated `ExecutionResult` is introduced.
+
+The CORE candidate scope remains exactly:
+
+| File                                               | Responsibility                                                                                 |
+| -------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `runtime/core/validation.py`                       | Bounded schema acquisition, policy access, provenance, traversal and integrity propagation.    |
+| `runtime/progress/store.py`                        | Shared reservations, stable reads, final readback and failed-operation state.                  |
+| `runtime/core/capability_governance.py`            | Account import-time and verification-time source/certification reads without weakening checks. |
+| `runtime/graph/models.py`                          | Account transitive fingerprint reads while preserving proof freshness and graph restrictions.  |
+| `runtime/tests/test_schema_io.py`                  | Proposed direct contract coverage.                                                             |
+| `runtime/tests/test_memory_readonly_inspection.py` | Composed-owner accounting, compatibility and no-write coverage.                                |
+
+Other consumers remain unchanged. Any demonstrated need for another edit requires an explicit allowlist amendment.
+
+The original Phase 9A slice remains separately scoped:
+
+```
+observability/__init__.py
+observability/selected_trace.py
+runtime/tests/test_p9a_selected_trace.py
+```
+
+**11. Exact unresolved admission prerequisites**
+
+| Stage                               | Still required                                                                                                                                                                                                                                                                                               |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Before implementation authorization | Independent design review; explicit `W_MAX`, `D_MAX`, `P_MAX`, `S_MAX`; complete manifest-membership disposition and trusted pin source; supported target/containment contract; bootstrap/context propagation rules; reconstruction/restart/recovery disposition; exact work order and sequencing authority. |
+| Before pinned operational admission | Concrete installed pins; demonstrated complete closure within 128 entries; target-specific containment evidence; instrumented byte/work accounting; compatibility and failure evidence; independent implementation review and owner acceptance under the existing lifecycle.                                 |
+
+Future acceptance evidence must cover schema and aggregate boundaries, final rereads, profile identity/completeness, cold/warm validators, legitimate recursion, non-progressing recursion, work/depth exhaustion, swallowed-error resistance, concurrency isolation, supported-target replacement attacks and unchanged recovery/no-write behavior. None of that evidence is claimed here.
+
+Design may proceed while MEM-03 remains BLOCKED. Any later implementation follows the existing canonical sequence: separately authorized CORE dependency work must supply its required acceptance evidence before the three-file slice relies on it. This creates no new global checkpoint and does not replace recorded ACTIVE/NEXT slots. [Canonical boundary (line 1292)]\(C:/Users/DELL/Desktop/AgentCompany/Agent_Company/ROADMAP.md:1292)
+
+**One next action:** separately commission an independent, read-only review of this consolidated contract and its explicitly open admission prerequisites.
+
+Frozen V1, closed Phase 8B/8C and DEC-01 architecture acceptance remain preserved. MEM-03 remains BLOCKED; D1 and Claude external review remain PAUSED. No implementation, tests, file edits or Git writes occurred. **Stopped before independent review.**
+
+<!-- CONTRACT-04 ORIGINAL SOURCE END -->
+
 ### G. Decision Engine / JEV
 
 - DEC-01 — Provider-neutral Decision Engine: deterministic rules plus worker,

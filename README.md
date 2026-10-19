@@ -1,5 +1,31 @@
 # Agent Company
 
+## CONTRACT-04 Canonical Design And DOC-TREE - 2026-10-19
+
+The complete original CONTRACT-04 and later owner design dispositions are stored
+in [ROADMAP](ROADMAP.md#contract-04-accepted-design---2026-10-19), the existing
+architecture/scope owner. [PROJECT_STATE](PROJECT_STATE.md#contract-04-design-acceptance-and-source-provenance---2026-10-19)
+records conversation-reported acceptance and user-relayed independent design
+REVIEW_PASS with source limitations; [TODO](TODO.md#contract-04-remaining-prerequisites---2026-10-19)
+owns the open implementation and operational prerequisites.
+
+Focused filesystem inspection confirms five existing CORE candidate paths:
+`runtime/core/validation.py`, `runtime/progress/store.py`,
+`runtime/core/capability_governance.py`, `runtime/graph/models.py` and
+`runtime/tests/test_memory_readonly_inspection.py`. Their presence is existing
+infrastructure, not CONTRACT-04 implementation evidence. The sixth candidate,
+`runtime/tests/test_schema_io.py`, remains absent. The separately scoped
+`observability/__init__.py`, `observability/selected_trace.py` and
+`runtime/tests/test_p9a_selected_trace.py` also remain absent; `observability/`
+remains PLANNED. No path, directory, manifest or approval artifact is created.
+
+Only the four existing Master Context documents change, retaining their current
+status/scope/work/DOC-TREE ownership. Implementation remains BLOCKED / NOT STARTED;
+Phase 9A is not accepted. The documentation diff is uncommitted and awaits
+independent documentation review. Frozen V1 and completed checkpoints remain
+intact; **MEM-03 remains BLOCKED; D1 remains PAUSED.** Claude external review stays
+PAUSED. `authority=none`; `automatic=false`.
+
 ## DEC-01 Architecture Acceptance And DOC-TREE - 2026-10-18
 
 AC-DEC-01-008 records owner architecture-only acceptance of AC-DEC-01-004 plus
