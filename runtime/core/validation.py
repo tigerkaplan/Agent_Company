@@ -2,10 +2,14 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
+import os
 import re
 from collections.abc import Mapping
+from contextvars import ContextVar
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -13,6 +17,67 @@ from typing import Any
 
 class JobValidationError(ValueError):
     """Raised when a job does not satisfy the canonical schema."""
+
+
+class SchemaIntegrityError(JobValidationError):
+    """Raised when bounded schema processing cannot safely continue."""
+
+
+SCHEMA_MAX_BYTES = 128 * 1024
+W_MAX = 16_777_216
+D_MAX = 128
+
+
+@dataclass
+class _ValidationState:
+    work: int = 0
+    depth: int = 0
+    active: set[tuple[Path, int, str, str]] = field(default_factory=set)
+    documents: dict[Path, tuple[dict[str, Any], bytes, str]] = field(
+        default_factory=dict
+    )
+    failed: SchemaIntegrityError | None = None
+
+
+_VALIDATION_STATE: ContextVar[_ValidationState | None] = ContextVar(
+    "schema_validation_state", default=None
+)
+
+
+def _load_schema(path: Path, description: str) -> tuple[dict[str, Any], bytes, str]:
+    """Load one complete schema while retaining its exact raw-byte identity."""
+    try:
+        with path.open("rb") as handle:
+            initial_extent = os.fstat(handle.fileno()).st_size
+            if initial_extent > SCHEMA_MAX_BYTES:
+                raise SchemaIntegrityError(
+                    f"{description.capitalize()} exceeds {SCHEMA_MAX_BYTES} raw bytes"
+                )
+            chunks: list[bytes] = []
+            acquired = 0
+            while acquired < initial_extent:
+                chunk = handle.read(initial_extent - acquired)
+                if not chunk:
+                    raise SchemaIntegrityError(
+                        f"{description.capitalize()} changed during acquisition"
+                    )
+                chunks.append(chunk)
+                acquired += len(chunk)
+            final_extent = os.fstat(handle.fileno()).st_size
+    except OSError as error:
+        raise JobValidationError(f"Could not load {description}") from error
+    if final_extent != initial_extent:
+        raise SchemaIntegrityError(
+            f"{description.capitalize()} changed during acquisition"
+        )
+    raw = b"".join(chunks)
+    try:
+        document = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError, RecursionError) as error:
+        raise JobValidationError(f"Could not load {description}") from error
+    if not isinstance(document, dict):
+        raise JobValidationError(f"{description.capitalize()} is not an object")
+    return document, raw, hashlib.sha256(raw).hexdigest()
 
 
 def default_schema_path() -> Path:
@@ -24,11 +89,36 @@ class JobValidator:
 
     def __init__(self, schema_path: Path | None = None) -> None:
         self.schema_path = schema_path or default_schema_path()
-        with self.schema_path.open("r", encoding="utf-8") as handle:
-            self.schema = json.load(handle)
+        self.schema, self.schema_raw_bytes, self.schema_sha256 = _load_schema(
+            self.schema_path, "schema"
+        )
 
     def validate(self, value: dict[str, Any]) -> None:
-        self._validate(value, self.schema, "$", self.schema, self.schema_path)
+        state = _VALIDATION_STATE.get()
+        if state is not None:
+            self._validate(value, self.schema, "$", self.schema, self.schema_path)
+            return
+        state = _ValidationState()
+        token = _VALIDATION_STATE.set(state)
+        try:
+            self._validate(value, self.schema, "$", self.schema, self.schema_path)
+        finally:
+            _VALIDATION_STATE.reset(token)
+
+    @staticmethod
+    def _charge(event: str) -> _ValidationState:
+        state = _VALIDATION_STATE.get()
+        if state is None:
+            raise SchemaIntegrityError("Validation traversal state is unavailable")
+        if state.failed is not None:
+            raise state.failed
+        if state.work >= W_MAX:
+            state.failed = SchemaIntegrityError(
+                f"Validation traversal exceeds W_MAX={W_MAX} before {event}"
+            )
+            raise state.failed
+        state.work += 1
+        return state
 
     def _validate(
         self,
@@ -38,29 +128,92 @@ class JobValidator:
         root: dict[str, Any],
         schema_path: Path,
     ) -> None:
-        if "$ref" in schema:
-            schema, root, schema_path = self._resolve_ref(
-                schema["$ref"], root, schema_path
+        state = self._charge("schema evaluation")
+        self._charge("instance node visit")
+        if state.depth >= D_MAX:
+            state.failed = SchemaIntegrityError(
+                f"Validation traversal exceeds D_MAX={D_MAX} active frames"
             )
+            raise state.failed
+        state.depth += 1
+        try:
+            self._validate_frame(value, schema, path, root, schema_path, state)
+        finally:
+            state.depth -= 1
+
+    def _validate_frame(
+        self,
+        value: Any,
+        schema: dict[str, Any],
+        path: str,
+        root: dict[str, Any],
+        schema_path: Path,
+        state: _ValidationState,
+    ) -> None:
+        if "$ref" in schema:
+            reference_chain: set[tuple[Path, int]] = set()
+            while "$ref" in schema:
+                reference_key = (schema_path.resolve(), id(schema))
+                if reference_key in reference_chain:
+                    state.failed = SchemaIntegrityError(
+                        f"{path}: non-progressing recursive schema reference"
+                    )
+                    raise state.failed
+                reference_chain.add(reference_key)
+                self._charge("reference resolution")
+                schema, root, schema_path = self._resolve_ref(
+                    schema["$ref"], root, schema_path
+                )
+                if set(schema) != {"$ref"}:
+                    break
+
+        active_key = (schema_path.resolve(), id(schema), path, "evaluate")
+        if active_key in state.active:
+            state.failed = SchemaIntegrityError(
+                f"{path}: non-progressing recursive schema evaluation"
+            )
+            raise state.failed
+        state.active.add(active_key)
+        try:
+            self._validate_keywords(value, schema, path, root, schema_path)
+        finally:
+            state.active.discard(active_key)
+
+    def _validate_keywords(
+        self,
+        value: Any,
+        schema: dict[str, Any],
+        path: str,
+        root: dict[str, Any],
+        schema_path: Path,
+    ) -> None:
 
         for candidate in schema.get("allOf", []):
+            self._charge("allOf branch attempt")
             self._validate(value, candidate, path, root, schema_path)
 
         if "if" in schema:
             condition_matches = True
             try:
+                self._charge("if branch attempt")
                 self._validate(value, schema["if"], path, root, schema_path)
+            except SchemaIntegrityError:
+                raise
             except JobValidationError:
                 condition_matches = False
             branch = schema.get("then") if condition_matches else schema.get("else")
             if branch is not None:
+                self._charge("conditional branch attempt")
                 self._validate(value, branch, path, root, schema_path)
 
         if "oneOf" in schema:
             matches = 0
             for candidate in schema["oneOf"]:
                 try:
+                    self._charge("oneOf branch attempt")
                     self._validate(value, candidate, path, root, schema_path)
+                except SchemaIntegrityError:
+                    raise
                 except JobValidationError:
                     continue
                 matches += 1
@@ -71,7 +224,10 @@ class JobValidator:
         if "anyOf" in schema:
             for candidate in schema["anyOf"]:
                 try:
+                    self._charge("anyOf branch attempt")
                     self._validate(value, candidate, path, root, schema_path)
+                except SchemaIntegrityError:
+                    raise
                 except JobValidationError:
                     continue
                 break
@@ -80,7 +236,10 @@ class JobValidator:
 
         if "not" in schema:
             try:
+                self._charge("not branch attempt")
                 self._validate(value, schema["not"], path, root, schema_path)
+            except SchemaIntegrityError:
+                raise
             except JobValidationError:
                 pass
             else:
@@ -207,6 +366,8 @@ class JobValidator:
     ) -> bool:
         try:
             self._validate(value, schema, path, root, schema_path)
+        except SchemaIntegrityError:
+            raise
         except JobValidationError:
             return False
         return True
@@ -247,13 +408,17 @@ class JobValidator:
                 raise JobValidationError(
                     f"Schema reference escapes its canonical directory: {reference}"
                 ) from error
-            try:
-                with resolved_path.open("r", encoding="utf-8") as handle:
-                    resolved_root = json.load(handle)
-            except (OSError, json.JSONDecodeError) as error:
-                raise JobValidationError(
-                    f"Could not load schema reference: {reference}"
-                ) from error
+            state = _VALIDATION_STATE.get()
+            if state is None:
+                raise SchemaIntegrityError("Validation traversal state is unavailable")
+            cached = state.documents.get(resolved_path)
+            if cached is None:
+                loaded = _load_schema(
+                    resolved_path, f"schema reference: {reference}"
+                )
+                state.documents[resolved_path] = loaded
+                cached = loaded
+            resolved_root = cached[0]
         if not separator or not fragment:
             return resolved_root, resolved_root, resolved_path
         if not fragment.startswith("/"):
