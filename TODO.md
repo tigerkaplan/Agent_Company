@@ -11,8 +11,8 @@
 - [x] Record owner design targets: `W_MAX=16,777,216`, `D_MAX=128`,
   `P_MAX=S_MAX=131,072` raw bytes. These supersede the original OPEN numeric
   entries without claiming implementation or compatibility acceptance.
-- [ ] Obtain independent review of this exact four-document reconciliation under
-  separate review authority; stop before performing it in AC-P9A-CONTRACT04-DOC-01.
+- [x] Complete the earlier four-document design reconciliation, bounded review,
+  correction and local commit at `9710decc977b040960fed28f91438040a332d9db`.
 - [ ] Establish complete trusted installation membership, required/excluded import
   disposition and an external trusted profile source. The reported 114 candidates
   (112 existing plus two proposed trace modules) have no supplied file-by-file
@@ -25,9 +25,16 @@
 - [ ] Establish the concrete separately authorized reconstruction/restart/recovery
   owner and procedure; retain no inspection-triggered repair, historic evidence
   rewriting, automatic re-attestation or approval restoration.
-- [ ] Obtain an exact bounded implementation work order and sequencing disposition
-  under the existing lifecycle. The accepted six-file CORE candidate scope is
-  not edit authority; any scope amendment needs explicit authorization.
+- [x] Close and commit BUILD-01's separately authorized two-file Shared CORE slice:
+  `runtime/core/validation.py` and `runtime/tests/test_schema_io.py` at
+  `376763d37a7a7cebb106cb793317bd62207fe402`. Conversation-supplied reports state
+  that the Codex builder obtained 12/12 focused and 112/112 affected-regression
+  PASS results; the independent Codex reviewer obtained 12/12 focused PASS,
+  accepted the 112/112 final-source evidence, and returned `REVIEW_PASS` with no
+  remaining High finding. No retained repository test logs or standalone review
+  artifact were verified.
+- [ ] Obtain separate authorization for any remaining CONTRACT-04 implementation.
+  BUILD-01 closure does not authorize the other CORE candidates or Phase 9A slice.
 - [ ] Before pinned operational admission, establish exact installed pins and
   complete closure within 128 entries, target containment evidence, instrumented
   byte/work accounting, compatibility/failure evidence, independent implementation
@@ -35,8 +42,10 @@
 - [ ] Only after accepted CORE dependency evidence and separate authorization may
   the original three-file Phase 9A slice rely on it.
 
-CONTRACT-04 design is accepted as conversation-reported; implementation remains
-BLOCKED / NOT STARTED. Phase 9A remains NOT STARTED and is not accepted. These
+CONTRACT-04 design is accepted as conversation-reported and BUILD-01 is CLOSED /
+COMMITTED, but CONTRACT-04 remains partially implemented. Pinned operational
+inspection and Windows containment remain unimplemented and unaccepted. Phase 9A
+Selected Trace remains NOT STARTED and is not accepted. These
 remaining obligations do not replace ACTIVE/NEXT or create a new global gate.
 Frozen V1, closed checkpoints and DEC-01 architecture acceptance are preserved.
 **MEM-03 remains BLOCKED; D1 remains PAUSED.** Claude external review remains

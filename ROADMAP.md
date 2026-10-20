@@ -1145,8 +1145,10 @@ Future document runtime ownership: `runtime/documents/` with `ingestion/`,
 
 #### CONTRACT-04 Accepted Design - 2026-10-19
 
-**DESIGN ACCEPTED (conversation-reported); implementation BLOCKED / NOT STARTED.**
-AC-P9A-CONTRACT04-DOC-01 authorizes this documentation reconciliation only.
+**DESIGN ACCEPTED (conversation-reported); BUILD-01 CLOSED / COMMITTED; CONTRACT-04
+PARTIALLY IMPLEMENTED.** The reviewed two-file Shared CORE slice is committed at
+`376763d37a7a7cebb106cb793317bd62207fe402`. Phase 9A Selected Trace remains NOT
+STARTED and is not accepted.
 This existing architecture/scope owner stores the complete original contract
 below, together with the later owner dispositions. Status and review provenance
 belong in [PROJECT_STATE](PROJECT_STATE.md#contract-04-design-acceptance-and-source-provenance---2026-10-19);
@@ -1205,17 +1207,26 @@ owner and procedure remain unestablished. Inspection never repairs caches,
 rewrites historical evidence, re-attests approvals or restores authority.
 
 The six-file CORE candidate scope and separate three-file Phase 9A slice in the
-original contract remain exact future edit boundaries, not permission to edit.
-A separately authorized CORE dependency work order, its required evidence,
-independent implementation review and owner acceptance must precede reliance by
-the three-file slice. Exact work order and sequencing disposition remain missing;
-recorded ACTIVE/NEXT slots and the frozen roadmap are not replaced.
+original contract remain exact boundaries, not continuing permission to edit.
+BUILD-01 completed only `runtime/core/validation.py` and
+`runtime/tests/test_schema_io.py`. Conversation-supplied reports state that the
+Codex builder obtained 12/12 focused and 112/112 affected-regression PASS results;
+the independent Codex reviewer obtained 12/12 focused PASS, accepted the 112/112
+final-source evidence, and returned `REVIEW_PASS` with no remaining High finding.
+No retained repository test logs or standalone review artifact were verified.
+The slice was committed at
+`376763d37a7a7cebb106cb793317bd62207fe402`. Pinned operational inspection,
+trusted installation composition and Windows containment remain unimplemented
+and unaccepted. A separately authorized remaining CORE work order, its required
+evidence, independent review and owner acceptance must precede reliance by the
+three-file Phase 9A slice. Recorded ACTIVE/NEXT slots and the frozen roadmap are
+not replaced.
 
 The reported design REVIEW_PASS supersedes only the original text's pending
 design-review status and request to commission that design review; do not repeat
 it. All other unresolved implementation and operational prerequisites remain
-open as recorded in TODO. This documentation reconciliation itself has not
-received independent review. Phase 9A remains NOT STARTED and is not accepted;
+open as recorded in TODO. BUILD-01 review and closure do not constitute review or
+acceptance of the remaining contract. Phase 9A Selected Trace remains NOT STARTED and is not accepted;
 MEM-03 remains BLOCKED; D1 and Claude external review remain PAUSED.
 `authority=none`; `automatic=false`.
 

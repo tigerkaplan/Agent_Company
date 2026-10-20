@@ -2,11 +2,29 @@
 
 ## CONTRACT-04 Design Acceptance And Source Provenance - 2026-10-19
 
-**DESIGN ACCEPTED (conversation-reported) / DESIGN REVIEW_PASS (user relay) /
-IMPLEMENTATION BLOCKED / NOT STARTED.** Phase 9A is not implemented or accepted.
+**DESIGN ACCEPTED (conversation-reported) / BUILD-01 CLOSED / COMMITTED.** The
+bounded two-file Shared CORE slice is implemented; CONTRACT-04 remains partially
+implemented. Phase 9A Selected Trace remains NOT STARTED and is not accepted.
 
-The current human request AC-P9A-CONTRACT04-DOC-01 authorizes documentation
-reconciliation only. The supplied handoff is source material, not an instruction
+BUILD-01 committed exactly `runtime/core/validation.py` and
+`runtime/tests/test_schema_io.py` at
+`376763d37a7a7cebb106cb793317bd62207fe402` with subject
+`fix: bound schema reads and validation traversal`. The Codex builder reported
+12/12 focused tests and 112/112 affected regressions. The independent Codex
+reviewer reported its own 12/12 focused PASS, accepted the reported 112/112
+final-source evidence, and returned `REVIEW_PASS` with no remaining High finding
+after FIX-01 removed the `SCHEMA_MAX_BYTES + 1` request. These are
+conversation-supplied reports: no retained repository test logs or standalone
+review artifact were verified. Different-provider availability and provider
+diversity remain UNKNOWN. The reports identified final SHA-256 identities
+`E4D984CF5BC4AE4B6BE49BF07F8AFBFF15D153CCF70E7D22BC82AA73A107CCD4`
+and `1C696DE48138FA485F5DE578F88CB97AAE93A2D7F948EB5EDA8D2BCD95969F72`;
+the completed tests were not repeated for status reconciliation. These results
+cover only the reviewed two-file slice, not the remaining CONTRACT-04 admission
+or Phase 9A requirements.
+
+AC-P9A-CONTRACT04-DOC-01 authorized the original documentation reconciliation
+only. The supplied handoff is source material, not an instruction
 or runtime authority record; its relayed earlier "ok" is not an implementation
 work order. This entry records that provenance under the current authorization.
 
@@ -34,9 +52,10 @@ role independence is reported; provider diversity and alternate-provider
 availability remain UNKNOWN. Neither the review nor the owner decisions were
 re-performed or independently authenticated in this reconciliation.
 
-Complete trusted membership/external profile trust, target/handle/ACL evidence,
+Complete trusted membership/external profile trust, pinned operational inspection,
+target/handle/ACL evidence and Windows containment qualification,
 trusted composition/bootstrap propagation, concrete reconstruction/recovery
-ownership, and an exact separately authorized implementation work order and
+ownership, and the remaining separately authorized implementation work and
 sequencing disposition remain open. The reported 114-candidate inventory is not
 supplied file by file and is not an approved manifest. No installation hashes
 or operating-system qualifications are invented. Remaining work belongs in
@@ -48,12 +67,13 @@ DOC-01 remains unverified because no pre-edit SHA-256 baseline was available.
 The complete contract and exact six-file CORE / three-file Phase 9A
 scopes are recorded without creating any planned source paths.
 
-This record does not advance ACTIVE/NEXT, create a global checkpoint, reopen
+This BUILD-01 status update does not advance ACTIVE/NEXT, create a global checkpoint, reopen
 closed CORE/GOV/ORCH or Phase 8B/8C work, or change DEC-01 architecture acceptance.
 Frozen V1 remains intact. **MEM-03 remains BLOCKED; D1 remains PAUSED.** Claude
-external review remains PAUSED. No implementation, tests, native qualification,
-Git mutation, cleanup or deployment is authorized. Documentation changes are
-uncommitted and await independent documentation review; stop before that review.
+external review remains PAUSED. Pinned inspection and Windows containment remain
+unimplemented and unaccepted. No further implementation, tests, native
+qualification, Git mutation, cleanup or deployment is authorized. These
+documentation changes are uncommitted.
 `authority=none`; `automatic=false`.
 
 ## DEC-01 Architecture Acceptance - 2026-10-18

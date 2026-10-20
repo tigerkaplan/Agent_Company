@@ -7,22 +7,31 @@ in [ROADMAP](ROADMAP.md#contract-04-accepted-design---2026-10-19), the existing
 architecture/scope owner. [PROJECT_STATE](PROJECT_STATE.md#contract-04-design-acceptance-and-source-provenance---2026-10-19)
 records conversation-reported acceptance and user-relayed independent design
 REVIEW_PASS with source limitations; [TODO](TODO.md#contract-04-remaining-prerequisites---2026-10-19)
-owns the open implementation and operational prerequisites.
+owns the remaining implementation and operational prerequisites.
 
-Focused filesystem inspection confirms five existing CORE candidate paths:
-`runtime/core/validation.py`, `runtime/progress/store.py`,
+The physical DOC-TREE now includes the completed BUILD-01 two-file slice:
+`runtime/core/validation.py` and `runtime/tests/test_schema_io.py`, committed at
+`376763d37a7a7cebb106cb793317bd62207fe402`. Conversation-supplied reports state
+that the Codex builder obtained 12/12 focused and 112/112 affected-regression PASS
+results; the independent Codex reviewer obtained 12/12 focused PASS, accepted the
+112/112 final-source evidence, and returned `REVIEW_PASS` with no remaining High
+finding. No retained repository test logs or standalone review artifact were
+verified. The other existing CORE
+candidate paths are
+`runtime/progress/store.py`,
 `runtime/core/capability_governance.py`, `runtime/graph/models.py` and
-`runtime/tests/test_memory_readonly_inspection.py`. Their presence is existing
-infrastructure, not CONTRACT-04 implementation evidence. The sixth candidate,
-`runtime/tests/test_schema_io.py`, remains absent. The separately scoped
+`runtime/tests/test_memory_readonly_inspection.py`; presence outside the reviewed
+two-file slice is existing infrastructure, not CONTRACT-04 implementation
+evidence. Pinned operational inspection and Windows containment remain
+unimplemented and unaccepted. The separately scoped
 `observability/__init__.py`, `observability/selected_trace.py` and
 `runtime/tests/test_p9a_selected_trace.py` also remain absent; `observability/`
 remains PLANNED. No path, directory, manifest or approval artifact is created.
 
 Only the four existing Master Context documents change, retaining their current
-status/scope/work/DOC-TREE ownership. Implementation remains BLOCKED / NOT STARTED;
-Phase 9A is not accepted. The documentation diff is uncommitted and awaits
-independent documentation review. Frozen V1 and completed checkpoints remain
+status/scope/work/DOC-TREE ownership. BUILD-01 is CLOSED / COMMITTED, while
+CONTRACT-04 remains partially implemented and Phase 9A Selected Trace remains
+NOT STARTED and unaccepted. The documentation diff is uncommitted. Frozen V1 and completed checkpoints remain
 intact; **MEM-03 remains BLOCKED; D1 remains PAUSED.** Claude external review stays
 PAUSED. `authority=none`; `automatic=false`.
 
