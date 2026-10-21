@@ -47,19 +47,29 @@ COMMITTED, but CONTRACT-04 remains partially implemented. Pinned operational
 inspection and Windows containment remain unimplemented and unaccepted. Phase 9A
 Selected Trace remains NOT STARTED and is not accepted. These
 remaining obligations do not replace ACTIVE/NEXT or create a new global gate.
-Frozen V1, closed checkpoints and DEC-01 architecture acceptance are preserved.
+Frozen V1, closed checkpoints and DEC-01 design acceptance are preserved.
 **MEM-03 remains BLOCKED; D1 remains PAUSED.** Claude external review remains
 PAUSED. No tests, probes, code edits or Git mutation follow automatically.
 `authority=none`; `automatic=false`.
 
-## DEC-01 Architecture Acceptance And Remaining Decisions - 2026-10-18
+## DEC-01 Design Acceptance And Remaining Decisions - 2026-10-21
 
-- [x] Record owner architecture-only acceptance under AC-DEC-01-008 of
-  AC-DEC-01-004 plus the AC-DEC-01-006 amendments.
-- [x] Record AC-DEC-01-005 / ENV-02 contract resolution of findings 1, 3 and 4,
-  and independent AC-DEC-01-007 RE_REVIEW_PASS closing finding 2's final Major.
+- [x] Preserve the complete verified 454-line AC-DEC-01-004 baseline in the
+  [existing ROADMAP architecture owner](ROADMAP.md#dec-01-accepted-design-contract---2026-10-21),
+  with SHA-256 `696db224e437da994f8530a0f6d3b10ca8b8d25eea9ac8fde76744730fc5cbee`.
+- [x] Preserve the AC-DEC-01-006 conflict-order amendment and AC-DEC-01-007
+  canonical uncertainty-order amendment without altering other contract rules.
+- [x] Record the owner-reported independent AC-DEC-01-008 `REVIEW_PASS` and its
+  evidence limitation: no standalone repository review artifact was verified and
+  the completed review was not repeated.
+- [x] Record owner design acceptance under AC-DEC-01-009. Findings 1, 3 and 4
+  remain PASS; Finding 2's conflict, ESCALATE identity and uncertainty-ordering
+  defects are resolved; all four original findings are closed at design level.
 - [x] Preserve immutable conflict order and select ESCALATE's complete conflict
   by original captured array index, with unchanged Error precedence and identity.
+- [x] Preserve unique canonical uncertainty pairs ordered by ASCII skill identity
+  and the fixed seven checks, with ascending unique `rule_ids`, read rejection and
+  exact serialization/identity/replay binding.
 - [ ] Obtain remaining technical owner dispositions, within later separately
   authorized work: final schema/limits/interfaces; actual freshness values,
   source-validity rules and requirement mappings; and material-unknown policy.
@@ -73,9 +83,9 @@ PAUSED. No tests, probes, code edits or Git mutation follow automatically.
   authorization; runtime compatibility, security-detector coverage and replay
   confinement remain unvalidated. Phase 9A remains before DEC-01.
 
-The [accepted design](ROADMAP.md#dec-01-accepted-architecture-contract---2026-10-18)
-and [status record](PROJECT_STATE.md#dec-01-architecture-acceptance---2026-10-18)
-close contract review only. DEC-01 implementation is NOT STARTED; architecture
+The [accepted design](ROADMAP.md#dec-01-accepted-design-contract---2026-10-21)
+and [status record](PROJECT_STATE.md#dec-01-design-acceptance---2026-10-21)
+close contract review only. DEC-01 implementation is NOT STARTED; design
 acceptance does not authorize it or complete Phase 9A. P9A-1 through P9A-6 remain
 assessment/proposal labels, not six new mandatory checkpoints. No new agent,
 database or authority owner is introduced. `authority=none`; `automatic=false`.

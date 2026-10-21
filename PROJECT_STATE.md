@@ -68,7 +68,7 @@ The complete contract and exact six-file CORE / three-file Phase 9A
 scopes are recorded without creating any planned source paths.
 
 This BUILD-01 status update does not advance ACTIVE/NEXT, create a global checkpoint, reopen
-closed CORE/GOV/ORCH or Phase 8B/8C work, or change DEC-01 architecture acceptance.
+closed CORE/GOV/ORCH or Phase 8B/8C work, or change DEC-01 design acceptance.
 Frozen V1 remains intact. **MEM-03 remains BLOCKED; D1 remains PAUSED.** Claude
 external review remains PAUSED. Pinned inspection and Windows containment remain
 unimplemented and unaccepted. No further implementation, tests, native
@@ -76,42 +76,52 @@ qualification, Git mutation, cleanup or deployment is authorized. These
 documentation changes are uncommitted.
 `authority=none`; `automatic=false`.
 
-## DEC-01 Architecture Acceptance - 2026-10-18
+## DEC-01 Design Acceptance - 2026-10-21
 
-AC-DEC-01-008 records the owner's explicit architecture-only acceptance in chat
-of AC-DEC-01-004 with the AC-DEC-01-006 amendments. Status:
-**ARCHITECTURE ACCEPTED / CONTRACT REVIEW CLOSED / IMPLEMENTATION NOT STARTED**.
-The accepted design direction and remaining technical dispositions are recorded
-in [ROADMAP](ROADMAP.md#dec-01-accepted-architecture-contract---2026-10-18);
-[TODO](TODO.md#dec-01-architecture-acceptance-and-remaining-decisions---2026-10-18)
-owns remaining work. This is acceptance of design, not runtime capability,
-Phase 9A acceptance, implementation authorization or DEC-01 product closure.
+AC-DEC-01-009 records the owner's explicit design-level acceptance of the complete
+AC-DEC-01-004 contract, the verified AC-DEC-01-006 conflict-order amendment and
+the AC-DEC-01-007 canonical uncertainty-order amendment after the owner-reported
+independent AC-DEC-01-008 `REVIEW_PASS`. Status:
+**DESIGN ACCEPTED / ALL FOUR ORIGINAL DESIGN FINDINGS CLOSED / IMPLEMENTATION NOT STARTED**.
+The complete baseline and amendments are preserved in the existing
+[ROADMAP architecture owner](ROADMAP.md#dec-01-accepted-design-contract---2026-10-21);
+[TODO](TODO.md#dec-01-design-acceptance-and-remaining-decisions---2026-10-21)
+owns remaining work. This is design acceptance, not runtime capability, Phase 9A
+acceptance, implementation authorization or DEC-01 product closure.
 
-Review provenance is the supplied chat record: AC-DEC-01-005 / ENV-02 returned
-FIX after resolving original Major findings 1, 3 and 4 at contract level;
-AC-DEC-01-007 returned independent RE_REVIEW_PASS for AC-DEC-01-006, closing the
-remaining Major in finding 2. Multiple validated conflicts now select the first
-by original captured array index, with immutable input order, the complete
-selected conflict and unchanged Error precedence. Runtime behavior was not
-tested by these reviews. The earlier AC-DEC-01-005 checkout-access BLOCKED result
-remains historical; ENV-02 established the authorized C: replacement for this
-bounded review. Review was a separate OpenAI / Codex role; provider-diverse
-review and alternate-provider availability remain unverified.
+The retained AC-DEC-01-004 source is
+`C:/Users/DELL/Downloads/AC-DEC-01-004_CONTRACT_REVISION.txt`, 454 lines, SHA-256
+`696db224e437da994f8530a0f6d3b10ca8b8d25eea9ac8fde76744730fc5cbee`.
+AC-DEC-01-006 and AC-DEC-01-007 are conversation-supplied normative amendments.
+The current owner instruction reports that independent AC-DEC-01-008 returned
+`REVIEW_PASS`: findings 1, 3 and 4 remain PASS; conflict ordering, ESCALATE
+identity and uncertainty ordering are resolved; all four original findings are
+closed at design level. No standalone AC-DEC-01-006, AC-DEC-01-007 or
+AC-DEC-01-008 repository artifact was verified, and the completed review was not
+repeated. Runtime behavior was not tested by these design reviews.
+
+AC-DEC-01-006 preserves the captured conflict array as immutable semantic input
+and selects the complete validated conflict at the lowest original captured
+array index. AC-DEC-01-007 requires exactly one uncertainty entry per unknown
+`(skill, check)` pair, ascending ASCII skill identity, the fixed seven-check
+order for equal skills, and unique ascending ASCII `rule_ids`; canonical writers,
+parsers, retained reads, semantic identity and replay all bind that order and
+reject rather than repair noncanonical or duplicate input. Outcome precedence,
+ranking, eligibility, persistence and security rules are unchanged.
 
 Reconciliation preflight verified `C:\Users\DELL\Desktop\AgentCompany\Agent_Company`,
-branch `master`, HEAD and local `origin/master` both
-`4773acb4fd64cec0d8d84f600377d44142f00120`, with no staged changes. Nine existing
-tracked modifications and four untracked diagnostic files are outside the
-four-document edit boundary and must remain unchanged. The four canonical
-documents were clean before this reconciliation; these acceptance edits are
-uncommitted. No standalone repository DEC report artifact is assumed.
+branch `master`, HEAD `b4553dcd1c8b12bbcf463b782c43df15afda3a53` and an empty
+index. Twelve existing tracked modifications and four untracked diagnostic files
+are outside the four-document edit boundary and remain preserved. These
+documentation edits are uncommitted; no standalone implementation or review
+artifact is inferred.
 
 Phase 9A remains before DEC-01 in the frozen roadmap. P9A-1 through P9A-6 remain
 assessment/proposal labels, not six new mandatory checkpoints. Existing owners,
 `authority=none`, `automatic=false` and `ExecutionResult` remain unchanged; no new
 agent, database or authority owner is introduced. **MEM-03 remains BLOCKED;
 D1 remains PAUSED.** Earlier dated status records retain their historical scope.
-The architecture acceptance leaves the technical decisions in ROADMAP/TODO open.
+Design acceptance leaves the technical decisions in ROADMAP/TODO open.
 This documentation-only reconciliation performs no implementation, runtime tests,
 installation, deployment, staging, commit, push or cleanup. `automatic=false`.
 

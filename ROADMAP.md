@@ -1,11 +1,12 @@
 # Agent Company Roadmap
 
-## DEC-01 Architecture Acceptance - 2026-10-18
+## DEC-01 Design Acceptance - 2026-10-21
 
-AC-DEC-01-008 records owner-approved architecture-only acceptance of
-AC-DEC-01-004 plus AC-DEC-01-006 after independent AC-DEC-01-007 RE_REVIEW_PASS.
-The [accepted architecture contract](#dec-01-accepted-architecture-contract---2026-10-18)
-closes the four original contract findings, not implementation or Phase 9A.
+AC-DEC-01-009 records owner-approved design-level acceptance of AC-DEC-01-004
+plus AC-DEC-01-006 and AC-DEC-01-007 after the owner-reported independent
+AC-DEC-01-008 `REVIEW_PASS`. The
+[accepted design contract](#dec-01-accepted-design-contract---2026-10-21)
+closes all four original design findings, not implementation or Phase 9A.
 DEC-01 implementation remains NOT STARTED; the frozen sequence is unchanged.
 Phase 9A remains before DEC-01. P9A-1 through P9A-6 are assessment/proposal
 labels, not six additional mandatory checkpoints. **MEM-03 remains BLOCKED;
@@ -1486,7 +1487,7 @@ Design may proceed while MEM-03 remains BLOCKED. Any later implementation follow
 
 **One next action:** separately commission an independent, read-only review of this consolidated contract and its explicitly open admission prerequisites.
 
-Frozen V1, closed Phase 8B/8C and DEC-01 architecture acceptance remain preserved. MEM-03 remains BLOCKED; D1 and Claude external review remain PAUSED. No implementation, tests, file edits or Git writes occurred. **Stopped before independent review.**
+Frozen V1, closed Phase 8B/8C and DEC-01 design acceptance remain preserved. MEM-03 remains BLOCKED; D1 and Claude external review remain PAUSED. No implementation, tests, file edits or Git writes occurred. **Stopped before independent review.**
 
 <!-- CONTRACT-04 ORIGINAL SOURCE END -->
 
@@ -1525,22 +1526,492 @@ Canonical JEV rule: **JEV judges. Policy authorizes. Executor acts.**
 JEV is a bounded semantic judging component: it does not authorize actions,
 serve as an agent or Reviewer, or act as a normal generation provider.
 
-#### DEC-01 Accepted Architecture Contract - 2026-10-18
+#### DEC-01 Accepted Design Contract - 2026-10-21
 
-Acceptance authority: the owner's architecture-only approval recorded in chat
-and AC-DEC-01-008. Accepted baseline: the full external
+Acceptance authority: the owner's design-level decision recorded in chat under
+AC-DEC-01-009. Accepted baseline: the complete external
 `AC-DEC-01-004_CONTRACT_REVISION.txt`, SHA-256
 `696db224e437da994f8530a0f6d3b10ca8b8d25eea9ac8fde76744730fc5cbee`,
-with the AC-DEC-01-006 amendments supplied in chat. This entry records the accepted
-design direction in the existing scope owner; it creates no separate report,
-Master Context, implementation path or authority record.
+with the AC-DEC-01-006 conflict-order and AC-DEC-01-007 uncertainty-order
+amendments supplied in chat. The verified source contains 454 lines. Its complete
+verbatim text is preserved below in the existing architecture/scope owner; the
+amendments control where they differ from that baseline. This creates no runtime
+path, implementation or authority record.
 
-AC-DEC-01-005 / ENV-02 resolved original Major findings 1, 3 and 4 at contract
-level and retained finding 2's multiple-conflict ESCALATE ambiguity. Independent
-AC-DEC-01-007 returned RE_REVIEW_PASS on the correction, closing that final
-contract finding. The reviews establish design closure only. Owner architecture
-acceptance is separate from technical interface disposition, implementation,
-runtime validation, Phase 9A acceptance and eventual DEC-01 product closure.
+The owner reports independent AC-DEC-01-008 `REVIEW_PASS`: findings 1, 3 and 4
+remain PASS; conflict ordering, ESCALATE identity and uncertainty ordering are
+resolved; all four original findings are closed at design level. AC-DEC-01-006,
+AC-DEC-01-007 and AC-DEC-01-008 remain conversation-supplied evidence; no
+standalone repository artifacts for them were verified, and the review was not
+repeated. Design closure is separate from technical interface disposition,
+implementation, runtime validation, Phase 9A acceptance and DEC-01 product
+closure.
+
+##### Complete retained AC-DEC-01-004 baseline
+
+The following block is the verified 454-line source text, preserved verbatim.
+Its original review-pending and historical-checkout statements describe the
+baseline at authorship time; AC-DEC-01-006, AC-DEC-01-007, AC-DEC-01-008 and the
+owner's AC-DEC-01-009 decision below provide the later dispositions.
+
+<!-- AC-DEC-01-004-VERBATIM-BEGIN -->
+```text
+**CONTRACT_REVISION_READY — AC-DEC-01-004**
+
+This is the complete proposed revision for independent review. It addresses the four AC-DEC-01-003 findings at contract level; their closure remains for the independent Reviewer. It grants no implementation, execution or Phase 9A acceptance.
+
+**1. Verified foundation and scope.** The authoritative checkout is `E:\Software\Agent_Company`, branch `master`, HEAD `4773acb4fd64cec0d8d84f600377d44142f00120`. Local `origin/master` matches. The index is empty. Starting and ending Git status show the same nine tracked modifications and four untracked diagnostic files. Git reported missing commit-graph files; no repair was attempted.
+
+The canonical Master Context remains [PROJECT_STATE.md](E:/Software/Agent_Company/PROJECT_STATE.md:221), [ROADMAP.md](E:/Software/Agent_Company/ROADMAP.md:488), [TODO.md](E:/Software/Agent_Company/TODO.md:582) and [README.md](E:/Software/Agent_Company/README.md:965). No separate context owner or repository artifact is introduced.
+
+The first slice produces one advisory Skill Selection decision. Every outcome has `authority="none"` and `automatic=false`. Selection does not authorize loading, execution, approval, retry, graph mutation or communication. Independently authorized loading must still use [SkillCatalog.load](E:/Software/Agent_Company/runtime/context/skills.py:97).
+
+Existing execution storage owns retention; CORE-08 owns catalog identities and instruction validation; GOV owns authority; CORE-03 owns evaluation; CORE-07 retains its existing observation and recovery boundaries. There is no new agent, orchestrator, database or authority ledger. `ExecutionResult` remains unchanged. DEC-02/JEV remains deferred. MEM-03 remains **BLOCKED** and D1 remains **PAUSED** under the current instruction.
+
+All new schema and interface details below are proposals for acceptance, not claims of current runtime support.
+
+**2. Closed types and bounds.** The following notation defines the complete nested vocabulary. Every object is closed: all listed fields are required, and additional fields are rejected. Nullable fields must be present as JSON `null`; omission is invalid. Discriminated variants contain exactly their variant’s fields.
+
+| Type | Definition |
+|---|---|
+| `Hex` | Exactly 64 lowercase hexadecimal characters. |
+| `ID` | ASCII `[A-Za-z0-9][A-Za-z0-9._:-]{0,199}`. |
+| `Name` | Existing catalog name: `[a-z][a-z0-9-]{0,79}`. |
+| `Text(n)` | Nonblank Unicode scalar string, at most `n` UTF-8 bytes. No unpaired surrogates; no control characters except tab, CR and LF. |
+| `UInt(n)` | JSON integer from `0` through `n`, inclusive. Booleans are not integers. |
+| `Time` | Valid UTC timestamp, exactly `YYYY-MM-DDTHH:MM:SS.ffffffZ`. |
+| `Path` | Repository-relative reference, at most 512 UTF-8 bytes, validated through existing `RepositoryReader` path/identity rules. |
+| `Pointer` | RFC 6901 JSON Pointer, at most 512 UTF-8 bytes and 16 segments; empty string means the root. |
+| `List(T,n)` | Ordered array of zero through `n` values of type `T`, unless a positive minimum is specified. |
+| `Ref(T)` | `{type:T, sha256:Hex}`; `T` fixes the digest domain and expected object type. |
+| `RawRef` | `{type:"raw_sha256", sha256:Hex, bytes:UInt(2097152)}`. Context-specific smaller limits still apply. |
+| `InstructionDigest` | `{type:"instruction_lf_utf8_sha256", sha256:Hex}`. Its distinct hashing rule is defined below. |
+| `EvidenceRef` | `{slot:ID, pointer:Pointer|null, start_line:UInt(131072)|null, end_line:UInt(131072)|null}`. References one retained input slot. Use either a pointer, a valid inclusive line span starting at 1, or neither for the whole input. |
+| `Scope` | `{project_id:ID, project_root:Text(1024), task_id:ID, job_id:ID|null, logical_job_id:ID|null}`. Root identity is locally resolved; optional job identities must already exist. |
+| `Owner` | One of `human`, `CORE08`, `GOV`, `CORE03`, `CORE07`, `execution`, `review`, `approval`, `local_files`, `external`. An ownership label grants no authority. |
+| `ExistingRef` | `{owner:Owner, identity:ID, raw:RawRef}`. Resolves a snapshot of an actual existing canonical artifact, validated by its owner. |
+| `Question` | `{id:ID, request:Text(512), answer_slot:ID, source_owner:Owner}`. An inert request for a particular missing fact or material. |
+
+A source reference is:
+
+`Source = {owner:Owner, identity:Text(512), version:Text(200)}`.
+
+Its identity is provenance data, never an executable path, URL-fetch instruction or authority assertion.
+
+Every retained structured artifact uses this envelope:
+
+`{schema_version:1, type:T, id:Ref(T), authority:"none", body:Body(T)}`.
+
+The permitted artifact types are `decision`, `input_manifest`, `selector_config`, `build_manifest`, `eligibility_policy`, `security_policy`, `task_snapshot`, `receipt`, `link`, `failure`, `decision_eval_spec` and `decision_eval_result`. Derived digest domains additionally include `skill_metadata`, `menu`, `ranking` and `selection_result`.
+
+The shared structural ceilings are depth 16 and 65,536 JSON nodes per artifact. No floating-point values are accepted in these new artifacts. Each individual field’s tighter bound applies.
+
+| Capacity | Ceiling |
+|---|---:|
+| Registered candidates considered | 256 |
+| Selected candidates | 1 |
+| Query | 16,000 UTF-8 bytes |
+| Decision envelope | 512 KiB |
+| Input slots | 48 |
+| Individual raw input | 128 KiB |
+| Serialized input manifest | 128 KiB |
+| Input bundle, including manifest and unique raw blobs | 2 MiB |
+| Selector/configuration/policy/build/task artifact | 128 KiB each |
+| Receipt | 32 KiB |
+| Individual link or failure artifact | 16 KiB |
+| Decision evaluation spec/result | 512 KiB each |
+
+Existing readers may impose smaller limits. No ceiling promises that every maximum-sized combination fits. Exceeding any effective limit produces a capacity error before release; there is no truncation, eviction or partial-success result.
+
+**3. Canonical serialization and identity.** Let `C(value)` be UTF-8 bytes of canonical JSON with sorted object keys, compact separators, ASCII escaping, lowercase hexadecimal Unicode escapes, no BOM and no trailing newline. Arrays preserve their specified order. There is no Unicode normalization or newline normalization. This matches the relevant [CORE-03 canonical serialization pattern](E:/Software/Agent_Company/runtime/evals/models.py:132), restricted here to integers and Unicode scalar strings.
+
+Parsing rejects duplicate keys, unknown fields, unsupported versions, malformed Unicode, non-finite numbers and wrong primitive types before model construction. Models copy caller values and recursively freeze objects and arrays; a frozen outer container around mutable nested values is insufficient.
+
+Define:
+
+- `B(bytes) = SHA-256(bytes)`.
+- `P(T,body) = {schema_version:1, type:T, authority:"none", body:body}`.
+- `H(T,body) = SHA-256(ASCII("ac-dec-01/v1/") || ASCII(T) || 0x00 || C(P(T,body)))`.
+
+The envelope’s `id` is `{type:T, sha256:H(T,body)}`. The `id` field is excluded from its own projection. The exact serialized envelope identity is separately `B(C(envelope))`.
+
+Consequently:
+
+- A decision’s semantic identity covers its entire body, including `as_of`, input-manifest identity, constraints, configuration, candidates and outcome.
+- Retention time belongs only in its receipt.
+- Changing any semantic input requires a new decision identity.
+- Formatting variants are rejected on retained structured-artifact reads: stored bytes must equal `C(parsed_envelope)`.
+- Existing GOV and CORE artifact hashes retain their existing algorithms. They are not silently reinterpreted as `H`.
+
+`InstructionDigest` deliberately preserves the current catalog rule:
+
+`SHA-256(UTF8(decoded_instruction_text.replace("\r\n", "\n")))`.
+
+It is **not** a raw-file-byte hash. Raw input hashes never apply that transformation. This distinction preserves [current instruction validation](E:/Software/Agent_Company/runtime/context/skills.py:109).
+
+Catalog metadata digests use `H("skill_metadata", metadata_projection)`. The projection contains exactly the eleven `SkillMetadata` fields, including explicit `version=1`, with its six tuple collections represented as arrays. Their original order is retained. Catalog format version is not a substitute for content identity.
+
+Collections use these orders:
+
+- Candidates: ascending catalog name.
+- Menu: ascending eligible catalog name.
+- Ranking: descending overlap, then ascending catalog name.
+- Set-valued ID/name lists: unique, ascending ASCII order.
+- Requirement rules: ascending `(skill, kind, label)`.
+- Input entries: ascending slot; receipt blob references: ascending raw digest.
+- Checks: the fixed order specified in section 6.
+- Evidence references: unique, ordered by `(slot, pointer, start_line, end_line)`, with null before non-null.
+- Build files: unique canonical path order.
+
+No sorting rule changes retained raw bytes.
+
+**4. Exact input bundle and configuration.** An input manifest body is:
+
+`{entries:List(InputEntry,48), total_raw_bytes:UInt(2097152), derivations:List(Derivation,48)}`.
+
+`InputEntry` contains exactly:
+
+`{slot:ID, role:Role, blob:RawRef, media:"text/plain"|"application/json", origin:Origin, trust:"canonical"|"untrusted", authority:"none", source:Source, observed_at:Time, expires_at:Time|null}`.
+
+`Role` is `query`, `catalog`, `task`, `eligibility_policy`, `selector_config`, `selector_build`, `baseline_build`, `security_policy` or `evidence`.
+
+`Origin` is `repository`, `human_request`, or one of CORE-11’s existing external origins: `pasted`, `web`, `email`, `upload`, `retrieved`, `scraped`, `connector`, `tool`.
+
+Exactly one entry exists for each of the first eight roles; remaining entries have role `evidence`. Slot names are unique. Every blob’s byte count and raw digest must match. `total_raw_bytes` counts unique blobs; the bundle ceiling additionally includes the manifest envelope.
+
+Trust and origin come from the local capture boundary. External body claims cannot establish them. External origins always remain untrusted. A canonical label is permitted only where an existing local owner establishes that classification.
+
+`Derivation` is:
+
+`{slot:ID, transform_id:ID, transform_version:ID, original_retained:false}`.
+
+It marks a newly supplied, transformed input. The derived bytes receive a new raw identity. The original is neither retained nor claimed replayable through that entry.
+
+The query blob is nonblank UTF-8 text, at most 16,000 bytes. Its decoded value must exactly equal the decision objective’s query.
+
+The task snapshot body is:
+
+`{scope:Scope, query_slot:ID, allowed_capabilities:List(ID,64), permitted_skills:List(Name,256), constraint_ids:List(ID,64), canonical_task:ExistingRef|null, evidence:List(EvidenceRef,16), conflicts:List(Conflict,16)}`.
+
+Its capabilities and constraints are explicit captured inputs, not inferred from token overlap. When `canonical_task` exists, the GOV owner validates its binding and ceilings. When absent, this is an advisory request without an invented canonical job or execution authority.
+
+`Conflict` is:
+
+`{code:"policy_conflict"|"scope_conflict"|"owner_disposition_required", owner:Owner, evidence:List(EvidenceRef,16)}`.
+
+It requires at least one evidence reference. Only the corresponding trusted local owner can establish a conflict; untrusted text cannot promote itself into one.
+
+The selector configuration body is fixed:
+
+`{algorithm:"core08-token-overlap-v1", max_selected:1, tokenizer:"python-lower-ascii-alnum-set", rank_fields:["identity","description"], positive_only:true, tie_break:"identity_ascending"}`.
+
+A build manifest body is:
+
+`{implementation_id:ID, version:ID, files:List(BuildFile,128), python_implementation:ID, python_version:ID, unicode_version:ID}`.
+
+At least one build file is required. `BuildFile` is `{path:Path, raw_sha256:Hex}`. These identify trusted installed code; they do not authorize loading captured source. Runtime and Unicode versions matter because the existing algorithm uses Python `str.lower()`.
+
+**5. Decision Evidence schema.** The decision envelope body contains exactly:
+
+| Field | Type and invariant |
+|---|---|
+| `decision_kind` | Constant `skill_selection`. |
+| `scope` | `Scope`, matching the task snapshot. |
+| `objective` | `{query:Text(16000), function:"skill_selection", constraint_ids:List(ID,64)}`; constraints match the task snapshot. |
+| `as_of` | `Time`, frozen before evaluation of freshness predicates. |
+| `inputs` | `Ref(input_manifest)`. |
+| `selector` | `{build:Ref(build_manifest), config:Ref(selector_config)}`. |
+| `eligibility_policy` | `Ref(eligibility_policy)`. |
+| `security_policy` | `Ref(security_policy)`. |
+| `candidate_universe` | `{catalog:RawRef, mode:"entire_catalog", coverage:"registered_catalog_only", unregistered_requested:List(Name,256)}`. |
+| `candidates` | `List(Candidate,256)`, exactly the validated catalog entries. |
+| `menu` | `List(Name,256)`, exactly candidates whose seven checks all pass. |
+| `ranking` | `Ranking`. |
+| `outcome` | One closed variant defined in section 7. |
+| `uncertainty` | `List(Unknown,1792)`, exactly the unknown candidate/check pairs. |
+| `confidence` | JSON `null`. |
+| `baseline` | `Baseline`. |
+| `replay` | `{mode:"captured_inputs_only", build:Ref(build_manifest), inputs:Ref(input_manifest), config:Ref(selector_config), as_of:Time}`; bindings equal the enclosing decision. |
+| `prior_decision_ref` | `Ref(decision)|null`; immutable lineage only, never retry instructions. |
+
+`Candidate` is:
+
+`{skill:Name, instruction_identity:Text(512), metadata:Ref(skill_metadata), declared_instruction_digest:InstructionDigest, checks:List(Check,7)}`.
+
+The instruction identity comes from `RepositoryReader.identity`, not path-name heuristics. The metadata reference resolves to the complete metadata projection from the retained catalog. No unselected instruction body is read.
+
+`Check` is:
+
+`{code:CheckCode, status:"pass"|"fail"|"unknown", reason:CheckReason, evidence:List(EvidenceRef,16)}`.
+
+`CheckCode` is the seven-value vocabulary in section 6. `CheckReason` is one of `verified`, `none_declared`, `not_permitted`, `predicate_false`, `missing_material`, `missing_fact`, `unmapped_requirement`, `untrusted_fact`, `expired`, `not_yet_valid` or `freshness_unavailable`. Pass/fail observations require evidence; unknown observations identify the missing or insufficient evidence.
+
+`Ranking` is:
+
+`{positive:List(RankRow,256), zero_overlap:List(Name,256)}`.
+
+`RankRow` is `{skill:Name, overlap:UInt(16000)}`, with overlap strictly positive. The positive rows and zero-overlap names partition the menu exactly. Excluded candidates cannot appear in either collection.
+
+`Unknown` is:
+
+`{skill:Name, check:CheckCode, reason:CheckReason, material:boolean, rule_ids:List(ID,64)}`.
+
+`Baseline` is:
+
+`{algorithm:"core08-token-overlap-v1", build:Ref(build_manifest), inputs:Ref(input_manifest), config:Ref(selector_config), menu:Ref(menu), output:Ranking, agreement:boolean}`.
+
+The menu reference is computed from `{names:menu}` using domain `menu`; ranking identity uses domain `ranking`. Baseline bindings must match the selector’s exact query, menu and configuration. `agreement` must equal structural equality of the two ranking outputs. The first slice requires agreement; a mismatch is an error.
+
+**6. Eligibility and freshness.** The eligibility-policy body is:
+
+`{version:1, scope_rule:"explicit_skill_allowlist", rules:List(RequirementRule,512), freshness:List(FreshnessRule,48)}`.
+
+Every rule has a unique `id:ID`. Requirement rules are closed variants:
+
+- Input: `{id, kind:"input", skill:Name, label:Text(1024), slot:ID, question:Question|null}`.
+- Prerequisite: `{id, kind:"prerequisite", skill:Name, label:Text(1024), slot:ID, pointer:Pointer, equals:boolean|ID, question:Question|null}`.
+
+There is at most one mapping for each `(skill, kind, label)`. Labels match declared catalog strings exactly. Free-text prerequisites are never interpreted as executable rules. An unmapped declaration is unknown.
+
+`FreshnessRule` is `{slot:ID, max_age_seconds:UInt(86400)}`, with a minimum of 1. Every manifest slot requires exactly one rule. Actual values must be explicitly accepted and captured; there is no implicit default.
+
+The fixed check order and predicates are:
+
+| Check | Pass condition |
+|---|---|
+| `registration` | Existing `SkillCatalog` validates the registered name, metadata and unique instruction identity from the captured catalog. |
+| `capabilities` | Every declared required capability belongs to the task’s validated allowed capabilities and applicable GOV ceiling. |
+| `inputs` | Every distinct declared input has an exact rule mapping to a present, security-valid retained input. |
+| `prerequisites` | Every declared prerequisite has a mapped field in an owner-validated structured source, with type-strict equality to its expected value. |
+| `scope` | Skill is explicitly present in `permitted_skills` and satisfies existing task/project restrictions. Empty permission list permits no skills. |
+| `security` | Candidate metadata, references and required material satisfy the pinned security policy and existing repository path restrictions. |
+| `freshness` | All evidence used by the other checks satisfies the freshness rules and its source owner’s validity rules at `as_of`. |
+
+For freshness, require `observed_at ≤ as_of` and age no greater than the configured maximum. If `expires_at` exists, require `as_of < expires_at`. Capture time cannot replace an underlying source’s validity period. Unknown source validity is unknown evidence. An explicit source-owner rule may recognize immutable, content-addressed evidence without expiry.
+
+A known false prerequisite or denied capability/scope is a fail. Missing, unmapped, untrusted or expired necessary evidence is unknown. Neither enters the verified menu. Empty prerequisite metadata produces `none_declared`, evidenced by the catalog; it does not prove undisclosed operational prerequisites absent.
+
+Malformed catalogs, duplicate names, instruction-identity collisions or invalid path references are global validation errors, matching existing catalog behavior.
+
+The freshness claim is limited to the captured evidence and `as_of`. Instruction bodies remain unverified until independently authorized loading. Current consideration must recheck applicable catalog/task/policy identities and freshness; historical reads do not establish current suitability.
+
+**7. Ranking and total outcome procedure.** Eligibility is completed before actual ranking. Only the verified menu is ranked.
+
+Preserve the existing [CORE-08 algorithm](E:/Software/Agent_Company/runtime/context/contracts.py:109) exactly:
+
+- Tokens are the set returned by `[a-z0-9]+` matches after Python `str.lower()`.
+- Candidate text is its catalog name, one ASCII space, then its description.
+- Score is the cardinality of the query/candidate token-set intersection.
+- Keep positive scores, sorted by descending score then ascending name.
+- Duplicate, foreign, missing or incorrectly ordered ranker output is an error.
+
+The `RelevanceRanker` interface returns identities, not scores. The adapter computes counts using the same pinned rule and verifies the returned ordering. It never infers confidence or probability from position.
+
+Materiality is deterministic. An unknown candidate is potentially material only when it has no failed checks, has positive counterfactual overlap, and would precede the best verified positive candidate—or no verified positive candidate exists. Counterfactual counts diagnose missing evidence; they do not admit or rank the candidate in the actual menu.
+
+A mapped question is resolvable only if it names the exact missing slot/fact and the owner permitted to supply it. An answer becomes a new captured input and new decision; it cannot silently resume this decision.
+
+Apply this precedence:
+
+1. **Error:** invalid, unsafe, unsupported, oversized or inconsistent input/output. Return a failure artifact; do not manufacture a decision outcome.
+2. **ESCALATE:** a validated task conflict requires an existing owner’s disposition.
+3. **CLARIFY:** at least one material unknown has a resolvable mapped question. Choose the first by `(skill, check order, rule ID)`.
+4. **ABSTAIN:** material unknowns remain without a resolvable question.
+5. **SELECT:** choose exactly the first positive ranked candidate.
+6. **ABSTAIN:** otherwise report no registered/permitted candidate or no positive overlap.
+
+Closed outcome variants are:
+
+- `{kind:"SELECT", skill:Name, automatic:false}`.
+- `{kind:"ABSTAIN", reason:"no_candidates"|"no_positive_overlap"|"insufficient_evidence", automatic:false}`.
+- `{kind:"CLARIFY", skill:Name, check:CheckCode, question:Question, automatic:false}`.
+- `{kind:"ESCALATE", conflict:Conflict, automatic:false}`.
+
+Every variant forbids the other variants’ fields. `SELECT` requires menu membership, first ranking position and a positive available score. A fallback is a separate decision with new identity and retained failure provenance; it never broadens authority.
+
+**8. Retention, commitment and recovery.** Proposed additive operations remain with the existing execution-evidence owner:
+
+| Operation | Contract |
+|---|---|
+| `retain_advisory` | Validate and retain a complete draft and input bundle; return committed evidence only after verified publication. |
+| `read_advisory` | Read committed historical evidence; never repair, refresh or execute it. |
+| `consider_current` | Apply live owner/freshness checks to committed evidence; return advisory data or a hold. |
+| `reconcile_advisory` | Explicitly authorized writer operation for an interrupted publication; never invoked by a read or automatically on restart. |
+
+Artifacts occupy a distinct advisory namespace beneath the configured executions root, outside GOV’s `.decisions` namespace. Physical path creation requires later implementation authorization.
+
+One cross-process lock covers all advisory publication, deduplication and recovery operations for that executions root. Reuse the existing [file-store lock mechanism](E:/Software/Agent_Company/runtime/storage/file_store.py:67). Do not nest it with canonical task/approval/GOV transition locks. Obtain owner-validated snapshots before publication; later current-use checks independently detect changed bindings.
+
+The owner’s configured byte/object quotas include provisional and orphaned content. All writers use the same lock. Capacity checks cannot rely solely on available disk space, and no automatic deletion or eviction is permitted.
+
+Publication order is:
+
+1. Validate the entire draft and decoded input bundle in memory.
+2. Under the advisory lock, check existing commitment and capacity.
+3. Publish each input blob through a same-filesystem temporary file, flush, synchronize and atomically rename. Existing identical bytes deduplicate; differing bytes at the same digest fail.
+4. Publish the canonical input-manifest envelope identically.
+5. Publish the canonical decision envelope identically.
+6. Read back and validate the complete set.
+7. Construct, validate and atomically publish the final receipt.
+8. Read back the receipt and its complete referenced set before returning success.
+
+The receipt body is:
+
+`{decision:Ref(decision), record_bytes:RawRef, manifest:Ref(input_manifest), manifest_bytes:RawRef, input_blobs:List(RawRef,48), committed_at:Time, writer_id:ID, mode:"fresh"|"recovered", security_policy:Ref(security_policy)}`.
+
+Its envelope identity follows section 3. Its `committed_at` records this publication attempt’s actual commit time. It is not selection time or a reconstructed historical timestamp.
+
+**The commit point is atomic publication of the final receipt.** Inputs and a record without that receipt remain provisional. A receipt is usable only when every referenced artifact exists and matches semantic identity, exact bytes, schema, security policy and completeness.
+
+For concurrent identical decisions, the second writer returns the existing validated commitment and receipt. It does not replace the receipt or refresh its time. Any same-identity/different-content disagreement is an integrity conflict.
+
+| Boundary | Required behavior |
+|---|---|
+| Crash before receipt publication | No committed decision; dependent use holds. |
+| Crash during receipt temporary write | Temporary content is ignored; no commit. |
+| Receipt published, response lost | A later validated read may deliver the existing commitment; it does not rerun selection. |
+| Missing/corrupt artifact after commitment | Reject the chain; no reconstruction from current files. |
+| Record/input set complete but receipt absent | Read reports uncommitted evidence. An explicit recovery writer may publish a new `mode="recovered"` receipt after complete verification. |
+| Partial/conflicting retained bytes | Hold. Recovery cannot overwrite them or claim the original transaction completed. |
+| Restart | Verify commitments; report provisional content. No automatic repair, redispatch or authority reuse. |
+| Stale evidence | Preserve historical evidence; deny current reuse. |
+| Full/unavailable medium or synchronization failure | Return capture failure; never claim retention success. |
+
+Recovery does not refresh `as_of`. A recovered historical decision must independently pass current-consideration checks before present use.
+
+This contract targets process-crash consistency on a validated local filesystem. Required file synchronization and atomic publication must be demonstrated on the target platform before runtime acceptance. Power-loss durability, network filesystems and coherent replacement of all retained artifacts are not claimed.
+
+No new CORE-07 event is introduced in the first slice. Existing GOV consumption events are never repurposed. Additional independent observation/rollback detection would require explicit semantics and capacity acceptance under existing owners. Hashes and receipts alone do not authenticate a completely replaced store.
+
+**9. Security across every artifact.** The security-policy body is:
+
+`{implementation_id:ID, version:ID, source_files:List(BuildFile,16), allowed_media:["text/plain","application/json"], reject_sensitive_keys:true, reject_credential_shapes:true, reject_hidden_reasoning:true, max_depth:16, max_nodes:65536}`.
+
+At least one implementation source file is required. The trusted host verifies its installed implementation and pinned digests; a supplied policy cannot disable checks.
+
+Apply security validation to raw decoded inputs, manifests, configuration, decision records, receipts, links, evaluations and failures—before persistence and again on reads:
+
+- Bound bytes before decoding or parsing.
+- Accept only declared UTF-8 text or JSON. Reject binary, archives and opaque encoded payloads in this slice.
+- Recursively inspect structured keys and string values using the pinned [canonical sensitive-content checks](E:/Software/Agent_Company/runtime/core/sanitization.py:9).
+- Reject credential shapes, sensitive fields, environment dumps, hidden-reasoning fields and prohibited source channels. Do not capture scratchpads or raw provider reasoning.
+- Preserve locally established origin/trust/authority metadata through retention and replay, following [CORE-11](E:/Software/Agent_Company/runtime/context/EXTERNAL_CONTENT.md:17).
+- Never execute or dereference instructions embedded in data.
+- Never copy rejected content, raw exceptions, commands or unsafe paths into failure evidence.
+
+Credential detection is the declared canonical detector contract, not proof that arbitrary unmarked confidential prose can always be recognized. Closed capture channels and minimal retained fields remain necessary.
+
+Sanitization is outside selection and retention. If separately authorized sanitization supplies replacement bytes, capture them as a new derived input identity. Never hash sanitized bytes while claiming the original bytes were retained. Discarded original content is unavailable for replay.
+
+A failure body is closed:
+
+`{scope:Scope|null, phase:"ingress"|"eligibility"|"ranking"|"retention"|"read"|"replay"|"evaluation"|"link"|"recovery", code:"validation"|"security"|"capacity"|"integrity"|"unavailable"|"unsupported"|"stale"|"conflict", related_decision:Ref(decision)|null, field:ID|null, automatic:false}`.
+
+Only independently validated safe identifiers may be populated. If the evidence medium is unavailable, return the same bounded failure transiently and explicitly report that durable capture failed.
+
+**10. GOV links and authority separation.** A link body is:
+
+`{decision:Ref(decision), scope:Scope, relation:"task_request"|"gov_intent"|"gov_consumption"|"execution"|"evaluation"|"review"|"approval", target:ExistingRef|Ref(decision_eval_result)}`.
+
+Relation and target owner/type must agree. The relevant existing owner validates the target’s actual identity, exact bytes and scope before the execution-evidence owner writes an immutable link.
+
+Links are individually atomic, security-validated and read back. Missing later artifacts are represented by the absence of a link, not invented IDs. A malformed existing link is an error, not “not applicable.”
+
+An execution-bearing link must bind the actual exact request and canonical execution evidence. A decision never substitutes for them. Existing [GOV consumption](E:/Software/Agent_Company/runtime/core/capability_governance.py:100) and [completion verification](E:/Software/Agent_Company/runtime/core/task_contract.py:511) remain unchanged.
+
+If GOV consumption exists but an advisory link is missing, consumption remains spent. Repairing evidence does not refund an attempt, recreate approval or dispatch again. Changing a pinned executable skill requires the existing exact-work authorization flow.
+
+**11. Non-acting replay and CORE-03 evaluation.** Replay receives a committed decision/input bundle and an explicitly selected, trusted local replay build. It receives no provider, connector, dispatcher, approval, mutation or recovery interfaces.
+
+Replay must:
+
+1. Verify receipt, exact bytes, all semantic identities and source provenance.
+2. Use captured query, catalog, constraints, rules, versions and `as_of`.
+3. Require the installed allowlisted build/runtime to match the captured manifest.
+4. Recompute eligibility, menu, ranking, baseline and outcome.
+5. Reproduce the decision’s semantic identity.
+
+Missing builds or inputs are errors. Replay cannot fetch packages, dynamically import captured source, substitute current files or call live owners to update historical facts. Captured code/configuration is data, not executable authority. Historical replay validity is separate from current suitability.
+
+The CORE-03 extension is an additive decision-subject entry point. Existing execution-bound specs, results, mandatory execution checks and GOV completion consumers continue accepting only their existing subject types. No fabricated `ExecutionResult`, job or execution identity is supplied.
+
+A decision-evaluation spec body contains exactly:
+
+`{subject:Ref(decision), inputs:Ref(input_manifest), menu:Ref(menu), selector_build:Ref(build_manifest), selector_config:Ref(selector_config), baseline:Ref(ranking), case_set:RawRef, case_id:ID, case_version:ID, expected:Expected, evaluator_id:"canonical-decision-deterministic", evaluator_version:"1", checks:List(EvalCheck,8)}`.
+
+`Expected` is either:
+
+- `{kind:"acceptable_selection", skills:List(Name,256)}`, requiring at least one skill; or
+- `{kind:"non_selection", outcome:"ABSTAIN"|"CLARIFY"|"ESCALATE"}`.
+
+`EvalCheck` is `{id:ID, type:EvalCheckType, severity:"critical"|"major"|"minor"}`.
+
+Exactly eight unique checks are required in this order:
+
+`record_validity`, `eligibility`, `menu_membership`, `outcome_consistency`, `evidence_coverage`, `baseline_reproducibility`, `authority_separation`, `acceptable_outcome`.
+
+The result body is:
+
+`{spec:Ref(decision_eval_spec), subject:Ref(decision), status:"pass"|"fail"|"error", checks:List(EvalCheckResult,8), score:null}`.
+
+Each check result is:
+
+`{id:ID, type:EvalCheckType, severity:"critical"|"major"|"minor", status:"pass"|"fail"|"error", code:"satisfied"|"expectation_mismatch"|"evidence_unavailable"|"invalid_evidence"|"unsupported", evidence:List(Ref(decision)|Ref(decision_eval_spec)|RawRef,16)}`.
+
+Check identities and severities must match the spec. Aggregation gives `error` precedence over `fail`, then `pass`. Missing required evidence yields error; checks are never silently skipped. Only the explicit deterministic evaluator registry is available.
+
+CORE-03 retains ownership and its isolation, identity and persistence patterns. Additional case bytes must be securely retained before an evaluation is released. Baseline agreement measures reproducibility; `acceptable_outcome` separately measures declared decision quality. Neither grants approval or completion.
+
+**12. Phase 9A dependency assessment.** The six identifiers remain assessment labels from DEC-01-002. This revision creates no six-checkpoint workflow and closes none of them.
+
+| Label | Existing owner and obligation | Dependency for the first slice |
+|---|---|---|
+| **P9A-1 — Capture** | Execution-evidence owner; traceable evidence and honest completeness reporting already apply. The specific advisory bundle/receipt interface is proposed. | Required before releasing retained advisory evidence or claiming exact replay. This design supplies the contract; implementation and acceptance remain unproven. |
+| **P9A-2 — Unified trace** | Phase 9A coordinates identities across existing owners. Unified trace is [canonical planned scope](E:/Software/Agent_Company/ROADMAP.md:1117). | Requires advisory identity and explicit later-link semantics. Downstream execution/review/approval records become applicable when they exist. Full telemetry is not a new prerequisite for writing selector code. |
+| **P9A-3 — Replay** | Phase 9A owns captured-version replay; existing policy prohibits effects and stale-authority reuse. | The captured-input-only boundary must be validated before replay is offered or claimed. A functioning selector is not needed to approve its interface. |
+| **P9A-4 — Evaluation** | CORE-03 owns evaluation. Current APIs remain [execution-bound](E:/Software/Agent_Company/runtime/evals/models.py:286). | CORE-03 acceptance of the additive subject contract is needed before integration or decision-quality claims. It is not a new approval owner. |
+| **P9A-5 — Integrity/recovery** | Execution storage and CORE-07 supply existing patterns and limitations. The advisory publication protocol is proposed. | Required before downstream release. Additional journal events are unnecessary for this proposed first slice and cannot be introduced implicitly. |
+| **P9A-6 — Acceptance** | Human owner and independent Reviewer retain existing acceptance responsibilities. | Actual dependencies require independent validation and owner disposition. This is not a new global checkpoint or Phase 9A closure claim. |
+
+The existing roadmap position of Phase 9A before DEC-01 remains intact. A later work order must identify the accepted substrate evidence it relies on and preserve the frozen sequence. This report neither advances that sequence nor authorizes early implementation.
+
+Population calibration, override trends, dashboards and detailed economic measurements remain later measurements. Unsupported timing/cost stays unavailable.
+
+**13. Acceptance criteria and static finding resolution.** These are requirements for future separately authorized validation, not tests executed here.
+
+| Criterion | Required observable result |
+|---|---|
+| Identity | Identical semantic inputs reproduce identity; changing any semantic field changes it. `id` and retention time cannot create self-reference. |
+| Serialization | Duplicate keys, wrong types, unknown fields, missing nullable keys and noncanonical retained bytes reject. |
+| Digest domains | CRLF/LF instruction equivalence follows catalog normalization while raw-byte identities remain distinct. |
+| Immutability | Mutating caller input or any nested model value cannot change retained semantic content. |
+| Eligibility | Unknown, stale, unmapped, denied and untrusted requirements never enter the verified menu. |
+| Ranking | Exact CORE-08 counts and ties reproduce; only the first verified positive candidate can be selected. |
+| Outcomes | Error/conflict/material-clarification precedence holds even when a positive candidate exists. |
+| Commitment | No outcome becomes usable before a complete matching receipt; all publication interruption boundaries hold correctly. |
+| Concurrency/recovery | Identical writers deduplicate; conflicts reject; recovery records its actual new commit time and never rewrites history. |
+| Security | Prohibited content in any retained component rejects before persistence; failures do not leak it. |
+| Replay | No providers, connectors, dispatch, dynamic source loading, effects or authority reuse occur. Missing versions fail explicitly. |
+| Evaluation/GOV | Acceptable-outcome evaluation remains separate from baseline agreement; execution/approval/completion behavior and consumed claims remain intact. |
+
+| DEC-01-003 finding | Revision coverage | Current status |
+|---|---|---|
+| 1. Identity and closed schema | Sections 2–5: closed types, bounds, projections, byte identity, digest domains and ordering. | Addressed in design; independent closure pending. |
+| 2. Deterministic selection | Sections 6–7: executable predicates, freshness, materiality, precedence and first-ranked selection. | Addressed in design; independent closure pending. |
+| 3. Commitment and recovery | Section 8: writer/lock ownership, final-receipt commit point, deduplication and explicit recovery. | Addressed in design; independent closure pending. |
+| 4. Retained-input security | Sections 4 and 9–11: all-artifact validation, provenance, derived-input identity and non-acting replay. | Addressed in design; independent closure pending. |
+
+**14. Remaining owner decisions and risks.** Owner acceptance remains required for the proposed schema/limits, actual freshness values and requirement mappings, the conservative material-unknown policy, execution-storage interface and target-filesystem guarantees, and CORE-03’s additive subject interface. The pilot needs a versioned case set, acceptable outcomes and expansion thresholds.
+
+Runtime compatibility, crash behavior, detector coverage and replay confinement remain unvalidated. Complete store replacement is outside the stated integrity boundary. Token overlap can be reproducible while selecting poorly; case-based quality evaluation must assess that separately.
+
+No implementation, imports, tests, benchmarks, file edits, Git writes, installation or deployment occurred. This contract exists in the conversation; no standalone repository artifact or canonical promotion is claimed.
+
+**One next action:** submit this complete AC-DEC-01-004 revision to a separate independent Reviewer to assess the four findings and Phase 9A dependency treatment. `automatic=false`.
+
+Stopped before independent re-review.
+```
+<!-- AC-DEC-01-004-VERBATIM-END -->
 
 Accepted first-slice direction:
 
@@ -1592,16 +2063,40 @@ Accepted first-slice direction:
 
 The accepted AC-DEC-01-006 correction is part of that contract:
 
-- Section 4: the captured conflicts array order is immutable semantic input.
-  No sorting, deduplication or reordering is permitted. Validation preserves
-  original indices.
+- Section 4: the captured conflicts array order is immutable semantic input
+  through copying, freezing, serialization, identity derivation, retention and
+  replay. No sorting, deduplication or reordering is permitted. Validation
+  preserves original indices.
 - Section 5: ESCALATE carries the complete selected conflict, including ordered
-  evidence references. The existing decision identity binds captured input order
-  and outcome. Identical replay inputs reproduce the same payload and identity.
-  Existing evidence-reference ordering requirements remain applicable.
+  evidence references. The decision identity binds the ordered captured task
+  snapshot and outcome. Identical captured inputs, builds, configuration and
+  `as_of` reproduce the same ESCALATE payload and identity. Existing
+  evidence-reference ordering requirements remain applicable.
 - Section 7: when ESCALATE applies, select the first validated conflict by its
   original captured array index, not validation order. Error precedence remains
   unchanged; this does not permit skipping invalid input to manufacture advice.
+
+The accepted AC-DEC-01-007 normative correction is also part of that contract:
+
+> The decision body's uncertainty array MUST contain exactly one `Unknown` per
+> unknown `(skill, check)` pair and MUST reject duplicate `(skill, check)` pairs.
+> It MUST sort by ascending ASCII skill identity. For equal skills, it MUST use
+> the fixed order `registration`, `capabilities`, `inputs`, `prerequisites`,
+> `scope`, `security`, `freshness`. It MUST keep unique `rule_ids` in ascending
+> ASCII order.
+>
+> The authoring path MUST establish canonical ordering before constructing the
+> envelope. The exact ordered array participates in canonical serialization
+> `C(P("decision", body))` and semantic identity `H("decision", body)`.
+>
+> Parsing and retained reads MUST reject duplicate pairs and noncanonical
+> ordering. Readers MUST NOT reorder, deduplicate, repair or re-identify retained
+> input.
+>
+> Replay MUST recompute the canonical array, compare every field structurally,
+> including `reason`, `material` and `rule_ids`, and reproduce the decision
+> semantic identity. Any mismatch MUST produce an error. No successful or partial
+> replay is permitted.
 
 Accepted persistence, security and evaluation direction:
 
@@ -1658,7 +2153,7 @@ compatibility, crash behavior, detector coverage and replay confinement remain
 unvalidated. Full calibration, override trends, dashboards and detailed economics
 remain later measurements; unavailable timing/cost must not be invented.
 
-Architecture approval resolves none of those runtime acceptance obligations and
+Design approval resolves none of those runtime acceptance obligations and
 authorizes no implementation or roadmap advancement. **MEM-03 remains BLOCKED;
 D1 remains PAUSED.** No staging, commit, push, installation or deployment is
 authorized by this record. `automatic=false`.
