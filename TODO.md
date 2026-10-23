@@ -31,20 +31,26 @@
   acceptability, plus the manual disposal procedure.
 - [x] Restrict any considered transmission to synthetic, non-sensitive data.
   Repository source, secrets and real user data remain excluded.
+- [x] Accept evaluation under the provider's documented data-processing and
+  limited service-retention conditions only for synthetic, non-sensitive
+  qualification data. No zero provider-side retention guarantee is assumed or
+  claimed; implementation-time privacy enforcement remains unresolved.
 - [ ] Independently validate Windows Credential Manager integration or approve
   another credential source, and define enforceable privacy controls. No
   credential is authorized or installed by this design-policy decision.
 - [x] Prohibit paid API expenditure. Per-request and aggregate paid-use limits
   are both zero.
-- [ ] Verify Free Tier eligibility and zero-charge enforcement, and obtain
-  separate authorization before any use.
+- [ ] Independently verify that the exact credential-bound project is Free Tier
+  and is not linked to active billing. Any uncertainty concerning project
+  identity, billing linkage, eligibility or charging must fail closed. Account
+  inspection and any subsequent use require separate authorization.
 - [x] Restrict initial operation to text-only, non-streaming and tool-free
   requests.
 - [x] Permit at most one transmission attempt with no automatic retry, fallback
   or provider substitution.
 - [ ] Obtain separate authorization before any Direct API implementation,
-  provider qualification, credential work, test, isolated canary or runtime
-  acceptance activity.
+  provider qualification, account inspection, credential work, test, isolated
+  canary or runtime acceptance activity.
 - [ ] If implementation is later authorized, obtain required deterministic and
   adversarial evidence, affected-scope independent implementation review and
   explicit owner runtime acceptance before enabling provider execution.
@@ -60,8 +66,8 @@ Frozen V1, 14 approved roles and prior valid PASS/BLOCKED states remain intact.
 CONTRACT-04 remains partially implemented; Phase 9A remains NOT STARTED and
 unaccepted; DEC-01 implementation remains NOT STARTED; **MEM-03 remains BLOCKED;
 D1 remains PAUSED.** This reconciliation adds no runtime capability and grants no
-implementation, execution, Git, credential, network or external-action authority.
-`authority=none`; `automatic=false`.
+implementation, execution, Git, account inspection, credential, network or
+external-action authority. `authority=none`; `automatic=false`.
 
 ## CONTRACT-04 Remaining Prerequisites - 2026-10-19
 

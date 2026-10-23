@@ -59,24 +59,31 @@ for a possible first qualification profile. Gemini Developer API is the first
 qualification candidate; `gemini-3.5-flash-lite` remains an **UNVERIFIED** model
 candidate. Any later authorized initial operation is limited to synthetic,
 non-sensitive data, text-only and non-streaming requests, and an exactly empty
-native-tool inventory. Paid API expenditure is prohibited. Each transmission is
+native-tool inventory. Only a project independently verified as Free Tier and
+not linked to active billing may be considered. Maximum permitted paid
+expenditure is $0. Any uncertainty concerning project identity, billing
+linkage, Free Tier eligibility or charging fails closed. Each transmission is
 limited to one attempt with no automatic retry, fallback or provider
 substitution.
 
 Exact request/response evidence must remain local, repository-external,
 access-restricted and bound to canonical execution identities. Thirty days is an
-initial design retention target, not an implemented retention control. Exact
-provider/profile qualification, destination and API version, model availability,
+initial design retention target, not an implemented retention control. For this
+restricted synthetic, non-sensitive qualification-data use case only, the owner
+accepts evaluation under the provider's documented data-processing and limited
+service-retention conditions. Zero provider-side retention is not assumed or
+claimed. This is not an implemented privacy control. Exact provider/profile
+qualification, destination and API version, model availability, account/project
+qualification, no-active-billing verification, enforceable zero-charge evidence,
 TLS implementation, credential integration, evidence access ownership and manual
-disposal, privacy enforcement and Free Tier zero-charge guarantees remain
-unresolved.
+disposal, and privacy enforcement remain unresolved.
 
 This is an owner-supplied design-policy decision only. It grants no
 implementation, test, provider qualification, API call, credential access,
-external transmission, purchase, repository mutation or Git authority. GOV-01
-remains fail-closed; opaque CLI adapters remain blocked. Frozen V1, 14 approved
-roles and all existing Roadmap gates remain unchanged. `authority=none`;
-`automatic=false`.
+account inspection, external transmission, purchase, repository mutation or Git
+authority. GOV-01 remains fail-closed; opaque CLI adapters remain blocked. Frozen
+V1, 14 approved roles and all existing Roadmap gates remain unchanged.
+`authority=none`; `automatic=false`.
 
 Repository preflight verified
 `C:\Users\DELL\Desktop\AgentCompany\Agent_Company`, branch `master`, HEAD
