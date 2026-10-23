@@ -52,6 +52,32 @@ provider profile, credential integration, transport receipt, or runtime
 confinement acceptance exists. Filesystem sandboxing remains insufficient proof
 of an empty model-accessible tool surface.
 
+### Owner design-policy disposition - 2026-10-23
+
+AC-GOV01-OWNER-DISPOSITION-003 records the human owner's design-policy decision
+for a possible first qualification profile. Gemini Developer API is the first
+qualification candidate; `gemini-3.5-flash-lite` remains an **UNVERIFIED** model
+candidate. Any later authorized initial operation is limited to synthetic,
+non-sensitive data, text-only and non-streaming requests, and an exactly empty
+native-tool inventory. Paid API expenditure is prohibited. Each transmission is
+limited to one attempt with no automatic retry, fallback or provider
+substitution.
+
+Exact request/response evidence must remain local, repository-external,
+access-restricted and bound to canonical execution identities. Thirty days is an
+initial design retention target, not an implemented retention control. Exact
+provider/profile qualification, destination and API version, model availability,
+TLS implementation, credential integration, evidence access ownership and manual
+disposal, privacy enforcement and Free Tier zero-charge guarantees remain
+unresolved.
+
+This is an owner-supplied design-policy decision only. It grants no
+implementation, test, provider qualification, API call, credential access,
+external transmission, purchase, repository mutation or Git authority. GOV-01
+remains fail-closed; opaque CLI adapters remain blocked. Frozen V1, 14 approved
+roles and all existing Roadmap gates remain unchanged. `authority=none`;
+`automatic=false`.
+
 Repository preflight verified
 `C:\Users\DELL\Desktop\AgentCompany\Agent_Company`, branch `master`, HEAD
 `f8d726e2cdc96f138df8d7447839bc3b10855957`, upstream `origin/master` at `+0/-0`,

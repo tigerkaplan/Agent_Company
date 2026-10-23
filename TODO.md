@@ -19,18 +19,29 @@
 - [x] Preserve the complete accepted design in the existing
   [ROADMAP architecture owner](ROADMAP.md#gov-01-direct-api-transport-accepted-design---2026-10-23)
   without adding a parallel governance document or mandatory checkpoint.
-- [ ] Select and separately qualify the first provider, canonical HTTPS
-  destination, model, API version and approved Windows TLS trust policy.
-- [ ] Decide exact-request evidence classification, retention duration, access
-  control and whether plaintext local retention is acceptable.
-- [ ] Approve a credential source and external-transmission/privacy policy; no
-  credential is authorized or installed by design acceptance.
-- [ ] Set per-request and aggregate API cost limits under the existing compute
-  budget and human-approval owners.
-- [ ] Decide whether initial V1 transport is text-only and non-streaming as the
-  design recommends.
-- [ ] Decide whether pre-send provider substitution can ever be allowed; the
-  accepted minimum forbids automatic fallback.
+- [x] Record Gemini Developer API as the first qualification candidate.
+  `gemini-3.5-flash-lite` remains an **UNVERIFIED** model candidate.
+- [ ] Independently qualify the exact canonical HTTPS destination, model identity
+  and availability, API version and approved Windows TLS trust policy.
+- [x] Require exact request/response evidence to remain local,
+  repository-external, access-restricted and bound to canonical execution
+  identities. Thirty days is an initial design retention target, not an
+  implemented retention control.
+- [ ] Decide evidence access ownership, storage protection and plaintext
+  acceptability, plus the manual disposal procedure.
+- [x] Restrict any considered transmission to synthetic, non-sensitive data.
+  Repository source, secrets and real user data remain excluded.
+- [ ] Independently validate Windows Credential Manager integration or approve
+  another credential source, and define enforceable privacy controls. No
+  credential is authorized or installed by this design-policy decision.
+- [x] Prohibit paid API expenditure. Per-request and aggregate paid-use limits
+  are both zero.
+- [ ] Verify Free Tier eligibility and zero-charge enforcement, and obtain
+  separate authorization before any use.
+- [x] Restrict initial operation to text-only, non-streaming and tool-free
+  requests.
+- [x] Permit at most one transmission attempt with no automatic retry, fallback
+  or provider substitution.
 - [ ] Obtain separate authorization before any Direct API implementation,
   provider qualification, credential work, test, isolated canary or runtime
   acceptance activity.

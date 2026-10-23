@@ -15,6 +15,20 @@ in-process verify-and-send, exact zero-tool validation, fail-closed response
 handling, one transport attempt, no automatic fallback, blocked opaque CLI
 adapters and a deferred/non-mandatory separate-process oracle.
 
+AC-GOV01-OWNER-DISPOSITION-003 adds an owner-approved design-policy overlay only.
+Gemini Developer API is the first qualification candidate, while
+`gemini-3.5-flash-lite` remains **UNVERIFIED**. Any later authorized initial
+operation is limited to synthetic, non-sensitive data, text-only, non-streaming
+and tool-free requests, zero paid expenditure, one transmission attempt, and no
+automatic retry, fallback or provider substitution. Exact request/response
+evidence must remain local, repository-external, access-restricted and bound to
+canonical execution identities; 30 days is an initial design retention target,
+not an implemented control. Provider/profile qualification, exact destination
+and API version, model availability, TLS implementation, credential integration,
+evidence access and manual disposal, privacy enforcement and Free Tier
+zero-charge guarantees remain unresolved and separately authorized. The complete
+accepted V2 source below is unchanged.
+
 This is design acceptance only. Direct API implementation, provider
 qualification, credential integration, isolated canary execution and runtime
 acceptance are NOT STARTED and require separate authorization and evidence.
