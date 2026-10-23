@@ -1,5 +1,57 @@
 # Agent Company TODO
 
+## GOV-01 Direct API Transport Remaining Decisions - 2026-10-23
+
+- [x] Verify the complete 612-line V2 source at
+  `C:/Users/DELL/Downloads/AC_GOV01_DIRECT_API_TRANSPORT_DESIGN_CANDIDATE_V2.md`,
+  SHA-256 `ffb09725b75c805c6dd35027be82817d4cf2811e0ed0dff7b4206bfc218ced94`.
+- [x] Record the owner-reported affected-scope independent `REVIEW_PASS` and
+  explicit design-level acceptance. No standalone review artifact was supplied
+  or re-performed during this reconciliation.
+- [x] Close the HIGH destination/credential finding at design level by requiring
+  exact qualified destination, API-version, TLS, redirect and proxy validation
+  before credential resolution or any network activity, with zero credential
+  disclosure and zero provider transmission on mismatch.
+- [x] Close the MEDIUM evidence-binding finding at design level by requiring
+  complete execution, request, Task Contract, rendered-package, provider/profile,
+  attempt, retry and continuation binding plus deterministic stale/replay
+  rejection before review PASS.
+- [x] Preserve the complete accepted design in the existing
+  [ROADMAP architecture owner](ROADMAP.md#gov-01-direct-api-transport-accepted-design---2026-10-23)
+  without adding a parallel governance document or mandatory checkpoint.
+- [ ] Select and separately qualify the first provider, canonical HTTPS
+  destination, model, API version and approved Windows TLS trust policy.
+- [ ] Decide exact-request evidence classification, retention duration, access
+  control and whether plaintext local retention is acceptable.
+- [ ] Approve a credential source and external-transmission/privacy policy; no
+  credential is authorized or installed by design acceptance.
+- [ ] Set per-request and aggregate API cost limits under the existing compute
+  budget and human-approval owners.
+- [ ] Decide whether initial V1 transport is text-only and non-streaming as the
+  design recommends.
+- [ ] Decide whether pre-send provider substitution can ever be allowed; the
+  accepted minimum forbids automatic fallback.
+- [ ] Obtain separate authorization before any Direct API implementation,
+  provider qualification, credential work, test, isolated canary or runtime
+  acceptance activity.
+- [ ] If implementation is later authorized, obtain required deterministic and
+  adversarial evidence, affected-scope independent implementation review and
+  explicit owner runtime acceptance before enabling provider execution.
+
+Design status: **ACCEPTED / IMPLEMENTATION DEFERRED**. Direct API implementation,
+provider qualification and runtime acceptance are **NOT STARTED**. Opaque native
+CLI adapters remain blocked; GOV-01 fail-closed behavior is unchanged. A
+separate-process oracle remains optional/deferred and is not a mandatory V1
+checkpoint. Existing Task Contract, Worker, Provider, evidence, retry,
+continuation, ReviewerRuntime, budget and approval owners remain authoritative.
+
+Frozen V1, 14 approved roles and prior valid PASS/BLOCKED states remain intact.
+CONTRACT-04 remains partially implemented; Phase 9A remains NOT STARTED and
+unaccepted; DEC-01 implementation remains NOT STARTED; **MEM-03 remains BLOCKED;
+D1 remains PAUSED.** This reconciliation adds no runtime capability and grants no
+implementation, execution, Git, credential, network or external-action authority.
+`authority=none`; `automatic=false`.
+
 ## CONTRACT-04 Remaining Prerequisites - 2026-10-19
 
 - [x] Preserve the complete original 250-line consolidated contract in the

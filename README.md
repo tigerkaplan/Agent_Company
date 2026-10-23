@@ -1,5 +1,44 @@
 # Agent Company
 
+## GOV-01 Direct API Transport Design Acceptance And DOC-TREE - 2026-10-23
+
+AC-GOV01-TRANSPORT-DOC-001 records owner design-level acceptance of the complete
+AC-GOV01-TRANSPORT-DESIGN-FIX-001 V2 contract after the owner-reported
+affected-scope independent `REVIEW_PASS`. The complete verified 612-line source,
+SHA-256 `ffb09725b75c805c6dd35027be82817d4cf2811e0ed0dff7b4206bfc218ced94`,
+is preserved in the existing
+[ROADMAP architecture owner](ROADMAP.md#gov-01-direct-api-transport-accepted-design---2026-10-23).
+Its canonical embedded copy removes only ten trailing Markdown hard-break spaces
+to keep repository whitespace validation clean; provenance and the normalized
+copy hash are recorded with the ROADMAP source.
+[PROJECT_STATE](PROJECT_STATE.md#gov-01-direct-api-transport-design-acceptance---2026-10-23)
+owns status and review provenance; [TODO](TODO.md#gov-01-direct-api-transport-remaining-decisions---2026-10-23)
+owns remaining owner decisions and future work.
+
+Both reviewed findings are closed at design level. The accepted design requires
+precredential exact destination/profile enforcement with zero credential
+disclosure and zero provider transmission on mismatch, plus complete canonical
+execution/retry/continuation evidence binding and deterministic stale/replay
+rejection before review PASS. Same-byte zero-tool validation, fail-closed
+responses, one transport attempt, no automatic fallback, blocked opaque CLI
+adapters and a deferred/non-mandatory separate-process oracle are preserved.
+
+This reconciliation adds no physical runtime, provider, configuration, schema,
+test, credential or evidence-store path. The existing GOV-01 current physical
+paths below remain unchanged. Direct API implementation, provider qualification,
+isolated canary execution and runtime acceptance are NOT STARTED. The accepted
+ROADMAP text is documentation, not an implemented transport or qualification
+artifact.
+
+Only the four existing Master Context documents change, retaining their current
+status/scope/work/DOC-TREE ownership. Frozen V1, 14 approved roles and all prior
+valid PASS/BLOCKED states remain intact. GOV-01 remains CLOSED / COMMITTED at
+`852ec01`; CONTRACT-04 remains partially implemented; Phase 9A remains NOT
+STARTED and unaccepted; DEC-01 implementation remains NOT STARTED; **MEM-03
+remains BLOCKED; D1 remains PAUSED.** No new mandatory checkpoint or parallel
+governance system is created. The documentation diff is unstaged and uncommitted.
+`authority=none`; `automatic=false`.
+
 ## CONTRACT-04 Canonical Design And DOC-TREE - 2026-10-19
 
 The complete original CONTRACT-04 and later owner design dispositions are stored

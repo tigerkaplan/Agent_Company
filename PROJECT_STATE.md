@@ -1,5 +1,73 @@
 # Agent Company Project State
 
+## GOV-01 Direct API Transport Design Acceptance - 2026-10-23
+
+AC-GOV01-TRANSPORT-DOC-001 records the owner's explicit design-level acceptance
+of the complete AC-GOV01-TRANSPORT-DESIGN-FIX-001 V2 contract after the
+owner-reported affected-scope independent `REVIEW_PASS`. Status:
+**DESIGN ACCEPTED / TWO REVIEW FINDINGS RESOLVED / IMPLEMENTATION DEFERRED**.
+Direct API implementation, provider qualification, live canary evidence and
+runtime acceptance are **NOT STARTED**. The accepted design grants no execution,
+credential, network, implementation, test, installation, staging, commit or push
+authority.
+
+The complete source was inspected at
+`C:/Users/DELL/Downloads/AC_GOV01_DIRECT_API_TRANSPORT_DESIGN_CANDIDATE_V2.md`:
+612 lines, 30,903 bytes, SHA-256
+`ffb09725b75c805c6dd35027be82817d4cf2811e0ed0dff7b4206bfc218ced94`.
+Its complete text is preserved in the existing
+[ROADMAP architecture owner](ROADMAP.md#gov-01-direct-api-transport-accepted-design---2026-10-23).
+For repository whitespace integrity, the embedded 612-line copy removes only the
+five source metadata lines' Markdown hard-break pairs (ten trailing ASCII spaces):
+30,893 bytes, SHA-256
+`5ec574202278060804f927db2fae494d424dbedb7d5f10cb86a305597836d506`.
+No words, ordering or design requirements change; the unchanged Downloads source
+and its expected hash remain the acceptance identity.
+The current owner instruction supplies the independent review outcome and design
+acceptance; no standalone reviewer artifact or session record was supplied, and
+the completed design review was not repeated during documentation reconciliation.
+
+The accepted correction closes the two reported design findings:
+
+1. **HIGH destination/credential enforcement:** the trusted canonical transport
+   must validate the exact qualified scheme, host, port, path, API version, TLS,
+   redirect and proxy policy before credential resolution or network activity.
+   Every mismatch requires zero credential disclosure and zero provider
+   transmission.
+2. **MEDIUM complete evidence binding:** the immutable prepared request and
+   receipt must bind the full canonical execution, request, Task Contract,
+   rendered-package, provider/profile, job-attempt, transport-attempt, retry and
+   continuation identities. Deterministic review must reject missing,
+   conflicting, stale or replayed evidence before PASS.
+
+These are enforceable future implementation requirements, not logging claims.
+The accepted design retains same-byte in-process verify-and-send, exact empty
+native-tool inventory, fail-closed response handling, one transport attempt, no
+automatic fallback and no tool-call dispatch. A separate-process oracle remains
+optional/deferred and is not a new V1 prerequisite.
+
+GOV-01 remains CLOSED / COMMITTED at `852ec01`; its current runtime still blocks
+opaque native CLI adapters before invocation. No direct API adapter, qualified
+provider profile, credential integration, transport receipt, or runtime
+confinement acceptance exists. Filesystem sandboxing remains insufficient proof
+of an empty model-accessible tool surface.
+
+Repository preflight verified
+`C:\Users\DELL\Desktop\AgentCompany\Agent_Company`, branch `master`, HEAD
+`f8d726e2cdc96f138df8d7447839bc3b10855957`, upstream `origin/master` at `+0/-0`,
+and an empty index.
+The previously reported inventory of 12 modified non-documentation tracked files and four untracked diagnostic files remains present and unstaged. Byte-for-byte preservation during DOC-001 is UNVERIFIED because authentic pre-edit fingerprints were not supplied.
+Only `PROJECT_STATE.md`, `ROADMAP.md`, `TODO.md` and `README.md` are authorized for
+this reconciliation; the documentation diff is uncommitted and unstaged.
+
+Frozen V1, 14 approved roles and existing roadmap ownership remain unchanged.
+CONTRACT-04 remains partially implemented; Phase 9A remains NOT STARTED and
+unaccepted; DEC-01 implementation remains NOT STARTED; **MEM-03 remains BLOCKED;
+D1 remains PAUSED.** Remaining Direct API owner decisions are recorded in
+[TODO](TODO.md#gov-01-direct-api-transport-remaining-decisions---2026-10-23).
+Earlier dated records retain their historical scope. `authority=none`;
+`automatic=false`.
+
 ## CONTRACT-04 Design Acceptance And Source Provenance - 2026-10-19
 
 **DESIGN ACCEPTED (conversation-reported) / BUILD-01 CLOSED / COMMITTED.** The

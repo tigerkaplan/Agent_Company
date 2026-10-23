@@ -1,5 +1,31 @@
 # Agent Company Roadmap
 
+## GOV-01 Direct API Transport Design Acceptance - 2026-10-23
+
+AC-GOV01-TRANSPORT-DOC-001 records owner-approved design-level acceptance of the
+complete AC-GOV01-TRANSPORT-DESIGN-FIX-001 V2 contract after the owner-reported
+affected-scope independent `REVIEW_PASS`. Both reviewed findings are closed at
+design level: destination/profile validation must precede credential resolution
+and network activity, and deterministic verification must bind the complete
+execution, attempt, retry and continuation identity before review can PASS.
+
+The [complete accepted design](#gov-01-direct-api-transport-accepted-design---2026-10-23)
+is retained under the existing GOV-01 architecture owner. It preserves same-byte
+in-process verify-and-send, exact zero-tool validation, fail-closed response
+handling, one transport attempt, no automatic fallback, blocked opaque CLI
+adapters and a deferred/non-mandatory separate-process oracle.
+
+This is design acceptance only. Direct API implementation, provider
+qualification, credential integration, isolated canary execution and runtime
+acceptance are NOT STARTED and require separate authorization and evidence.
+GOV-01 remains CLOSED / COMMITTED at `852ec01`; frozen V1, 14 approved roles and
+all existing scope, approval, evidence, retry, continuation and review owners are
+unchanged. CONTRACT-04 remains partially implemented; Phase 9A remains NOT
+STARTED and unaccepted; DEC-01 implementation remains NOT STARTED; **MEM-03
+remains BLOCKED; D1 remains PAUSED.** No new checkpoint, process, service,
+database, role or authority store is created. `authority=none`;
+`automatic=false`.
+
 ## DEC-01 Design Acceptance - 2026-10-21
 
 AC-DEC-01-009 records owner-approved design-level acceptance of AC-DEC-01-004
@@ -859,6 +885,638 @@ Opaque native-tool CLI providers fail closed; no native CLI confinement is claim
 GOV-01 is CLOSED / COMMITTED at `852ec01` after verified independent PASS and GOV-01C2 closure.
 GOV-02 is CLOSED / COMMITTED at `e6dbe3f` after independent R5 PASS and verified owner closure.
 Details: [Task Contract](governance/task-contract/README.md).
+
+##### GOV-01 Direct API Transport Accepted Design - 2026-10-23
+
+The following is the complete accepted 612-line V2 source from
+`C:/Users/DELL/Downloads/AC_GOV01_DIRECT_API_TRANSPORT_DESIGN_CANDIDATE_V2.md`,
+SHA-256 `ffb09725b75c805c6dd35027be82817d4cf2811e0ed0dff7b4206bfc218ced94`.
+It is retained as the accepted design baseline. The surrounding status record,
+not the source's pre-review candidate label, records the later owner acceptance
+and owner-reported independent `REVIEW_PASS`. No implementation authority follows.
+
+The repository copy preserves all 612 source lines but removes the five metadata
+lines' Markdown hard-break pairs (ten trailing ASCII spaces) so
+`git diff --check` can remain clean. The normalized embedded bytes are 30,893
+bytes with SHA-256
+`5ec574202278060804f927db2fae494d424dbedb7d5f10cb86a305597836d506`.
+No words, ordering or design requirements change. The unchanged Downloads source
+and its expected SHA-256 above remain the acceptance identity.
+
+<!-- AC-GOV01-DIRECT-API-TRANSPORT-V2-SOURCE-BEGIN -->
+# GOV-01 Direct API Transport - Bounded Design Candidate v2
+
+Design ID: `AC-GOV01-TRANSPORT-DESIGN-FIX-001`
+Revises: `AC-GOV01-TRANSPORT-DESIGN-001`
+Status: **DESIGN_FIX READY - IMPLEMENTATION NOT AUTHORIZED**
+Mode: Design revision only
+Source preserved unchanged: `C:\Users\DELL\Downloads\AC_GOV01_DIRECT_API_TRANSPORT_DESIGN_CANDIDATE_SOURCE.md`
+Source SHA-256: `cadb43528697513e66ad89181991a23e3a6d1cb514e48d27bb273cfe72cbe004`
+
+## Decision
+
+**DESIGN: CANDIDATE**
+
+Recommendation: **ADAPT** the existing provider architecture with a bounded,
+byte-level direct API transport. Keep every unqualified CLI adapter blocked.
+
+The v2 design preserves same-byte in-process verify-and-send, strict zero-tool
+validation, fail-closed response handling, one transport attempt, no automatic
+fallback, and the existing GOV-01 authority boundary. It adds two mandatory
+corrections:
+
+1. the trusted canonical transport owns and validates the complete destination
+   before credential resolution or network activity; and
+2. the prepared request and transport receipt bind the complete canonical
+   execution, attempt, retry, and continuation identity and are independently
+   revalidated before review can PASS.
+
+A separate-process oracle is not a mandatory V1 component. It remains a
+deferred hardening option if the owner later expands the threat model to distrust
+the canonical runtime process or requires proof of bytes received by the remote
+provider.
+
+## Two-finding change summary
+
+### Finding 1 - HIGH: destination and credential enforcement
+
+**RESOLVED in this design.**
+
+The trusted canonical transport, not the adapter, task, model, environment, or
+caller, resolves the effective destination from an independently qualified
+provider profile. Before the credential resolver is called, it must validate the
+exact scheme, canonical host, explicit effective port, path, query policy, API
+version placement and value, HTTP method, TLS policy, redirect policy, and proxy
+policy. A supplied destination may only be accepted if every normalized field is
+identical to the qualified profile.
+
+Any missing value, ambiguity, unsupported port, endpoint override, redirect,
+proxy use, destination drift, API-version conflict, or TLS-policy mismatch fails
+closed before credential access and before network transmission. The failure
+must record `credential_resolution_attempted=false` and
+`network_attempted=false`. The successful receipt binds the validated
+destination, TLS policy, and qualification-profile digest.
+
+### Finding 2 - MEDIUM: complete evidence binding
+
+**RESOLVED in this design.**
+
+The immutable prepared-request envelope and provider artifact/transport receipt
+must contain and bind `job_id`, `execution_id`, canonical `ExecutionRequest`
+digest, Task Contract digest, rendered package digest, requested and actual
+provider, qualification-profile digest, canonical job attempt, transport
+attempt, and applicable retry and continuation identities. Existing retry and
+continuation owners remain authoritative; the transport only records their
+canonical projections and digests.
+
+Before review can PASS, deterministic verification must independently recompute
+and compare the identity against the canonical `ExecutionRequest`, Task Contract,
+rendered package, `ExecutionResult`, execution decision trace, provider artifact,
+and transport receipt. Missing, conflicting, stale, substituted, duplicated, or
+replayed identity evidence is a deterministic failure, never an advisory log.
+
+## Preflight and preserved baseline
+
+The complete original candidate was verified at the source path and hash stated
+above before this revision was prepared. It contains 229 lines and 16,339 bytes.
+The source remains unchanged.
+
+The original candidate recorded this repository baseline:
+
+- Repository: `C:\Users\DELL\Desktop\AgentCompany\Agent_Company`
+- Branch: `master`
+- HEAD: `f8d726e2cdc96f138df8d7447839bc3b10855957`
+- Upstream: `origin/master`, reported `+0/-0`
+- Worktree: already dirty with 12 modified tracked files and 4 untracked
+  diagnostic/test files; those files remain outside this design revision.
+
+No Git operation was performed for this bounded fix. No repository file,
+configuration, test, installation, credential, provider, model, or roadmap state
+was changed. No provider, CLI, network, or live qualification probe was invoked.
+
+The canonical GOV-01 contract remains CLOSED / COMMITTED. Provider output cannot
+grant authority. Native adapters must expose a trusted empty native-tool surface,
+and opaque CLI adapters remain blocked before process invocation. Filesystem
+sandboxing remains insufficient evidence of an empty model-accessible tool
+surface.
+
+## Existing components suitable for reuse
+
+| Component | Reuse |
+| --- | --- |
+| `TaskContract` | Retain `provider_call` authorization and the exact `native_tools == frozenset()` fail-closed guard. |
+| `ProviderAdapter` | Retain the provider-neutral interface; formally add confinement and qualification metadata. |
+| `ProviderRouter` | Retain pre-execution eligibility and availability selection, but forbid automatic fallback for the initial direct API path. |
+| `ProviderExecutor` | Retain the pre-call confinement guard, execution-package construction, and provider-artifact creation. |
+| `Worker` | Retain authority validation, retry/budget reservation, certified dispatch, identity checks, result recording, and continuation routing. |
+| `ExecutionRequest` | Remain the canonical execution and attempt identity presented to the transport. |
+| `ExecutionResult` | Keep schema version 1 and reference richer provider evidence through the existing artifact reference. |
+| `FileProviderArtifactStore` | Extend the existing record schema rather than introduce a new storage mechanism. |
+| `ExecutionStore` and capability governance | Retain intent/result binding, consumption evidence, replay prevention, and durable decision traces. |
+| Retry runtime/store | Remain authoritative for retry eligibility, authorization, reservation, admission, and consumed-attempt evidence. |
+| Continuation runtime/store | Remain authoritative for plan, logical-job, sequence, step, and prior-execution identities. |
+| `DeterministicVerifier` | Extend verification to the exact serialized request, destination, response, and complete identity chain. |
+| `ReviewerRuntime` | Retain fail-closed `FAIL`/`NEEDS_HUMAN` behavior and existing review/approval routing. |
+| Compute budget and approval owners | Reuse for API spend, external transmission, and human approval. |
+
+Current implementation gaps remain unchanged:
+
+- the provider factory constructs only local CLI adapters;
+- `ProviderAdapter` does not formally declare its native-tool surface or
+  qualification profile;
+- `ProviderExecutionResult` remains CLI/process-oriented;
+- provider artifacts store process stdout/stderr rather than final request and
+  transport evidence; and
+- deterministic review does not currently validate the outbound request,
+  destination, or full receipt identity.
+
+These are identified design deltas, not implemented capabilities.
+
+## Minimum architecture delta
+
+### 1. Qualified direct API adapter
+
+Add one `direct_api` adapter kind while leaving current CLI adapters unchanged
+and blocked.
+
+The adapter must expose:
+
+- `native_tools = frozenset()` with the exact existing type requirement;
+- provider and model identity;
+- a qualification-profile identifier and digest;
+- supported execution mode, initially `READ_ONLY` only;
+- a provider-specific deterministic request encoder;
+- a provider-specific effective-tool-inventory extractor; and
+- a provider-specific response decoder and response-type allowlist.
+
+The adapter must not own credentials, destination overrides, redirects, proxy
+configuration, retries, or network transmission. Vendor request and response
+field semantics remain inside the adapter/profile boundary. Worker, Router,
+ProviderExecutor, ExecutionResult, and ReviewerRuntime remain provider-neutral.
+
+### 2. Independently qualified provider profile
+
+Each permitted provider/model/API-version combination requires one immutable,
+independently reviewed qualification profile. Its canonical bytes and digest are
+the authority for transport validation. The profile must contain at least:
+
+- provider and profile identifiers;
+- model and API version;
+- HTTP method;
+- scheme, necessarily `https` for V1;
+- canonical ASCII host;
+- explicit effective port;
+- exact path and query policy;
+- exact API-version location and value, including path, header, or qualified
+  query component as applicable;
+- allowed non-secret headers and forbidden header names;
+- approved TLS verification policy;
+- redirect policy, necessarily disabled;
+- proxy policy, necessarily direct/no-proxy for V1;
+- request-field allowlist and explicit tool-disable representation;
+- response-type allowlist;
+- maximum request and response sizes;
+- activation and, if applicable, expiry/supersession identity; and
+- qualification evidence references.
+
+The profile cannot be selected or altered by task text, model output, inherited
+environment, user configuration, arbitrary adapter input, or a per-request
+endpoint option. Unknown, inactive, expired, conflicting, or ambiguously encoded
+profiles fail closed.
+
+### 3. Immutable prepared request and identity envelope
+
+Introduce one bounded immutable `PreparedProviderRequest` with two distinct
+parts: an internal identity/transport envelope and the final outbound body bytes.
+
+The envelope must contain:
+
+- `job_id`;
+- `execution_id`;
+- canonical `ExecutionRequest` SHA-256;
+- canonical Task Contract SHA-256;
+- rendered execution-package SHA-256;
+- requested provider;
+- actual provider;
+- model and API version;
+- qualification-profile identifier and SHA-256;
+- canonical job attempt from `ExecutionRequest.attempt`;
+- transport attempt, fixed at `1`;
+- decision-intent digest and dispatch-consumption/claim digest supplied by the
+  existing execution-governance owner;
+- retry identity, either canonical `null` or a complete projection of existing
+  retry evidence; and
+- continuation identity, either canonical `null` or the complete existing
+  continuation tuple.
+
+When retry identity applies, the projection must include the existing canonical
+values needed to distinguish the retry from original work: source job, retry job,
+logical job, retry sequence/job attempt, authorization digest, repair-scope
+digest, and reservation/admission or consumed-attempt evidence digest as
+applicable. The transport must not derive, repair, or authorize any of them.
+
+When continuation identity applies, it must include:
+
+- `continuation_plan_digest`;
+- `continuation_logical_job_id`;
+- `continuation_sequence`;
+- `continuation_step_id`; and
+- `continuation_execution_ref` when required by the canonical request.
+
+Continuation values must be wholly absent or canonically complete according to
+the existing `ExecutionRequest` contract. Retry identity does not authorize
+continuation, and continuation identity does not authorize a retry.
+
+The outbound portion must contain:
+
+- allowlisted non-secret headers;
+- final UTF-8 request-body bytes;
+- request-body SHA-256 and byte length; and
+- the provider-specific derived effective tool inventory.
+
+The body is serialized once. Validation and transmission receive the same
+immutable byte sequence. Nothing may reconstruct, reserialize, compress,
+transform, or replace it after validation.
+
+### 4. Mandatory pre-credential destination gate
+
+The canonical transport must execute the following order without reordering or
+bypass:
+
+1. Load the active qualified profile by its trusted identifier.
+2. Verify the profile digest and qualification state.
+3. Resolve the effective destination exclusively from the profile. If an adapter
+   supplied destination is present, normalize and compare every field exactly.
+4. Validate method, `https` scheme, canonical host, effective port, exact path,
+   query policy, and API-version placement/value.
+5. Validate the approved TLS policy, hostname verification requirement,
+   certificate-verification requirement, redirect-disabled state, direct/no-proxy
+   state, and disabled environment inheritance.
+6. Validate complete execution identity and exact request bytes, including the
+   empty effective tool inventory.
+7. Freeze the validated destination/request tuple and create its precredential
+   digest.
+8. Only then call the approved credential resolver using the qualified profile
+   identity, never a task-supplied host or endpoint.
+9. Inject the credential into the in-memory allowlisted authorization header.
+10. Send the already-validated body bytes once to the already-validated
+    destination.
+
+The canonical transport must reject:
+
+- any non-HTTPS scheme;
+- host aliasing or host drift after canonicalization;
+- implicit or explicit port drift;
+- an unsupported port;
+- path normalization that changes the qualified path;
+- unexpected query components;
+- conflicting, missing, duplicated, or unsupported API versions;
+- user-, task-, model-, environment-, or adapter-controlled endpoint overrides;
+- redirects or any 3xx destination substitution;
+- explicit or environment-derived HTTP/SOCKS proxies;
+- custom transport hooks or middleware that can change destination or body;
+- disabled certificate or hostname verification;
+- unapproved CA bundles, TLS settings, or connection adapters; and
+- any mismatch between the selected provider and the destination profile.
+
+For every precredential mismatch:
+
+- the credential resolver must not be called;
+- no authorization header or token value may be materialized or disclosed;
+- no DNS lookup, socket connection, TLS handshake, or provider transmission may
+  occur;
+- the execution returns a non-retryable fail-closed result; and
+- bounded local failure evidence records the mismatch class plus
+  `credential_resolution_attempted=false`, `network_attempted=false`, and
+  `transport_attempt=0`, without secrets.
+
+Credential acquisition failure after a successful destination gate still causes
+zero network transmission. A redirect response, if one is received from the
+qualified destination, is a terminal rejected response and is never followed.
+
+### 5. Same-byte zero-tool verification and transmission
+
+The trusted in-process transport is a canonical runtime enforcement component,
+not an adapter assertion. It must:
+
+1. parse the final request bytes with duplicate-key rejection;
+2. apply the exact provider/model/API-version field allowlist;
+3. derive the effective model-accessible tool inventory from those bytes;
+4. require the inventory to be exactly empty;
+5. confirm the body digest and identity envelope immediately before credential
+   resolution;
+6. pass the same immutable bytes to the network client without reserialization;
+7. permit exactly one network transmission attempt; and
+8. create a bounded receipt before the provider result can be accepted.
+
+Required request conditions remain:
+
+- `tools` is exactly empty where the qualified API supports the field;
+- `tool_choice` is exactly `none` where supported;
+- if either field is unsupported, its omission is explicitly defined in the
+  independently reviewed profile and is never inferred from silence;
+- hosted-tool, function-call, web-search, file-search, computer-use,
+  code-interpreter, MCP, and equivalent capability fields are forbidden;
+- unknown capability-bearing fields are rejected;
+- stateful assistant, thread, session, conversation, or stored-agent identifiers
+  are rejected for V1;
+- streaming is disabled for V1;
+- automatic retries, response hooks, middleware mutation, redirects,
+  environment proxies, and automatic provider fallback are disabled; and
+- no tool dispatcher is reachable from the adapter or response path.
+
+The canonical job attempt and the transport attempt are different identities.
+An authorized job retry may produce a new canonical execution and a new single
+transport attempt; the transport itself never retries. An ambiguous network
+outcome is non-retryable and requires human disposition.
+
+### 6. Fail-closed response validation
+
+Before accepting success, the adapter must reject:
+
+- tool, function, MCP, hosted-tool, or computer-use calls;
+- `required_action` or equivalent continuation states;
+- provider requests to submit tool results;
+- unknown response item types;
+- unsupported binary or multimodal payloads;
+- malformed, oversized, or non-UTF-8 responses;
+- response identity inconsistent with the prepared request; and
+- any response reached through redirect, retry, fallback, or destination drift.
+
+V1 permits only bounded text output plus explicitly qualified usage and finish
+metadata. A rejected response cannot be dispatched as a tool request, treated as
+continuation authority, retried automatically, or sent to another provider.
+
+### 7. Complete provider artifact and transport receipt
+
+Extend the existing provider artifact schema rather than create another storage
+mechanism. The write-once artifact must retain:
+
+#### Canonical identity
+
+- `job_id` and `execution_id`;
+- canonical `ExecutionRequest` digest;
+- Task Contract digest;
+- rendered package digest;
+- requested and actual provider;
+- qualification-profile identifier and digest;
+- canonical job attempt and transport attempt;
+- decision-intent and dispatch-consumption/claim digests;
+- canonical retry identity or explicit `null`; and
+- canonical continuation identity or explicit `null`.
+
+#### Validated destination and credential boundary
+
+- method, scheme, canonical host, effective port, path, query policy, and API
+  version location/value;
+- TLS-policy identifier/digest and verification outcome;
+- `redirects_allowed=false`;
+- `proxy_mode=none`;
+- `environment_transport_config_used=false`;
+- precredential validation digest;
+- `credential_resolution_attempted` as a boolean;
+- `network_attempted` as a boolean; and
+- no credential value, authorization-header value, or reversible credential
+  fingerprint.
+
+#### Request and response evidence
+
+- exact request bytes encoded losslessly;
+- request-body SHA-256 and byte length;
+- allowlisted non-secret header inventory;
+- derived tool inventory, necessarily `[]`;
+- tool-choice validation result;
+- attempt count, necessarily `1` for a transmitted request;
+- `fallback_used=false`;
+- exact bounded response bytes and digest;
+- response status and observed response-type inventory;
+- status, timestamps, and usage; and
+- a receipt digest over the canonical identity, destination, request, and
+  response evidence.
+
+The receipt is evidence, never authority. It cannot authorize a retry,
+continuation, fallback, review PASS, external action, or completion.
+
+`ExecutionResult` remains structurally unchanged. Its existing provider-artifact
+reference binds the result to this evidence path. Existing execution decision
+traces and completion receipts remain responsible for their established result,
+artifact, review, and approval digests.
+
+### 8. Deterministic identity and replay verification
+
+Before semantic provider review can PASS, `DeterministicVerifier` must load the
+canonical sources independently and recompute all comparisons. It must not trust
+the adapter's boolean claims, receipt summaries, or executor narrative.
+
+It must verify:
+
+1. the `ExecutionRequest` digest from canonical persisted request bytes;
+2. `job_id`, `execution_id`, job attempt, execution mode, provider selection,
+   and artifact reference against `ExecutionRequest` and `ExecutionResult`;
+3. the Task Contract digest against the canonical Task Contract boundary and
+   retained authority evidence;
+4. the rendered package digest against the canonical package rebuilt from the
+   request and retained context, or an existing canonical persisted package;
+5. requested/actual provider and `fallback_used=false` against Router selection
+   and `ExecutionResult`;
+6. qualification-profile digest and active-at-send status against the retained
+   qualified profile snapshot;
+7. destination, API version, TLS, redirect, and proxy fields against that
+   profile;
+8. request bytes, body digest, empty effective tool inventory, and tool-choice
+   representation by independently parsing the retained bytes;
+9. canonical job attempt separately from fixed transport attempt;
+10. applicable retry identity against existing retry authorization,
+    reservation/admission, consumed-attempt, and source-failure evidence;
+11. applicable continuation identity against existing continuation plan,
+    logical-job, sequence, step, and latest-execution evidence;
+12. decision-intent, dispatch claim/consumption, result trace, and artifact
+    ownership through the existing execution store;
+13. response bytes, digest, status, provider identity, and response types; and
+14. uniqueness: the receipt, request digest, execution identity, and consumed
+    dispatch evidence have not been substituted or reused for another execution.
+
+Missing, malformed, conflicting, stale-at-send, superseded-before-send,
+duplicated, or replayed evidence fails deterministic verification. A historical
+profile that was valid and pinned at send time does not become invalid merely
+because a later profile exists; the verifier checks the execution-time profile
+snapshot and lifecycle evidence.
+
+A deterministic identity failure yields `FAIL` or `NEEDS_HUMAN` under existing
+ReviewerRuntime policy and can never become PASS through provider output. It
+does not reopen the consumed attempt, synthesize retry authority, advance a
+continuation, or authorize automatic resend.
+
+## Normative enforcement points
+
+The two corrections are enforcement requirements, not logging requirements.
+
+| Enforcement point | Required gate | Fail-closed outcome |
+| --- | --- | --- |
+| Before credential resolver | Exact profile, destination, API version, TLS, proxy, request bytes, tool inventory, and identity must validate. | Resolver not called; zero credential disclosure; zero network activity; non-retryable blocked/failed result. |
+| Immediately before send | Frozen destination, immutable body digest, provider/profile identity, and transport attempt must still match. | Credential discarded in memory; zero transmission; no alternate provider or endpoint. |
+| Network client | Direct qualified HTTPS connection, approved TLS verification, no proxy, no redirect, no retry, same bytes. | Terminal failure; no resend or fallback. |
+| Response admission | Status, size, encoding, identity, and response-type allowlist must pass. | Response rejected; no tool dispatch, continuation, or retry authority. |
+| Deterministic review | Canonical request, Task Contract, package, result, profile, receipt, retry/continuation owners, and decision trace must agree. | Deterministic FAIL/NEEDS_HUMAN; review cannot PASS. |
+
+## Independent verification decision
+
+| Option | Decision | Reason |
+| --- | --- | --- |
+| Adapter declares `native_tools = frozenset()` | **REJECT** | An assertion is not evidence of the effective request. |
+| Validate an object before later serialization | **REJECT** | Serialization or middleware can change the transmitted request after validation. |
+| Validate final bytes and complete identity, then send those same bytes through the canonical transport | **CANDIDATE** | Independent verification can reparse the retained bytes and recompute destination, tool, and identity bindings without trusting adapter prose. |
+| Separate process that repeats adapter checks without exclusive egress | **REJECT** | Process separation alone does not strengthen the request boundary. |
+| Separate process with exclusive egress, authenticated IPC, independent pinning, and its own receipt | **CANDIDATE, DEFERRED** | Stronger against a compromised runtime but not required by the current documented trust boundary. |
+
+The bounded in-process design proves the exact application bytes handed to the
+canonical transport and the qualified destination to which that transport was
+configured to send them. It does not cryptographically prove which bytes the
+remote provider ultimately received.
+
+Proof of provider-received bytes would require a provider-signed request-hash
+receipt or an independently controlled TLS terminator/egress oracle that is the
+only network path. A future isolated acceptance canary should use an independently
+controlled recording endpoint or transport stub to compare received bytes and
+destination evidence with the retained request. Neither an oracle nor a canary
+is authorized by this design revision.
+
+## Security and privacy trade-offs
+
+### Benefits
+
+- Removes the opaque CLI native-tool surface and inherited CLI/MCP/user-config
+  risk.
+- Makes destination, API version, request bytes, and effective tool inventory
+  independently inspectable.
+- Ensures a destination mismatch cannot disclose credentials or reach a
+  provider.
+- Eliminates model-generated tool dispatch.
+- Preserves existing authority, identity, retry, continuation, evidence, review,
+  and approval ownership.
+
+### Remaining risks
+
+- The canonical runtime and in-process transport remain inside the trusted
+  computing base.
+- The receipt proves bytes handed to the transport, not bytes received by the
+  remote provider.
+- Provider API or response-schema drift can invalidate a qualified profile.
+- DNS, Windows trust-store, CA, TLS-library, and dependency changes remain part
+  of the qualified transport environment.
+- API credentials and their approved local source remain sensitive.
+- Exact request evidence may contain confidential task context.
+- External transmission creates privacy, residency, contractual, and usage-cost
+  exposure.
+- Parser, canonicalization, or profile-definition defects could produce false
+  acceptance until independently reviewed and tested.
+- No implementation, automated test, isolated canary, or provider qualification
+  evidence exists from this design revision.
+
+A digest alone is insufficient for later independent semantic inspection.
+Therefore exact request retention remains mandatory unless an approved encrypted
+retention mechanism provides equivalent access. The existing local provider
+artifact store is mechanically sufficient; retention period, access control,
+data classification, and plaintext acceptability remain owner decisions.
+
+Credentials must be injected only after the mandatory destination gate through
+an owner-approved credential source keyed by qualified profile identity. They
+must remain absent from `ExecutionRequest`, rendered context, request artifact,
+transport receipt, logs, errors, and review evidence. No new secret store is
+mandated by this design.
+
+## Roadmap and V1 assessment
+
+- **GOV-01:** hard dependency and unchanged. CLI adapters remain fail-closed.
+- **Shared CORE:** reuse authority, execution identity, budget, evidence, replay,
+  retry, continuation, and review owners; no new authority ledger.
+- **BUILD-02:** preserve `REVIEW_PASS / ACCEPTANCE BLOCKED`. This transport does
+  not rely on unaccepted `readonly_inspection` lifecycle work.
+- **CONTRACT-04:** remains partially implemented. Pinned installation and
+  Windows-containment obligations are not claimed by this design.
+- **Phase 9A:** remains NOT STARTED and unaccepted. It may later consume receipts
+  but is not required to create or validate them.
+- **ExecutionResult, Worker, and ReviewerRuntime:** retained; provider evidence
+  production and deterministic verification are adapted within existing owners.
+- **Frozen V1 and 14 roles:** unchanged. No role, service, database, security
+  service, process, or mandatory checkpoint is added.
+- **MEM-03 and DEC-01 implementation:** unchanged and not dependencies.
+
+Mandatory for any accepted direct API V1 transport:
+
+- precredential destination/profile enforcement;
+- approved HTTPS/TLS verification with redirects and proxies disabled;
+- final-byte request verification;
+- independently qualified provider/model/API-version profile;
+- empty derived native-tool inventory;
+- fail-closed response parsing;
+- one transport attempt and no automatic fallback;
+- complete execution/retry/continuation evidence binding;
+- deterministic replay/staleness rejection; and
+- independent implementation review and owner acceptance.
+
+Optional or deferred:
+
+- separate-process egress oracle;
+- encrypted evidence archive;
+- streaming;
+- multi-provider fallback;
+- provider-signed receipts; and
+- Phase 9A telemetry integration.
+
+The direct transport itself is not authorized or automatically mandatory. If
+provider-backed execution or provider-backed review is required while CLI
+confinement remains blocked, this is the minimum viable architectural route.
+Otherwise, defer it and keep provider execution blocked.
+
+## Future acceptance evidence
+
+Any later implementation acceptance must include, at minimum:
+
+- independent source review of the destination gate and credential-call order;
+- deterministic proof that every destination/profile mismatch makes zero calls
+  to the credential resolver and network client;
+- adversarial destination cases covering scheme, host, port, path, API version,
+  redirect, proxy, TLS, environment override, and adapter override;
+- same-byte tests proving the verified bytes are the bytes passed to the network
+  client;
+- zero-tool request tests for supported, unsupported, duplicate, unknown, and
+  aliased capability fields;
+- response tests covering every forbidden tool/action response type;
+- identity tests for missing, conflicting, stale, substituted, duplicate, and
+  replayed receipts;
+- retry tests proving one HTTP attempt and preservation of canonical retry
+  ownership;
+- continuation tests proving provider output and receipts cannot advance or
+  authorize continuation;
+- a separately authorized isolated recording canary, if the owner requires
+  observed wire-receipt equivalence; and
+- independent affected-scope review plus explicit owner acceptance.
+
+These are future acceptance requirements, not authorization to implement or run
+them now.
+
+## Unresolved owner decisions
+
+1. Whether the threat model trusts independently reviewed canonical runtime code
+   or requires isolation from a compromised runtime process.
+2. The first provider endpoint, canonical destination, model, API version, and
+   approved Windows HTTPS/TLS trust policy to qualify.
+3. Exact-request retention classification, duration, and permitted readers.
+4. Approved credential source and external-transmission policy.
+5. Per-request and aggregate API cost limits.
+6. Whether V1 is text-only and non-streaming as recommended.
+7. Whether pre-send provider substitution is ever allowed; the minimum design
+   requires none and forbids automatic fallback.
+
+## One next permitted action
+
+Submit this complete v2 artifact to a separate, affected-scope independent design
+review limited to the two corrected findings: precredential destination/profile
+enforcement and complete deterministic evidence binding. No implementation,
+test, credential, provider call, live probe, roadmap change, or acceptance action
+is implied.
+<!-- AC-GOV01-DIRECT-API-TRANSPORT-V2-SOURCE-END -->
 
 #### GOV-02 — Capability Governance
 
