@@ -1,5 +1,43 @@
 # Agent Company Roadmap
 
+## Agent 11 Finance & Pricing Accepted Design - 2026-10-24
+
+Agent 11 remains **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT IMPLEMENTED**.
+AC-V1-AGENT11-DESIGN-009 returned the owner-accepted `REVIEW_PASS`, resolving
+`AG11-DESIGN-R1` through `AG11-DESIGN-R5` only for the reviewed 888-line source
+with SHA-256
+`46EB8C6375FAC0A13E7A845C7793019BC4625E568B934264E02E2ECCA0BAE142` at
+`C:/Users/DELL/Downloads/AC_V1_AGENT11_DESIGN_005_R2_R5_REVISION_20261024.md`.
+The external source is evidence by exact identity; its complete text is not
+copied into the repository.
+
+The accepted design is a future `READ_ONLY` Finance & Pricing analysis boundary.
+It may calculate, compare, explain and recommend from approved, source-bound
+inputs, but it may not approve or issue prices, quotes, discounts, refunds,
+credits, invoices or contracts; adopt financial policy; communicate an external
+commitment; mutate business records; or initiate payments, purchases, transfers,
+subscriptions or spend. Sales retains leads, opportunities, proposals and
+follow-up; Marketing retains positioning, campaigns and market evidence;
+Operations retains process and reporting coordination; Communications or Sales
+retains external wording and delivery; and planned Analytics retains general
+statistical and cross-domain analysis. Agent 11 owns only future finance and
+pricing semantics within an authorized analysis.
+
+The design reuses existing Task Contract, `ExecutionResult`, approval,
+authorization-fingerprint, review and human-decision boundaries. Material
+financial scope must be immutable and digest-bound before any future authorized
+execution; new or changed material policy requires new bound input and approval.
+Provider eligibility remains **NOT QUALIFIED**. The proposed provider eligibility
+flags remain fail-closed, and this documentation record does not modify a
+provider manifest, certify a provider or authorize provider execution.
+
+No proposed `agents/finance-pricing/`, finance-pricing skill or workflow path is
+created. The frozen 14-role roster is unchanged. `MEM-03` remains **BLOCKED /
+HOLD / NOT ACCEPTED**, `BUILD-02` remains `REVIEW_PASS / ACCEPTANCE BLOCKED`,
+and `CONTRACT-04` installation remains **BLOCKED**. Implementation, testing,
+runtime acceptance, deployment and Git work require separate authorization.
+`automatic=false`.
+
 ## Canonical Reconciliation Overlay - 2026-10-24
 
 This overlay reconciles the full current roadmap with the reference-only R2

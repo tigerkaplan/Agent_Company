@@ -1,5 +1,34 @@
 # Agent Company TODO
 
+## Agent 11 Accepted Design - Remaining Work - 2026-10-24
+
+- [x] Record the owner-accepted AC-V1-AGENT11-DESIGN-009 `REVIEW_PASS` and
+  preserve `AG11-DESIGN-R1` through `AG11-DESIGN-R5` as `RESOLVED` only for the
+  exact 888-line source with SHA-256
+  `46EB8C6375FAC0A13E7A845C7793019BC4625E568B934264E02E2ECCA0BAE142`.
+- [ ] Obtain owner decisions for approved formulas and calculation policies;
+  permitted currencies and scales; jurisdiction-specific rounding; tax/VAT
+  treatment; cost allocation and overhead; exchange-rate sources and freshness;
+  materiality and review thresholds; financial-data classification and
+  retention; whether budget variance belongs in the first implementation slice;
+  provider qualification; and any future standalone financial-policy approval
+  mechanism.
+- [ ] Before implementation, obtain a separate bounded work order with an exact
+  file allowlist and acceptance criteria; preserve existing Task Contract,
+  `ExecutionResult`, approval, review and human-authority owners; keep provider
+  eligibility fail-closed until independently qualified; and require affected
+  deterministic, adversarial and regression evidence plus independent
+  implementation review and explicit owner acceptance.
+- [ ] Keep the existing Agent 11 implementation item open. Design-review
+  acceptance creates no agent directory, role, skill, workflow, schema, provider
+  manifest, runtime capability, deployment or Git authority.
+
+Agent 11 remains **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT IMPLEMENTED**.
+The frozen 14-role roster and Sales, Marketing, Operations, Communications and
+planned Analytics boundaries remain unchanged. `MEM-03` remains **BLOCKED /
+HOLD / NOT ACCEPTED**; `BUILD-02` remains `REVIEW_PASS / ACCEPTANCE BLOCKED`;
+and `CONTRACT-04` installation remains **BLOCKED**. `automatic=false`.
+
 ## Canonical Roadmap Reconciliation - Remaining Work - 2026-10-24
 
 - [x] Reconcile the reference-only R2 conflict register against the current
