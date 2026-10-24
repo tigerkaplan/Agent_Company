@@ -7,6 +7,11 @@
 - [x] Preserve the frozen V1 roster: ten current roles plus Finance & Pricing,
   Analytics, Content and Design as Agents 11-14, APPROVED V1 / PLANNED / NOT
   IMPLEMENTED before Phase 9 rather than Phase 10/Post-V1.
+- [x] Record the owner-approved sequencing boundary: separately authorized,
+  bounded design/contract preparation for Agents 11-14 may occur while MEM-03
+  remains mandatory V1 on BLOCKED / HOLD / NOT ACCEPTED. Preparation creates no
+  agent, skill, workflow, implementation checkpoint or runtime authority and
+  does not waive, satisfy, reorder or bypass any existing mandatory gate.
 - [x] Preserve exact planned capability IDs `CAP-SALES`,
   `CAP-SEARCH-GROWTH-01`, `CAP-REV-01` and `CAP-SOC-01`.
 - [x] Preserve Phase 9A before DEC-01 runtime; keep Phase 9B Control Room,
@@ -18,9 +23,10 @@
   occurs on baseline, so BUILD-02 defect attribution is UNKNOWN. Do not waive
   the gate or repeat unchanged tests/design work; the broader recovery refactor
   is owner-DEFERRED pending material new evidence or renewed authorization.
-- [ ] MEM-03 remains BLOCKED / NOT ACCEPTED pending native Windows identity,
-  compatibility, evidence-custody and protected-execution qualification. Do not
-  restart an unchanged attempt.
+- [ ] MEM-03 remains mandatory V1 and BLOCKED / HOLD / NOT ACCEPTED pending
+  native Windows identity, compatibility, evidence-custody and
+  protected-execution qualification. Do not restart an unchanged attempt or
+  treat Agents 11-14 design preparation as acceptance or bypass.
 - [ ] CONTRACT-04 installation remains BLOCKED. The verified 180-candidate
   artifact is discovery evidence only; all membership decisions and dependency
   closure remain unresolved, and the set does not fit the 128-entry ceiling.

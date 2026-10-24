@@ -17,7 +17,7 @@ this current overlay and the later accepted decisions control current status.
 | --- | --- |
 | CORE-01 through CORE-11; GOV-01/02; ORCH-01 | CLOSED / COMMITTED. CORE-07 remains closed; the reviewed recovery-lock diagnostic is retained, the concurrency proof is INSUFFICIENT, and the broader recovery-coordination refactor is owner-DEFERRED. |
 | MEM-01 / MEM-02 / MEM-02B | CLOSED / COMMITTED; MEM-02 is PUSHED. MEM-02B commit `ad055f8` and later fixture-hygiene commit `4773acb` are ancestors of current HEAD. Do not restart older ACTIVE/UNCOMMITTED steps. |
-| MEM-03 | BLOCKED / NOT ACCEPTED. Native Windows compatibility, identity and protected-execution evidence remain incomplete. |
+| MEM-03 | Mandatory V1; BLOCKED / HOLD / NOT ACCEPTED. Native Windows compatibility, identity, evidence-custody and protected-execution evidence remain incomplete. Design preparation for Agents 11-14 does not bypass or satisfy this gate. |
 | Shared CORE BUILD-01 | CLOSED / COMMITTED at `376763d`; reviewed two-file scope only. |
 | Shared CORE BUILD-02 | REVIEW_PASS / ACCEPTANCE BLOCKED. Mandatory affected regression remains 51/52; the same recovery-lock signature occurs on the committed baseline, so BUILD-02 defect attribution is UNKNOWN. The 52/52 requirement remains. |
 | GOV-01 Direct API Transport V2 | DESIGN ACCEPTED / REVIEW_PASS / documentation and Git closed; implementation, provider qualification and runtime acceptance NOT STARTED. CLI adapters remain blocked. |
@@ -40,6 +40,14 @@ Phase 10 or Post-V1:
 12. Analytics - APPROVED V1 / PLANNED / NOT IMPLEMENTED.
 13. Content - APPROVED V1 / PLANNED / NOT IMPLEMENTED.
 14. Design - APPROVED V1 / PLANNED / NOT IMPLEMENTED.
+
+Owner-approved sequencing permits separately authorized, bounded design and
+contract preparation for Agents 11-14 before MEM-03 acceptance. This is
+preparatory documentation only: it creates no agent, skill, workflow, runtime
+contract or implementation checkpoint. Agent implementation and runtime
+acceptance remain behind MEM-03 and every other applicable existing mandatory
+gate. MEM-03 remains mandatory V1 on BLOCKED / HOLD / NOT ACCEPTED; preparation
+does not waive, satisfy, reorder or bypass it.
 
 The exact V1 capability IDs remain `CAP-SALES`,
 `CAP-SEARCH-GROWTH-01`, `CAP-REV-01` and `CAP-SOC-01`, all planned and
@@ -633,7 +641,9 @@ ACTIVE = None. The older MEM-02B commit action is superseded by the current
 committed lineage. No blocked implementation is promoted into NEXT by this
 reconciliation; a later action still requires its own owner authorization.
 MEM-02 is CLOSED / COMMITTED / PUSHED; MEM-02B is CLOSED / COMMITTED; MEM-03
-remains BLOCKED / NOT ACCEPTED. No later implementation is authorized.
+remains mandatory V1 on BLOCKED / HOLD / NOT ACCEPTED. Bounded Agents 11-14
+design/contract preparation may be separately authorized, but no later
+implementation or runtime acceptance is authorized.
 MEM-01 is CLOSED / COMMITTED at `5e29cdb177838adb1682ab3b36728623d714c5e3`.
 GOV-01 remains CLOSED / COMMITTED at `852ec01`; GOV-02 is CLOSED / COMMITTED
 at `e6dbe3f`; ORCH-01 is CLOSED / COMMITTED at `d3878081`.

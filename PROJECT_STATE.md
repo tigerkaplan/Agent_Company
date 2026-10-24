@@ -29,9 +29,10 @@ Current status overlay:
   CLOSED / COMMITTED in the current HEAD ancestry (`ad055f8`; later fixture
   hygiene `4773acb`). Its older UNCOMMITTED and ACTIVE entries are superseded
   status snapshots, not work to restart.
-- MEM-03 is **BLOCKED / NOT ACCEPTED**. Its bounded implementation evidence does
-  not establish native Windows identity, compatibility, protected execution or
-  acceptance. No repeat attempt is authorized by this reconciliation.
+- MEM-03 remains a mandatory frozen-V1 checkpoint on **BLOCKED / HOLD / NOT
+  ACCEPTED**. Its bounded implementation evidence does not establish native
+  Windows identity, compatibility, protected execution or acceptance. No
+  repeat attempt or bypass is authorized by this reconciliation.
 - Shared CORE BUILD-01 is CLOSED / COMMITTED. BUILD-02 retains independent
   `REVIEW_PASS` but **ACCEPTANCE BLOCKED**: the mandatory affected regression is
   51/52, with the same recovery-lock failure signature reproduced on the
@@ -50,8 +51,12 @@ Current status overlay:
   installation or execution.
 - D1 remains PAUSED / unaccepted. D2-D8 remain accepted ownership mappings, not
   implemented checkpoints. Phase 9A, Agents 11-14 and the V1 capability
-  expansions remain NOT STARTED. DEC-01 design is accepted but runtime is NOT
-  STARTED; DEC-02/JEV remains DEFERRED.
+  expansions remain NOT STARTED. The owner permits separately authorized,
+  bounded design/contract preparation for Agents 11-14 while MEM-03 remains on
+  HOLD; this does not create an implementation checkpoint or authorize agent
+  directories, skills, workflows, implementation, runtime acceptance or use of
+  prepared material. DEC-01 design is accepted but runtime is NOT STARTED;
+  DEC-02/JEV remains DEFERRED.
 
 The owner-approved GOV-01 evidence-custody policy is design policy only. The
 human project owner is the design-policy custodian; exact writer, reviewer and
