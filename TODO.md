@@ -1,5 +1,57 @@
 # Agent Company TODO
 
+## Agent 14 Accepted Design - Remaining Work - 2026-10-25
+
+- [x] Record the owner-accepted AC-V1-AGENT14-DESIGN-005 `REVIEW_PASS` and
+  preserve `AG14-DESIGN-R1` through `AG14-DESIGN-R3` as `RESOLVED` only for
+  the exact 552-line, 35,534-byte source with SHA-256
+  `9BDB320EB6450D7FE2AA8C475D4BE753198C02EE0ADBDF2FA2D85A646B188138`.
+- [x] Record the accepted bounded operation set `PREPARE_STATIC_VISUAL`,
+  `ADAPT_STATIC_VISUAL` and `INSPECT_STATIC_VISUAL`, including the practical
+  editable-SVG and rendered-PNG objective and the accepted maximum of three
+  output variants, without claiming implementation.
+- [ ] `AG14-CM-01`: add and independently validate the exact Design task class,
+  agent and capability identifiers in canonical job schemas.
+- [ ] `AG14-CM-02`: add the bounded Design role, routing and workflow entries
+  only under a separately authorized implementation work order.
+- [ ] `AG14-CM-03`: qualify and certify provider eligibility for the exact
+  capability/profile; keep every provider fail-closed until then.
+- [ ] `AG14-CM-04`: implement, register, qualify and independently review the
+  deterministic serializer/renderer toolchain; CORE-04 selection or loading is
+  not execution authority.
+- [ ] `AG14-CM-05`: preserve the CORE-11 binary-content limitation. The accepted
+  initial design permits only trusted-serializer normalization and embedding of
+  an exact approved first-party PNG; provider-visible binary interpretation
+  remains unsupported.
+- [ ] `AG14-CM-06`: implement artifact production only as separately approved
+  `CONTROLLED_WRITE`, L2 with exact scope, fresh authorization, mutation
+  evidence and independent review; inspection remains `READ_ONLY`, L1.
+- [ ] `AG14-CM-07`: require independent human inspection of the actual rendered
+  PNG while automated semantic visual inspection remains unavailable.
+- [ ] Obtain owner decisions for final SVG/PNG policy; dimensions and artifact
+  limits; authorized staging root; renderer; first-party/internal-only rights
+  policy; accessibility thresholds; whether future semantic image inspection
+  may transmit binary content to a separately qualified provider; provider
+  qualification; and any future generative-media scope. Do not infer approval
+  from design acceptance.
+- [ ] Before implementation, obtain a separate bounded work order with an exact
+  file allowlist and acceptance criteria. Preserve immutable DesignRequest and
+  toolchain binding, Task Contract equality, authorization fingerprint,
+  CORE-04, CORE-11, canonical `ExecutionResult`, human approval and independent
+  visual review; require focused normal, boundary, adversarial and regression
+  evidence plus independent implementation review and explicit owner acceptance.
+- [ ] Keep the existing `Add canonical Agent 14 Design` implementation item
+  open. Design-review acceptance creates no agent directory, skill, workflow,
+  schema, provider manifest, renderer, runtime capability, artifact, test,
+  deployment or Git authority.
+
+Agent 14 remains **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT IMPLEMENTED**.
+There is no publication, external-send, live-site-write, purchase or generative-
+media authority. Agents 11 through 13 remain closed and the frozen 14-role
+roster is unchanged. `MEM-03` remains **BLOCKED / HOLD / NOT ACCEPTED**;
+`BUILD-02` remains `REVIEW_PASS / ACCEPTANCE BLOCKED`; and `CONTRACT-04`
+installation remains **BLOCKED**. `automatic=false`.
+
 ## Agent 13 Accepted Design - Remaining Work - 2026-10-24
 
 - [x] Record the owner-accepted AC-V1-AGENT13-DESIGN-007 `REVIEW_PASS`, preserve

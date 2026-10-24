@@ -1,5 +1,67 @@
 # Agent Company Roadmap
 
+## Agent 14 Design Accepted Design - 2026-10-25
+
+Agent 14 is **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT IMPLEMENTED**.
+The owner accepted AC-V1-AGENT14-DESIGN-005 `REVIEW_PASS`, resolving
+`AG14-DESIGN-R1` through `AG14-DESIGN-R3` only for the reviewed 552-line,
+35,534-byte source at
+`C:/Users/DELL/Downloads/AC_V1_AGENT14_DESIGN_DRAFT_20261024.md`, SHA-256
+`9BDB320EB6450D7FE2AA8C475D4BE753198C02EE0ADBDF2FA2D85A646B188138`.
+The external source is evidence by exact identity; its complete text is not
+copied into the repository.
+
+The bounded V1 design operation set is `PREPARE_STATIC_VISUAL`,
+`ADAPT_STATIC_VISUAL` and `INSPECT_STATIC_VISUAL`. The practical objective is
+to produce real internal draft artifacts: an editable SVG source and an exact
+rendered PNG/preview with immutable provenance, metadata and inspection
+evidence. This objective is accepted design, not evidence that a renderer,
+adapter, provider capability or artifact-production runtime exists.
+
+Inspection and planning remain `READ_ONLY`, L1, `write_scope: null`. Artifact
+production is a distinct `CONTROLLED_WRITE`, L2 operation requiring separate
+human execution approval, an exact job-specific write scope, bounded mutation
+evidence and independent review. Publication, external sends, live-site writes,
+purchases, deployment and unapproved generation services remain prohibited.
+
+One immutable canonical `DesignRequest` reference must be identical in job
+inputs and Task Contract inputs. Its pre-approval material scope includes the
+selected serializer, renderer, fonts, versions, complete CORE-04 registry and
+toolchain identities/digests, output scope, sources and required checks. The
+existing authorization fingerprint and every material identity must be
+revalidated immediately before writing; substitution, drift, fallback and
+stale or cross-attempt approval fail closed. CORE-04 discovery, selection and
+loading do not grant execution authority. CORE-11 preserves untrusted external
+text isolation; binary bytes are not provider inputs. The initial design's only
+raster path is deterministic trusted-serializer normalization and embedding of
+an exact approved first-party PNG.
+
+Canonical `ExecutionResult` retains deterministic `blocked`, `needs_human`,
+`failed` and `needs_review` boundaries, canonical blocker/error forms,
+retryability, real evidence, identical `artifacts`/`output_refs` and
+`next_actions.automatic=false`. Independent human visual review inspects the
+actual PNG; review PASS does not grant publication authority.
+
+Content owns copy and narrative; Marketing owns positioning, campaigns and
+brand policy; Social Media owns channel context and coordination; Software owns
+implementation; Research owns evidence collection; Reviewer remains
+independent; and the human owner retains approval, rights-policy and publication
+authority. Provider eligibility remains pending and fail-closed. No provider
+manifest, capability certification, runtime eligibility, role, skill, workflow,
+schema or renderer changed.
+
+`AG14-CM-01` through `AG14-CM-07` remain implementation prerequisites. Final
+SVG/PNG policy, limits, staging root, renderer, rights, accessibility, provider
+qualification, whether future semantic image inspection may transmit binary
+content to a separately qualified provider, and future generative-media scope
+remain unapproved. The existing `CAP-CREATIVE-01` classification remains
+**ACCEPTED ARCHITECTURE / PLANNED /
+NON-BLOCKING FOR V1**; this record authorizes no generative-media service.
+Agents 11 through 13 remain closed, the frozen 14-role roster is unchanged,
+`MEM-03` remains **BLOCKED / HOLD / NOT ACCEPTED**, `BUILD-02` remains
+`REVIEW_PASS / ACCEPTANCE BLOCKED`, and `CONTRACT-04` installation remains
+**BLOCKED**.
+
 ## Agent 13 Content Accepted Design - 2026-10-24
 
 Agent 13 is **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT IMPLEMENTED**.

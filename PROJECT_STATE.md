@@ -1,5 +1,61 @@
 # Agent Company Project State
 
+## Agent 14 Accepted Design Review - 2026-10-25
+
+AC-V1-AGENT14-DESIGN-006 records the owner's acceptance of the independent
+AC-V1-AGENT14-DESIGN-005 `REVIEW_PASS`. `AG14-DESIGN-R1` through
+`AG14-DESIGN-R3` are `RESOLVED` only for the exact reviewed source at
+`C:/Users/DELL/Downloads/AC_V1_AGENT14_DESIGN_DRAFT_20261024.md`: 552 lines,
+35,534 bytes, SHA-256
+`9BDB320EB6450D7FE2AA8C475D4BE753198C02EE0ADBDF2FA2D85A646B188138`.
+
+Current Agent 14 status is **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT
+IMPLEMENTED**. The accepted bounded operations are `PREPARE_STATIC_VISUAL`,
+`ADAPT_STATIC_VISUAL` and `INSPECT_STATIC_VISUAL`. Inspection and planning are
+`READ_ONLY`, L1, `write_scope: null`; future production of actual editable SVG
+and rendered PNG draft artifacts requires separately approved
+`CONTROLLED_WRITE`, L2, an exact write scope and independent review. No Design
+agent, schema, skill, workflow, renderer, provider eligibility, artifact or
+runtime capability was created by this acceptance.
+
+The accepted design binds one immutable canonical `DesignRequest` reference
+identically through job inputs and Task Contract inputs. Before approval it
+binds the selected serializer, renderer, fonts, versions, CORE-04 registry,
+descriptor, definition, schema, adapter, render-profile and conversion-policy
+identities and digests; all bindings and the existing authorization fingerprint
+must be revalidated immediately before writing. CORE-04 selection grants no
+execution authority. CORE-11 keeps provider-visible external text untrusted and
+non-authoritative; binary assets are not transmitted to a provider. The initial
+design permits only trusted-serializer normalization and embedding of an exact,
+approved first-party PNG. Provider-supplied URIs, executable SVG and unapproved
+reference forms fail closed.
+
+Canonical `ExecutionResult` distinguishes `blocked`, `needs_human`, `failed`
+and `needs_review`, preserves canonical blocker/error shapes, real evidence,
+`artifacts == output_refs`, retryability and `next_actions.automatic=false`.
+Actual rendered output requires independent human visual inspection. Reviewer
+PASS grants neither publication nor external-send authority.
+
+`AG14-CM-01` through `AG14-CM-07` remain implementation prerequisites. Final
+SVG/PNG policy, dimensions and limits, staging root, renderer, rights,
+accessibility, provider qualification, whether future semantic image inspection
+may transmit binary content to a separately qualified provider, and future
+generative-media scope remain unapproved owner decisions. Provider eligibility
+remains fail-closed.
+Content retains copy and narrative; Marketing retains positioning, campaign and
+brand policy; Social Media retains channel context and coordination; Software
+retains implementation; Research retains evidence collection; Reviewer remains
+independent; and the human owner retains approval, rights-policy and publication
+authority.
+
+Agents 11 through 13 remain closed at **APPROVED V1 / DESIGN REVIEW ACCEPTED /
+NOT IMPLEMENTED**. The frozen 14-role roster is unchanged. `MEM-03` remains
+**BLOCKED / HOLD / NOT ACCEPTED**; Shared CORE `BUILD-02` remains `REVIEW_PASS /
+ACCEPTANCE BLOCKED`; and `CONTRACT-04` installation remains **BLOCKED**.
+Implementation, tests, rendering, installation, provider qualification,
+deployment and Git work remain separately gated and unauthorized.
+`automatic=false`.
+
 ## Agent 13 Accepted Design Review and Policy - 2026-10-24
 
 AC-V1-AGENT13-DESIGN-008 records the owner's acceptance of the independent
