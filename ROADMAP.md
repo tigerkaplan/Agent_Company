@@ -1,5 +1,43 @@
 # Agent Company Roadmap
 
+## Agent 12 Analytics Accepted Design - 2026-10-24
+
+Agent 12 is **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT IMPLEMENTED**.
+AC-V1-AGENT12-DESIGN-008 returned the owner-accepted `REVIEW_PASS`, resolving
+`AG12-DESIGN-R1` through `AG12-DESIGN-R4`, including `AG12-DESIGN-R4-F1` and
+`AG12-DESIGN-R4-F1-A`, only for the reviewed 1,168-line source at
+`C:/Users/DELL/Downloads/Pasted markdown.md`, SHA-256
+`29A22A43028A5DC37949F210CAA10200DDF1141FC84E65701055E5584B1DB46D`.
+The external source is evidence by exact identity; its complete text is not
+copied into the repository.
+
+The accepted future Analytics boundary is `READ_ONLY`, L1,
+`write_scope: null` and `automatic=false`. It permits deterministic,
+provenance-bound metric, reconciliation, period, cohort, funnel and declared
+experiment analysis from approved dataset snapshots, with uncertainty and
+independent verification. It provides internal findings only: it may not mutate
+records or systems, publish findings, trigger actions, create experiments,
+broaden data access, make domain decisions or treat correlation as causation.
+
+Agent 11 retains finance and pricing semantics; Sales retains individual leads
+and opportunities; Marketing retains positioning, audience and campaign
+decisions; Social Media retains channel-level performance review; Operations
+retains process ownership and reporting coordination; Communications or the
+owning domain retains external wording and delivery; Reviewer remains
+independent; and the human owner and authoritative source systems retain data
+access and business policy. Agent 12 owns only the specified measurement layer.
+
+The design reuses the existing Task Contract, authorization fingerprint,
+approvals, budgets, evidence and `ExecutionResult`. Provider qualification and
+eligibility remain pending and fail closed. No provider manifest, capability
+certification or runtime eligibility changed. No proposed Agent 12 directory,
+role, skill, workflow or schema path is created. The frozen 14-role roster is
+unchanged; Agent 11 remains closed; `MEM-03` remains **BLOCKED / HOLD / NOT
+ACCEPTED**, `BUILD-02` remains `REVIEW_PASS / ACCEPTANCE BLOCKED`, and
+`CONTRACT-04` installation remains **BLOCKED**. Implementation, testing,
+provider qualification, runtime acceptance, deployment and Git work require
+separate authorization.
+
 ## Agent 11 Finance & Pricing Accepted Design - 2026-10-24
 
 Agent 11 remains **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT IMPLEMENTED**.

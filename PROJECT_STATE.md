@@ -1,5 +1,35 @@
 # Agent Company Project State
 
+## Agent 12 Accepted Design Review - 2026-10-24
+
+AC-V1-AGENT12-DESIGN-008 records the owner's acceptance of the independent
+Agent 12 Analytics design review. The result is `REVIEW_PASS`.
+`AG12-DESIGN-R1` through `AG12-DESIGN-R4`, including `AG12-DESIGN-R4-F1` and
+`AG12-DESIGN-R4-F1-A`, are `RESOLVED` only for the exact reviewed source at
+`C:/Users/DELL/Downloads/Pasted markdown.md`: 1,168 lines, SHA-256
+`29A22A43028A5DC37949F210CAA10200DDF1141FC84E65701055E5584B1DB46D`.
+The source's earlier proposed, not-reviewed and not-accepted wording is retained
+as historical artifact text and does not override the later owner acceptance.
+
+Current Agent 12 status is **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT
+IMPLEMENTED**. The accepted design is `READ_ONLY`, L1, `write_scope: null` and
+`automatic=false`. It reuses the existing Task Contract, authorization
+fingerprint, approvals, budgets, evidence and `ExecutionResult`; it creates no
+new authority mechanism. No agent directory, role, skill, workflow, schema,
+provider manifest or runtime capability has been created or modified. Provider
+qualification and eligibility remain pending and fail closed; this acceptance
+does not establish provider availability, certification or execution authority.
+
+Agent 11 remains closed at **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT
+IMPLEMENTED**. The frozen 14-role roster and the ownership boundaries of
+Finance & Pricing, Sales, Marketing, Social Media, Operations, Communications
+and Reviewer remain unchanged. Unresolved Analytics policy decisions remain
+unapproved. `MEM-03` remains **BLOCKED / HOLD / NOT ACCEPTED**; Shared CORE
+`BUILD-02` remains `REVIEW_PASS / ACCEPTANCE BLOCKED`; and `CONTRACT-04`
+installation remains **BLOCKED**. Implementation, tests, provider qualification,
+runtime acceptance, deployment and Git work remain separately gated and
+unauthorized by this acceptance.
+
 ## Agent 11 Accepted Design Review - 2026-10-24
 
 AC-V1-AGENT11-DESIGN-009 records the owner's acceptance of the independent

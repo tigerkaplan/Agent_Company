@@ -1,5 +1,38 @@
 # Agent Company TODO
 
+## Agent 12 Accepted Design - Remaining Work - 2026-10-24
+
+- [x] Record the owner-accepted AC-V1-AGENT12-DESIGN-008 `REVIEW_PASS` and
+  preserve `AG12-DESIGN-R1` through `AG12-DESIGN-R4`, including
+  `AG12-DESIGN-R4-F1` and `AG12-DESIGN-R4-F1-A`, as `RESOLVED` only for the
+  exact 1,168-line source with SHA-256
+  `29A22A43028A5DC37949F210CAA10200DDF1141FC84E65701055E5584B1DB46D`.
+- [ ] Obtain owner decisions for the final capability name; whether experiment
+  summaries belong in the first implementation slice; approved inferential
+  methods and confidence levels; small-group suppression; privacy
+  classification, retention and export; data-size and local-processing limits;
+  initial restricted-data exclusion; project-specific metric dictionaries;
+  currency and financial-metric handoff with Agent 11; low-risk descriptive
+  review requirements; forecasting scope; provider qualification and
+  eligibility; and the exact implementation allowlist and sequencing.
+- [ ] Before implementation, obtain a separate bounded work order with an exact
+  file allowlist and acceptance criteria; preserve the existing Task Contract,
+  authorization fingerprint, approvals, budgets, evidence, `ExecutionResult`,
+  review and human-authority owners; keep provider eligibility fail-closed until
+  independently qualified; and require affected deterministic, boundary,
+  adversarial and regression evidence plus independent implementation review
+  and explicit owner acceptance.
+- [ ] Keep the existing Agent 12 implementation item open. Design-review
+  acceptance creates no agent directory, role, skill, workflow, schema,
+  provider manifest, runtime capability, deployment or Git authority.
+
+Agent 12 remains **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT IMPLEMENTED** at
+`READ_ONLY`, L1, `write_scope: null` and `automatic=false`. Agent 11 remains
+closed. The frozen 14-role roster and existing domain ownership boundaries are
+unchanged. `MEM-03` remains **BLOCKED / HOLD / NOT ACCEPTED**; `BUILD-02`
+remains `REVIEW_PASS / ACCEPTANCE BLOCKED`; and `CONTRACT-04` installation
+remains **BLOCKED**.
+
 ## Agent 11 Accepted Design - Remaining Work - 2026-10-24
 
 - [x] Record the owner-accepted AC-V1-AGENT11-DESIGN-009 `REVIEW_PASS` and
