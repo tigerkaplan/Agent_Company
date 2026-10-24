@@ -1,5 +1,60 @@
 # Agent Company Roadmap
 
+## Canonical Reconciliation Overlay - 2026-10-24
+
+This overlay reconciles the full current roadmap with the reference-only R2
+conflict register at
+`C:/Users/DELL/Downloads/AC_CODEX_ROADMAP_RECONCILIATION_INPUT_20261024.md`
+(SHA-256
+`c31e0ff1bb7ada6fcfe6c303b8254fc92bc4116040687f9995c297a40badc9df`).
+It does not replace the accepted design sources embedded below, reopen a closed
+checkpoint or create implementation authority. Where dated entries conflict,
+this current overlay and the later accepted decisions control current status.
+
+### Current status and dependency boundary
+
+| Scope | Current canonical classification |
+| --- | --- |
+| CORE-01 through CORE-11; GOV-01/02; ORCH-01 | CLOSED / COMMITTED. CORE-07 remains closed; the reviewed recovery-lock diagnostic is retained, the concurrency proof is INSUFFICIENT, and the broader recovery-coordination refactor is owner-DEFERRED. |
+| MEM-01 / MEM-02 / MEM-02B | CLOSED / COMMITTED; MEM-02 is PUSHED. MEM-02B commit `ad055f8` and later fixture-hygiene commit `4773acb` are ancestors of current HEAD. Do not restart older ACTIVE/UNCOMMITTED steps. |
+| MEM-03 | BLOCKED / NOT ACCEPTED. Native Windows compatibility, identity and protected-execution evidence remain incomplete. |
+| Shared CORE BUILD-01 | CLOSED / COMMITTED at `376763d`; reviewed two-file scope only. |
+| Shared CORE BUILD-02 | REVIEW_PASS / ACCEPTANCE BLOCKED. Mandatory affected regression remains 51/52; the same recovery-lock signature occurs on the committed baseline, so BUILD-02 defect attribution is UNKNOWN. The 52/52 requirement remains. |
+| GOV-01 Direct API Transport V2 | DESIGN ACCEPTED / REVIEW_PASS / documentation and Git closed; implementation, provider qualification and runtime acceptance NOT STARTED. CLI adapters remain blocked. |
+| CONTRACT-04 revision 2 | DESIGN ACCEPTED / PARTIALLY IMPLEMENTED; installation BLOCKED. The 180-candidate inventory is not an approved manifest, exceeds the 128-entry ceiling, and has UNRESOLVED membership and UNVERIFIED dependency closure. Alternative A is approved as design scope only. |
+| D1 / D2-D8 | D1 PAUSED / unaccepted. D2-D8 are ACCEPTED / MAPPED ownership families, not implementation or new checkpoints. |
+| Phase 9A / DEC-01 / DEC-02 | Phase 9A NOT STARTED and precedes DEC-01 runtime. DEC-01 design is accepted; runtime NOT STARTED. DEC-02/JEV is DEFERRED. |
+
+No currently blocked item becomes implementation-ready through documentation.
+The Shared CORE BUILD-02, MEM-03 and CONTRACT-04 admission blockers remain
+distinct and fail closed.
+
+### Frozen V1 placement and remaining scope
+
+The physical and roadmap placement remains: current ten agents, then the
+planned Agent Expansion section, then Capability Expansion and Phase 9. The
+four unimplemented roles stay explicitly inside frozen V1 and are not moved to
+Phase 10 or Post-V1:
+
+11. Finance & Pricing - APPROVED V1 / PLANNED / NOT IMPLEMENTED.
+12. Analytics - APPROVED V1 / PLANNED / NOT IMPLEMENTED.
+13. Content - APPROVED V1 / PLANNED / NOT IMPLEMENTED.
+14. Design - APPROVED V1 / PLANNED / NOT IMPLEMENTED.
+
+The exact V1 capability IDs remain `CAP-SALES`,
+`CAP-SEARCH-GROWTH-01`, `CAP-REV-01` and `CAP-SOC-01`, all planned and
+unimplemented at their full accepted scopes. Phase 9A Observability, Phase 9B
+Control Room and Phase 9C Operating Layer remain distinct planned V1 scopes.
+Phase 8E stays PAUSED / BLOCKED; 8F, 8G and 8H remain NOT STARTED. Phase 10
+still begins with the Brightshore production Project Pack. Existing
+`shared/projects/brightshore/` is operational project state, not pack
+acceptance.
+
+Optional Obsidian Stage 1 local notes and Stage 2 governed integration remain
+PROPOSED / UNVERIFIED and separate from MEM-03. They are not a V1 blocker, new
+agent, second authority database or implementation checkpoint. Other Later /
+Post-V1 classifications below remain unchanged.
+
 ## GOV-01 Direct API Transport Design Acceptance - 2026-10-23
 
 AC-GOV01-TRANSPORT-DOC-001 records owner-approved design-level acceptance of the
@@ -533,10 +588,21 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
 - MEM-02 Knowledge Lifecycle + Retrieval / RAG: CLOSED / COMMITTED / PUSHED;
   formal bounded closure PASS; owner-verified HEAD
   `22c9d37b503d3eea242eb6cc35041efdaac0a4d5`.
-- MEM-02B Learning Constraint Pipeline: CLOSED / UNCOMMITTED under CLOSURE-119;
-  formal ACCEPTANCE-116, retained owner gates PASS and separate-session
-  review/routing evidence preserved. Git remains separately authorized.
-- MEM-03 Memory Providers: PLANNED / NOT STARTED.
+- MEM-02B Learning Constraint Pipeline: CLOSED / COMMITTED in current HEAD
+  ancestry at `ad055f8`; later fixture hygiene is committed at `4773acb`.
+  Formal ACCEPTANCE-116, retained owner gates PASS and separate-session
+  review/routing evidence remain preserved.
+- MEM-03 Memory Providers: BLOCKED / NOT ACCEPTED; its planned provider scope
+  remains frozen but native Windows admission and compatibility evidence are
+  incomplete.
+- Shared CORE BUILD-01: CLOSED / COMMITTED at `376763d` for its reviewed
+  two-file slice.
+- Shared CORE BUILD-02: REVIEW_PASS / ACCEPTANCE BLOCKED at 51/52 mandatory
+  affected regressions; same recovery-lock signature on baseline, attribution
+  UNKNOWN, 52/52 still required.
+- CONTRACT-04: DESIGN ACCEPTED / PARTIALLY IMPLEMENTED; installation BLOCKED.
+- Direct API Transport V2 and DEC-01: design accepted; runtime implementation
+  and qualification NOT STARTED.
 - Phase 8E: PAUSED / BLOCKED; no VPS has been created or deployed. Hostinger is
   preferred, with paid procurement deferred until near V1 completion and still
   requiring separate approval.
@@ -562,10 +628,12 @@ serious inconsistency / completion correctness issue? YES -> evaluate for V1;
 NO -> POST-V1 / LATER / REFERENCE. Later ideas must not interrupt the checkpoint
 sequence or expand the existing Canonical V1 Definition below.
 
-One ACTIVE and one NEXT checkpoint slot: ACTIVE = None; MEM-02B CLOSED / UNCOMMITTED.
-NEXT = separately authorized MEM-02B exact-change-set review and commit.
-MEM-02 is CLOSED / COMMITTED / PUSHED under the owner-verified post-commit
-record; MEM-03 remains PLANNED / NOT STARTED. No later implementation is authorized.
+One ACTIVE and one NEXT checkpoint slot remains a governance constraint.
+ACTIVE = None. The older MEM-02B commit action is superseded by the current
+committed lineage. No blocked implementation is promoted into NEXT by this
+reconciliation; a later action still requires its own owner authorization.
+MEM-02 is CLOSED / COMMITTED / PUSHED; MEM-02B is CLOSED / COMMITTED; MEM-03
+remains BLOCKED / NOT ACCEPTED. No later implementation is authorized.
 MEM-01 is CLOSED / COMMITTED at `5e29cdb177838adb1682ab3b36728623d714c5e3`.
 GOV-01 remains CLOSED / COMMITTED at `852ec01`; GOV-02 is CLOSED / COMMITTED
 at `e6dbe3f`; ORCH-01 is CLOSED / COMMITTED at `d3878081`.
@@ -1615,14 +1683,18 @@ State is what is happening now. These remain separate.
   truth/authenticity/unsupported freshness remain UNKNOWN, non-null mutation
   `diff_ref` remains unsupported and fails closed. Commit/push and HEAD
   `22c9d37b503d3eea242eb6cc35041efdaac0a4d5` are owner-verified.
-- MEM-02B — Learning Constraint Pipeline: CLOSED / UNCOMMITTED under CLOSURE-119;
-  retained validation, independent review, owner acceptance and closure remain distinct.
+- MEM-02B — Learning Constraint Pipeline: CLOSED / COMMITTED in current HEAD
+  ancestry at `ad055f8`, with later fixture hygiene at `4773acb`; retained
+  validation, independent review, owner acceptance, closure and Git identity
+  remain distinct.
   observation -> candidate lesson ->
   evidence -> deduplication -> scope -> validation/review -> promotion -> active
   planning constraint. A PASS does not automatically become a permanent rule.
-- MEM-03 — Memory Providers: PLANNED / NOT STARTED; local provider first. Hindsight is only a future
-  prototype provider behind `MemoryInterface`; SwarmVault and Vault Curate are
-  reference patterns, not core dependencies.
+- MEM-03 — Memory Providers: BLOCKED / NOT ACCEPTED. The planned local-provider
+  scope remains behind `MemoryInterface`; native Windows compatibility,
+  identity, evidence custody and protected-execution acceptance remain
+  incomplete. Hindsight is only a future prototype provider; SwarmVault and
+  Vault Curate are reference patterns, not core dependencies.
 
 ### D. Agent Expansion
 
@@ -1871,6 +1943,30 @@ Windows 11 x64 on local fixed NTFS is a conditionally accepted first qualificati
 target only. Exact OS build, volume, principal, safe root, component-handle
 access/sharing/reparse semantics, ACL enforcement and containment evidence remain
 unverified. No Windows mechanism or installed filesystem security is accepted.
+
+The later fresh candidate inventory was generated from immutable Git commit
+`98f197821966e9d4ff777ff88b69d88b96e461dd` without executing repository code.
+The repository-external artifact
+`C:/Users/DELL/AppData/Local/Temp/AgentCompany/CONTRACT-04/AC-CONTRACT04-FRESH-INVENTORY-FIX-001-20261024T063030Z/candidate-inventory.v2.json`
+is 182,009 bytes with SHA-256
+`2a8c958c7d3cbb99ddeed79e3e13768868e9c2ad3f517bd59507b7dcd9859e87`.
+It contains 178 committed candidates plus two absent historically proposed
+observability modules: 180 total, all membership dispositions UNRESOLVED.
+Dependency closure and dynamic file-access discovery remain UNVERIFIED, and
+180 does not satisfy the approved 1-128 profile-entry limit. The artifact is
+candidate discovery evidence only, not an installation manifest, trusted
+profile, detached trust anchor or installed-file pin set. It supersedes the
+older unsupplied 114-candidate count for current planning without reconstructing
+that historical inventory.
+
+The current owner instruction affirms **Alternative A - selected-action evidence
+inspection** as the CONTRACT-04 design-scope boundary, using
+`runtime.memory.action_trace.build_action_candidates(request, owners)` as the
+design reference. `observability/selected_trace.py` remains PLANNED / NOT
+IMPLEMENTED. Exact profile location, Windows principal/SID, permissions,
+bootstrap delivery, dynamic dependencies, final membership, installed-file pins
+and independent trust qualification remain unresolved. This approval grants no
+installation, pruning, execution or Phase 9A acceptance.
 
 Trusted composition must supply complete installation membership, exact installed
 raw-byte pins and an external trusted profile identity; no artifact-selected
@@ -2929,7 +3025,8 @@ local inference, and fine-tuning stay POST-V1; planned folders stay absent.
 - MEM-02 is CLOSED / COMMITTED / PUSHED at the owner-verified HEAD above.
 - MEM-02B is formally accepted within the bounded Authority-62 / Scope-63 scope,
   with six owner PASS gates, separate-session REVIEW-113, ROUTING-115 and explicit
-  ACCEPTANCE-116. CLOSURE-119 records bounded closure; work is UNCOMMITTED. MEM-03, agents 11-14,
+  ACCEPTANCE-116. CLOSURE-119 records bounded closure; MEM-02B is COMMITTED at `ad055f8`, with
+  later fixture hygiene committed at `4773acb`. MEM-03, agents 11-14,
   CAP-SOC-01 and other specifically planned
   capability expansion, advanced Code Intelligence, Phase 9, Decision
   Engine/JEV, and Phase 10 remain planned and unimplemented as described above.

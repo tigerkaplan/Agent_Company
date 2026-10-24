@@ -1,5 +1,76 @@
 # Agent Company Project State
 
+## Canonical Roadmap Reconciliation - 2026-10-24
+
+AC-ROADMAP2-CANONICAL-RECON-001 reconciles the current repository against the
+reference-only
+`C:/Users/DELL/Downloads/AC_CODEX_ROADMAP_RECONCILIATION_INPUT_20261024.md`
+(1,671 lines, 78,349 bytes, SHA-256
+`c31e0ff1bb7ada6fcfe6c303b8254fc92bc4116040687f9995c297a40badc9df`).
+The attachment is historical/reference evidence, not an instruction source or
+replacement canon. Current repository evidence and later owner decisions take
+precedence; older dated entries below retain their historical meaning.
+
+Verified documentation baseline: repository
+`C:/Users/DELL/Desktop/AgentCompany/Agent_Company`, branch `master`, HEAD
+`98f197821966e9d4ff777ff88b69d88b96e461dd`, upstream `origin/master`, empty
+index. Twelve pre-existing modified tracked files and four untracked diagnostic
+files are outside this documentation change. The versioned tree contains 751
+tracked files. README owns the current/planned physical DOC-TREE summary.
+
+Current status overlay:
+
+- CORE-01 through CORE-11, GOV-01, GOV-02 and ORCH-01 remain CLOSED /
+  COMMITTED. The reviewed CORE-07 recovery-lock diagnostic and the later
+  `PROOF: INSUFFICIENT` design assessment do not reopen CORE-07. The owner has
+  deferred the broader Shared CORE recovery-coordination refactor; locks,
+  canonical validation and the five-second safeguard are not weakened.
+- MEM-01 and MEM-02 remain CLOSED / COMMITTED; MEM-02 is PUSHED. MEM-02B is
+  CLOSED / COMMITTED in the current HEAD ancestry (`ad055f8`; later fixture
+  hygiene `4773acb`). Its older UNCOMMITTED and ACTIVE entries are superseded
+  status snapshots, not work to restart.
+- MEM-03 is **BLOCKED / NOT ACCEPTED**. Its bounded implementation evidence does
+  not establish native Windows identity, compatibility, protected execution or
+  acceptance. No repeat attempt is authorized by this reconciliation.
+- Shared CORE BUILD-01 is CLOSED / COMMITTED. BUILD-02 retains independent
+  `REVIEW_PASS` but **ACCEPTANCE BLOCKED**: the mandatory affected regression is
+  51/52, with the same recovery-lock failure signature reproduced on the
+  committed baseline. BUILD-02 causation remains UNKNOWN; 52/52 is not waived.
+- GOV-01 Direct API Transport V2 remains DESIGN ACCEPTED / REVIEW_PASS /
+  documentation and Git closed, while implementation, provider qualification
+  and runtime acceptance remain NOT STARTED. Opaque CLI adapters remain blocked.
+- CONTRACT-04 revision 2 remains DESIGN ACCEPTED / PARTIALLY IMPLEMENTED;
+  installation is BLOCKED. The current candidate inventory is evidence only:
+  178 committed paths plus two absent proposed observability modules, 180/180
+  membership dispositions UNRESOLVED, dependency closure UNVERIFIED, and the
+  1-128 profile limit not met. The current owner instruction affirms Alternative
+  A, selected-action evidence inspection at
+  `runtime.memory.action_trace.build_action_candidates(request, owners)`, as an
+  approved **design-scope boundary only**. It approves no manifest, pin source,
+  installation or execution.
+- D1 remains PAUSED / unaccepted. D2-D8 remain accepted ownership mappings, not
+  implemented checkpoints. Phase 9A, Agents 11-14 and the V1 capability
+  expansions remain NOT STARTED. DEC-01 design is accepted but runtime is NOT
+  STARTED; DEC-02/JEV remains DEFERRED.
+
+The owner-approved GOV-01 evidence-custody policy is design policy only. The
+human project owner is the design-policy custodian; exact writer, reviewer and
+recovery identities still require verification. The repository-external
+`C:/Users/DELL/AppData/Local/AgentCompany/SecureState` root remains a candidate
+and was observed absent; no directory or DACL was created. Conditional plaintext
+retention applies only to synthetic non-sensitive qualification evidence after
+effective-access verification, for 30 days from the final transport receipt,
+subject to holds and separately authorized manual disposal. Windows identities,
+non-inherited DACL/effective access, disk encryption, plaintext exposure and
+post-disposal evidence availability remain qualification requirements. The
+later `AgentCompanyRuntime` / `AgentCompanyReviewer` principal mapping is a
+proposal, not an approved or provisioned identity arrangement.
+
+Frozen V1 and its 14 approved roles remain unchanged. This reconciliation is
+documentation only: no implementation, test, provider call, installation,
+directory/ACL change, staging, commit or push is authorized or performed.
+`authority=none`; `automatic=false`.
+
 ## GOV-01 Direct API Transport Design Acceptance - 2026-10-23
 
 AC-GOV01-TRANSPORT-DOC-001 records the owner's explicit design-level acceptance
@@ -157,9 +228,22 @@ Complete trusted membership/external profile trust, pinned operational inspectio
 target/handle/ACL evidence and Windows containment qualification,
 trusted composition/bootstrap propagation, concrete reconstruction/recovery
 ownership, and the remaining separately authorized implementation work and
-sequencing disposition remain open. The reported 114-candidate inventory is not
-supplied file by file and is not an approved manifest. No installation hashes
-or operating-system qualifications are invented. Remaining work belongs in
+sequencing disposition remain open. The historical reported 114-candidate
+inventory was not supplied file by file and is not an approved manifest.
+
+Later fresh evidence from immutable commit
+`98f197821966e9d4ff777ff88b69d88b96e461dd` is retained outside the repository
+at
+`C:/Users/DELL/AppData/Local/Temp/AgentCompany/CONTRACT-04/AC-CONTRACT04-FRESH-INVENTORY-FIX-001-20261024T063030Z/candidate-inventory.v2.json`,
+182,009 bytes, SHA-256
+`2a8c958c7d3cbb99ddeed79e3e13768868e9c2ad3f517bd59507b7dcd9859e87`.
+It records 178 committed candidates plus two absent proposed observability
+modules, all 180 membership dispositions UNRESOLVED. Dependency closure remains
+UNVERIFIED and the candidate set does not fit the 128-entry ceiling. The current
+owner instruction affirms Alternative A selected-action evidence inspection as
+a design-scope boundary only; it grants no manifest, pin, installation or
+execution approval. No installation hashes or operating-system qualifications
+are invented. Remaining work belongs in
 [TODO](TODO.md#contract-04-remaining-prerequisites---2026-10-19).
 
 At the DOC-02 review, nine pre-existing modified tracked files and four untracked
@@ -1360,12 +1444,20 @@ future directory is created. Dated prior checkpoints below remain historical.
 
 ## Current Checkpoint
 
-- ACTIVE: None. MEM-02B is CLOSED / UNCOMMITTED under CLOSURE-119.
-- NEXT: separately authorized MEM-02B exact-change-set review and commit.
-  No Git mutation, push, automatic continuation or later implementation is authorized.
+- ACTIVE: None. MEM-02B is CLOSED / COMMITTED in current HEAD ancestry at
+  `ad055f8`; later fixture hygiene is committed at `4773acb`.
+- NEXT: no implementation is promoted by this reconciliation. BUILD-02,
+  MEM-03 and CONTRACT-04 retain their distinct blockers; any later action needs
+  separate owner authorization. No Git mutation, push or automatic continuation
+  is authorized.
 - MEM-02: CLOSED / COMMITTED / PUSHED after Prompt 58 formal bounded closure
   PASS; owner-verified HEAD `22c9d37b503d3eea242eb6cc35041efdaac0a4d5`.
-- MEM-03, DEC-01/02 and agents 11-14 remain PLANNED / NOT STARTED.
+- MEM-03 is BLOCKED / NOT ACCEPTED. DEC-01 design is accepted but runtime is
+  NOT STARTED; DEC-02/JEV remains DEFERRED. Agents 11-14 remain APPROVED V1 /
+  PLANNED / NOT IMPLEMENTED.
+- Shared CORE BUILD-01 is CLOSED / COMMITTED. BUILD-02 is REVIEW_PASS /
+  ACCEPTANCE BLOCKED at 51/52 mandatory affected regressions; the same
+  recovery-lock signature occurs on baseline and causation remains UNKNOWN.
 - MEM-01: CLOSED / COMMITTED at `5e29cdb177838adb1682ab3b36728623d714c5e3`.
   See the current status and preserved closure above for A1-A7,
   owner-supplied independent PASS and limitations.

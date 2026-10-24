@@ -1,5 +1,40 @@
 # Agent Company TODO
 
+## Canonical Roadmap Reconciliation - Remaining Work - 2026-10-24
+
+- [x] Reconcile the reference-only R2 conflict register against the current
+  repository without replacing newer canonical status or reopening closed work.
+- [x] Preserve the frozen V1 roster: ten current roles plus Finance & Pricing,
+  Analytics, Content and Design as Agents 11-14, APPROVED V1 / PLANNED / NOT
+  IMPLEMENTED before Phase 9 rather than Phase 10/Post-V1.
+- [x] Preserve exact planned capability IDs `CAP-SALES`,
+  `CAP-SEARCH-GROWTH-01`, `CAP-REV-01` and `CAP-SOC-01`.
+- [x] Preserve Phase 9A before DEC-01 runtime; keep Phase 9B Control Room,
+  Phase 9C Operating Layer, Phase 8E-8H and Brightshore-first Phase 10 distinct.
+- [x] Preserve DEC-01 design acceptance separately from unstarted runtime and
+  keep DEC-02/JEV deferred.
+- [ ] BUILD-02 remains REVIEW_PASS / ACCEPTANCE BLOCKED until the mandatory
+  affected regression is 52/52. The retained 51/52 recovery-lock signature also
+  occurs on baseline, so BUILD-02 defect attribution is UNKNOWN. Do not waive
+  the gate or repeat unchanged tests/design work; the broader recovery refactor
+  is owner-DEFERRED pending material new evidence or renewed authorization.
+- [ ] MEM-03 remains BLOCKED / NOT ACCEPTED pending native Windows identity,
+  compatibility, evidence-custody and protected-execution qualification. Do not
+  restart an unchanged attempt.
+- [ ] CONTRACT-04 installation remains BLOCKED. The verified 180-candidate
+  artifact is discovery evidence only; all membership decisions and dependency
+  closure remain unresolved, and the set does not fit the 128-entry ceiling.
+- [x] Record CONTRACT-04 Alternative A, selected-action evidence inspection at
+  `runtime.memory.action_trace.build_action_candidates(request, owners)`, as an
+  approved design-scope boundary only. No implementation, manifest or pins are
+  approved.
+- [ ] Keep Phase 9A and all downstream runtime work NOT STARTED until their
+  existing prerequisites and separate authorizations are satisfied.
+
+This section changes documentation status only. It creates no new checkpoint,
+test obligation, implementation authority or Git authority. Older dated TODO
+entries remain historical snapshots where explicitly superseded here.
+
 ## GOV-01 Direct API Transport Remaining Decisions - 2026-10-23
 
 - [x] Verify the complete 612-line V2 source at
@@ -29,6 +64,19 @@
   implemented retention control.
 - [ ] Decide evidence access ownership, storage protection and plaintext
   acceptability, plus the manual disposal procedure.
+- [x] Record the owner-approved evidence-custody design policy: human project
+  owner as custodian; repository-external SecureState candidate; non-inherited
+  restricted DACL; synthetic-only conditional plaintext; receipt-bound 30-day
+  target; holds; separately authorized manual disposal; post-disposal
+  re-verification fails closed when exact bytes are missing.
+- [ ] Independently qualify the exact SecureState path, owner, writer/reviewer/
+  recovery identities and SIDs, non-inherited DACL/effective access, parent-path
+  access, disk-encryption status and residual plaintext exposure. The candidate
+  directory is absent and must not be created without separate authorization.
+- [ ] Obtain owner selection for the runtime writer, independent reviewer and
+  recovery administrator identities. `AgentCompanyRuntime` and
+  `AgentCompanyReviewer` remain proposed account names only; Codex sandbox
+  identities are not approved by default.
 - [x] Restrict any considered transmission to synthetic, non-sensitive data.
   Repository source, secrets and real user data remain excluded.
 - [x] Accept evaluation under the provider's documented data-processing and
@@ -82,10 +130,19 @@ external-action authority. `authority=none`; `automatic=false`.
   entries without claiming implementation or compatibility acceptance.
 - [x] Complete the earlier four-document design reconciliation, bounded review,
   correction and local commit at `9710decc977b040960fed28f91438040a332d9db`.
-- [ ] Establish complete trusted installation membership, required/excluded import
-  disposition and an external trusted profile source. The reported 114 candidates
-  (112 existing plus two proposed trace modules) have no supplied file-by-file
-  list or installed hashes and do not constitute an approved manifest.
+- [x] Generate and integrity-review a fresh candidate inventory from immutable
+  commit `98f197821966e9d4ff777ff88b69d88b96e461dd`: 178 committed candidates plus
+  two absent proposed observability modules, 180 total; artifact SHA-256
+  `2a8c958c7d3cbb99ddeed79e3e13768868e9c2ad3f517bd59507b7dcd9859e87`.
+  This is candidate evidence only, not dependency closure or manifest approval.
+- [x] Select Alternative A, selected-action evidence inspection at
+  `runtime.memory.action_trace.build_action_candidates(request, owners)`, as the
+  approved design-scope boundary. `observability/selected_trace.py` remains
+  PLANNED / NOT IMPLEMENTED.
+- [ ] Establish complete operation-specific trusted installation membership,
+  INCLUDE/EXCLUDE disposition, dependency closure within 1-128 entries and an
+  independently trusted external profile/pin source. All 180 dispositions remain
+  UNRESOLVED; 180 does not fit the approved profile ceiling.
 - [ ] Establish the conditional Windows 11 x64/local fixed NTFS target's exact
   build/volume, principal, safe root, component-handle access/sharing/reparse rules,
   ACL enforcement and supported containment qualification evidence.
@@ -721,14 +778,16 @@ Historical closure validation: 14/14 CORE-11 tests and `git diff --check` passed
   learning from traces. Promotion to active constraints stays separate in MEM-02B.
   See the canonical closure limitations; owner-verified HEAD
   `22c9d37b503d3eea242eb6cc35041efdaac0a4d5` resolves the previous commit action.
-- [x] MEM-02B Learning Constraint Pipeline — CLOSED / UNCOMMITTED under CLOSURE-119;
-  exact-change-set review and Git lifecycle remain separately authorized:
+- [x] MEM-02B Learning Constraint Pipeline — CLOSED / COMMITTED at `ad055f8`;
+  later fixture hygiene is committed at `4773acb`:
   promote observations to planning
   constraints only after evidence, deduplication, scoping, and review; PASS is
   not automatically a permanent rule.
-- [ ] MEM-03 Memory Providers — PLANNED / NOT STARTED: local provider first; Hindsight only as a future
-  provider behind MemoryInterface; SwarmVault/Vault Curate are references, not
-  core dependencies.
+- [ ] MEM-03 Memory Providers — BLOCKED / NOT ACCEPTED: retain local provider
+  scope behind MemoryInterface, but require native Windows identity,
+  compatibility, evidence-custody and protected-execution qualification.
+  Hindsight remains only a future provider; SwarmVault/Vault Curate are
+  references, not core dependencies.
 - [ ] Add canonical Agent 11 Finance & Pricing.
 - [ ] Add canonical Agent 12 Analytics.
 - [ ] Add canonical Agent 13 Content.

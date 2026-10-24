@@ -1,5 +1,47 @@
 # Agent Company
 
+## Canonical DOC-TREE Reconciliation - 2026-10-24
+
+Current verified repository: `C:/Users/DELL/Desktop/AgentCompany/Agent_Company`,
+branch `master`, HEAD `98f197821966e9d4ff777ff88b69d88b96e461dd`, upstream
+`origin/master`, empty index. Read-only Git tree inspection reports 751 tracked
+files. The current visible worktree contains 12 pre-existing modified tracked
+files and exactly four non-ignored untracked diagnostics:
+
+- `orchestrator/graph/test_retained_fixture_diagnostics.py`
+- `orchestrator/graph/test_run_validation_measurements.py`
+- `runtime/tests/fixture_diagnostics.py`
+- `runtime/tests/recovery_lock_telemetry.py`
+
+Git-ignored generated/local material is physically present (2,545 ignored paths
+at preflight), but it is not promoted into the canonical versioned DOC-TREE.
+The tracked top level is `.agents/`, `.claude/`, `agent-generation/`, `agents/`,
+`config/`, `docs/`, `governance/`, `infrastructure/`, `integrations/`,
+`orchestrator/`, `providers/`, `runtime/`, `schemas/`, `shared/`, `skills/`, plus
+the tracked root files `.dockerignore`, `.env.example`, `.gitignore`,
+`AGENTS.md`, `CLAUDE.md`, `compose.yaml`, `CONSTITUTION.md`, `Dockerfile`,
+`INTENT.md`, `PROJECT_STATE.md`, `README.md`, `ROADMAP.md` and `TODO.md`. The
+detailed Current Repository Structure below remains the canonical navigation
+summary.
+
+Physical inspection confirms exactly ten current agent directories. The four
+frozen V1 role targets remain absent and planned:
+`agents/finance-pricing/`, `agents/analytics/`, `agents/content/` and
+`agents/design/`. The other documented future roots also remain absent:
+`shared/memory/`, `skills/search-growth/`,
+`skills/social-media/lifecycle/`,
+`orchestrator/workflows/search-growth/`,
+`orchestrator/workflows/social-media-operations/`, `observability/`,
+`apps/control-room/`, `orchestrator/decision-engine/` and
+`project-packs/brightshore/`. No future directory was created.
+
+Master Context ownership remains unchanged: PROJECT_STATE owns current status,
+ROADMAP owns capability/architecture scope, TODO owns remaining work, and this
+README owns current/planned physical DOC-TREE navigation. The attached R2 file
+is reference evidence only and is not a repository tree node or canonical
+document. No source, runtime, test, configuration or governance-contract path is
+changed by this reconciliation.
+
 ## GOV-01 Direct API Transport Design Acceptance And DOC-TREE - 2026-10-23
 
 AC-GOV01-TRANSPORT-DOC-001 records owner design-level acceptance of the complete
@@ -66,6 +108,16 @@ unimplemented and unaccepted. The separately scoped
 `observability/__init__.py`, `observability/selected_trace.py` and
 `runtime/tests/test_p9a_selected_trace.py` also remain absent; `observability/`
 remains PLANNED. No path, directory, manifest or approval artifact is created.
+
+The repository-external fresh inventory artifact is not a DOC-TREE node. Its
+verified SHA-256 is
+`2a8c958c7d3cbb99ddeed79e3e13768868e9c2ad3f517bd59507b7dcd9859e87`;
+it records 178 committed candidates plus two absent proposed observability
+modules. All 180 membership decisions and dependency closure remain unresolved,
+so the candidate set is not an approved manifest and does not satisfy the
+1-128 profile limit. Alternative A selected-action evidence inspection is
+approved as design scope only; no source path, profile, pin or installation is
+created by that decision.
 
 Only the four existing Master Context documents change, retaining their current
 status/scope/work/DOC-TREE ownership. BUILD-01 is CLOSED / COMMITTED, while
@@ -838,26 +890,21 @@ after independent R4 PASS and owner closure PASS. MEM-01 is CLOSED / COMMITTED
 at `5e29cdb177838adb1682ab3b36728623d714c5e3`; MEM-02 is CLOSED /
 COMMITTED / PUSHED after Prompt 58 bounded closure PASS and owner verification
 of HEAD `22c9d37b503d3eea242eb6cc35041efdaac0a4d5`.
-ACTIVE: None. MEM-02B is CLOSED / UNCOMMITTED under CLOSURE-119.
-NEXT: separately authorized MEM-02B exact-change-set review and commit.
-MEM-03, DEC-01/02 and agents 11-14
-remain PLANNED / NOT STARTED.
+ACTIVE: None. MEM-02B is CLOSED / COMMITTED in current HEAD ancestry at
+`ad055f8`, with later fixture hygiene at `4773acb`. MEM-03 is BLOCKED / NOT
+ACCEPTED. DEC-01 design is accepted but runtime is NOT STARTED; DEC-02/JEV is
+DEFERRED. Agents 11-14 remain APPROVED V1 / PLANNED / NOT IMPLEMENTED.
 
 ## Current Repository Structure
 
-CURRENT acceptance source is the E: checkout identified by ACCEPTANCE-116.
-The five BUILD-64 product paths remain physically present; FIX-80/FIX-101 add no
-product directory. External handoff evidence is not a repository DOC-TREE node.
-No new physical-tree audit or committed-source attestation is claimed here.
-The following F: tree provenance is retained as historical MEM-02 evidence:
-
-Historical physical observation: authoritative F: checkout at that checkpoint.
-Owner-verified MEM-02 HEAD: `22c9d37b503d3eea242eb6cc35041efdaac0a4d5`;
-MEM-02 is CLOSED / COMMITTED / PUSHED. This task records owner Git evidence
-without running Git commands or attesting a current clean worktree. The earlier
-branch/index/dirty-worktree preflight remains in the dated closure record.
-MEM-01's recorded committed foundation and the existing physical paths remain
-intact. Generated contents and ignored local configuration are not expanded.
+CURRENT physical source is the verified C: checkout and HEAD recorded in the
+2026-10-24 DOC-TREE overlay above. The E: ACCEPTANCE-116 and F: MEM-02 checkout
+observations remain historical evidence for their checkpoints; they no longer
+identify the current physical tree. External handoff and repository-external
+candidate-inventory evidence are not DOC-TREE nodes. MEM-02 remains CLOSED /
+COMMITTED / PUSHED at its retained owner-verified identity. Generated contents
+and ignored local configuration are counted separately and are not expanded as
+canonical versioned paths.
 
 - `agents/` — 10 canonical roles: communications, knowledge-manager, marketing,
   operations, project-manager, research, reviewer, sales, social-media, and
@@ -885,7 +932,8 @@ intact. Generated contents and ignored local configuration are not expanded.
   `test_memory_action_trace.py` and `test_memory_integration.py` under
   `runtime/tests/`. Foreground composition lives in existing provider context
   and CLI files; accepted Inspection lives in existing canonical owner stores.
-  No production Memory provider or durability is established; MEM-03 stays PLANNED / NOT STARTED.
+  No production Memory provider or accepted durability is established; MEM-03
+  stays BLOCKED / NOT ACCEPTED.
   `shared/memory/` stays absent / PLANNED.
   `runtime/progress/` is the CURRENT CORE-07 implementation, CLOSED / COMMITTED
   at `6bcffa4` after CORE-07R3 PASS; it contains typed/schema-validated, bounded,
@@ -1124,9 +1172,10 @@ and SYNC-04A. The exception gate and accepted refinements live in
 LATER / REFERENCE; only critical implementation, security, data-loss, authority,
 architectural-consistency, or completion-correctness blockers may be evaluated
 for V1. They do not interrupt the checkpoint sequence or grant implementation
-authority. ACTIVE: None. MEM-02B is CLOSED / UNCOMMITTED under CLOSURE-119.
-NEXT: separately authorized MEM-02B exact-change-set review and commit.
-MEM-02 is CLOSED / COMMITTED / PUSHED; MEM-03 remains PLANNED / NOT STARTED.
+authority. ACTIVE: None. MEM-02B is CLOSED / COMMITTED in current HEAD ancestry
+at `ad055f8`; later fixture hygiene is committed at `4773acb`. No blocked
+implementation is promoted into NEXT by this documentation reconciliation.
+MEM-02 is CLOSED / COMMITTED / PUSHED; MEM-03 is BLOCKED / NOT ACCEPTED.
 MEM-01 is CLOSED / COMMITTED at `5e29cdb177838adb1682ab3b36728623d714c5e3`.
 ORCH-01 is CLOSED / COMMITTED at `d3878081`; GOV-02 remains CLOSED / COMMITTED at `e6dbe3f`.
 GOV-01 remains CLOSED / COMMITTED at `852ec01`.
