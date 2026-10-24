@@ -1,5 +1,48 @@
 # Agent Company Roadmap
 
+## Agent 13 Content Accepted Design - 2026-10-24
+
+Agent 13 is **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT IMPLEMENTED**.
+The owner accepted AC-V1-AGENT13-DESIGN-007 `REVIEW_PASS` and approved
+`AC-AG13-POLICY-001` as **APPROVED - DESIGN SCOPE ONLY**.
+`AG13-DESIGN-R1` through `AG13-DESIGN-R4` are `REVIEW_RESOLVED`, and
+`AG13-DESIGN-E1` is **CLOSED / EVIDENCE GAP RESOLVED**, only for the reviewed
+646-line source at
+`C:/Users/DELL/Downloads/AC_V1_AGENT13_DESIGN_DRAFT_20261024.md`, SHA-256
+`9807DB16BFC98F86079BB0E68FC4101A57802447607A7F804D540315C695CDA7`.
+The external source is evidence by exact identity; its complete text is not
+copied into the repository.
+
+The frozen V1 Content role retains the closed operation set `GENERATE_DRAFT`,
+`EDIT_DRAFT` and `REPURPOSE_DRAFT`. The approved initial operational design
+slice is exactly `EDIT_DRAFT` / `INTERNAL_REVIEW` / user-supplied original
+content / `FIRST_PARTY_EDIT_ONLY` / `OWNER_SUPPLIED` or `UNVERIFIED` claims.
+It is `READ_ONLY`, L1, `write_scope: null` and `automatic=false`. It preserves
+source identity, immutable request binding, the existing Task Contract and
+authorization fingerprint, CORE-11 isolation, canonical `ExecutionResult`,
+budgets, approvals, evidence and independent review. It produces internal
+drafts only and has no publication, sending, purchasing or consequential-write
+authority.
+
+`GENERATE_DRAFT` and `REPURPOSE_DRAFT` remain within V1 design but are
+fail-closed wherever independent factual verification or third-party
+copyright/reuse permission is required. `OWNER_SUPPLIED` and `UNVERIFIED`
+content cannot be promoted to `VERIFIED` merely because it was supplied by a
+user. Source possession, user assertion, Research output or Reviewer `PASS`
+does not establish copyright permission. The policy creates no canonical
+issuer, rights registry, approval action or unrestricted verifier.
+
+Marketing retains strategy, positioning, campaigns and audience decisions;
+Communications retains message-specific drafting and delivery; Social Media
+retains posts, captions, hooks, calendars and channel repurposing; Research
+retains evidence collection and source-quality verification; Reviewer remains independent;
+and planned Agent 14 retains visual design. No proposed Agent 13 role, skill,
+workflow or schema path is created. Provider qualification remains pending and
+the new capability remains ineligible until separately qualified. Agent 11 and
+Agent 12 remain closed, the frozen 14-role roster is unchanged, `MEM-03` remains
+**BLOCKED / HOLD / NOT ACCEPTED**, `BUILD-02` remains `REVIEW_PASS /
+ACCEPTANCE BLOCKED`, and `CONTRACT-04` installation remains **BLOCKED**.
+
 ## Agent 12 Analytics Accepted Design - 2026-10-24
 
 Agent 12 is **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT IMPLEMENTED**.

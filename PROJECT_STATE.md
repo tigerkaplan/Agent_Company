@@ -1,5 +1,44 @@
 # Agent Company Project State
 
+## Agent 13 Accepted Design Review and Policy - 2026-10-24
+
+AC-V1-AGENT13-DESIGN-008 records the owner's acceptance of the independent
+AC-V1-AGENT13-DESIGN-007 `REVIEW_PASS` and approval of
+`AC-AG13-POLICY-001` as **APPROVED - DESIGN SCOPE ONLY**.
+`AG13-DESIGN-R1` through `AG13-DESIGN-R4` are `REVIEW_RESOLVED`, and
+`AG13-DESIGN-E1` is **CLOSED / EVIDENCE GAP RESOLVED**, only for the exact
+reviewed source at
+`C:/Users/DELL/Downloads/AC_V1_AGENT13_DESIGN_DRAFT_20261024.md`: 646 lines,
+SHA-256
+`9807DB16BFC98F86079BB0E68FC4101A57802447607A7F804D540315C695CDA7`.
+
+Current Agent 13 status is **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT
+IMPLEMENTED**. The accepted role design retains `GENERATE_DRAFT`, `EDIT_DRAFT`
+and `REPURPOSE_DRAFT`. Its approved initial operational design slice is limited
+to `EDIT_DRAFT`, `INTERNAL_REVIEW`, user-supplied original content,
+`FIRST_PARTY_EDIT_ONLY`, and `OWNER_SUPPLIED` or `UNVERIFIED` claims. The design
+is `READ_ONLY`, L1, `write_scope: null` and `automatic=false`, preserves CORE-11
+external-content isolation and independent review, and grants no publication or
+external-action authority.
+
+`GENERATE_DRAFT` and `REPURPOSE_DRAFT` remain in frozen V1 design but cannot
+bypass missing factual-verification or third-party copyright/reuse authority.
+No canonical issuer, rights registry, approval action or verification authority
+is created by the policy. No agent directory, role, skill, workflow, schema,
+provider manifest or runtime capability has been created or modified. Provider
+qualification and eligibility remain pending and fail closed. Implementation,
+tests, installation, provider qualification, runtime acceptance, deployment and
+Git work remain separately gated and unauthorized by this acceptance.
+
+Marketing retains strategy, positioning and campaigns; Communications retains
+message-specific drafting and delivery; Social Media retains channel-level
+content; Research retains evidence collection and source verification; Reviewer
+remains independent; and planned Agent 14 retains visual design. Agent 11 and
+Agent 12 remain closed at **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT
+IMPLEMENTED**. The frozen 14-role roster is unchanged. `MEM-03` remains
+**BLOCKED / HOLD / NOT ACCEPTED**; Shared CORE `BUILD-02` remains `REVIEW_PASS /
+ACCEPTANCE BLOCKED`; and `CONTRACT-04` installation remains **BLOCKED**.
+
 ## Agent 12 Accepted Design Review - 2026-10-24
 
 AC-V1-AGENT12-DESIGN-008 records the owner's acceptance of the independent

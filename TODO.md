@@ -1,5 +1,43 @@
 # Agent Company TODO
 
+## Agent 13 Accepted Design - Remaining Work - 2026-10-24
+
+- [x] Record the owner-accepted AC-V1-AGENT13-DESIGN-007 `REVIEW_PASS`, preserve
+  `AG13-DESIGN-R1` through `AG13-DESIGN-R4` as `REVIEW_RESOLVED`, and preserve
+  `AG13-DESIGN-E1` as **CLOSED / EVIDENCE GAP RESOLVED** only for the exact
+  646-line source with SHA-256
+  `9807DB16BFC98F86079BB0E68FC4101A57802447607A7F804D540315C695CDA7`.
+- [x] Record `AC-AG13-POLICY-001` as **APPROVED - DESIGN SCOPE ONLY**: retain
+  all three V1 design operations, while limiting the initial operational design
+  slice to `EDIT_DRAFT`, `INTERNAL_REVIEW`, user-supplied original content,
+  `FIRST_PARTY_EDIT_ONLY`, and `OWNER_SUPPLIED` or `UNVERIFIED` claims.
+- [ ] Keep `GENERATE_DRAFT`, `REPURPOSE_DRAFT`, independently verified factual
+  claims and third-party reuse fail-closed until their exact source-verification,
+  copyright and canonical issuer/rights-authority prerequisites are separately
+  defined, approved and qualified. Do not infer authority from source possession,
+  user assertion, Research output, Reviewer `PASS` or provider text.
+- [ ] Decide the final capability name, typed ContentRequest schema disposition,
+  output formats and limits, low-risk review policy, privacy/retention/export
+  rules, style-guide precedence, accessibility requirements and project-specific
+  terminology without widening the accepted initial slice.
+- [ ] Before implementation, obtain a separate bounded work order with an exact
+  file allowlist and acceptance criteria; update canonical schema, routing and
+  capability mappings without compatibility aliases; keep provider eligibility
+  fail-closed until independently qualified; and require focused normal,
+  boundary, adversarial and regression evidence plus independent implementation
+  review and explicit owner acceptance.
+- [ ] Keep the existing Agent 13 implementation item open. Design and policy
+  acceptance creates no agent directory, role, skill, workflow, schema, provider
+  manifest, runtime capability, test, deployment or Git authority.
+
+Agent 13 remains **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT IMPLEMENTED** at
+`READ_ONLY`, L1, `write_scope: null` and `automatic=false`. Agent 11 and Agent
+12 remain closed. Marketing, Communications, Social Media, Research, Reviewer
+and planned Agent 14 ownership boundaries remain unchanged. The frozen 14-role roster is
+unchanged. `MEM-03` remains **BLOCKED / HOLD / NOT ACCEPTED**; `BUILD-02`
+remains `REVIEW_PASS / ACCEPTANCE BLOCKED`; and `CONTRACT-04` installation
+remains **BLOCKED**.
+
 ## Agent 12 Accepted Design - Remaining Work - 2026-10-24
 
 - [x] Record the owner-accepted AC-V1-AGENT12-DESIGN-008 `REVIEW_PASS` and
