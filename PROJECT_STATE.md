@@ -1,5 +1,46 @@
 # Agent Company Project State
 
+## MEM-03 Event Log Bootstrap Receipt Disposition - 2026-10-25
+
+`AC-MEM03-EVENTLOG-DISPOSITION-20261025-04` records the owner's decision that
+Windows Event Log is **NO_GO** for the authoritative MEM-03 bootstrap-failure
+durable receipt channel. The earlier `NO_QUALIFIED_EXISTING_CHANNEL` finding
+and the bounded `Application` channel `CANDIDATE_UNSUITABLE` finding remain
+valid and are not superseded.
+
+The non-privileged `Application` probe established only that the existing
+OS-managed channel was present, enabled and serviced. Its circular mode,
+disabled retention and auto-backup, broad write-bearing channel access and lack
+of exact Controller/Reviewer/Executor bindings did not establish independent
+receipt authority or durability. No event was written.
+
+A separately pre-provisioned custom channel could technically give the
+Controller publish rights, the Reviewer read-only rights and the Executor no
+ordinary channel rights while reserving elevated configuration to an
+independent host-security custodian. Neither that channel, its registered
+publisher nor a qualified custodian currently exists or is approved.
+
+The decisive blocker is a **CONTRACT MISMATCH**, not a proven runtime code
+defect: the Windows event publication contract supplies no synchronous
+durable-commit acknowledgement for an individual receipt. Successful buffered
+submission or later query visibility cannot prove that the receipt survived a
+crash. Independent forwarding or archival would require its own pre-existing
+transactional commit acknowledgement and qualification; it cannot be inferred
+from Event Log availability.
+
+Further Event Log configuration trials under this unchanged hypothesis are
+closed. Event Log may be considered later only as secondary diagnostic evidence;
+it is not a bootstrap trust anchor and gains no qualification, implementation or
+execution authority. The unresolved requirement is one independently
+administered transactional receipt mechanism, provisioned and qualified before
+MEM-03 bootstrap. No replacement service is asserted to exist or be approved.
+
+`MEM-03` remains **BLOCKED / HOLD / NOT ACCEPTED**. Shared CORE `BUILD-02`
+remains `REVIEW_PASS / ACCEPTANCE BLOCKED`; `CONTRACT-04` installation remains
+**BLOCKED**; accepted Agent 11-14 designs and all closed checkpoints remain
+unchanged. No implementation, test, Windows change, installation or Git action
+is authorized. `automatic=false`.
+
 ## Agent 14 Accepted Design Review - 2026-10-25
 
 AC-V1-AGENT14-DESIGN-006 records the owner's acceptance of the independent

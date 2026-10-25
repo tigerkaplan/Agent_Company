@@ -1,5 +1,41 @@
 # Agent Company Roadmap
 
+## MEM-03 Event Log Receipt Architecture Disposition - 2026-10-25
+
+The owner records Windows Event Log as **NO_GO** for the authoritative MEM-03
+bootstrap-failure durable receipt channel under
+`AC-MEM03-EVENTLOG-DISPOSITION-20261025-04`. This preserves the preceding
+`NO_QUALIFIED_EXISTING_CHANNEL` and `Application CANDIDATE_UNSUITABLE`
+findings.
+
+An independently pre-provisioned custom channel can separate ordinary
+principal access in design: Controller publish, Reviewer read-only, Executor
+excluded, and elevated configuration retained by a separate host-security
+custodian. That separation does not solve the receipt contract. Windows event
+publication provides buffered submission without a synchronous per-receipt
+durable-commit acknowledgement. Query visibility, circular or retain-mode
+configuration, export and forwarding do not by themselves prove crash-durable
+commitment to the publisher.
+
+The blocker is therefore **CONTRACT MISMATCH**, not a proven defect in current
+runtime code. Repeating Event Log configuration trials without a materially
+different durability mechanism is closed. Event Log remains eligible only as
+secondary diagnostic evidence and is not an approved authority store, receipt
+channel, implementation dependency or qualification target.
+
+Before MEM-03 bootstrap, a separate independently administered transactional
+receipt mechanism must already exist and must be qualified for exact custodian,
+writer and independent verifier identities; executor exclusion; synchronous
+durable acknowledgement; restart, full-capacity and partial-failure behavior;
+retention, integrity, tamper evidence, archival and recovery. No replacement
+service or operator is currently claimed to exist or be approved.
+
+`MEM-03` remains **BLOCKED / HOLD / NOT ACCEPTED**. `BUILD-02` remains
+`REVIEW_PASS / ACCEPTANCE BLOCKED`; `CONTRACT-04` installation remains
+**BLOCKED**; the frozen 14-role boundary and accepted Agent 11-14 designs remain
+unchanged. This decision grants no provisioning, implementation, test, Windows,
+installation or Git authority. `automatic=false`.
+
 ## Agent 14 Design Accepted Design - 2026-10-25
 
 Agent 14 is **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT IMPLEMENTED**.

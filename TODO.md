@@ -1,5 +1,37 @@
 # Agent Company TODO
 
+## MEM-03 Event Log Receipt Disposition - Remaining Work - 2026-10-25
+
+- [x] Record the owner's `AC-MEM03-EVENTLOG-DISPOSITION-20261025-04` decision:
+  Windows Event Log is **NO_GO** for the authoritative MEM-03
+  bootstrap-failure durable receipt channel.
+- [x] Preserve `NO_QUALIFIED_EXISTING_CHANNEL` and the bounded `Application`
+  channel `CANDIDATE_UNSUITABLE` finding. Availability and configured access do
+  not establish qualification.
+- [x] Classify the decisive blocker as **CONTRACT MISMATCH**, not a proven
+  runtime code defect: ordinary principal separation is technically designable,
+  but Windows event publication has no synchronous per-receipt durable-commit
+  acknowledgement.
+- [x] Close further Event Log configuration trials under the unchanged
+  hypothesis. Retain Event Log only as possible secondary diagnostic evidence,
+  without trust-anchor, qualification, implementation or execution authority.
+- [ ] Identify one independently administered transactional receipt mechanism
+  that already exists before MEM-03 bootstrap. Do not infer, create or approve a
+  replacement service through this documentation decision.
+- [ ] Before any bootstrap authorization, independently qualify the mechanism's
+  exact human host-security custodian, authorized writer and read-only verifier;
+  Executor exclusion; synchronous durable acknowledgement; restart and
+  full-capacity behavior; partial-failure handling; retention; integrity and
+  tamper evidence; archival; and recovery.
+- [ ] Obtain a separate bounded work order and independent affected review for
+  any future mechanism-specific design, provisioning or implementation. Do not
+  repeat Event Log configuration trials without materially new contract evidence.
+
+`MEM-03` remains **BLOCKED / HOLD / NOT ACCEPTED**. `BUILD-02` remains
+`REVIEW_PASS / ACCEPTANCE BLOCKED`; `CONTRACT-04` installation remains
+**BLOCKED**; accepted Agent 11-14 designs and all closed gates remain unchanged.
+No replacement service is asserted to exist or be approved. `automatic=false`.
+
 ## Agent 14 Accepted Design - Remaining Work - 2026-10-25
 
 - [x] Record the owner-accepted AC-V1-AGENT14-DESIGN-005 `REVIEW_PASS` and
