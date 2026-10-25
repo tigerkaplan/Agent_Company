@@ -223,11 +223,21 @@ and `CONTRACT-04` installation remains **BLOCKED**. `automatic=false`.
 - [x] Preserve the frozen V1 roster: ten current roles plus Finance & Pricing,
   Analytics, Content and Design as Agents 11-14, APPROVED V1 / PLANNED / NOT
   IMPLEMENTED before Phase 9 rather than Phase 10/Post-V1.
-- [x] Record the owner-approved sequencing boundary: separately authorized,
-  bounded design/contract preparation for Agents 11-14 may occur while MEM-03
-  remains mandatory V1 on BLOCKED / HOLD / NOT ACCEPTED. Preparation creates no
-  agent, skill, workflow, implementation checkpoint or runtime authority and
-  does not waive, satisfy, reorder or bypass any existing mandatory gate.
+- [x] Record owner-selected M1 NARROW SEQUENCING: separately authorized offline,
+  synthetic-data, non-authoritative code development may proceed while MEM-03
+  remains mandatory V1 on BLOCKED / HOLD / NOT ACCEPTED, but only under an
+  exact-file work order with bounded scope, deterministic tests, independent
+  review and preserved evidence. Prohibit production data, secrets, network or
+  provider calls, protected native execution, authority-bearing persistence and
+  unauthorized external effects. Require separate acceptance before runtime
+  integration or promotion; an offline pilot PASS never implies V1 acceptance.
+- [x] Preserve the completed Agent 11 exact-division pilot at
+  `29802269c2a4cab4d0f8f13d980ec85e31708737`: exactly
+  `pilots/agent11_finance_pricing/exact_division.py` and
+  `pilots/agent11_finance_pricing/test_exact_division.py`, with the owner-reported
+  19/19 deterministic test result, independent `REVIEW_PASS` and Git closure.
+  The pilot is offline and non-authoritative; Agent 11 production integration
+  remains NOT IMPLEMENTED and separately gated.
 - [x] Preserve exact planned capability IDs `CAP-SALES`,
   `CAP-SEARCH-GROWTH-01`, `CAP-REV-01` and `CAP-SOC-01`.
 - [x] Preserve Phase 9A before DEC-01 runtime; keep Phase 9B Control Room,

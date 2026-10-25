@@ -278,13 +278,27 @@ Current status overlay:
   approved **design-scope boundary only**. It approves no manifest, pin source,
   installation or execution.
 - D1 remains PAUSED / unaccepted. D2-D8 remain accepted ownership mappings, not
-  implemented checkpoints. Phase 9A, Agents 11-14 and the V1 capability
-  expansions remain NOT STARTED. The owner permits separately authorized,
-  bounded design/contract preparation for Agents 11-14 while MEM-03 remains on
-  HOLD; this does not create an implementation checkpoint or authorize agent
-  directories, skills, workflows, implementation, runtime acceptance or use of
-  prepared material. DEC-01 design is accepted but runtime is NOT STARTED;
+  implemented checkpoints. Phase 9A, production integration for Agents 11-14
+  and the V1 capability expansions remain NOT STARTED. Under owner-selected M1
+  NARROW SEQUENCING, separately authorized offline, synthetic-data,
+  non-authoritative code development may proceed while MEM-03 remains on HOLD,
+  but only through an exact-file work order with bounded scope, deterministic
+  tests, independent review and preserved evidence. Such work must use no
+  production data, secrets, network or provider calls, protected native
+  execution, authority-bearing persistence or unauthorized external effects.
+  Every slice requires separate acceptance before runtime integration or
+  promotion, does not advance an ACTIVE/NEXT checkpoint and does not establish
+  V1 acceptance. DEC-01 design is accepted but runtime is NOT STARTED;
   DEC-02/JEV remains DEFERRED.
+
+The completed isolated Agent 11 exact-division pilot is preserved under this
+boundary at commit `29802269c2a4cab4d0f8f13d980ec85e31708737`, containing only
+`pilots/agent11_finance_pricing/exact_division.py` and
+`pilots/agent11_finance_pricing/test_exact_division.py`. The current instruction
+reports 19/19 deterministic tests, independent `REVIEW_PASS` and Git closure;
+Git history independently confirms the exact two-file commit. That offline pilot
+PASS does not implement Agent 11, authorize runtime integration or imply V1
+acceptance.
 
 The owner-approved GOV-01 evidence-custody policy is design policy only. The
 human project owner is the design-policy custodian; exact writer, reviewer and

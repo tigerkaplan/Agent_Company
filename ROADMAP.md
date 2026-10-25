@@ -892,9 +892,18 @@ ACTIVE = None. The older MEM-02B commit action is superseded by the current
 committed lineage. No blocked implementation is promoted into NEXT by this
 reconciliation; a later action still requires its own owner authorization.
 MEM-02 is CLOSED / COMMITTED / PUSHED; MEM-02B is CLOSED / COMMITTED; MEM-03
-remains mandatory V1 on BLOCKED / HOLD / NOT ACCEPTED. Bounded Agents 11-14
-design/contract preparation may be separately authorized, but no later
-implementation or runtime acceptance is authorized.
+remains mandatory V1 on BLOCKED / HOLD / NOT ACCEPTED. Owner-selected M1 NARROW
+SEQUENCING permits separately authorized offline, synthetic-data,
+non-authoritative code development without advancing the ACTIVE/NEXT sequence.
+Every slice requires an exact-file work order, bounded scope, deterministic
+tests, independent review and preserved evidence. Production data, secrets,
+network or provider calls, protected native execution, authority-bearing
+persistence and unauthorized external effects are prohibited. Separate
+acceptance is required before runtime integration or promotion; an offline pilot
+PASS never implies V1 acceptance. The completed two-file Agent 11 exact-division
+pilot remains closed at `29802269c2a4cab4d0f8f13d980ec85e31708737`, with the
+owner-reported 19/19 deterministic test result and independent `REVIEW_PASS`,
+without implementing Agent 11 or changing any mandatory gate.
 MEM-01 is CLOSED / COMMITTED at `5e29cdb177838adb1682ab3b36728623d714c5e3`.
 GOV-01 remains CLOSED / COMMITTED at `852ec01`; GOV-02 is CLOSED / COMMITTED
 at `e6dbe3f`; ORCH-01 is CLOSED / COMMITTED at `d3878081`.
