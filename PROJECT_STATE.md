@@ -41,6 +41,40 @@ remains `REVIEW_PASS / ACCEPTANCE BLOCKED`; `CONTRACT-04` installation remains
 unchanged. No implementation, test, Windows change, installation or Git action
 is authorized. `automatic=false`.
 
+## MEM-03 V1 Administrator Trust Boundary - 2026-10-25
+
+`AC-MEM03-TRUST-BOUNDARY-20261025-01` is recorded from the owner's explicit
+conversation instruction as **OWNER APPROVED — OPTION A**. For V1, privileged
+Windows administrators are trusted computing-base members, and compromise of a
+privileged administrator is outside the local receipt-service threat model.
+This is a scoped threat-model decision, not a claim that local ACLs provide
+immutability against administrators or that any current administrator,
+custodian, account, token, right or service has been qualified.
+
+The ordinary-principal boundary remains mandatory. The Controller may have only
+the bounded machine-receipt write interface; the Reviewer remains independently
+read-only; the Executor has no receipt write, alteration, deletion, replacement
+or custody authority; and the host-security custodian's provisioning and
+break-glass role grants no routine execution, evidence-writing, review or
+approval authority. Durable commit acknowledgement, independent review,
+fail-closed restart/recovery, retention, integrity and acceptance evidence
+remain required.
+
+`MEM03-LOCAL-RECEIPT-SVC-V1` remains **CANDIDATE / NOT APPROVED / NOT
+IMPLEMENTED**. No such service, store or qualified operator is asserted to
+exist. The exact qualified human host-security custodian remains unresolved;
+the earlier `DELL` design label is not operator qualification. Current
+`AC-MEM-03-090` / `AC-MEM-03-092` requirements add no independent receipt
+database or authority service, so this candidate cannot become effective
+without a separately approved contract amendment, independent affected review
+and later provisioning authority.
+
+Windows Event Log remains **NO_GO**. `MEM-03` remains **BLOCKED / HOLD / NOT
+ACCEPTED**; Shared CORE `BUILD-02` remains `REVIEW_PASS / ACCEPTANCE BLOCKED`;
+`CONTRACT-04` installation remains **BLOCKED**; and the frozen 14-role boundary,
+accepted Agent 11-14 designs and design-only implementation status remain
+unchanged. `automatic=false`.
+
 ## Agent 14 Accepted Design Review - 2026-10-25
 
 AC-V1-AGENT14-DESIGN-006 records the owner's acceptance of the independent

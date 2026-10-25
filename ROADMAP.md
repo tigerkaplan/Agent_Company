@@ -36,6 +36,40 @@ service or operator is currently claimed to exist or be approved.
 unchanged. This decision grants no provisioning, implementation, test, Windows,
 installation or Git authority. `automatic=false`.
 
+## MEM-03 Approved V1 Trust Boundary - 2026-10-25
+
+The owner-approved `AC-MEM03-TRUST-BOUNDARY-20261025-01` decision selects
+**OWNER APPROVED — OPTION A**: privileged Windows administrators are trusted V1
+computing-base members, and privileged-administrator compromise is outside the
+local receipt-service threat model. This resolves only that threat-model branch.
+It does not make administrator capability a receipt, independent verification,
+approval or ordinary workflow authority, and it does not claim administrator-
+resistant local immutability.
+
+Controller, Reviewer and Executor separation remains mandatory. Any V1 local
+receipt design must still establish a bounded authenticated Controller writer,
+an independent read-only Reviewer, Executor exclusion, synchronous durable-
+commit acknowledgement, immutable receipt identity and integrity evidence,
+bounded retention and capacity failure, fail-closed restart/recovery, qualified
+custody and independent acceptance evidence. The exact qualified human
+host-security custodian and governed break-glass rights remain unresolved.
+
+`MEM03-LOCAL-RECEIPT-SVC-V1` is retained only as a **CANDIDATE / NOT APPROVED /
+NOT IMPLEMENTED** architecture. No service, database, pipe, key, storage root or
+operator is asserted to exist or be approved. The current
+`AC-MEM-03-090` / `AC-MEM-03-092` contract retains existing execution storage
+and adds no independent receipt database or authority service. Selecting this
+candidate later would therefore require a separately authorized contract
+amendment, independent affected security review, explicit owner approval and
+independently administered pre-bootstrap provisioning and qualification.
+
+Windows Event Log remains **NO_GO**. `MEM-03` remains **BLOCKED / HOLD / NOT
+ACCEPTED**; `BUILD-02` remains `REVIEW_PASS / ACCEPTANCE BLOCKED`;
+`CONTRACT-04` installation remains **BLOCKED**; and the frozen 14-role boundary
+and Agent 11-14 design-only implementation status remain unchanged. This record
+grants no implementation, provisioning, installation, test, Windows or Git
+authority. `automatic=false`.
+
 ## Agent 14 Design Accepted Design - 2026-10-25
 
 Agent 14 is **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT IMPLEMENTED**.

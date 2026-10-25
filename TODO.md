@@ -32,6 +32,38 @@
 **BLOCKED**; accepted Agent 11-14 designs and all closed gates remain unchanged.
 No replacement service is asserted to exist or be approved. `automatic=false`.
 
+## MEM-03 Approved Trust Boundary - Remaining Work - 2026-10-25
+
+- [x] Record the owner's conversation-reported
+  `AC-MEM03-TRUST-BOUNDARY-20261025-01` decision as **OWNER APPROVED — OPTION A**.
+  Privileged Windows administrators are trusted V1 computing-base members, and
+  administrator compromise is outside the local receipt-service threat model.
+- [x] Preserve the mandatory ordinary-principal boundary: bounded Controller
+  receipt writing, independent Reviewer read-only verification, Executor
+  exclusion, and no routine execution, evidence-writing, review or approval
+  authority for the host-security custodian or break-glass administrators.
+- [ ] Identify and independently qualify the exact human host-security custodian
+  and the governed standing and break-glass rights. The earlier `DELL` design
+  label is not operator qualification.
+- [ ] Keep `MEM03-LOCAL-RECEIPT-SVC-V1` at **CANDIDATE / NOT APPROVED / NOT
+  IMPLEMENTED**. No service, database, endpoint, key, root or operator is
+  asserted to exist or be approved.
+- [ ] If the candidate is selected later, obtain a separately authorized
+  amendment resolving the current `AC-MEM-03-090` / `AC-MEM-03-092` prohibition
+  on adding an independent receipt database or authority service.
+- [ ] Before any provisioning or bootstrap authorization, independently review
+  and accept exact identities and effective access, synchronous durable-commit
+  acknowledgement, receipt integrity, retention and full-capacity behavior,
+  fail-closed restart/recovery, archival, administrator limitations and
+  pre-bootstrap qualification evidence.
+
+Windows Event Log remains **NO_GO**. `MEM-03` remains **BLOCKED / HOLD / NOT
+ACCEPTED**; `BUILD-02` remains `REVIEW_PASS / ACCEPTANCE BLOCKED`;
+`CONTRACT-04` installation remains **BLOCKED**; and the frozen 14-role boundary
+and accepted Agent 11-14 design-only implementation status remain unchanged.
+No implementation, provisioning, installation, testing or Git authority is
+granted. `automatic=false`.
+
 ## Agent 14 Accepted Design - Remaining Work - 2026-10-25
 
 - [x] Record the owner-accepted AC-V1-AGENT14-DESIGN-005 `REVIEW_PASS` and
