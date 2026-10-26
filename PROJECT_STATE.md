@@ -1,5 +1,62 @@
 # Agent Company Project State
 
+## PIH-V0 Owner-Approved Design Closure - 2026-10-26
+
+`AC-PIH-V0-DESIGN-CLOSURE-20261026-15` records **OWNER-APPROVED DESIGN
+CLOSURE** for the exact reviewed Private Intelligence Hub V0 contract and its
+nine-file implementation candidate scope. The independent affected review
+`AC-PIH-V0-JCS-REREVIEW-20261026-14` returned `PASS` for the final RFC 8785 JCS
+serialization correction. This closes design only; it is not implementation,
+installation, runtime-test, deployment, commit or push evidence or authority.
+
+| Finding | Design status | Preserved result |
+|---|---|---|
+| `PIH-DR-01` | `CLOSED` | Worktree, commit, push and remote alignment remain separate; alignment never proves push. |
+| `PIH-DR-02` | `CLOSED` | Availability remains separate from nullable freshness; `SOURCE_UNAVAILABLE` requires `freshness=null`. |
+| `PIH-DR-03` | `CLOSED` | Current evidence classification remains required and independent of lifecycle state. |
+| `PIH-GAP-SEC-01` | `CLOSED` | Numeric-loopback, exact Host/routes, safe-DOM, CSP, no-CORS and offline-only boundaries remain preserved. |
+| `PIH-GAP-DET-01` | `CLOSED` | One immutable commit governs four blob reads; atomic identity and exact source-span validation remain fail-closed. |
+| `PIH-GAP-SCHEMA-01` | `CLOSED` | Model B plus the JCS amendment received affected `REVIEW PASS`; content and verification identities remain separate. |
+
+Exact retained evidence is repository-external and remains evidence rather than
+canonical source text:
+
+- `PIH_V0_SCHEMA_RETRY_ORIGINAL.md`: 4,967 bytes, 54 lines, SHA-256
+  `2279C91C3CB04BA1EBE8EC018ED7B8299B579AEC853ADCFADA9C3EEC2140E8CA`.
+- `PIH_V0_SCHEMA_AMENDMENT_ORIGINAL.txt`: 14,527 bytes, 420 lines, SHA-256
+  `1553F95E6023BA84DA37A86094387067D2D78756BBFB15F603FF3B99E960E2E8`.
+- `PIH_V0_CANONICAL_SERIALIZATION_RETRY_TRANSCRIPT.md`: 2,713 bytes, 29
+  lines, SHA-256
+  `4814310E763A42E81F89B36EFB397872EC7C9B6835C961FA604AD440D76805CB`.
+- `PIH_V0_CANONICAL_JSON_AMENDMENT_ORIGINAL.txt`: 14,537 bytes, 297 lines,
+  SHA-256
+  `8DF6F315552CCDF1286198C3D098818EFFCA831AAE9AAAF5EA39627E681223A3`.
+
+The earlier `UI_SLICE_READY` and self-contained `DESIGN_ADDENDUM_READY` remain
+retained conversation evidence under `AC-PIH-LOCAL-UI-20261025-05` and
+`AC-PIH-V0-DESIGN-ADDENDUM-20261025-07`. The latter corrected all six design
+findings subject to review; the Model B and JCS artifacts above record the
+bounded schema corrections and final PASS chain.
+
+PIH-V0 remains **DESIGN CLOSED / OWNER APPROVED / NOT IMPLEMENTED**. Phase 9B
+remains **PLANNED**; Control Room and PIH remain projections over canonical
+state, never authority stores. The current repository still has ten agent
+definitions against fourteen approved V1 roles. No implementation candidate
+path was created. `automatic=false`.
+
+`AC-PIH-V0-DOC-CLOSURE-20261026-19` records **OWNER-APPROVED DOCUMENTATION
+CLOSURE** for this exact four-document PIH reconciliation. The scoped
+documentation review preserved PASS for `PROJECT_STATE.md`, `ROADMAP.md`,
+`TODO.md` and `README.md`; affected continuation
+`AC-PIH-V0-DOC-EVIDENCE-20261026-18` resolved `PIH-DOC-ER-01` and
+`PIH-DOC-EVIDENCE-01` with `PASS`. Its complete corrected, explicitly
+non-canonical report is 3,591 bytes and 105 lines, SHA-256
+`E05A19CF50004AC022B9C3F2F878947E4D45D0FEC14D5D11405E475F412C0175`.
+Path/status preservation is verified; pre/post byte preservation for the 12
+unrelated modified files and four untracked diagnostics remains unverified.
+This documentation closure grants no staging, commit, push, implementation,
+installation, test, deployment or monitoring authority. `automatic=false`.
+
 ## Agent 11 M2 Owner Acceptance - 2026-10-26
 
 `AC-AG11-M2-ACCEPT-20261026-03` records **OWNER ACCEPTED** for the exact

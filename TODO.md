@@ -1,5 +1,38 @@
 # Agent Company TODO
 
+## PIH-V0 Design Closure - Remaining Work - 2026-10-26
+
+- [x] Preserve `PIH-DR-01`, `PIH-DR-02`, `PIH-DR-03`, `PIH-GAP-SEC-01` and
+  `PIH-GAP-DET-01` as the five previously closed design findings.
+- [x] Preserve `AC-PIH-V0-JCS-REREVIEW-20261026-14` as the independent affected
+  `PASS` for the final Model B/JCS correction to `PIH-GAP-SCHEMA-01`.
+- [x] Record `AC-PIH-V0-DESIGN-CLOSURE-20261026-15` as owner-approved design
+  closure for exactly six findings, the reviewed PIH-V0 contract and the exact
+  nine-file candidate allowlist.
+- [x] Preserve Phase 9B as **PLANNED**, PIH/Control Room as a projection over
+  canonical state, and ten current definitions versus fourteen approved roles.
+- [x] Keep full Source Review records, Research & Methods Library,
+  prompt/template versions, extraction lineage, external research and archive
+  ingestion outside V0 as non-blocking future proposals.
+- [x] Preserve scoped documentation PASS for `PROJECT_STATE.md`, `ROADMAP.md`,
+  `TODO.md` and `README.md`, plus affected
+  `AC-PIH-V0-DOC-EVIDENCE-20261026-18` PASS resolving `PIH-DOC-ER-01` and
+  `PIH-DOC-EVIDENCE-01` against corrected report SHA-256
+  `E05A19CF50004AC022B9C3F2F878947E4D45D0FEC14D5D11405E475F412C0175`.
+- [x] Record `AC-PIH-V0-DOC-CLOSURE-20261026-19` as owner-approved
+  documentation closure for this exact four-document PIH reconciliation.
+- [ ] Keep any documentation staging, commit and push behind separate explicit
+  Git authorization and validation; documentation closure grants none.
+- [ ] Keep PIH-V0 implementation **NOT STARTED / NOT AUTHORIZED**. Any future
+  implementation requires a separate owner-approved work order bounded to the
+  exact nine paths, followed by applicable test, independent review, acceptance
+  and separate Git gates.
+
+Path/status preservation is verified; unrelated-file pre/post byte preservation
+remains unverified. No implementation, schema/runtime code, folder creation,
+installation, test, deployment, monitoring, staging, commit or push is completed
+or authorized by these design and documentation closures. `automatic=false`.
+
 ## Agent 11 M2 Owner Acceptance - Remaining Work - 2026-10-26
 
 - [x] Preserve `AC-AG11-M2-REVIEW-20261026-02` as

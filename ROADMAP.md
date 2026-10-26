@@ -1,5 +1,60 @@
 # Agent Company Roadmap
 
+## PIH-V0 Owner-Approved Design - 2026-10-26
+
+Private Intelligence Hub V0 is **DESIGN CLOSED / OWNER APPROVED / NOT
+IMPLEMENTED** under `AC-PIH-V0-DESIGN-CLOSURE-20261026-15`, after independent
+affected `PASS` at `AC-PIH-V0-JCS-REREVIEW-20261026-14`. The six design findings
+`PIH-DR-01`, `PIH-DR-02`, `PIH-DR-03`, `PIH-GAP-SEC-01`,
+`PIH-GAP-DET-01` and `PIH-GAP-SCHEMA-01` are closed only at design level.
+
+The approved V0 remains a local, read-only Phase 9B projection with exactly
+three views: Roadmap/status, evidence freshness/provenance, and coverage
+gaps/blockers. It reads the committed `PROJECT_STATE.md`, `ROADMAP.md`,
+`TODO.md` and `README.md` blobs from one immutable commit, retains exact source
+and span evidence, rejects mixed captures, and never substitutes worktree bytes
+for committed source bytes. Phase 9B remains **PLANNED**, Control Room remains a
+view/operator layer over canonical state rather than a second source of truth,
+and ten current agent definitions remain distinct from fourteen approved V1
+roles.
+
+The accepted Model B contract hashes RFC 8785 JCS UTF-8 bytes for
+`{schema_version, content}` at `schema_version=1`. Mutable observations expressed
+inside closed `content` participate in `content_fingerprint`; verification-only
+metadata, including `last_verified`, remains outside it. The separate
+`verification_fingerprint` binds `schema_version`, the complete
+`content_fingerprint`, and the complete verification envelope except itself.
+Source-document paths and record keys are unique; schema-defined arrays are
+normalized deterministically before JCS, while JCS itself preserves array order.
+
+The local HTTP/browser boundary remains numeric-loopback only with exact Host,
+GET/HEAD routes, bodyless HEAD, no CORS or external requests, strict response
+headers, offline assets, safe text-only DOM insertion and fixed non-reflective
+failure responses. The exact implementation candidate allowlist is:
+
+1. `apps/control-room/README.md`
+2. `apps/control-room/intelligence-hub/index.html`
+3. `apps/control-room/intelligence-hub/app.js`
+4. `apps/control-room/intelligence-hub/styles.css`
+5. `runtime/control_room/__init__.py`
+6. `runtime/control_room/__main__.py`
+7. `runtime/control_room/intelligence_hub.py`
+8. `schemas/private-intelligence-hub-snapshot.schema.json`
+9. `runtime/tests/test_private_intelligence_hub.py`
+
+All nine paths remain absent and candidate-only. Full Source Review records,
+Research & Methods Library, prompt/template versioning, extraction lineage,
+external research and archive ingestion remain non-blocking future proposals
+outside V0. The approved design grants no implementation, package, runtime,
+test, installation, publication, deployment, monitoring or Git authority.
+`automatic=false`.
+
+The exact four-document PIH reconciliation is **DOCUMENTATION CLOSED / OWNER
+APPROVED** under `AC-PIH-V0-DOC-CLOSURE-20261026-19`, after four scoped document
+PASS results and affected PASS for corrected non-canonical report SHA-256
+`E05A19CF50004AC022B9C3F2F878947E4D45D0FEC14D5D11405E475F412C0175`.
+This closure changes no design, implementation scope, phase status or Git gate.
+
 ## Agent 11 M2 Offline Pilot Scope - 2026-10-26
 
 `AC-AG11-M2-ACCEPT-20261026-03` owner-accepts only the exact offline,

@@ -1,5 +1,40 @@
 # Agent Company
 
+## PIH-V0 Planned DOC-TREE - 2026-10-26
+
+`AC-PIH-V0-DESIGN-CLOSURE-20261026-15` closes the reviewed Private Intelligence
+Hub V0 design only. The physical repository contains none of the nine approved
+implementation candidate paths:
+
+1. `apps/control-room/README.md`
+2. `apps/control-room/intelligence-hub/index.html`
+3. `apps/control-room/intelligence-hub/app.js`
+4. `apps/control-room/intelligence-hub/styles.css`
+5. `runtime/control_room/__init__.py`
+6. `runtime/control_room/__main__.py`
+7. `runtime/control_room/intelligence_hub.py`
+8. `schemas/private-intelligence-hub-snapshot.schema.json`
+9. `runtime/tests/test_private_intelligence_hub.py`
+
+These paths remain **PLANNED / ABSENT / NOT IMPLEMENTED**. Phase 9B remains
+planned; PIH and Control Room remain read-only projections over canonical state,
+not authority stores. The physical `agents/` tree still contains ten current
+definitions against fourteen approved V1 roles. Full Source Review records,
+Research & Methods Library, prompt/template versioning, extraction lineage,
+external research and archive ingestion remain outside V0 and create no current
+DOC-TREE node.
+
+[PROJECT_STATE](PROJECT_STATE.md#pih-v0-owner-approved-design-closure---2026-10-26)
+owns design-closure status and evidence provenance;
+[ROADMAP](ROADMAP.md#pih-v0-owner-approved-design---2026-10-26) owns the approved
+architecture and scope; [TODO](TODO.md#pih-v0-design-closure---remaining-work---2026-10-26)
+owns the completed documentation closure and remaining implementation/Git gates.
+`AC-PIH-V0-DOC-CLOSURE-20261026-19` owner-approves the exact four-document
+reconciliation after affected PASS for corrected non-canonical report SHA-256
+`E05A19CF50004AC022B9C3F2F878947E4D45D0FEC14D5D11405E475F412C0175`.
+No file, directory, runtime, schema, test, package or Git action is created or
+authorized by this DOC-TREE record. `automatic=false`.
+
 ## Agent 11 M2 Physical DOC-TREE Reconciliation - 2026-10-26
 
 Current verified repository: `C:/Users/DELL/Desktop/AgentCompany/Agent_Company`,
