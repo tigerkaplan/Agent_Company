@@ -1,5 +1,32 @@
 # Agent Company Roadmap
 
+## CTX-BUDGET-01 Scoped Technical Closure - 2026-10-26
+
+`AC-V1-CTX-BUDGET-DOC-20261026-25` owner-accepts scoped technical closure for
+the reviewed one-file fixture correction in
+`runtime/tests/test_execution_results.py`, SHA-256
+`2599F8B40709F37A8B90DBA0F847FCDC060BC6BD0C525D79FDF551F5F81DBF68`.
+`CTX_FIX_REVIEW_PASS`, focused `4/4 PASS` and affected `115/115 PASS` with exit
+`0` satisfy the approved test-only work order. The final result supersedes the
+historical `113/115` result for the same four-module affected inventory.
+
+This closure changes no production architecture, runtime behavior, context
+limit, provider boundary, capability scope, phase sequence or physical
+DOC-TREE. Production context discovery remains fail-closed at 131072 bytes per
+file. The committed/pre-reconciliation HEAD measurement of `PROJECT_STATE.md`
+was 165232 bytes. A prior documentation reviewer observed a 167242-byte
+worktree snapshot after the reconciliation insertion; that value is not
+permanently current, and current worktree size must be measured when required.
+The compatibility risk remains **OPEN** for separately authorized work. The
+bounded fixture is test-only and is not production acceptance.
+
+`GOV_FIX_REVIEW_PASS` and Governance Validator `PASS` remain preserved.
+`BUILD-02` remains `REVIEW_PASS / ACCEPTANCE BLOCKED` with its separate
+mandatory inventory at `51/52 SAME`; `MEM-03` remains **BLOCKED / HOLD / NOT
+ACCEPTED**; and `CONTRACT-04` installation remains **BLOCKED**. Documentation
+review and every Git state remain separate. No implementation, validation,
+deployment or Git authority follows. `automatic=false`.
+
 ## PIH-V0 Owner-Approved Design - 2026-10-26
 
 Private Intelligence Hub V0 is **DESIGN CLOSED / OWNER APPROVED / NOT

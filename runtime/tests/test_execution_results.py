@@ -28,7 +28,10 @@ from runtime.providers.adapters import sanitize_provider_text
 from runtime.providers.artifacts import FileProviderArtifactStore
 from runtime.providers.config import ProviderConfiguration
 from runtime.providers.context import ExecutionContextBuilder
-from runtime.tests.contract_fixtures import CertifiedProviderFixture as ProviderExecutor
+from runtime.tests.contract_fixtures import (
+    CertifiedProviderFixture as ProviderExecutor,
+    bounded_context_repository,
+)
 from runtime.providers.models import (
     ProviderAvailability,
     ProviderExecutionResult,
@@ -213,20 +216,21 @@ class ExecutionResultContractTests(unittest.TestCase):
         self.assertEqual(execution.artifacts, ())
 
     def test_provider_executor_normalizes_native_output_to_references(self) -> None:
-        with tempfile.TemporaryDirectory() as temporary:
-            adapters = {
-                "claude": FakeProviderAdapter("claude", available=False),
-                "codex": FakeProviderAdapter("codex", available=True),
-            }
-            execution = ProviderExecutor(
-                ProviderRouter(ProviderConfiguration(REPOSITORY_ROOT), adapters),
-                ExecutionContextBuilder(REPOSITORY_ROOT),
-                FileProviderArtifactStore(Path(temporary) / "provider-output"),
-            ).execute(request(provider="claude"))
-            self.assertEqual(execution.status, "succeeded")
-            self.assertEqual(execution.evidence[0]["kind"], "provider_output")
-            self.assertEqual(execution.artifacts, execution.output_refs)
-            self.assertNotIn("codex output", json.dumps(execution.to_dict()))
+        with bounded_context_repository() as context_root:
+            with tempfile.TemporaryDirectory() as temporary:
+                adapters = {
+                    "claude": FakeProviderAdapter("claude", available=False),
+                    "codex": FakeProviderAdapter("codex", available=True),
+                }
+                execution = ProviderExecutor(
+                    ProviderRouter(ProviderConfiguration(REPOSITORY_ROOT), adapters),
+                    ExecutionContextBuilder(context_root),
+                    FileProviderArtifactStore(Path(temporary) / "provider-output"),
+                ).execute(request(provider="claude"))
+                self.assertEqual(execution.status, "succeeded")
+                self.assertEqual(execution.evidence[0]["kind"], "provider_output")
+                self.assertEqual(execution.artifacts, execution.output_refs)
+                self.assertNotIn("codex output", json.dumps(execution.to_dict()))
 
     def test_malformed_status_is_rejected_by_model_and_schema(self) -> None:
         with self.assertRaisesRegex(ExecutionContractError, "not canonical"):
@@ -762,22 +766,23 @@ class ExecutionResultContractTests(unittest.TestCase):
                     exit_code=0,
                 )
 
-        with tempfile.TemporaryDirectory() as temporary:
-            artifact_store = FileProviderArtifactStore(Path(temporary) / "provider-output")
-            execution = ProviderExecutor(
-                ProviderRouter(
-                    ProviderConfiguration(REPOSITORY_ROOT),
-                    {
-                        "claude": FakeProviderAdapter("claude", available=False),
-                        "codex": FakeJsonAdapter("codex", available=True),
-                    },
-                ),
-                ExecutionContextBuilder(REPOSITORY_ROOT),
-                artifact_store,
-            ).execute(request(provider="codex"))
-            self.assertEqual(execution.status, "succeeded")
-            self.assertEqual(execution.next_actions, ())
-            self.assertIn("automatic", artifact_store.load(execution.execution_id)["process"]["stdout"])
+        with bounded_context_repository() as context_root:
+            with tempfile.TemporaryDirectory() as temporary:
+                artifact_store = FileProviderArtifactStore(Path(temporary) / "provider-output")
+                execution = ProviderExecutor(
+                    ProviderRouter(
+                        ProviderConfiguration(REPOSITORY_ROOT),
+                        {
+                            "claude": FakeProviderAdapter("claude", available=False),
+                            "codex": FakeJsonAdapter("codex", available=True),
+                        },
+                    ),
+                    ExecutionContextBuilder(context_root),
+                    artifact_store,
+                ).execute(request(provider="codex"))
+                self.assertEqual(execution.status, "succeeded")
+                self.assertEqual(execution.next_actions, ())
+                self.assertIn("automatic", artifact_store.load(execution.execution_id)["process"]["stdout"])
 
 
 if __name__ == "__main__":

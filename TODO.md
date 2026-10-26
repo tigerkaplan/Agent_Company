@@ -1,5 +1,38 @@
 # Agent Company TODO
 
+## CTX-BUDGET-01 Scoped Technical Closure - Remaining Work - 2026-10-26
+
+- [x] Record owner acceptance of CTX-BUDGET-01 scoped technical closure for the
+  exact one-file fixture correction in `runtime/tests/test_execution_results.py`
+  at SHA-256
+  `2599F8B40709F37A8B90DBA0F847FCDC060BC6BD0C525D79FDF551F5F81DBF68`.
+- [x] Preserve `CTX_FIX_REVIEW_PASS`, focused `4/4 PASS` with exit `0`, and the
+  final affected `115/115 PASS` with exit `0`; retain the historical `113/115`
+  result as superseded evidence for the same four-module inventory.
+- [x] Preserve `GOV_FIX_REVIEW_PASS` and Governance Validator `PASS` with exit
+  `0` without repeating either gate.
+- [x] Reconcile CTX-BUDGET status, scope and remaining work in
+  `PROJECT_STATE.md`, `ROADMAP.md` and `TODO.md`. No physical path changed, so
+  the README-owned CURRENT/PLANNED DOC-TREE requires no update.
+- [ ] Keep the production context-size risk **OPEN**: the
+  committed/pre-reconciliation HEAD measurement of `PROJECT_STATE.md` was
+  165232 bytes against the unchanged 131072-byte per-file discovery limit. A
+  prior documentation reviewer observed a 167242-byte worktree snapshot after
+  the reconciliation insertion; that value is not permanently current, and
+  current worktree size must be measured when required. Any production
+  correction requires a separate owner-approved work order, validation and
+  independent review.
+- [ ] Obtain an independent affected-documentation review of only these three
+  CTX-BUDGET entries before any later Git action.
+- [ ] Keep staging, commit and push behind separate explicit Git authorization;
+  scoped technical closure and documentation reconciliation grant none.
+
+Shared CORE `BUILD-02` remains `REVIEW_PASS / ACCEPTANCE BLOCKED`; its mandatory
+inventory remains `51/52 SAME`. `MEM-03` remains **BLOCKED / HOLD / NOT
+ACCEPTED**, and `CONTRACT-04` installation remains **BLOCKED**. No production
+acceptance, implementation, test, review, installation, deployment or Git
+operation is authorized by this record. `automatic=false`.
+
 ## PIH-V0 Design Closure - Remaining Work - 2026-10-26
 
 - [x] Preserve `PIH-DR-01`, `PIH-DR-02`, `PIH-DR-03`, `PIH-GAP-SEC-01` and

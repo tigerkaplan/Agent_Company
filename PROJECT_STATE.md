@@ -1,5 +1,43 @@
 # Agent Company Project State
 
+## CTX-BUDGET-01 Owner-Accepted Scoped Technical Closure - 2026-10-26
+
+`AC-V1-CTX-BUDGET-DOC-20261026-25` records **OWNER-ACCEPTED SCOPED
+TECHNICAL CLOSURE** for the exact one-file context-budget fixture correction in
+`runtime/tests/test_execution_results.py`, SHA-256
+`2599F8B40709F37A8B90DBA0F847FCDC060BC6BD0C525D79FDF551F5F81DBF68`.
+The reviewed diff is `+36/-31` and changes only the two authorized existing test
+methods to supply the existing bounded repository fixture to
+`ExecutionContextBuilder`; production context discovery, provider configuration,
+adapters, artifact storage and original assertions remain unchanged.
+
+Retained evidence is `CTX_FIX_REVIEW_PASS`, focused `4/4 PASS` with exit `0`,
+and the final four-module affected inventory `115/115 PASS` with exit `0`. The
+final affected evidence manifest has SHA-256
+`30E144B292188A7A8512B913EAB1CB820EC6077B8FFB7536396F5B02CC5B9501`.
+This supersedes the historical `113/115` result for the same affected inventory;
+its two `ContextBuildError: Discovery read budget exceeded` errors now pass.
+`GOV_FIX_REVIEW_PASS` and the Governance Validator `PASS` with exit `0` remain
+accepted and were not repeated.
+
+The production context-size risk remains **OPEN** and separate. The
+committed/pre-reconciliation HEAD measurement of `PROJECT_STATE.md` was 165232
+bytes against the unchanged 131072-byte per-file discovery limit. A prior
+documentation reviewer observed a 167242-byte worktree snapshot after the
+reconciliation insertion; that value is not permanently current. Current
+worktree size must be measured when required. The fixture correction does not
+establish production compatibility or acceptance. Shared CORE `BUILD-02`
+remains `REVIEW_PASS /
+ACCEPTANCE BLOCKED`; its separate mandatory inventory remains `51/52 SAME` and
+is not waived. `MEM-03` remains **BLOCKED / HOLD / NOT ACCEPTED**, and
+`CONTRACT-04` installation remains **BLOCKED**.
+
+This record is documentation-only. CTX-BUDGET-01 is owner-accepted within the
+exact scoped technical boundary, but the documentation diff and one-file test
+correction remain unstaged and uncommitted. No production acceptance,
+implementation, test, review, staging, commit, push, fetch, reset, cleanup or
+deployment authority follows. `automatic=false`.
+
 ## PIH-V0 Owner-Approved Design Closure - 2026-10-26
 
 `AC-PIH-V0-DESIGN-CLOSURE-20261026-15` records **OWNER-APPROVED DESIGN
