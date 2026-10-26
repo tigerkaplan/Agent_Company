@@ -16,8 +16,9 @@ the unchanged M1 helper identity
 `08F50215E79D81BEB256ECB1D27FD9C3671B0D83D065EB6B88774CE7FF9556B3`,
 and the existing M1 narrow-sequencing authorization. It adds no governance
 mechanism, roadmap phase, agent, capability, workflow, runtime integration or
-production authority. The M2 files remain uncommitted, and Agent 11 remains
-**APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT PRODUCTION IMPLEMENTED**.
+production authority. The M2 files are tracked at exact code commit
+`f49f21510812f962e9521bec830bb821f32f9b1d`, and Agent 11 remains **APPROVED V1 /
+DESIGN REVIEW ACCEPTED / NOT PRODUCTION IMPLEMENTED**.
 
 `MEM-03` remains **BLOCKED / HOLD / NOT ACCEPTED**; `BUILD-02` remains
 `REVIEW_PASS / ACCEPTANCE BLOCKED`; `CONTRACT-04` installation remains

@@ -3,9 +3,9 @@
 ## Agent 11 M2 Physical DOC-TREE Reconciliation - 2026-10-26
 
 Current verified repository: `C:/Users/DELL/Desktop/AgentCompany/Agent_Company`,
-branch `master`, HEAD and local `origin/master` at
-`7180398ab5297ad90b8292dd5f16d03059adeb5a`, with an empty index. The physical
-DOC-TREE now includes these exact untracked M2 pilot paths:
+branch `master`, HEAD `f49f21510812f962e9521bec830bb821f32f9b1d` with parent
+documentation commit `6175d3f07522bedcd1639ded5166d1ef797e5a10` and an empty
+index. The physical DOC-TREE tracks these exact M2 pilot paths:
 
 - `pilots/agent11_finance_pricing/synthetic_cost_scenario.py` - SHA-256
   `4855FBF9C90D01BB8A37DA5C00954BE5D1A654A6705694C74F034F90846088AA`.
@@ -15,8 +15,9 @@ DOC-TREE now includes these exact untracked M2 pilot paths:
 `AC-AG11-M2-REVIEW-20261026-02` independently returned
 `REVIEW_PASS / CLOSURE_READY`, 30/30 scoped tests PASS and zero new findings.
 `AC-AG11-M2-ACCEPT-20261026-03` records **OWNER ACCEPTED** for only those exact
-two files. They remain unchanged and uncommitted. The committed M1 pilot paths
-`pilots/agent11_finance_pricing/exact_division.py` and
+two files. They remain byte-identical to the reviewed identities and are tracked
+at code commit `f49f21510812f962e9521bec830bb821f32f9b1d`. The committed M1
+pilot paths `pilots/agent11_finance_pricing/exact_division.py` and
 `pilots/agent11_finance_pricing/test_exact_division.py`, its Git closure and its
 narrow-sequencing authorization remain unchanged; the M1 helper retains SHA-256
 `08F50215E79D81BEB256ECB1D27FD9C3671B0D83D065EB6B88774CE7FF9556B3`.

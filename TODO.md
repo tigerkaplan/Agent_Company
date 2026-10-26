@@ -14,8 +14,10 @@
 - [x] Preserve the unchanged M1 helper at SHA-256
   `08F50215E79D81BEB256ECB1D27FD9C3671B0D83D065EB6B88774CE7FF9556B3`,
   the completed M1 Git closure and the M1 narrow-sequencing authorization.
-- [x] Classify M2 as isolated, offline, synthetic, non-authoritative and
-  uncommitted; it is not production Agent 11 implementation or V1 acceptance.
+- [x] Classify M2 as isolated, offline, synthetic and non-authoritative, with
+  both reviewed paths tracked at exact code commit
+  `f49f21510812f962e9521bec830bb821f32f9b1d`; it is not production Agent 11
+  implementation or V1 acceptance.
 - [ ] Obtain independent affected-documentation review of only
   `PROJECT_STATE.md`, `ROADMAP.md`, `TODO.md` and `README.md`, bound to the
   unchanged M2 and M1 identities above, before any later Git action.
@@ -24,8 +26,9 @@ Agent 11 remains **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT PRODUCTION
 IMPLEMENTED**. `MEM-03` remains **BLOCKED / HOLD / NOT ACCEPTED**; `BUILD-02`
 remains `REVIEW_PASS / ACCEPTANCE BLOCKED`; `CONTRACT-04` installation remains
 **BLOCKED**; and the frozen 14-role scope is unchanged. The two M2 files remain
-unchanged and uncommitted. No code, test, review, implementation, installation,
-staging, commit, push, fetch or cleanup follows automatically. `automatic=false`.
+byte-identical to the reviewed identities and are tracked in that exact code
+commit. No code, test, review, implementation, installation, staging, commit,
+push, fetch or cleanup follows automatically. `automatic=false`.
 
 ## MEM-03 Event Log Receipt Disposition - Remaining Work - 2026-10-25
 

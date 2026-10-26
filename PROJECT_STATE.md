@@ -21,16 +21,20 @@ the completed M1 two-file Git closure and M1 narrow-sequencing authorization
 remain unchanged.
 
 M2 is **ISOLATED / OFFLINE / SYNTHETIC / NON-AUTHORITATIVE / OWNER ACCEPTED /
-UNCOMMITTED**. It uses no production data and grants no production, runtime,
-provider, persistence, financial-policy or external-effect authority. Agent 11
-remains **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT PRODUCTION IMPLEMENTED**;
-M2 acceptance is not V1 acceptance or runtime-integration approval.
+COMMITTED** at exact code commit
+`f49f21510812f962e9521bec830bb821f32f9b1d`. It uses no production data and
+grants no production, runtime, provider, persistence, financial-policy or
+external-effect authority. Agent 11 remains **APPROVED V1 / DESIGN REVIEW
+ACCEPTED / NOT PRODUCTION IMPLEMENTED**; M2 acceptance is not V1 acceptance or
+runtime-integration approval.
 
-Verified documentation baseline: repository
-`C:/Users/DELL/Desktop/AgentCompany/Agent_Company`, branch `master`, HEAD and
-local `origin/master` at `7180398ab5297ad90b8292dd5f16d03059adeb5a`, with
-an empty index. The 12 unrelated modified tracked files and four untracked
-diagnostics remain protected; the two M2 files remain unchanged and uncommitted.
+Verified code-closure state: repository
+`C:/Users/DELL/Desktop/AgentCompany/Agent_Company`, branch `master`, HEAD
+`f49f21510812f962e9521bec830bb821f32f9b1d` with parent documentation commit
+`6175d3f07522bedcd1639ded5166d1ef797e5a10`, and an empty index. The 12 unrelated
+modified tracked files and four untracked diagnostics remain protected; the two
+M2 files remain byte-identical to the reviewed identities and are tracked in
+that code commit.
 `MEM-03` remains **BLOCKED / HOLD / NOT ACCEPTED**; Shared CORE `BUILD-02`
 remains `REVIEW_PASS / ACCEPTANCE BLOCKED`; `CONTRACT-04` installation remains
 **BLOCKED**; and the frozen 14-role scope is unchanged. No implementation,
