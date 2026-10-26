@@ -1,5 +1,32 @@
 # Agent Company TODO
 
+## Agent 11 M2 Owner Acceptance - Remaining Work - 2026-10-26
+
+- [x] Preserve `AC-AG11-M2-REVIEW-20261026-02` as
+  `REVIEW_PASS / CLOSURE_READY`, with 30/30 scoped tests PASS, exit 0 and zero
+  new findings; no test or review was rerun for this documentation task.
+- [x] Record `AC-AG11-M2-ACCEPT-20261026-03` as **OWNER ACCEPTED** for exactly
+  `pilots/agent11_finance_pricing/synthetic_cost_scenario.py` at SHA-256
+  `4855FBF9C90D01BB8A37DA5C00954BE5D1A654A6705694C74F034F90846088AA`
+  and `pilots/agent11_finance_pricing/test_synthetic_cost_scenario.py` at
+  SHA-256
+  `DB8DA82DADC010F6DEEA1FB1D140AEBD9071EBDB0431036A06200A7ECF55BC98`.
+- [x] Preserve the unchanged M1 helper at SHA-256
+  `08F50215E79D81BEB256ECB1D27FD9C3671B0D83D065EB6B88774CE7FF9556B3`,
+  the completed M1 Git closure and the M1 narrow-sequencing authorization.
+- [x] Classify M2 as isolated, offline, synthetic, non-authoritative and
+  uncommitted; it is not production Agent 11 implementation or V1 acceptance.
+- [ ] Obtain independent affected-documentation review of only
+  `PROJECT_STATE.md`, `ROADMAP.md`, `TODO.md` and `README.md`, bound to the
+  unchanged M2 and M1 identities above, before any later Git action.
+
+Agent 11 remains **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT PRODUCTION
+IMPLEMENTED**. `MEM-03` remains **BLOCKED / HOLD / NOT ACCEPTED**; `BUILD-02`
+remains `REVIEW_PASS / ACCEPTANCE BLOCKED`; `CONTRACT-04` installation remains
+**BLOCKED**; and the frozen 14-role scope is unchanged. The two M2 files remain
+unchanged and uncommitted. No code, test, review, implementation, installation,
+staging, commit, push, fetch or cleanup follows automatically. `automatic=false`.
+
 ## MEM-03 Event Log Receipt Disposition - Remaining Work - 2026-10-25
 
 - [x] Record the owner's `AC-MEM03-EVENTLOG-DISPOSITION-20261025-04` decision:

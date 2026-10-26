@@ -1,5 +1,30 @@
 # Agent Company Roadmap
 
+## Agent 11 M2 Offline Pilot Scope - 2026-10-26
+
+`AC-AG11-M2-ACCEPT-20261026-03` owner-accepts only the exact offline,
+synthetic and non-authoritative M2 pilot at
+`pilots/agent11_finance_pricing/synthetic_cost_scenario.py` (SHA-256
+`4855FBF9C90D01BB8A37DA5C00954BE5D1A654A6705694C74F034F90846088AA`)
+and `pilots/agent11_finance_pricing/test_synthetic_cost_scenario.py` (SHA-256
+`DB8DA82DADC010F6DEEA1FB1D140AEBD9071EBDB0431036A06200A7ECF55BC98`).
+Independent checkpoint `AC-AG11-M2-REVIEW-20261026-02` returned
+`REVIEW_PASS / CLOSURE_READY`, 30/30 scoped tests PASS and zero new findings.
+
+This bounded acceptance preserves the completed M1 exact-division Git closure,
+the unchanged M1 helper identity
+`08F50215E79D81BEB256ECB1D27FD9C3671B0D83D065EB6B88774CE7FF9556B3`,
+and the existing M1 narrow-sequencing authorization. It adds no governance
+mechanism, roadmap phase, agent, capability, workflow, runtime integration or
+production authority. The M2 files remain uncommitted, and Agent 11 remains
+**APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT PRODUCTION IMPLEMENTED**.
+
+`MEM-03` remains **BLOCKED / HOLD / NOT ACCEPTED**; `BUILD-02` remains
+`REVIEW_PASS / ACCEPTANCE BLOCKED`; `CONTRACT-04` installation remains
+**BLOCKED**; and the frozen 14-role scope is unchanged. Any later implementation,
+runtime promotion or Git lifecycle requires its own authorization and applicable
+gates. `automatic=false`.
+
 ## MEM-03 Event Log Receipt Architecture Disposition - 2026-10-25
 
 The owner records Windows Event Log as **NO_GO** for the authoritative MEM-03

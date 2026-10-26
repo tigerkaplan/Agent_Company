@@ -1,5 +1,36 @@
 # Agent Company
 
+## Agent 11 M2 Physical DOC-TREE Reconciliation - 2026-10-26
+
+Current verified repository: `C:/Users/DELL/Desktop/AgentCompany/Agent_Company`,
+branch `master`, HEAD and local `origin/master` at
+`7180398ab5297ad90b8292dd5f16d03059adeb5a`, with an empty index. The physical
+DOC-TREE now includes these exact untracked M2 pilot paths:
+
+- `pilots/agent11_finance_pricing/synthetic_cost_scenario.py` - SHA-256
+  `4855FBF9C90D01BB8A37DA5C00954BE5D1A654A6705694C74F034F90846088AA`.
+- `pilots/agent11_finance_pricing/test_synthetic_cost_scenario.py` - SHA-256
+  `DB8DA82DADC010F6DEEA1FB1D140AEBD9071EBDB0431036A06200A7ECF55BC98`.
+
+`AC-AG11-M2-REVIEW-20261026-02` independently returned
+`REVIEW_PASS / CLOSURE_READY`, 30/30 scoped tests PASS and zero new findings.
+`AC-AG11-M2-ACCEPT-20261026-03` records **OWNER ACCEPTED** for only those exact
+two files. They remain unchanged and uncommitted. The committed M1 pilot paths
+`pilots/agent11_finance_pricing/exact_division.py` and
+`pilots/agent11_finance_pricing/test_exact_division.py`, its Git closure and its
+narrow-sequencing authorization remain unchanged; the M1 helper retains SHA-256
+`08F50215E79D81BEB256ECB1D27FD9C3671B0D83D065EB6B88774CE7FF9556B3`.
+
+M2 is isolated, offline, synthetic and non-authoritative. It is not production
+Agent 11 implementation, runtime integration or V1 acceptance. The 12 unrelated
+modified tracked files and four untracked diagnostics remain protected.
+`MEM-03` remains **BLOCKED / HOLD / NOT ACCEPTED**; `BUILD-02` remains
+`REVIEW_PASS / ACCEPTANCE BLOCKED`; `CONTRACT-04` installation remains
+**BLOCKED**; and the frozen 14-role scope is unchanged. PROJECT_STATE owns the
+acceptance status, ROADMAP owns scope, TODO owns the independent documentation
+review gate, and this entry records only physical path presence. No code, tests
+or Git action is authorized by this reconciliation. `automatic=false`.
+
 ## Canonical DOC-TREE Reconciliation - 2026-10-24
 
 Current verified repository: `C:/Users/DELL/Desktop/AgentCompany/Agent_Company`,

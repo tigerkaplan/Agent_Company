@@ -1,5 +1,42 @@
 # Agent Company Project State
 
+## Agent 11 M2 Owner Acceptance - 2026-10-26
+
+`AC-AG11-M2-ACCEPT-20261026-03` records **OWNER ACCEPTED** for the exact
+two-file Agent 11 M2 offline pilot:
+
+- `pilots/agent11_finance_pricing/synthetic_cost_scenario.py` - SHA-256
+  `4855FBF9C90D01BB8A37DA5C00954BE5D1A654A6705694C74F034F90846088AA`.
+- `pilots/agent11_finance_pricing/test_synthetic_cost_scenario.py` - SHA-256
+  `DB8DA82DADC010F6DEEA1FB1D140AEBD9071EBDB0431036A06200A7ECF55BC98`.
+
+Independent checkpoint `AC-AG11-M2-REVIEW-20261026-02` returned
+`REVIEW_PASS / CLOSURE_READY`, 30/30 scoped tests PASS with exit 0, and zero
+new findings across CODE DEFECT, CONTRACT MISMATCH, EVIDENCE GAP, ENVIRONMENT
+and AUTHORIZATION. This documentation task preserves that evidence and did not
+rerun the tests or review. The unchanged M1 helper
+`pilots/agent11_finance_pricing/exact_division.py` remains at SHA-256
+`08F50215E79D81BEB256ECB1D27FD9C3671B0D83D065EB6B88774CE7FF9556B3`;
+the completed M1 two-file Git closure and M1 narrow-sequencing authorization
+remain unchanged.
+
+M2 is **ISOLATED / OFFLINE / SYNTHETIC / NON-AUTHORITATIVE / OWNER ACCEPTED /
+UNCOMMITTED**. It uses no production data and grants no production, runtime,
+provider, persistence, financial-policy or external-effect authority. Agent 11
+remains **APPROVED V1 / DESIGN REVIEW ACCEPTED / NOT PRODUCTION IMPLEMENTED**;
+M2 acceptance is not V1 acceptance or runtime-integration approval.
+
+Verified documentation baseline: repository
+`C:/Users/DELL/Desktop/AgentCompany/Agent_Company`, branch `master`, HEAD and
+local `origin/master` at `7180398ab5297ad90b8292dd5f16d03059adeb5a`, with
+an empty index. The 12 unrelated modified tracked files and four untracked
+diagnostics remain protected; the two M2 files remain unchanged and uncommitted.
+`MEM-03` remains **BLOCKED / HOLD / NOT ACCEPTED**; Shared CORE `BUILD-02`
+remains `REVIEW_PASS / ACCEPTANCE BLOCKED`; `CONTRACT-04` installation remains
+**BLOCKED**; and the frozen 14-role scope is unchanged. No implementation,
+installation, staging, commit, push, fetch or cleanup is authorized by this
+record. `automatic=false`.
+
 ## MEM-03 Event Log Bootstrap Receipt Disposition - 2026-10-25
 
 `AC-MEM03-EVENTLOG-DISPOSITION-20261025-04` records the owner's decision that
