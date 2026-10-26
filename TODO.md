@@ -11,6 +11,8 @@
   result as superseded evidence for the same four-module inventory.
 - [x] Preserve `GOV_FIX_REVIEW_PASS` and Governance Validator `PASS` with exit
   `0` without repeating either gate.
+- [x] Preserve `CTX_DOC_AFFECTED_REVIEW_PASS` for exactly the three corrected
+  CTX-BUDGET documentation sections.
 - [x] Reconcile CTX-BUDGET status, scope and remaining work in
   `PROJECT_STATE.md`, `ROADMAP.md` and `TODO.md`. No physical path changed, so
   the README-owned CURRENT/PLANNED DOC-TREE requires no update.
@@ -22,10 +24,15 @@
   current worktree size must be measured when required. Any production
   correction requires a separate owner-approved work order, validation and
   independent review.
-- [ ] Obtain an independent affected-documentation review of only these three
-  CTX-BUDGET entries before any later Git action.
-- [ ] Keep staging, commit and push behind separate explicit Git authorization;
-  scoped technical closure and documentation reconciliation grant none.
+- [x] Record the exact four-file implementation/documentation change as
+  **COMMITTED / PUSHED** at
+  `6443e3ecdb7a6adc3888d2fdad91846a6e735076`, after the verified non-force
+  update of remote `refs/heads/master`.
+- [ ] Obtain an independent affected-documentation review of only this bounded
+  status amendment before any later Git action.
+- [ ] Keep any further staging, commit or push behind separate explicit Git
+  authorization. This status-only amendment creates no recursive
+  commit-identity documentation requirement.
 
 Shared CORE `BUILD-02` remains `REVIEW_PASS / ACCEPTANCE BLOCKED`; its mandatory
 inventory remains `51/52 SAME`. `MEM-03` remains **BLOCKED / HOLD / NOT

@@ -17,8 +17,8 @@ final affected evidence manifest has SHA-256
 `30E144B292188A7A8512B913EAB1CB820EC6077B8FFB7536396F5B02CC5B9501`.
 This supersedes the historical `113/115` result for the same affected inventory;
 its two `ContextBuildError: Discovery read budget exceeded` errors now pass.
-`GOV_FIX_REVIEW_PASS` and the Governance Validator `PASS` with exit `0` remain
-accepted and were not repeated.
+`CTX_DOC_AFFECTED_REVIEW_PASS`, `GOV_FIX_REVIEW_PASS` and the Governance
+Validator `PASS` with exit `0` remain accepted and were not repeated.
 
 The production context-size risk remains **OPEN** and separate. The
 committed/pre-reconciliation HEAD measurement of `PROJECT_STATE.md` was 165232
@@ -32,11 +32,14 @@ ACCEPTANCE BLOCKED`; its separate mandatory inventory remains `51/52 SAME` and
 is not waived. `MEM-03` remains **BLOCKED / HOLD / NOT ACCEPTED**, and
 `CONTRACT-04` installation remains **BLOCKED**.
 
-This record is documentation-only. CTX-BUDGET-01 is owner-accepted within the
-exact scoped technical boundary, but the documentation diff and one-file test
-correction remain unstaged and uncommitted. No production acceptance,
+This reconciliation is documentation-only. CTX-BUDGET-01 remains
+**OWNER-ACCEPTED** within the exact scoped technical boundary. The reviewed
+four-file implementation/documentation change is **COMMITTED / PUSHED** at
+`6443e3ecdb7a6adc3888d2fdad91846a6e735076`; verified remote
+`refs/heads/master` points to that commit. No production acceptance, further
 implementation, test, review, staging, commit, push, fetch, reset, cleanup or
-deployment authority follows. `automatic=false`.
+deployment authority follows. This status-only amendment creates no recursive
+commit-identity documentation requirement. `automatic=false`.
 
 ## PIH-V0 Owner-Approved Design Closure - 2026-10-26
 
