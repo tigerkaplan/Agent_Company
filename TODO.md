@@ -1,5 +1,29 @@
 # Agent Company TODO
 
+## Production Context Layout Correction - Remaining Work - 2026-10-26
+
+- [x] Owner approved exact five-file Work Order
+  `AC-V1-CORE08-PROD-CONTEXT-LAYOUT-20261026-47` under authorization
+  `AC-V1-CORE08-AUTHORIZATION-20261026-49`.
+- [x] Preserve the exact 55,913-byte historical suffix at
+  `docs/history/PROJECT_STATE-2026-10-26.md` and prove that the unchanged
+  original prefix plus the archive reconstructs the 167,747-byte preimage.
+- [x] Keep live `PROJECT_STATE.md` at 113,627 bytes without changing the
+  131,072-byte CORE-08 discovery limit.
+- [x] Obtain independent review of the exact five-file implementation and its
+  retained validation evidence.
+- [x] Obtain separate owner acceptance/closure after review.
+- [ ] Obtain independent review of this exact four-file closure-status
+  reconciliation.
+- [ ] Commit and push only under separate explicit authorization.
+
+Status is **IMPLEMENTATION COMPLETE / CORE08_REVIEW_PASS / OWNER-ACCEPTED
+SCOPED TECHNICAL CLOSURE / PENDING DOCUMENTATION REVIEW**. Retained validation
+is Context Smoke `READY`, 108/108 PASS and 88/88 PASS. BUILD-02 remains
+`REVIEW_PASS / ACCEPTANCE BLOCKED` at 51/52; MEM-03 remains `BLOCKED / HOLD /
+NOT ACCEPTED`; CONTRACT-04 remains blocked. No provider, installation,
+deployment, monitoring or Git authority follows. `automatic=false`.
+
 ## CTX-BUDGET-01 Scoped Technical Closure - Remaining Work - 2026-10-26
 
 - [x] Record owner acceptance of CTX-BUDGET-01 scoped technical closure for the

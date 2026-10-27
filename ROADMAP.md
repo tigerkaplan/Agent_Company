@@ -1,5 +1,24 @@
 # Agent Company Roadmap
 
+## Production Context Layout Correction - 2026-10-26
+
+Owner-authorized Work Order `AC-V1-CORE08-PROD-CONTEXT-LAYOUT-20261026-47`
+is **IMPLEMENTATION COMPLETE / CORE08_REVIEW_PASS / OWNER-ACCEPTED SCOPED
+TECHNICAL CLOSURE**. Retained validation is Context Smoke `READY`, 108/108 PASS
+and 88/88 PASS. The live
+`PROJECT_STATE.md` is 113,627 bytes and retains the current canonical overlay;
+the exact 55,913-byte historical suffix is now
+`docs/history/PROJECT_STATE-2026-10-26.md`. The unchanged original prefix plus
+that archive reconstructs the 167,747-byte preimage exactly. The 131,072-byte
+CORE-08 discovery limit is unchanged.
+
+This layout-only implementation changes no runtime, provider, context-contract
+or authority behavior. BUILD-02 remains `REVIEW_PASS / ACCEPTANCE BLOCKED` at
+51/52, MEM-03 remains `BLOCKED / HOLD / NOT ACCEPTED`, and CONTRACT-04 remains
+blocked. Independent review and owner acceptance are complete. Independent review
+of this four-file closure-status reconciliation, commit and push remain separate
+pending gates. `automatic=false`.
+
 ## CTX-BUDGET-01 Scoped Technical Closure - 2026-10-26
 
 `AC-V1-CTX-BUDGET-DOC-20261026-25` owner-accepts scoped technical closure for

@@ -1,5 +1,26 @@
 # Agent Company
 
+## Production Context Layout DOC-TREE - 2026-10-26
+
+Work Order `AC-V1-CORE08-PROD-CONTEXT-LAYOUT-20261026-47` is
+**IMPLEMENTATION COMPLETE / CORE08_REVIEW_PASS / OWNER-ACCEPTED SCOPED
+TECHNICAL CLOSURE / PENDING DOCUMENTATION REVIEW**. Retained validation is
+Context Smoke `READY`, 108/108 PASS and 88/88 PASS. The physical DOC-TREE is:
+
+- `PROJECT_STATE.md` - live current-state overlay, 113,627 bytes;
+- `docs/history/PROJECT_STATE-2026-10-26.md` - exact 55,913-byte historical
+  suffix beginning `## POST-ORCH-01 DOC-TREE - 2026-10-09`.
+
+The unchanged 111,834-byte original prefix plus the archive reconstructs the
+original 167,747-byte source with SHA-256
+`A3210486ABD89A86EBEE5760D46AE3C6B1F789B3048A76497815EB3903978457`.
+The CORE-08 per-file discovery limit remains 131,072 bytes. This is a
+documentation-layout change only; it grants no provider, runtime, authority,
+installation, deployment, monitoring, staging, commit or push change. BUILD-02,
+MEM-03 and CONTRACT-04 gates remain unchanged. This closure-status reconciliation
+still requires independent documentation review; commit and push remain separate
+pending gates. `automatic=false`.
+
 ## PIH-V0 Planned DOC-TREE - 2026-10-26
 
 `AC-PIH-V0-DESIGN-CLOSURE-20261026-15` closes the reviewed Private Intelligence
