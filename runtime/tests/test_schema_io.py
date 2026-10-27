@@ -139,6 +139,99 @@ class SchemaIOTests(unittest.TestCase):
             with self.assertRaisesRegex(SchemaIntegrityError, "exceeds 131072"):
                 validator.validate({})
 
+    def test_schema_reference_validation_is_bounded_and_cached_per_operation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            main = self._write(
+                root,
+                "main.json",
+                json.dumps(
+                    {
+                        "allOf": [
+                            {"$ref": "external.json#/$defs/value"},
+                            {"$ref": "external.json#/$defs/value"},
+                        ]
+                    }
+                ).encode(),
+            )
+            external = self._write(
+                root,
+                "external.json",
+                b'{"$defs":{"value":{"type":"object"}}}',
+            )
+            validator = JobValidator(main)
+            original = Path.open
+            reads = 0
+
+            def counted_open(path, *args, **kwargs):
+                nonlocal reads
+                if Path(path) == external and args and args[0] == "rb":
+                    reads += 1
+                return original(path, *args, **kwargs)
+
+            with patch.object(Path, "open", counted_open):
+                validator.validate_schema_references()
+            self.assertEqual(reads, 1)
+
+    def test_schema_reference_validation_deduplicates_document_cycles(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            main = self._write(root, "main.json", b'{"$ref":"external.json"}')
+            external = self._write(root, "external.json", b'{"$ref":"main.json"}')
+            validator = JobValidator(main)
+            original = Path.open
+            reads = {main: 0, external: 0}
+
+            def counted_open(path, *args, **kwargs):
+                candidate = Path(path)
+                if candidate in reads and args and args[0] == "rb":
+                    reads[candidate] += 1
+                return original(path, *args, **kwargs)
+
+            with patch.object(Path, "open", counted_open):
+                validator.validate_schema_references()
+            self.assertEqual(reads, {main: 0, external: 1})
+
+    def test_private_reference_resolution_without_state_fails_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            main = self._write(root, "main.json", b'{"$ref":"external.json"}')
+            self._write(root, "external.json", b'{"type":"object"}')
+            validator = JobValidator(main)
+
+            with self.assertRaisesRegex(
+                SchemaIntegrityError, "Validation traversal state is unavailable"
+            ):
+                validator._resolve_ref("external.json", validator.schema, main)
+
+    def test_schema_reference_validation_rejects_invalid_references(self):
+        cases = (
+            ("unsupported.json", b'{"$ref":"#unsupported"}', "Unsupported"),
+            ("escape.json", b'{"$ref":"../escape.json"}', "escapes"),
+            ("missing.json", b'{"$ref":"absent.json"}', "Could not load"),
+            ("type.json", b'{"$ref":1}', "not a string"),
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name, raw, message in cases:
+                with self.subTest(name=name):
+                    path = self._write(root, name, raw)
+                    with self.assertRaisesRegex(JobValidationError, message):
+                        JobValidator(path).validate_schema_references()
+
+    def test_schema_reference_validation_enforces_traversal_limits(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            work = self._write(root, "work.json", b'{"type":"object"}')
+            with patch("runtime.core.validation.W_MAX", 1):
+                with self.assertRaisesRegex(SchemaIntegrityError, "W_MAX=1"):
+                    JobValidator(work).validate_schema_references()
+
+            depth = self._write(root, "depth.json", b'{"outer":{"inner":{}}}')
+            with patch("runtime.core.validation.D_MAX", 2):
+                with self.assertRaisesRegex(SchemaIntegrityError, "D_MAX=2"):
+                    JobValidator(depth).validate_schema_references()
+
     def test_legitimate_recursive_schema_advances_through_instance(self):
         with tempfile.TemporaryDirectory() as directory:
             schema = {

@@ -1,5 +1,24 @@
 # Agent Company TODO
 
+## GOV-CONTRACT-FIX-18 Scoped Technical Closure - Remaining Work - 2026-10-27
+
+- [x] Record **OWNER-ACCEPTED SCOPED TECHNICAL CLOSURE** for the exact reviewed
+  three-file implementation identities in PROJECT_STATE and ROADMAP.
+- [x] Preserve `GOV_FIX_REVIEW_PASS`, focused `17/17 PASS`, Governance Validator
+  `PASS` and affected `115/115 PASS` without repeating tests or review.
+- [x] Keep README and the physical DOC-TREE unchanged; no path changed.
+- [x] Preserve CORE-08 and CTX-BUDGET **CLOSED / PUSHED**, BUILD-02
+  `REVIEW_PASS / ACCEPTANCE BLOCKED` at `51/52`, MEM-03 **BLOCKED / HOLD / NOT
+  ACCEPTED**, and CONTRACT-04 **BLOCKED**.
+- [ ] Obtain independent review of only these three GOV-CONTRACT-FIX-18
+  documentation sections.
+- [ ] Stage, commit and push only under separate explicit Git authorization; no
+  recursive commit-hash documentation requirement applies.
+
+Status is **OWNER-ACCEPTED SCOPED TECHNICAL CLOSURE / DOCUMENTATION
+RECONCILIATION COMPLETE / PENDING DOCUMENTATION REVIEW / GIT PENDING**. No
+code, test, installation, cleanup or Git operation is authorized. `automatic=false`.
+
 ## Production Context Layout Correction - Remaining Work - 2026-10-26
 
 - [x] Owner approved exact five-file Work Order

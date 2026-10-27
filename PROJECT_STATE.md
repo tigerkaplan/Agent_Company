@@ -1,5 +1,24 @@
 # Agent Company Project State
 
+## GOV-CONTRACT-FIX-18 Owner-Accepted Scoped Technical Closure - 2026-10-27
+
+`AC-V1-GOV18-OWNER-CLOSURE-20261027-58` records **OWNER-ACCEPTED SCOPED
+TECHNICAL CLOSURE** for reviewed identities: `runtime/core/validation.py`
+`1E7ACA61E7392A2DCEA262C4CA3C2C74BC3C9C8A7528CABD23FA292357A4FEDD`,
+`governance/capability-governance/validate.py`
+`0EAF9E21C02B4B24563B4385A42AB6AE430FCD1EE0B45606D1C256B712CD7B5E`, and
+`runtime/tests/test_schema_io.py`
+`65D78A215BF9A38AE2177A333C5FFA9C1657651925365EB385595385798C8AF`.
+`GOV_FIX_REVIEW_PASS`, focused 17/17, Governance Validator PASS and affected
+115/115 PASS are retained, not repeated.
+
+Documentation review and Git closure remain separate pending gates. CORE-08 and
+CTX-BUDGET remain CLOSED / PUSHED. BUILD-02 remains `REVIEW_PASS / ACCEPTANCE
+BLOCKED` at 51/52; MEM-03 remains `BLOCKED / HOLD / NOT ACCEPTED`; CONTRACT-04
+remains BLOCKED. README and the physical DOC-TREE are unchanged. No code,
+test or Git authority follows; no recursive commit-hash requirement is created.
+`automatic=false`.
+
 ## CTX-BUDGET-01 Owner-Accepted Scoped Technical Closure - 2026-10-26
 
 `AC-V1-CTX-BUDGET-DOC-20261026-25` records **OWNER-ACCEPTED SCOPED

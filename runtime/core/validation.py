@@ -105,6 +105,39 @@ class JobValidator:
         finally:
             _VALIDATION_STATE.reset(token)
 
+    def validate_schema_references(self) -> None:
+        """Validate the complete schema-reference graph in one bounded operation."""
+        state = _VALIDATION_STATE.get()
+        token = None
+        if state is None:
+            state = _ValidationState()
+            token = _VALIDATION_STATE.set(state)
+        try:
+            if state.failed is not None:
+                raise state.failed
+            schema_path = self.schema_path.resolve()
+            cached = state.documents.get(schema_path)
+            if cached is None:
+                state.documents[schema_path] = (
+                    self.schema,
+                    self.schema_raw_bytes,
+                    self.schema_sha256,
+                )
+            elif cached[1] != self.schema_raw_bytes:
+                state.failed = SchemaIntegrityError(
+                    "Schema changed during validation traversal"
+                )
+                raise state.failed
+            self._walk_schema_references(
+                self.schema,
+                self.schema,
+                schema_path,
+                {schema_path},
+            )
+        finally:
+            if token is not None:
+                _VALIDATION_STATE.reset(token)
+
     @staticmethod
     def _charge(event: str) -> _ValidationState:
         state = _VALIDATION_STATE.get()
@@ -119,6 +152,51 @@ class JobValidator:
             raise state.failed
         state.work += 1
         return state
+
+    def _walk_schema_references(
+        self,
+        value: Any,
+        root: dict[str, Any],
+        schema_path: Path,
+        visited_documents: set[Path],
+    ) -> None:
+        state = self._charge("schema-reference discovery node visit")
+        if state.depth >= D_MAX:
+            state.failed = SchemaIntegrityError(
+                f"Validation traversal exceeds D_MAX={D_MAX} active frames"
+            )
+            raise state.failed
+        state.depth += 1
+        try:
+            if isinstance(value, dict):
+                if "$ref" in value:
+                    reference = value["$ref"]
+                    if not isinstance(reference, str):
+                        raise JobValidationError("Schema reference is not a string")
+                    self._charge("reference resolution")
+                    _, resolved_root, resolved_path = self._resolve_ref(
+                        reference, root, schema_path
+                    )
+                    resolved_path = resolved_path.resolve()
+                    if resolved_path not in visited_documents:
+                        visited_documents.add(resolved_path)
+                        self._walk_schema_references(
+                            resolved_root,
+                            resolved_root,
+                            resolved_path,
+                            visited_documents,
+                        )
+                for item in value.values():
+                    self._walk_schema_references(
+                        item, root, schema_path, visited_documents
+                    )
+            elif isinstance(value, list):
+                for item in value:
+                    self._walk_schema_references(
+                        item, root, schema_path, visited_documents
+                    )
+        finally:
+            state.depth -= 1
 
     def _validate(
         self,
